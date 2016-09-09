@@ -24,7 +24,7 @@
 import os
 
 from PyQt4 import QtGui, uic
-from PyQt4.QtCore import pyqtSignal, pyqtSlot, QThread
+from PyQt4.QtCore import pyqtSignal, pyqtSlot, QThread, QFileInfo
 from PyQt4.QtGui import QFileDialog
 
 from qgis.core import *
@@ -43,7 +43,7 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
     closingPlugin = pyqtSignal()
     
     def __init__(self, parent=None):
-        """Default constructor."""
+        """Constructor."""
         
         super(puPluginDockWidget, self).__init__(parent)
         # Set up the user interface from Designer.
@@ -52,6 +52,7 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
+        self.loadVfkFileButton.setDisabled(True)
     
     @pyqtSlot()
     def on_vfkFileBrowseButton_clicked(self):
@@ -69,7 +70,13 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
     
     @pyqtSlot()
     def on_loadVfkFileButton_clicked(self):
-        """Starts loading the selected VFK file in a separate thread."""
+        """Starts loading the selected VFK file in a separate thread.
+        
+        Disables loading widgets until loading is finished.
+        
+        """
+        
+        self._enable_load_widgets(False)
         
         _filePath = self.vfkFileLineEdit.text()
         
@@ -81,6 +88,41 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.openThread = OpenThread()
         self.openThread.work.connect(self.loadVfkClass.run_loading_vfk_layer)
         self.openThread.start()
+        
+        self._enable_load_widgets(True)
+    
+    def on_vfkFileLineEdit_textChanged(self):
+        """Checks if the text in vfkFileLineEdit is a path to valid VFK file.
+        
+        If so, loadVfkFileButton is enabled, otherwise loadVfkFileButton
+        is disabled.
+        """
+        
+        _tempText = self.vfkFileLineEdit.text()
+        
+        _tempFilePath = QFileInfo(_tempText)
+         
+        if _tempFilePath.isFile() and _tempFilePath.suffix() in ('vfk', 'VFK'): 
+            self.loadVfkFileButton.setEnabled(True)
+        else:
+            self.loadVfkFileButton.setEnabled(False)
+    
+    def _enable_load_widgets(self, _enableBool):
+        """Sets enabled or disabled loading widgets.
+        
+        Sets enabled or disabled following widgets:
+            vfkFileLineEdit
+            vfkFileBrowseButton
+            loadVfkFileButton 
+        
+        Args:
+            _enableBool (bool): True to set enabled, False to set disabled.
+        
+        """
+        
+        self.vfkFileLineEdit.setEnabled(_enableBool)
+        self.vfkFileBrowseButton.setEnabled(_enableBool)
+        self.loadVfkFileButton.setEnabled(_enableBool)
     
     def closeEvent(self, event):
         self.closingPlugin.emit()

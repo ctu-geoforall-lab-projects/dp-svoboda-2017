@@ -30,6 +30,7 @@ from qgis.utils import iface
 
 from osgeo import ogr
 
+import traceback
 
 class LoadVfkClass(QObject):
     """A class for loading VFK file."""
@@ -56,20 +57,18 @@ class LoadVfkClass(QObject):
         
         _fileInfo = QFileInfo(self._filePath)
         _dbName = QDir(
-            _fileInfo.absolutePath()).\
-            filePath(_fileInfo.baseName() + '.db')
+            _fileInfo.absolutePath()).filePath(_fileInfo.baseName() + '.db')
         
-        self._load_vfk_file(self._filePath, _dbName)
+        self._load_vfk_file(_dbName)
         
         self._open_database(_dbName)
         
-        self._load_vfk_layer('PAR', self._filePath)
+        self._load_vfk_layer('PAR')
     
-    def _load_vfk_file(self, _filePath, _dbName):
+    def _load_vfk_file(self, _dbName):
         """Loads a VFK file.
         
         Args:
-            _filePath (str): A full path to the file.
             _dbName (QDir): A full path to the database.
         
         """
@@ -79,7 +78,7 @@ class LoadVfkClass(QObject):
             
             self.loadVfkFileProgressBar.setValue(0)
             
-            _ogrDataSource = ogr.Open(_filePath)
+            _ogrDataSource = ogr.Open(self._filePath)
             
             if not _ogrDataSource:
                 self._raise_load_error(
@@ -153,12 +152,11 @@ class LoadVfkClass(QObject):
                 'Error opening database connection.',
                 u'Chyba při otevírání databáze.')
     
-    def _load_vfk_layer(self, _vfkLayerCode, _filePath):
+    def _load_vfk_layer(self, _vfkLayerCode):
         """Loads a layer of the given code from VFK file into the map canvas.
         
         Args:
             _vfkLayerCode (str): The code of a layer.
-            _filePath (str): A full path to the file.
         
         Raises:
             The method handles exceptions by displaying error messages
@@ -166,7 +164,7 @@ class LoadVfkClass(QObject):
         
         """
         
-        _composedURI = _filePath + "|layername=" + _vfkLayerCode
+        _composedURI = self._filePath + "|layername=" + _vfkLayerCode
         _layer = QgsVectorLayer(_composedURI, _vfkLayerCode, 'ogr')
         
         if _layer.isValid():
@@ -177,11 +175,14 @@ class LoadVfkClass(QObject):
                 u'Chyba při načítání vrsty')
     
     def _raise_load_error(
-            self, _engLogMsg, _czeLabelMsg, _czeBarMsg=None, _duration=5):
+            self, _engLogMsg, _czeLabelMsg, _czeBarMsg=None, _duration=7):
         """Displays error messages.
         
         Displays error messages in the 'puPlugin' Log Messages Panel,
         loadVfkLabel and Message Bar.
+        
+        For development purposes it displays traceback
+        in the 'puPlugin Development' Log Messages Panel.
         
         Args:
             _engLogMsg (str): A message in the 'puPlugin' Log Messages Panel.
@@ -194,7 +195,7 @@ class LoadVfkClass(QObject):
             The method handles exceptions by displaying error messages
             in the 'puPlugin' Log Messages Panel, loadVfkLabel and Message Bar.
         
-        """
+        """        
         
         _pluginName = 'puPlugin'
         
@@ -205,4 +206,10 @@ class LoadVfkClass(QObject):
         self.loadVfkLabel.setText(_czeLabelMsg)
         iface.messageBar().pushMessage(
             _pluginName, _czeBarMsg , QgsMessageBar.WARNING, _duration)
+        
+        _developmentTb = 'puPlugin Development'
+        _tb = traceback.format_exc()
+        
+        if not _tb == None:
+            QgsMessageLog.logMessage(_tb, _developmentTb)
 

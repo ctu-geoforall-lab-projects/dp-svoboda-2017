@@ -19,7 +19,7 @@
      <rect>
       <x>9</x>
       <y>0</y>
-      <width>341</width>
+      <width>351</width>
       <height>141</height>
      </rect>
     </property>
@@ -39,7 +39,7 @@
        <item>
         <widget class="QPushButton" name="vfkFileBrowseButton">
          <property name="text">
-          <string>...</string>
+          <string>Procházet</string>
          </property>
         </widget>
        </item>
