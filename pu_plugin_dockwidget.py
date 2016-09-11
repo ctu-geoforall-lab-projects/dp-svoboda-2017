@@ -59,9 +59,9 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
         """Opens a file dialog and filters VFK files."""
         
         _filePath = QFileDialog.getOpenFileName(
-            self, u'Načti soubor VFK',
+            self, u'Vyberte soubor VFK',
             self.vfkFileLineEdit.text(),
-            'VFK soubor (*.vfk)')
+            '.vfk (*.vfk)')
         
         if not _filePath:
             return
@@ -70,26 +70,22 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
     
     @pyqtSlot()
     def on_loadVfkFileButton_clicked(self):
-        """Starts loading the selected VFK file in a separate thread.
-        
-        Disables loading widgets until loading is finished.
-        
-        """
-        
-        self._enable_load_widgets(False)
+        """Starts loading the selected VFK file in a separate thread."""
         
         _filePath = self.vfkFileLineEdit.text()
+        
+        self.loadVfkLabel.setText(u'Načítám data do SQLite databáze.')
         
         QgsApplication.processEvents()
         
         self.loadVfkClass = LoadVfkClass(
-            _filePath, self.loadVfkLabel, self.loadVfkFileProgressBar)
+            _filePath, self.loadVfkLabel,
+            self.loadVfkFileProgressBar, self.vfkFileLineEdit,
+            self.vfkFileBrowseButton, self.loadVfkFileButton)
         
         self.openThread = OpenThread()
         self.openThread.work.connect(self.loadVfkClass.run_loading_vfk_layer)
         self.openThread.start()
-        
-        self._enable_load_widgets(True)
     
     def on_vfkFileLineEdit_textChanged(self):
         """Checks if the text in vfkFileLineEdit is a path to valid VFK file.
@@ -106,23 +102,6 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.loadVfkFileButton.setEnabled(True)
         else:
             self.loadVfkFileButton.setEnabled(False)
-    
-    def _enable_load_widgets(self, _enableBool):
-        """Sets enabled or disabled loading widgets.
-        
-        Sets enabled or disabled following widgets:
-            vfkFileLineEdit
-            vfkFileBrowseButton
-            loadVfkFileButton 
-        
-        Args:
-            _enableBool (bool): True to set enabled, False to set disabled.
-        
-        """
-        
-        self.vfkFileLineEdit.setEnabled(_enableBool)
-        self.vfkFileBrowseButton.setEnabled(_enableBool)
-        self.loadVfkFileButton.setEnabled(_enableBool)
     
     def closeEvent(self, event):
         self.closingPlugin.emit()

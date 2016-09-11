@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/plugins/puPlugin" >
         <file>icon.png</file>
+        <file>data/PAR.qml</file>
     </qresource>
 </RCC>

@@ -28,7 +28,7 @@ class OpenThread(QThread):
     """A subclass of QThread with pyqtSignal called work."""
 
     def __init__(self):
-        """Default constructor."""
+        """Constructor."""
         
         super(OpenThread, self).__init__()
         
