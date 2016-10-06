@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt
-from PyQt4.QtGui import QAction, QIcon
+from PyQt4.QtGui import QAction, QIcon, QToolButton
 # Initialize Qt resources from file resources.py
 import resources
 
@@ -65,8 +65,8 @@ class puPlugin:
         self.actions = []
         self.menu = self.tr(u'&PU Plugin')
         # TODO: We are going to let the user set this up in a future iteration
-        self.toolbar = self.iface.addToolBar(u'puPlugin')
-        self.toolbar.setObjectName(u'puPlugin')
+        self.toolButton = QToolButton()
+        self.iface.addToolBarWidget(self.toolButton)
 
         #print "** INITIALIZING puPlugin"
 
@@ -142,6 +142,9 @@ class puPlugin:
 
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
+
+        self.toolButton.setDefaultAction(action)
+
         action.triggered.connect(callback)
         action.setEnabled(enabled_flag)
 
@@ -152,7 +155,7 @@ class puPlugin:
             action.setWhatsThis(whats_this)
 
         if add_to_toolbar:
-            self.toolbar.addAction(action)
+            pass
 
         if add_to_menu:
             self.iface.addPluginToMenu(
@@ -199,12 +202,9 @@ class puPlugin:
         #print "** UNLOAD puPlugin"
 
         for action in self.actions:
-            self.iface.removePluginMenu(
-                self.tr(u'&PU Plugin'),
-                action)
+            self.iface.removePluginMenu(u'&PU Plugin', action)
+            self.iface.removePluginMenu(self.menu, action)
             self.iface.removeToolBarIcon(action)
-        # remove the toolbar
-        del self.toolbar
 
     #--------------------------------------------------------------------------
 
@@ -228,6 +228,6 @@ class puPlugin:
 
             # show the dockwidget
             # TODO: fix to allow choice of dock location
-            self.iface.addDockWidget(Qt.BottomDockWidgetArea, self.dockwidget)
+            self.iface.addDockWidget(Qt.TopDockWidgetArea, self.dockwidget)
             self.dockwidget.show()
 
