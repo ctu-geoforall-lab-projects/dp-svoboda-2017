@@ -65,21 +65,21 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def on_vfkFileBrowseButton_clicked(self):
         """Opens a file dialog and filters VFK files."""
         
-        _filePath = QFileDialog.getOpenFileName(
+        filePath = QFileDialog.getOpenFileName(
             self, u'Vyberte soubor VFK',
             self.vfkFileLineEdit.text(),
             '.vfk (*.vfk)')
         
-        if not _filePath:
+        if not filePath:
             return
         
-        self.vfkFileLineEdit.setText(_filePath)
+        self.vfkFileLineEdit.setText(filePath)
     
     @pyqtSlot()
     def on_loadVfkFileButton_clicked(self):
         """Starts loading the selected VFK file in a separate thread."""
         
-        _filePath = self.vfkFileLineEdit.text()
+        filePath = self.vfkFileLineEdit.text()
         
         self.loadVfkLabel.setText(u'Načítám data do SQLite databáze.')
         
@@ -87,7 +87,7 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
         
         QgsApplication.processEvents()
         
-        threading.Thread(target=self.run_loading_vfk_layer(_filePath)).start()
+        threading.Thread(target=self.run_loading_vfk_layer(filePath)).start()
     
     def on_vfkFileLineEdit_textChanged(self):
         """Checks if the text in vfkFileLineEdit is a path to valid VFK file.
@@ -96,46 +96,46 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
         is disabled.
         """
         
-        _tempText = self.vfkFileLineEdit.text()
+        tempText = self.vfkFileLineEdit.text()
         
-        _tempFilePath = QFileInfo(_tempText)
+        tempFilePath = QFileInfo(tempText)
          
-        if _tempFilePath.isFile() and _tempFilePath.suffix() in ('vfk', 'VFK'): 
+        if tempFilePath.isFile() and tempFilePath.suffix() in ('vfk', 'VFK'): 
             self.loadVfkFileButton.setEnabled(True)
         else:
             self.loadVfkFileButton.setEnabled(False)
             
-    def run_loading_vfk_layer(self, _filePath):
+    def run_loading_vfk_layer(self, filePath):
         """Calls methods for loading a VFK layer.
         
         Disables loading widgets until the loading is finished.
         
         Args:
-            _filePath (str): A full path to the file.
+            filePath (str): A full path to the file.
         
         """
         
         self.loadVfkFileProgressBar.setValue(0)
         
-        _fileInfo = QFileInfo(_filePath)
-        _dbName = QDir(
-            _fileInfo.absolutePath()).filePath(_fileInfo.baseName() + '.db')
+        fileInfo = QFileInfo(filePath)
+        dbName = QDir(
+            fileInfo.absolutePath()).filePath(fileInfo.baseName() + '.db')
         
-        self._load_vfk_file(_filePath)
-        self._open_database(_dbName)
+        self._load_vfk_file(filePath)
+        self._open_database(dbName)
         
-        _vfkLayerCode = 'PAR'
-        _layerName = _fileInfo.baseName() + '-' + _vfkLayerCode
+        vfkLayerCode = 'PAR'
+        layerName = fileInfo.baseName() + '-' + vfkLayerCode
         
-        self._load_vfk_layer(_filePath, _vfkLayerCode, _layerName)
+        self._load_vfk_layer(filePath, vfkLayerCode, layerName)
         
         self._enable_load_widgets(True)
     
-    def _load_vfk_file(self, _filePath):
+    def _load_vfk_file(self, filePath):
         """Loads a VFK file.
         
         Args:
-            _filePath (str): A full path to the file.
+            filePath (str): A full path to the file.
         
         Raises:
             The method handles exceptions by displaying error messages
@@ -148,16 +148,16 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
             QgsApplication.registerOgrDrivers()
             QgsApplication.processEvents()
             
-            _ogrDataSource = ogr.Open(_filePath)
+            ogrDataSource = ogr.Open(filePath)
             
-            _layerCount = _ogrDataSource.GetLayerCount()
-            _layerNames = []
+            layerCount = ogrDataSource.GetLayerCount()
+            layerNames = []
             
-            for i in xrange(_layerCount):
-                _layerNames.append(
-                    _ogrDataSource.GetLayer(i).GetLayerDefn().GetName())
+            for i in xrange(layerCount):
+                layerNames.append(
+                    ogrDataSource.GetLayer(i).GetLayerDefn().GetName())
             
-            if 'PAR' not in _layerNames:
+            if 'PAR' not in layerNames:
                 self._raise_load_error(
                     'VFK file does not contain PAR layer, therefore it '
                     'can not be loaded by PU Plugin. '
@@ -169,13 +169,13 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 QgsApplication.processEvents()
                 return
             
-            self.loadVfkFileProgressBar.setRange(0, _layerCount)
+            self.loadVfkFileProgressBar.setRange(0, layerCount)
             
-            for i in xrange(_layerCount):
+            for i in xrange(layerCount):
                 self.loadVfkFileProgressBar.setValue(i+1)
                 self.loadVfkLabel.setText(
                     u"Načítám {} ({}/{})"
-                    .format(_layerNames[i], i+1, _layerCount))
+                    .format(layerNames[i], i+1, layerCount))
                 
                 QgsApplication.processEvents()
                 
@@ -185,11 +185,11 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 'Error loading VFK file.',
                 u'Chyba při načítání VFK souboru.')
     
-    def _open_database(self, _dbName):
+    def _open_database(self, dbName):
         """Opens a database.
         
         Args:
-            _dbName (QDir): A full path to the database.
+            dbName (QDir): A full path to the database.
         
         Raises:
             The method handles exceptions by displaying error messages
@@ -205,11 +205,11 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
                     u'Databázový ovladač QSQLITE není dostupný.')
                 return
             
-            _connectionName = QUuid.createUuid().toString()
-            _db = QSqlDatabase.addDatabase("QSQLITE", _connectionName)
-            _db.setDatabaseName(_dbName)
+            connectionName = QUuid.createUuid().toString()
+            db = QSqlDatabase.addDatabase("QSQLITE", connectionName)
+            db.setDatabaseName(dbName)
             
-            if not _db.open():
+            if not db.open():
                 self._raise_load_error(
                     'Database connection failed.',
                     u'Nepodařilo se připojit k databázi.')
@@ -218,16 +218,16 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 'Error opening database connection.',
                 u'Chyba při otevírání databáze.')
     
-    def _load_vfk_layer(self, _filePath, _vfkLayerCode, _layerName):
+    def _load_vfk_layer(self, filePath, vfkLayerCode, layerName):
         """Loads a layer of the given code from VFK file into the map canvas.
         
         Also sets symbology according
-        to "/plugins/puPlugin/data/<_vfkLayerCode>.qml" file.
+        to "/plugins/puPlugin/data/<vfkLayerCode>.qml" file.
         
         Args:
-            _filePath (str): A full path to the file.
-            _vfkLayerCode (str): A code of the layer.
-            _layerName (str): A name of the layer.
+            filePath (str): A full path to the file.
+            vfkLayerCode (str): A code of the layer.
+            layerName (str): A name of the layer.
         
         Raises:
             The method handles exceptions by displaying error messages
@@ -237,24 +237,24 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
         """
         
         try:
-            _composedURI = _filePath + "|layername=" + _vfkLayerCode
-            _layer = QgsVectorLayer(_composedURI, _layerName, 'ogr')
+            composedURI = filePath + "|layername=" + vfkLayerCode
+            layer = QgsVectorLayer(composedURI, layerName, 'ogr')
             
-            if _layer.isValid():
-                _style = ':/plugins/puPlugin/data/' + _vfkLayerCode + '.qml'
-                _layer.loadNamedStyle(_style)
-                QgsMapLayerRegistry.instance().addMapLayer(_layer)
+            if layer.isValid():
+                style = ':/plugins/puPlugin/data/' + vfkLayerCode + '.qml'
+                layer.loadNamedStyle(style)
+                QgsMapLayerRegistry.instance().addMapLayer(layer)
             else:
                 self._raise_load_error(
-                    'Layer {} is not valid.'.format(_vfkLayerCode),
-                    u'Vrstva {} není platná.'.format(_vfkLayerCode))
+                    'Layer {} is not valid.'.format(vfkLayerCode),
+                    u'Vrstva {} není platná.'.format(vfkLayerCode))
         except:
             self._raise_load_error(
-                    'Error loading {} layer.'.format(_vfkLayerCode),
-                    u'Chyba při načítání vrsty {}.'.format(_vfkLayerCode))
+                    'Error loading {} layer.'.format(vfkLayerCode),
+                    u'Chyba při načítání vrsty {}.'.format(vfkLayerCode))
     
     def _raise_load_error(
-            self, _engLogMsg, _czeLabelMsg, _czeBarMsg=None, _duration=7):
+            self, engLogMsg, czeLabelMsg, czeBarMsg=None, duration=7):
         """Displays error messages.
         
         Displays error messages in the 'puPlugin' Log Messages Panel,
@@ -264,10 +264,10 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
         in the 'puPlugin Development' Log Messages Tab.
         
         Args:
-            _engLogMsg (str): A message in the 'puPlugin' Log Messages Panel.
-            _czeLabelMsg (str): A message in the loadVfkLabel.
-            _czeLabelMsg (str): A message in the Message Bar.
-            _duration (int): A duration of the message in the Message Bar
+            engLogMsg (str): A message in the 'puPlugin' Log Messages Panel.
+            czeLabelMsg (str): A message in the loadVfkLabel.
+            czeLabelMsg (str): A message in the Message Bar.
+            duration (int): A duration of the message in the Message Bar
                              in seconds.
         
         Raises:
@@ -277,23 +277,23 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
         
         """
         
-        _pluginName = 'PU Plugin'
+        pluginName = 'PU Plugin'
         
-        if _czeBarMsg is None:
-            _czeBarMsg = _czeLabelMsg
+        if czeBarMsg is None:
+            czeBarMsg = czeLabelMsg
         
-        QgsMessageLog.logMessage(_engLogMsg, _pluginName)
-        self.loadVfkLabel.setText(_czeLabelMsg)
+        QgsMessageLog.logMessage(engLogMsg, pluginName)
+        self.loadVfkLabel.setText(czeLabelMsg)
         iface.messageBar().pushMessage(
-            _pluginName, _czeBarMsg , QgsMessageBar.WARNING, _duration)
+            pluginName, czeBarMsg , QgsMessageBar.WARNING, duration)
         
-        _developmentTb = 'PU Plugin Development'
-        _tb = traceback.format_exc()
+        developmentTb = 'PU Plugin Development'
+        tb = traceback.format_exc()
         
-        if 'None' not in _tb:
-            QgsMessageLog.logMessage(_tb, _developmentTb)
+        if 'None' not in tb:
+            QgsMessageLog.logMessage(tb, developmentTb)
             
-    def _enable_load_widgets(self, _enableBool):
+    def _enable_load_widgets(self, enableBool):
         """Sets enabled or disabled loading widgets.
         
         Sets enabled or disabled following widgets:
@@ -302,13 +302,13 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
             loadVfkFileButton 
         
         Args:
-            _enableBool (bool): True to set enabled, False to set disabled.
+            enableBool (bool): True to set enabled, False to set disabled.
         
         """
         
-        self.vfkFileLineEdit.setEnabled(_enableBool)
-        self.vfkFileBrowseButton.setEnabled(_enableBool)
-        self.loadVfkFileButton.setEnabled(_enableBool)
+        self.vfkFileLineEdit.setEnabled(enableBool)
+        self.vfkFileBrowseButton.setEnabled(enableBool)
+        self.loadVfkFileButton.setEnabled(enableBool)
     
     def closeEvent(self, event):
         self.closingPlugin.emit()
