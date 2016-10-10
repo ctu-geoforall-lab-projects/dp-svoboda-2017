@@ -34,10 +34,10 @@ from qgis.utils import iface
 
 from osgeo import ogr
 
-from fileinput import filename
-
 import traceback
 import threading
+
+from load_thread import LoadThread
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -87,7 +87,9 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
         
         QgsApplication.processEvents()
         
-        threading.Thread(target=self.run_loading_vfk_layer(filePath)).start()
+        self.loadThread = LoadThread(filePath)
+        self.loadThread.work.connect(self.run_loading_vfk_layer)
+        self.loadThread.start()
     
     def on_vfkFileLineEdit_textChanged(self):
         """Checks if the text in vfkFileLineEdit is a path to valid VFK file.
