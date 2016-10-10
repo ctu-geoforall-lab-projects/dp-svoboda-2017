@@ -60,9 +60,13 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
         self.loadVfkFileButton.setDisabled(True)
+        
+        self.vfkFileBrowseButton.clicked.connect(
+            self.vfkFileBrowseButton_clicked)
+        self.loadVfkFileButton.clicked.connect(
+            self.loadVfkFileButton_clicked)
     
-    @pyqtSlot()
-    def on_vfkFileBrowseButton_clicked(self):
+    def vfkFileBrowseButton_clicked(self):
         """Opens a file dialog and filters VFK files."""
         
         filePath = QFileDialog.getOpenFileName(
@@ -75,8 +79,7 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
         
         self.vfkFileLineEdit.setText(filePath)
     
-    @pyqtSlot()
-    def on_loadVfkFileButton_clicked(self):
+    def loadVfkFileButton_clicked(self):
         """Starts loading the selected VFK file in a separate thread."""
         
         filePath = self.vfkFileLineEdit.text()
