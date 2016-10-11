@@ -29,20 +29,20 @@ class LoadThread(QThread):
     
     work = pyqtSignal(str)
 
-    def __init__(self, fileName):
+    def __init__(self, filePath):
         """Constructor.
         
         Args:
-            fileName (str): A full path to the file.
+            filePath (str): A full path to the file.
         
         """
         
         super(LoadThread, self).__init__()
 
-        self.fileName = fileName
+        self.filePath = filePath
 
     def run(self):
-        """Starts the QThread and emits self.fileName."""
+        """Starts the QThread and emits self.filePath."""
         
-        self.work.emit(self.fileName)
+        self.work.emit(self.filePath)
 
