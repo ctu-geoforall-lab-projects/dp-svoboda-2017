@@ -24,7 +24,7 @@
 import os
 
 from PyQt4 import QtGui, uic
-from PyQt4.QtCore import pyqtSignal, pyqtSlot, QThread, QFileInfo, QDir, QUuid
+from PyQt4.QtCore import pyqtSignal, pyqtSlot, QFileInfo, QDir, QUuid
 from PyQt4.QtGui import QFileDialog
 from PyQt4.QtSql import QSqlDatabase
 
@@ -35,7 +35,6 @@ from qgis.utils import iface
 from osgeo import ogr
 
 import traceback
-import threading
 
 from load_thread import LoadThread
 
