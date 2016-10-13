@@ -9,15 +9,15 @@
 [general]
 name=PU Plugin
 qgisMinimumVersion=2.0
-description=Plugin pro pozemkové úpravy
+description=Plugin pro pozemkove upravy
 version=0.1
 author=Ondřej Svoboda
 email=svoboond@gmail.com
 
-about=Plugin pro pozemkové úpravy
+about=Plugin pro pozemkove upravy
 
-tracker=https://github.com/svoboond/qgis-pu-plugin/issues
-repository=https://github.com/svoboond/qgis-pu-plugin
+tracker=https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017/issues
+repository=https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017
 # End of mandatory metadata
 
 # Recommended items:
@@ -28,7 +28,7 @@ repository=https://github.com/svoboond/qgis-pu-plugin
 # Tags are comma separated with spaces allowed
 tags=pu
 
-homepage=https://github.com/svoboond/qgis-pu-plugin
+homepage=https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017
 category=Plugins
 icon=icon.png
 # experimental flag
