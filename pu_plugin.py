@@ -22,10 +22,9 @@
 """
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt
 from PyQt4.QtGui import QAction, QIcon, QToolButton
-# Initialize Qt resources from file resources.py
+
 import resources
 
-# Import the code for the DockWidget
 from dockwidget import DockWidget
 import os.path
 
@@ -41,7 +40,7 @@ class puPlugin:
             application at run time.
         :type iface: QgsInterface
         """
-        # Save reference to the QGIS interface
+        
         self.iface = iface
 
         # initialize plugin directory
@@ -68,10 +67,7 @@ class puPlugin:
         self.toolButton = QToolButton()
         self.iface.addToolBarWidget(self.toolButton)
 
-        #print "** INITIALIZING puPlugin"
-
-        self.pluginIsActive = False
-        self.dockwidget = None
+        self.dockWidget = None
 
 
     # noinspection PyMethodMayBeStatic
@@ -88,7 +84,6 @@ class puPlugin:
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
         return QCoreApplication.translate('puPlugin', message)
-
 
     def add_action(
         self,
@@ -166,7 +161,6 @@ class puPlugin:
 
         return action
 
-
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
@@ -176,57 +170,23 @@ class puPlugin:
             text=self.tr(u'PU Plugin'),
             callback=self.run,
             parent=self.iface.mainWindow())
-
-    #--------------------------------------------------------------------------
-
-    def onClosePlugin(self):
-        """Cleanup necessary items here when plugin dockwidget is closed"""
-
-        #print "** CLOSING puPlugin"
-
-        # disconnects
-        self.dockwidget.closingPlugin.disconnect(self.onClosePlugin)
-
-        # remove this statement if dockwidget is to remain
-        # for reuse if plugin is reopened
-        # Commented next statement since it causes QGIS crashe
-        # when closing the docked window:
-        # self.dockwidget = None
-
-        self.pluginIsActive = False
-
-
+        
+        self.dockWidget = DockWidget(self.iface)
+    
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
-
-        #print "** UNLOAD puPlugin"
-
+        
         for action in self.actions:
             self.iface.removePluginMenu(u'&PU Plugin', action)
             self.iface.removePluginMenu(self.menu, action)
             self.iface.removeToolBarIcon(action)
-
-    #--------------------------------------------------------------------------
-
+    
     def run(self):
-        """Run method that loads and starts the plugin"""
+        """Show the dockWidget if visible, otherwise hides the dockWidget."""
+        
+        if not self.dockWidget.isVisible():
+            self.iface.addDockWidget(Qt.TopDockWidgetArea, self.dockWidget)
+            self.dockWidget.show()
+        else:
+            self.dockWidget.hide()
 
-        if not self.pluginIsActive:
-            self.pluginIsActive = True
-
-            #print "** STARTING puPlugin"
-
-            # dockwidget may not exist if:
-            #    first run of plugin
-            #    removed on close (see self.onClosePlugin method)
-            if self.dockwidget == None:
-                # Create the dockwidget (after translation) and keep reference
-                self.dockwidget = DockWidget(self.iface)
-
-            # connect to provide cleanup on closing of dockwidget
-            self.dockwidget.closingPlugin.connect(self.onClosePlugin)
-
-            # show the dockwidget
-            # TODO: fix to allow choice of dock location
-            self.iface.addDockWidget(Qt.TopDockWidgetArea, self.dockwidget)
-            self.dockwidget.show()
