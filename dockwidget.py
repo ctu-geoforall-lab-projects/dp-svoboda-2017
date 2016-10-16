@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- puPluginDockWidget
+ DockWidget
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -21,11 +21,8 @@
  ***************************************************************************/
 """
 
-import os
-
-from PyQt4 import QtGui, uic
 from PyQt4.QtCore import pyqtSignal, pyqtSlot, QFileInfo, QDir, QUuid
-from PyQt4.QtGui import QFileDialog
+from PyQt4.QtGui import QDockWidget, QFileDialog
 from PyQt4.QtSql import QSqlDatabase
 
 from qgis.core import *
@@ -36,52 +33,54 @@ from osgeo import ogr
 
 import traceback
 
+from ui_dockwidget import ui_DockWidget
 from load_thread import LoadThread
 
 
-FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'pu_plugin_dockwidget_base.ui'))
-
-
-class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
+class DockWidget(QDockWidget, ui_DockWidget):
     """The main widget of the PU Plugin."""
     
     closingPlugin = pyqtSignal()
     
-    def __init__(self, parent=None):
-        """Constructor."""
+    def __init__(self, iface):
+        """Constructor.
         
-        super(puPluginDockWidget, self).__init__(parent)
-        # Set up the user interface from Designer.
-        # After setupUI you can access any designer object by doing
-        # self.<objectname>, and you can use autoconnect slots - see
-        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
-        # #widgets-and-dialogs-with-auto-connect
-        self.setupUi(self)
-        self.loadVfkFileButton.setDisabled(True)
+        Args:
+            iface (QgisInterface): A reference to the QgisInterface.
         
-        self.vfkFileBrowseButton.clicked.connect(
-            self.vfkFileBrowseButton_clicked)
-        self.loadVfkFileButton.clicked.connect(
-            self.loadVfkFileButton_clicked)
+        """
+        
+        self.iface = iface
+        
+        super(DockWidget, self).__init__()
+        self.setup_ui(self)
+        
+        self.loadVfkPushButton.setDisabled(True)
+        
+        self.browseVfkPushButton.clicked.connect(
+            self.browseVfkPushButton_clicked)
+        self.loadVfkPushButton.clicked.connect(
+            self.loadVfkPushButton_clicked)
+        self.browseVfkLineEdit.textChanged.connect(
+            self.browseVfkLineEdit_textChanged)
     
-    def vfkFileBrowseButton_clicked(self):
+    def browseVfkPushButton_clicked(self):
         """Opens a file dialog and filters VFK files."""
         
         filePath = QFileDialog.getOpenFileName(
             self, u'Vyberte soubor VFK',
-            self.vfkFileLineEdit.text(),
+            self.browseVfkLineEdit.text(),
             '.vfk (*.vfk)')
         
         if not filePath:
             return
         
-        self.vfkFileLineEdit.setText(filePath)
+        self.browseVfkLineEdit.setText(filePath)
     
-    def loadVfkFileButton_clicked(self):
+    def loadVfkPushButton_clicked(self):
         """Starts loading the selected VFK file in a separate thread."""
         
-        filePath = self.vfkFileLineEdit.text()
+        filePath = self.browseVfkLineEdit.text()
         
         self.loadVfkLabel.setText(u'Načítám data do SQLite databáze.')
         
@@ -92,23 +91,23 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.loadThread = LoadThread(filePath)
         self.loadThread.work.connect(self.run_loading_vfk_layer)
         self.loadThread.start()
-    
-    def on_vfkFileLineEdit_textChanged(self):
-        """Checks if the text in vfkFileLineEdit is a path to valid VFK file.
         
-        If so, loadVfkFileButton is enabled, otherwise loadVfkFileButton
+    def browseVfkLineEdit_textChanged(self):
+        """Checks if the text in browseVfkLineEdit is a path to valid VFK file.
+        
+        If so, loadVfkPushButton is enabled, otherwise loadVfkPushButton
         is disabled.
         """
         
-        tempText = self.vfkFileLineEdit.text()
+        tempText = self.browseVfkLineEdit.text()
         
         tempFilePath = QFileInfo(tempText)
-         
+        
         if tempFilePath.isFile() and tempFilePath.suffix() in ('vfk', 'VFK'): 
-            self.loadVfkFileButton.setEnabled(True)
+            self.loadVfkPushButton.setEnabled(True)
         else:
-            self.loadVfkFileButton.setEnabled(False)
-            
+            self.loadVfkPushButton.setEnabled(False)
+    
     def run_loading_vfk_layer(self, filePath):
         """Calls methods for loading a VFK layer.
         
@@ -119,7 +118,7 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
         
         """
         
-        self.loadVfkFileProgressBar.setValue(0)
+        self.loadVfkProgressBar.setValue(0)
         
         fileInfo = QFileInfo(filePath)
         dbName = QDir(
@@ -145,7 +144,7 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
             The method handles exceptions by displaying error messages
             in the 'PU Plugin' Log Messages Tab, loadVfkLabel, Message Bar
             and 'PU Plugin Development' Log Messages Tab.
-        
+            
         """
         
         try:
@@ -173,10 +172,10 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 QgsApplication.processEvents()
                 return
             
-            self.loadVfkFileProgressBar.setRange(0, layerCount)
+            self.loadVfkProgressBar.setRange(0, layerCount)
             
             for i in xrange(layerCount):
-                self.loadVfkFileProgressBar.setValue(i+1)
+                self.loadVfkProgressBar.setValue(i+1)
                 self.loadVfkLabel.setText(
                     u"Načítám {} ({}/{})"
                     .format(layerNames[i], i+1, layerCount))
@@ -260,7 +259,7 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def _raise_load_error(
             self, engLogMsg, czeLabelMsg, czeBarMsg=None, duration=7):
         """Displays error messages.
-        
+    
         Displays error messages in the 'puPlugin' Log Messages Panel,
         loadVfkLabel and Message Bar.
         
@@ -296,23 +295,23 @@ class puPluginDockWidget(QtGui.QDockWidget, FORM_CLASS):
         
         if 'None' not in tb:
             QgsMessageLog.logMessage(tb, developmentTb)
-            
+    
     def _enable_load_widgets(self, enableBool):
         """Sets enabled or disabled loading widgets.
         
         Sets enabled or disabled following widgets:
-            vfkFileLineEdit
-            vfkFileBrowseButton
-            loadVfkFileButton 
+            browseVfkLineEdit
+            browseVfkPushButton
+            loadVfkPushButton
         
         Args:
             enableBool (bool): True to set enabled, False to set disabled.
         
         """
         
-        self.vfkFileLineEdit.setEnabled(enableBool)
-        self.vfkFileBrowseButton.setEnabled(enableBool)
-        self.loadVfkFileButton.setEnabled(enableBool)
+        self.browseVfkLineEdit.setEnabled(enableBool)
+        self.browseVfkPushButton.setEnabled(enableBool)
+        self.loadVfkPushButton.setEnabled(enableBool)
     
     def closeEvent(self, event):
         self.closingPlugin.emit()

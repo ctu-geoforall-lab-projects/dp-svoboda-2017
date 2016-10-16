@@ -26,7 +26,7 @@ from PyQt4.QtGui import QAction, QIcon, QToolButton
 import resources
 
 # Import the code for the DockWidget
-from pu_plugin_dockwidget import puPluginDockWidget
+from dockwidget import DockWidget
 import os.path
 
 
@@ -221,7 +221,7 @@ class puPlugin:
             #    removed on close (see self.onClosePlugin method)
             if self.dockwidget == None:
                 # Create the dockwidget (after translation) and keep reference
-                self.dockwidget = puPluginDockWidget()
+                self.dockwidget = DockWidget(self.iface)
 
             # connect to provide cleanup on closing of dockwidget
             self.dockwidget.closingPlugin.connect(self.onClosePlugin)
@@ -230,4 +230,3 @@ class puPlugin:
             # TODO: fix to allow choice of dock location
             self.iface.addDockWidget(Qt.TopDockWidgetArea, self.dockwidget)
             self.dockwidget.show()
-
