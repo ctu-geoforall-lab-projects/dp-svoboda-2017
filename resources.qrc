@@ -1,6 +1,9 @@
 <RCC>
-    <qresource prefix="/plugins/puPlugin" >
-        <file>icon.png</file>
-        <file>data/PAR.qml</file>
+    <qresource>
+        <file alias="icon.png">icon.png</file>
+        <file alias="PAR.qml">data/qml/PAR.qml</file>
+        <file alias="mActionSelectRectangle.svg">data/icons/mActionSelectRectangle.svg</file>
+        <file alias="mActionSelectPolygon.svg">data/icons/mActionSelectPolygon.svg</file>
     </qresource>
 </RCC>
+

@@ -82,7 +82,7 @@ class DockWidget(QDockWidget, ui_DockWidget):
         
         filePath = self.browseVfkLineEdit.text()
         
-        self.loadVfkLabel.setText(u'Načítám data do SQLite databáze.')
+        self.statusLabel.setText(u'Načítám data do SQLite databáze.')
         
         self._enable_load_widgets(False)
         
@@ -142,7 +142,7 @@ class DockWidget(QDockWidget, ui_DockWidget):
         
         Raises:
             The method handles exceptions by displaying error messages
-            in the 'PU Plugin' Log Messages Tab, loadVfkLabel, Message Bar
+            in the 'PU Plugin' Log Messages Tab, statusLabel, Message Bar
             and 'PU Plugin Development' Log Messages Tab.
             
         """
@@ -176,13 +176,13 @@ class DockWidget(QDockWidget, ui_DockWidget):
             
             for i in xrange(layerCount):
                 self.loadVfkProgressBar.setValue(i+1)
-                self.loadVfkLabel.setText(
+                self.statusLabel.setText(
                     u"Načítám {} ({}/{})"
                     .format(layerNames[i], i+1, layerCount))
                 
                 QgsApplication.processEvents()
                 
-            self.loadVfkLabel.setText(u'Data byla úspešně načtena.')
+            self.statusLabel.setText(u'Data byla úspešně načtena.')
         except:
             self._raise_load_error(
                 'Error loading VFK file.',
@@ -196,7 +196,7 @@ class DockWidget(QDockWidget, ui_DockWidget):
         
         Raises:
             The method handles exceptions by displaying error messages
-            in the 'PU Plugin' Log Messages Tab, loadVfkLabel, Message Bar
+            in the 'PU Plugin' Log Messages Tab, statusLabel, Message Bar
             and 'PU Plugin Development' Log Messages Tab.
         
         """
@@ -234,7 +234,7 @@ class DockWidget(QDockWidget, ui_DockWidget):
         
         Raises:
             The method handles exceptions by displaying error messages
-            in the 'PU Plugin' Log Messages Tab, loadVfkLabel, Message Bar
+            in the 'PU Plugin' Log Messages Tab, statusLabel, Message Bar
             and 'PU Plugin Development' Log Messages Tab.
         
         """
@@ -244,7 +244,7 @@ class DockWidget(QDockWidget, ui_DockWidget):
             layer = QgsVectorLayer(composedURI, layerName, 'ogr')
             
             if layer.isValid():
-                style = ':/plugins/puPlugin/data/' + vfkLayerCode + '.qml'
+                style = ':/' + str(vfkLayerCode) + '.qml'
                 layer.loadNamedStyle(style)
                 QgsMapLayerRegistry.instance().addMapLayer(layer)
             else:
@@ -261,21 +261,21 @@ class DockWidget(QDockWidget, ui_DockWidget):
         """Displays error messages.
     
         Displays error messages in the 'puPlugin' Log Messages Panel,
-        loadVfkLabel and Message Bar.
+        statusLabel and Message Bar.
         
         For development purposes it displays traceback
         in the 'puPlugin Development' Log Messages Tab.
         
         Args:
             engLogMsg (str): A message in the 'puPlugin' Log Messages Panel.
-            czeLabelMsg (str): A message in the loadVfkLabel.
+            czeLabelMsg (str): A message in the statusLabel.
             czeLabelMsg (str): A message in the Message Bar.
             duration (int): A duration of the message in the Message Bar
                              in seconds.
         
         Raises:
             The method handles exceptions by displaying error messages
-            in the 'PU Plugin' Log Messages Tab, loadVfkLabel, Message Bar
+            in the 'PU Plugin' Log Messages Tab, statusLabel, Message Bar
             and 'PU Plugin Development' Log Messages Tab.
         
         """
@@ -286,7 +286,7 @@ class DockWidget(QDockWidget, ui_DockWidget):
             czeBarMsg = czeLabelMsg
         
         QgsMessageLog.logMessage(engLogMsg, pluginName)
-        self.loadVfkLabel.setText(czeLabelMsg)
+        self.statusLabel.setText(czeLabelMsg)
         iface.messageBar().pushMessage(
             pluginName, czeBarMsg , QgsMessageBar.WARNING, duration)
         
