@@ -25,7 +25,7 @@ from PyQt4.QtGui import QAction, QIcon, QToolButton
 
 import resources
 
-from dockwidget import DockWidget
+from pu_bin import dockwidget
 import os.path
 
 
@@ -83,7 +83,7 @@ class puPlugin:
         :rtype: QString
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
-        return QCoreApplication.translate('puPlugin', message)
+        return QCoreApplication.translate(u'puPlugin', message)
 
     def add_action(
         self,
@@ -171,7 +171,7 @@ class puPlugin:
             callback=self.run,
             parent=self.iface.mainWindow())
         
-        self.dockWidget = DockWidget(self.iface)
+        self.dockWidget = dockwidget.DockWidget(self.iface)
     
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""

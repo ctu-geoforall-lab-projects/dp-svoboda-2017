@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- DockWidget
+ LoadVfkFrame
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -21,77 +21,126 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtCore import pyqtSignal, pyqtSlot, QFileInfo, QDir, QUuid
-from PyQt4.QtGui import QDockWidget, QFileDialog
+from PyQt4.QtGui import (QFrame, QGridLayout, QLabel, QLineEdit, QPushButton,
+                         QProgressBar, QFileDialog)
+from PyQt4.QtCore import pyqtSignal, QFileInfo, QDir, QUuid
 from PyQt4.QtSql import QSqlDatabase
 
-from qgis.core import *
 from qgis.gui import QgsMessageBar
-from qgis.utils import iface
+from qgis.core import *
 
 from osgeo import ogr
 
 import traceback
 
-from ui_dockwidget import ui_DockWidget
 from load_thread import LoadThread
 
 
-class DockWidget(QDockWidget, ui_DockWidget):
-    """The main widget of the PU Plugin."""
+class LoadVfkFrame(QFrame):
+    """A frame which contains widgets for loading a VFK file."""
     
-    closingPlugin = pyqtSignal()
+    text_browseVfkLineEdit = pyqtSignal(str)
+    value_loadVfkProgressBar = pyqtSignal(int)
     
-    def __init__(self, iface):
+    def __init__(self, parentWidget, dockWidgetName, iface):
         """Constructor.
         
         Args:
-            iface (QgisInterface): A reference to the QgisInterface.
+            parentWidget (QWidget): A reference to the parent widget.
+            dockWidgetName (str): A name of the dock widget.
         
         """
         
+        self.pW = parentWidget
+        self.dW = dockWidgetName
         self.iface = iface
         
-        super(DockWidget, self).__init__()
-        self.setup_ui(self)
+        super(QFrame, self).__init__(self.pW)
         
-        self.loadVfkPushButton.setDisabled(True)
+        self._setup_self()
+    
+    def _setup_self(self):
+        """Sets up self."""
         
-        self.browseVfkPushButton.clicked.connect(
-            self.browseVfkPushButton_clicked)
-        self.loadVfkPushButton.clicked.connect(
-            self.loadVfkPushButton_clicked)
+        self.setObjectName(u'loadVfkFrame')
+        self.setFrameShape(QFrame.StyledPanel)
+        self.setFrameShadow(QFrame.Raised)
+        
+        self.loadVfkGridLayout = QGridLayout(self)
+        self.loadVfkGridLayout.setObjectName(u'loadVfkGridLayout')
+        
+        self._build_widgets()
+    
+    def _build_widgets(self):
+        """Build own widgets."""
+        
+        self.browseVfkLabel = QLabel(self)
+        self.browseVfkLabel.setObjectName(u'browseVfkLabel')
+        self.browseVfkLabel.setText(u'VFK soubor:')
+        self.loadVfkGridLayout.addWidget(self.browseVfkLabel, 0, 0, 1, 1)
+        
+        self.browseVfkLineEdit = QLineEdit(self)
+        self.browseVfkLineEdit.setObjectName(u'browseVfkLineEdit')
+        self.text_browseVfkLineEdit.connect(
+            self._set_text_browseVfkLineEdit)
         self.browseVfkLineEdit.textChanged.connect(
             self.browseVfkLineEdit_textChanged)
+        self.loadVfkGridLayout.addWidget(self.browseVfkLineEdit, 0, 1, 1, 1)
+        
+        self.browseVfkPushButton = QPushButton(self)
+        self.browseVfkPushButton.setObjectName(u'browseVfkPushButton')
+        self.browseVfkPushButton.clicked.connect(
+            self.browseVfkPushButton_clicked)
+        self.browseVfkPushButton.setText(u'Procházet')
+        self.loadVfkGridLayout.addWidget(self.browseVfkPushButton, 0, 2, 1, 1)
+        
+        self.loadVfkProgressBar = QProgressBar(self)
+        self.loadVfkProgressBar.setObjectName(u'loadVfkProgressBar')
+        self.value_loadVfkProgressBar.connect(
+            self._set_value_loadVfkProgressBar)
+        self.value_loadVfkProgressBar.emit(0)
+        self.loadVfkGridLayout.addWidget(self.loadVfkProgressBar, 1, 0, 1, 2)
+        
+        self.loadVfkPushButton = QPushButton(self)
+        self.loadVfkPushButton.setObjectName(u'loadVfkPushButton')
+        self.loadVfkPushButton.clicked.connect(self.loadVfkPushButton_clicked)
+        self.loadVfkPushButton.setText(u'Načíst')
+        self.loadVfkGridLayout.addWidget(self.loadVfkPushButton, 1, 2, 1, 1)
+        self.loadVfkPushButton.setDisabled(True)
+        
+    def _set_text_browseVfkLineEdit(self, text):
+        """Sets text.
+        
+        Args:
+            text (str): A text to be written.
+        
+        """
+        
+        self.browseVfkLineEdit.setText(text)
+    
+    def _set_value_loadVfkProgressBar(self, value):
+        """Sets a value to the progress bar.
+        
+        Args:
+            text (str): A value to be set.
+        
+        """
+        
+        self.loadVfkProgressBar.setValue(value)
     
     def browseVfkPushButton_clicked(self):
         """Opens a file dialog and filters VFK files."""
         
         filePath = QFileDialog.getOpenFileName(
-            self, u'Vyberte soubor VFK',
+            self.pW, u'Načíst',
             self.browseVfkLineEdit.text(),
-            '.vfk (*.vfk)')
+            u'.vfk (*.vfk)')
         
         if not filePath:
             return
         
-        self.browseVfkLineEdit.setText(filePath)
+        self._set_text_browseVfkLineEdit.emit(filePath)
     
-    def loadVfkPushButton_clicked(self):
-        """Starts loading the selected VFK file in a separate thread."""
-        
-        filePath = self.browseVfkLineEdit.text()
-        
-        self.statusLabel.setText(u'Načítám data do SQLite databáze.')
-        
-        self._enable_load_widgets(False)
-        
-        QgsApplication.processEvents()
-        
-        self.loadThread = LoadThread(filePath)
-        self.loadThread.work.connect(self.run_loading_vfk_layer)
-        self.loadThread.start()
-        
     def browseVfkLineEdit_textChanged(self):
         """Checks if the text in browseVfkLineEdit is a path to valid VFK file.
         
@@ -108,6 +157,22 @@ class DockWidget(QDockWidget, ui_DockWidget):
         else:
             self.loadVfkPushButton.setEnabled(False)
     
+    def loadVfkPushButton_clicked(self):
+        """Starts loading the selected VFK file in a separate thread."""
+        
+        filePath = self.browseVfkLineEdit.text()
+        
+        self.pW.statusLabel.text_statusLabel.emit(
+            u'Načítám data do SQLite databáze.')
+        
+        self._enable_load_widgets(False)
+        
+        QgsApplication.processEvents()
+        
+        self.loadThread = LoadThread(filePath)
+        self.loadThread.work.connect(self.run_loading_vfk_layer)
+        self.loadThread.start()
+    
     def run_loading_vfk_layer(self, filePath):
         """Calls methods for loading a VFK layer.
         
@@ -118,7 +183,7 @@ class DockWidget(QDockWidget, ui_DockWidget):
         
         """
         
-        self.loadVfkProgressBar.setValue(0)
+        self.value_loadVfkProgressBar.emit(0)
         
         fileInfo = QFileInfo(filePath)
         dbName = QDir(
@@ -144,7 +209,7 @@ class DockWidget(QDockWidget, ui_DockWidget):
             The method handles exceptions by displaying error messages
             in the 'PU Plugin' Log Messages Tab, statusLabel, Message Bar
             and 'PU Plugin Development' Log Messages Tab.
-            
+        
         """
         
         try:
@@ -162,9 +227,9 @@ class DockWidget(QDockWidget, ui_DockWidget):
             
             if 'PAR' not in layerNames:
                 self._raise_load_error(
-                    'VFK file does not contain PAR layer, therefore it '
-                    'can not be loaded by PU Plugin. '
-                    'The file can be loaded by "Add Vector Layer"',
+                    u'VFK file does not contain PAR layer, therefore it '
+                    u'can not be loaded by PU Plugin. '
+                    u'The file can be loaded by "Add Vector Layer"',
                     u'VFK soubor neobsahuje vrstvu parcel.',
                     u'VFK soubor neobsahuje vrstvu parcel, '
                     u'proto nemůže být pomocí PU Pluginu načten. '
@@ -175,17 +240,18 @@ class DockWidget(QDockWidget, ui_DockWidget):
             self.loadVfkProgressBar.setRange(0, layerCount)
             
             for i in xrange(layerCount):
-                self.loadVfkProgressBar.setValue(i+1)
-                self.statusLabel.setText(
-                    u"Načítám {} ({}/{})"
+                self.value_loadVfkProgressBar.emit(i+1)
+                self.pW.statusLabel.text_statusLabel.emit(
+                    u'Načítám {} ({}/{})'
                     .format(layerNames[i], i+1, layerCount))
                 
                 QgsApplication.processEvents()
                 
-            self.statusLabel.setText(u'Data byla úspešně načtena.')
+            self.pW.statusLabel.text_statusLabel.emit(
+                u'Data byla úspešně načtena.')
         except:
             self._raise_load_error(
-                'Error loading VFK file.',
+                u'Error loading VFK file.',
                 u'Chyba při načítání VFK souboru.')
     
     def _open_database(self, dbName):
@@ -204,7 +270,7 @@ class DockWidget(QDockWidget, ui_DockWidget):
         try:
             if not QSqlDatabase.isDriverAvailable('QSQLITE'):
                 self._raise_load_error(
-                    'SQLITE database driver is not available.',
+                    u'SQLITE database driver is not available.',
                     u'Databázový ovladač QSQLITE není dostupný.')
                 return
             
@@ -214,18 +280,18 @@ class DockWidget(QDockWidget, ui_DockWidget):
             
             if not db.open():
                 self._raise_load_error(
-                    'Database connection failed.',
+                    u'Database connection failed.',
                     u'Nepodařilo se připojit k databázi.')
         except:
             self._raise_load_error(
-                'Error opening database connection.',
+                u'Error opening database connection.',
                 u'Chyba při otevírání databáze.')
     
     def _load_vfk_layer(self, filePath, vfkLayerCode, layerName):
         """Loads a layer of the given code from VFK file into the map canvas.
         
         Also sets symbology according
-        to "/plugins/puPlugin/data/<vfkLayerCode>.qml" file.
+        to "/plugins/puPlugin/data/qml/<vfkLayerCode>.qml" file.
         
         Args:
             filePath (str): A full path to the file.
@@ -249,11 +315,11 @@ class DockWidget(QDockWidget, ui_DockWidget):
                 QgsMapLayerRegistry.instance().addMapLayer(layer)
             else:
                 self._raise_load_error(
-                    'Layer {} is not valid.'.format(vfkLayerCode),
+                    u'Layer {} is not valid.'.format(vfkLayerCode),
                     u'Vrstva {} není platná.'.format(vfkLayerCode))
         except:
             self._raise_load_error(
-                    'Error loading {} layer.'.format(vfkLayerCode),
+                    u'Error loading {} layer.'.format(vfkLayerCode),
                     u'Chyba při načítání vrsty {}.'.format(vfkLayerCode))
     
     def _raise_load_error(
@@ -280,17 +346,17 @@ class DockWidget(QDockWidget, ui_DockWidget):
         
         """
         
-        pluginName = 'PU Plugin'
+        pluginName = u'PU Plugin'
         
         if czeBarMsg is None:
             czeBarMsg = czeLabelMsg
         
         QgsMessageLog.logMessage(engLogMsg, pluginName)
-        self.statusLabel.setText(czeLabelMsg)
-        iface.messageBar().pushMessage(
+        self.pW.statusLabel.text_statusLabel.emit(czeLabelMsg)
+        self.iface.messageBar().pushMessage(
             pluginName, czeBarMsg , QgsMessageBar.WARNING, duration)
         
-        developmentTb = 'PU Plugin Development'
+        developmentTb = u'PU Plugin Development'
         tb = traceback.format_exc()
         
         if 'None' not in tb:
@@ -312,8 +378,4 @@ class DockWidget(QDockWidget, ui_DockWidget):
         self.browseVfkLineEdit.setEnabled(enableBool)
         self.browseVfkPushButton.setEnabled(enableBool)
         self.loadVfkPushButton.setEnabled(enableBool)
-    
-    def closeEvent(self, event):
-        self.closingPlugin.emit()
-        event.accept()
 
