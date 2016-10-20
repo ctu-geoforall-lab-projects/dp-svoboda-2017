@@ -180,6 +180,8 @@ class puPlugin:
             self.iface.removePluginMenu(u'&PU Plugin', action)
             self.iface.removePluginMenu(self.menu, action)
             self.iface.removeToolBarIcon(action)
+        
+        self.iface.removeDockWidget(self.dockWidget)
     
     def run(self):
         """Show the dockWidget if visible, otherwise hides the dockWidget."""
