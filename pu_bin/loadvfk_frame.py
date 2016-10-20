@@ -382,8 +382,8 @@ class LoadVfkFrame(QFrame):
         self.loadVfkPushButton.setEnabled(enableBool)
     
     def _last_used_path(self):
-        return QSettings().value('puPlugin/lastVfkFilePath', '.')
+        return QSettings().value('puplugin/lastVfkFilePath', '.')
     
     def _set_last_used_path(self, value):
-        QSettings().setValue('puPlugin/lastVfkFilePath', value)
+        QSettings().setValue('puplugin/lastVfkFilePath', value)
 
