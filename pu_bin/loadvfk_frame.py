@@ -139,7 +139,7 @@ class LoadVfkFrame(QFrame):
         if not filePath:
             return
         
-        self._set_text_browseVfkLineEdit.emit(filePath)
+        self.text_browseVfkLineEdit.emit(filePath)
     
     def browseVfkLineEdit_textChanged(self):
         """Checks if the text in browseVfkLineEdit is a path to valid VFK file.
