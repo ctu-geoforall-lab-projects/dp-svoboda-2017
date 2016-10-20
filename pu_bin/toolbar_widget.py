@@ -23,7 +23,9 @@
 
 from PyQt4.QtGui import (QWidget, QHBoxLayout, QHBoxLayout, QToolBar, QAction,
                          QIcon, QPixmap)
-from PyQt4.QtCore import QSize
+from PyQt4.QtCore import QSize, pyqtSignal, pyqtSlot, SIGNAL, SLOT
+
+from qgis.core import *
 
 
 class ToolBarWidget(QWidget):
@@ -61,12 +63,22 @@ class ToolBarWidget(QWidget):
         
         self.toolBar = QToolBar(self)
         self.toolBar.setObjectName(u'toolBar')
-        self.toolBar.resize(QSize(100, 40))
-        self.toolBar.setIconSize(QSize(26, 26))
+        self.toolBar.resize(QSize(24, 24))
+        self.toolBar.setIconSize(QSize(24, 24))
         self.toolBarHBoxLayout.addWidget(self.toolBar)
         
         self.selectRectangleAction = QAction(self.toolBar)
         self.selectRectangleAction.setObjectName(u'selectRectangleAction')
+        self.actionSelectRectangle = self.iface.actionSelectRectangle()
+        self.actionSelectRectangle.changed.connect(
+            self._change_selectRectangleAction)
+        self.selectRectangleAction.triggered.connect(
+            self._trigger_selectRectangleAction)
+        self.selectRectangleAction.setCheckable(True)
+        if self.actionSelectRectangle.isChecked():
+            self.selectRectangleAction.setChecked(True)
+        if not self.actionSelectRectangle.isEnabled():
+            self.selectRectangleAction.setDisabled(True)
         selectRectangleIcon = QIcon()
         selectRectangleIcon.addPixmap(QPixmap(':/mActionSelectRectangle.svg'))
         self.selectRectangleAction.setIcon(selectRectangleIcon)
@@ -74,8 +86,62 @@ class ToolBarWidget(QWidget):
         
         self.selectPolygonAction = QAction(self.toolBar)
         self.selectPolygonAction.setObjectName(u'selectPolygonAction')
+        self.actionSelectPolygon = self.iface.actionSelectPolygon()
+        self.actionSelectPolygon.changed.connect(
+            self._change_selectPolygonAction)
+        self.selectPolygonAction.triggered.connect(
+            self._trigger_selectPolygonAction)
+        self.selectPolygonAction.setCheckable(True)
+        if self.actionSelectPolygon.isChecked():
+            self.selectPolygonAction.setChecked(True)
+        if not self.actionSelectPolygon.isEnabled():
+            self.selectPolygonAction.setDisabled(True)
         selectPolygonIcon = QIcon()
         selectPolygonIcon.addPixmap(QPixmap(':/mActionSelectPolygon.svg'))
         self.selectPolygonAction.setIcon(selectPolygonIcon)
         self.toolBar.addAction(self.selectPolygonAction)
+    
+    def _change_selectRectangleAction(self):
+        """Sets selectRectangleAction based on QGIS actionSelectRectangle."""
+        
+        if self.actionSelectRectangle.isEnabled():
+            self.selectRectangleAction.setEnabled(True)
+        else:
+            self.selectRectangleAction.setDisabled(True)
+        
+        if self.actionSelectRectangle.isChecked():
+            self.selectRectangleAction.setChecked(True)
+        else:
+            self.selectRectangleAction.setChecked(False)
+    
+    def _trigger_selectRectangleAction(self):
+        """Triggers select by rectangle."""
+        
+        if not self.selectRectangleAction.isChecked():
+            self.selectRectangleAction.setChecked(True)
+            
+        if not self.actionSelectRectangle.isChecked():
+            self.actionSelectRectangle.trigger()
+    
+    def _change_selectPolygonAction(self):
+        """Sets selectPolygonAction based on QGIS actionSelectPolygon."""
+        
+        if self.actionSelectPolygon.isEnabled():
+            self.selectPolygonAction.setEnabled(True)
+        else:
+            self.selectPolygonAction.setDisabled(True)
+        
+        if self.actionSelectPolygon.isChecked():
+            self.selectPolygonAction.setChecked(True)
+        else:
+            self.selectPolygonAction.setChecked(False)
+    
+    def _trigger_selectPolygonAction(self):
+        """Triggers select by polygon."""
+        
+        if not self.selectPolygonAction.isChecked():
+            self.selectPolygonAction.setChecked(True)
+        
+        if not self.actionSelectPolygon.isChecked():
+            self.actionSelectPolygon.trigger()
 
