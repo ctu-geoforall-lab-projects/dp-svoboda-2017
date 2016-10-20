@@ -23,7 +23,7 @@
 
 from PyQt4.QtGui import (QFrame, QGridLayout, QLabel, QLineEdit, QPushButton,
                          QProgressBar, QFileDialog)
-from PyQt4.QtCore import pyqtSignal, QFileInfo, QDir, QUuid
+from PyQt4.QtCore import pyqtSignal, QFileInfo, QDir, QUuid, QSettings
 from PyQt4.QtSql import QSqlDatabase
 
 from qgis.gui import QgsMessageBar
@@ -133,11 +133,13 @@ class LoadVfkFrame(QFrame):
         
         filePath = QFileDialog.getOpenFileName(
             self.pW, u'Načíst',
-            self.browseVfkLineEdit.text(),
+            self._last_used_path(),
             u'.vfk (*.vfk)')
         
         if not filePath:
             return
+        
+        self._set_last_used_path(filePath)
         
         self.text_browseVfkLineEdit.emit(filePath)
     
@@ -378,4 +380,10 @@ class LoadVfkFrame(QFrame):
         self.browseVfkLineEdit.setEnabled(enableBool)
         self.browseVfkPushButton.setEnabled(enableBool)
         self.loadVfkPushButton.setEnabled(enableBool)
+    
+    def _last_used_path(self):
+        return QSettings().value('puPlugin/lastVfkFilePath', '.')
+    
+    def _set_last_used_path(self, value):
+        QSettings().setValue('puPlugin/lastVfkFilePath', value)
 
