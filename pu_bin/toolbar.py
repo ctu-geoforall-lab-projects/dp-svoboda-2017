@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- ToolBarWidget
+ Toolbar
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -21,21 +21,21 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import (QWidget, QHBoxLayout, QHBoxLayout, QToolBar, QAction,
+from PyQt4.QtGui import (QHBoxLayout, QHBoxLayout, QToolBar, QAction,
                          QIcon, QPixmap)
 from PyQt4.QtCore import QSize, pyqtSignal, pyqtSlot, SIGNAL, SLOT
 
 from qgis.core import *
 
 
-class ToolBarWidget(QWidget):
+class Toolbar(QToolBar):
     """A widget which contains tools."""
     
     def __init__(self, parentWidget, dockWidgetName, iface):
         """Constructor.
         
         Args:
-            parentWidget (QWidget): A reference to the parent widget.
+            parentWidget (QToolBar): A reference to the parent widget.
             dockWidgetName (str): A name of the dock widget.
         
         """
@@ -44,14 +44,15 @@ class ToolBarWidget(QWidget):
         self.dW = dockWidgetName
         self.iface = iface
         
-        super(QWidget, self).__init__(self.pW)
+        super(QToolBar, self).__init__(self.pW)
         
         self._setup_self()
     
     def _setup_self(self):
         """Sets up self."""
         
-        self.setObjectName(u'toolBarWidget')
+        self.setObjectName(u'toolBar')
+        self.setIconSize(QSize(24, 24))
         
         self.toolBarHBoxLayout = QHBoxLayout(self)
         self.toolBarHBoxLayout.setObjectName(u'toolBarHBoxLayout')
@@ -61,13 +62,7 @@ class ToolBarWidget(QWidget):
     def _build_widgets(self):
         """Build own widgets."""
         
-        self.toolBar = QToolBar(self)
-        self.toolBar.setObjectName(u'toolBar')
-        self.toolBar.resize(QSize(24, 24))
-        self.toolBar.setIconSize(QSize(24, 24))
-        self.toolBarHBoxLayout.addWidget(self.toolBar)
-        
-        self.selectRectangleAction = QAction(self.toolBar)
+        self.selectRectangleAction = QAction(self)
         self.selectRectangleAction.setObjectName(u'selectRectangleAction')
         self.actionSelectRectangle = self.iface.actionSelectRectangle()
         self.actionSelectRectangle.changed.connect(
@@ -82,9 +77,9 @@ class ToolBarWidget(QWidget):
         selectRectangleIcon = QIcon()
         selectRectangleIcon.addPixmap(QPixmap(':/mActionSelectRectangle.svg'))
         self.selectRectangleAction.setIcon(selectRectangleIcon)
-        self.toolBar.addAction(self.selectRectangleAction)
+        self.addAction(self.selectRectangleAction)
         
-        self.selectPolygonAction = QAction(self.toolBar)
+        self.selectPolygonAction = QAction(self)
         self.selectPolygonAction.setObjectName(u'selectPolygonAction')
         self.actionSelectPolygon = self.iface.actionSelectPolygon()
         self.actionSelectPolygon.changed.connect(
@@ -99,7 +94,7 @@ class ToolBarWidget(QWidget):
         selectPolygonIcon = QIcon()
         selectPolygonIcon.addPixmap(QPixmap(':/mActionSelectPolygon.svg'))
         self.selectPolygonAction.setIcon(selectPolygonIcon)
-        self.toolBar.addAction(self.selectPolygonAction)
+        self.addAction(self.selectPolygonAction)
     
     def _change_selectRectangleAction(self):
         """Sets selectRectangleAction based on QGIS actionSelectRectangle."""
