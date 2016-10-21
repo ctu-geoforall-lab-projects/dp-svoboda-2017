@@ -172,6 +172,8 @@ class puPlugin:
             parent=self.iface.mainWindow())
         
         self.dockWidget = dockwidget.DockWidget(self.iface)
+        
+        self.iface.addDockWidget(Qt.TopDockWidgetArea, self.dockWidget)
     
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
@@ -187,7 +189,6 @@ class puPlugin:
         """Show the dockWidget if visible, otherwise hides the dockWidget."""
         
         if not self.dockWidget.isVisible():
-            self.iface.addDockWidget(Qt.TopDockWidgetArea, self.dockWidget)
             self.dockWidget.show()
         else:
             self.dockWidget.hide()

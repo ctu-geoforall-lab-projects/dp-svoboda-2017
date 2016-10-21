@@ -52,7 +52,7 @@ class Toolbar(QToolBar):
         """Sets up self."""
         
         self.setObjectName(u'toolBar')
-        self.setIconSize(QSize(24, 24))
+        self.setIconSize(self.iface.mainWindow().iconSize())
         
         self.toolBarHBoxLayout = QHBoxLayout(self)
         self.toolBarHBoxLayout.setObjectName(u'toolBarHBoxLayout')
