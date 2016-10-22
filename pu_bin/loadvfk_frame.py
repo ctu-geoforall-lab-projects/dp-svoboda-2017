@@ -387,14 +387,24 @@ class LoadVfkFrame(QFrame):
         self.loadVfkPushButton.setEnabled(enableBool)
     
     def _last_used_path(self):
-        """Gets last used path for file dialog."""
+        """Gets last used path for file dialog.
+                
+        Returns:
+            str: A last used path.
+        
+        """
         
         return QSettings().value('puplugin/lastVfkFilePath', '.')
     
-    def _set_last_used_path(self, value):
-        """Sets last used path for file dialog."""
+    def _set_last_used_path(self, path):
+        """Sets last used path for file dialog.
         
-        QSettings().setValue('puplugin/lastVfkFilePath', value)
+        Args:
+            path (str): A path to be set.
+        
+        """
+        
+        QSettings().setValue('puplugin/lastVfkFilePath', path)
     
     def _set_options(self):
         """Sets topological editing enabled."""
