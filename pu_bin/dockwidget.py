@@ -47,12 +47,7 @@ class DockWidget(QDockWidget):
         dockWidgetName = u'dockWidget'
         
         self._setup_self(dockWidgetName)
-        
-#         self.loadVfkPushButton.clicked.connect(
-#             self.loadVfkPushButton_clicked)
-#         self.browseVfkLineEdit.textChanged.connect(
-#             self.browseVfkLineEdit_textChanged)
-    
+       
     def _setup_self(self, dockWidgetName):
         """Sets up self.
         
