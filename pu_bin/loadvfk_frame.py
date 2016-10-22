@@ -293,7 +293,8 @@ class LoadVfkFrame(QFrame):
         """Loads a layer of the given code from VFK file into the map canvas.
         
         Also sets symbology according
-        to "/plugins/puPlugin/data/qml/<vfkLayerCode>.qml" file.
+        to "/plugins/puPlugin/data/qml/<vfkLayerCode>.qml" file and enables
+        snapping.
         
         Args:
             filePath (str): A full path to the file.
@@ -315,6 +316,10 @@ class LoadVfkFrame(QFrame):
                 style = ':/' + str(vfkLayerCode) + '.qml'
                 layer.loadNamedStyle(style)
                 QgsMapLayerRegistry.instance().addMapLayer(layer)
+                
+                QgsProject.instance().setSnapSettingsForLayer(
+                    layer.id(), True, 2, 1, 10, True)
+                self._set_options()
             else:
                 self._raise_load_error(
                     u'Layer {} is not valid.'.format(vfkLayerCode),
@@ -386,4 +391,9 @@ class LoadVfkFrame(QFrame):
     
     def _set_last_used_path(self, value):
         QSettings().setValue('puplugin/lastVfkFilePath', value)
+    
+    def _set_options(self):
+        """Sets topological editing enabled."""
+        
+        QgsProject.instance().setTopologicalEditing(True)
 
