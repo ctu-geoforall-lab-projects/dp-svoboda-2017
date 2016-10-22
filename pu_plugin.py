@@ -34,11 +34,10 @@ class puPlugin:
 
     def __init__(self, iface):
         """Constructor.
-
-        :param iface: An interface instance that will be passed to this class
-            which provides the hook by which you can manipulate the QGIS
-            application at run time.
-        :type iface: QgsInterface
+        
+        Args:
+            iface (QgisInterface): A reference to the QgisInterface.
+        
         """
         
         self.iface = iface
@@ -72,67 +71,47 @@ class puPlugin:
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
-        """Get the translation for a string using Qt translation API.
-
+        """Gets the translation for a string using Qt translation API.
+        
         We implement this ourselves since we do not inherit QObject.
-
-        :param message: String for translation.
-        :type message: str, QString
-
-        :returns: Translated version of message.
-        :rtype: QString
+        
+        Args:
+            message (str): String for translation.
+        
+        Returns:
+            QString: Translated version of message.
+        
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
         return QCoreApplication.translate(u'puPlugin', message)
 
     def add_action(
-        self,
-        icon_path,
-        text,
-        callback,
-        enabled_flag=True,
-        add_to_menu=True,
-        add_to_toolbar=True,
-        status_tip=None,
-        whats_this=None,
-        parent=None):
-        """Add a toolbar icon to the toolbar.
+            self, icon_path, text, callback,
+            enabled_flag=True, add_to_menu=True, add_to_toolbar=True,
+            status_tip=None, whats_this=None, parent=None):
+        """Adds a toolbar icon to the toolbar.
 
-        :param icon_path: Path to the icon for this action. Can be a resource
-            path (e.g. ':/plugins/foo/bar.png') or a normal file system path.
-        :type icon_path: str
-
-        :param text: Text that should be shown in menu items for this action.
-        :type text: str
-
-        :param callback: Function to be called when the action is triggered.
-        :type callback: function
-
-        :param enabled_flag: A flag indicating if the action should be enabled
-            by default. Defaults to True.
-        :type enabled_flag: bool
-
-        :param add_to_menu: Flag indicating whether the action should also
-            be added to the menu. Defaults to True.
-        :type add_to_menu: bool
-
-        :param add_to_toolbar: Flag indicating whether the action should also
-            be added to the toolbar. Defaults to True.
-        :type add_to_toolbar: bool
-
-        :param status_tip: Optional text to show in a popup when mouse pointer
-            hovers over the action.
-        :type status_tip: str
-
-        :param parent: Parent widget for the new action. Defaults None.
-        :type parent: QWidget
-
-        :param whats_this: Optional text to show in the status bar when the
-            mouse pointer hovers over the action.
-
-        :returns: The action that was created. Note that the action is also
-            added to self.actions list.
-        :rtype: QAction
+        Args:
+            icon_path (str): Path to the icon for this action.
+            text (str): Text that should be shown in menu items for this action.
+            callback (function): Function to be called when the action is
+                triggered.
+            enabled_flag (bool): A flag indicating if the action should be
+                enabled by default. Defaults to True.
+            add_to_menu (bool): Flag indicating whether the action should also
+                be added to the menu. Defaults to True.
+            add_to_toolbar (bool): Flag indicating whether the action should
+                also be added to the toolbar. Defaults to True.
+            status_tip (str): Optional text to show in a popup when mouse
+                pointer hovers over the action.
+            parent (QWidget): Parent widget for the new action. Defaults None.
+            whats_this (str): Optional text to show in the status bar when the
+                mouse pointer hovers over the action.
+        
+        Returns:
+            QAction: The action that was created. Note that the action is also
+                added to self.actions list.
+        
         """
 
         icon = QIcon(icon_path)
