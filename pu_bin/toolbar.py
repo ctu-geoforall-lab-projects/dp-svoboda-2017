@@ -21,8 +21,7 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import (QHBoxLayout, QHBoxLayout, QToolBar, QAction,
-                         QIcon, QPixmap)
+from PyQt4.QtGui import (QToolBar, QToolButton, QAction, QIcon, QPixmap)
 from PyQt4.QtCore import QSize, pyqtSignal, pyqtSlot, SIGNAL, SLOT
 
 from qgis.core import *
@@ -54,19 +53,55 @@ class Toolbar(QToolBar):
         self.setObjectName(u'toolBar')
         self.setIconSize(self.iface.mainWindow().iconSize())
         
-        self.toolBarHBoxLayout = QHBoxLayout(self)
-        self.toolBarHBoxLayout.setObjectName(u'toolBarHBoxLayout')
-        
         self._build_widgets()
     
     def _build_widgets(self):
         """Build own widgets."""
         
+        self.selectToolButton = QToolButton(self)
+        self.selectToolButton.setPopupMode(1)
+        
         self.selectRectangleAction = self.iface.actionSelectRectangle()
         self.selectRectangleAction.setObjectName(u'selectRectangleAction')
-        self.addAction(self.selectRectangleAction)
+        self.selectToolButton.addAction(self.selectRectangleAction)
         
         self.selectPolygonAction = self.iface.actionSelectPolygon()
         self.selectPolygonAction.setObjectName(u'selectPolygonAction')
-        self.addAction(self.selectPolygonAction)
+        self.selectToolButton.addAction(self.selectPolygonAction)
+        
+        self.selectFreehandAction = self.iface.actionSelectFreehand()
+        self.selectFreehandAction.setObjectName(u'selectFreehandAction')
+        self.selectToolButton.addAction(self.selectFreehandAction)
+        
+        self.selectRadiusAction = self.iface.actionSelectRadius()
+        self.selectRadiusAction.setObjectName(u'selectRadiusAction')
+        self.selectToolButton.addAction(self.selectRadiusAction)
+        
+        for action in self.iface.attributesToolBar().actions():
+            if action.objectName() == 'ActionSelect':
+                self.qgisSelectToolButton = action.defaultWidget()
+                break
+        
+        self.selectToolButton.setDefaultAction(
+            self.qgisSelectToolButton.defaultAction())
+        
+        self.qgisSelectToolButton.toggled.connect(
+            self._set_default_action_selectToolButton)
+        
+        self.insertWidget(
+            self.qgisSelectToolButton.defaultAction(),
+            self.selectToolButton)
+        
+        for action in self.iface.attributesToolBar().actions(): 
+            if action.objectName() == 'mActionDeselectAll':
+                self.deselectAllAction = action
+                break
+        
+        self.addAction(self.deselectAllAction)
+    
+    def _set_default_action_selectToolButton(self):
+        """Sets selectToolButton's default action."""
+        
+        self.selectToolButton.setDefaultAction(
+            self.qgisSelectToolButton.defaultAction())
 
