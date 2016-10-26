@@ -26,7 +26,7 @@ from PyQt4.QtCore import QMetaObject
 
 from status_label import StatusLabel
 from toolbar import Toolbar
-from loadvfk_frame import LoadVfkFrame
+from stackedwidget import StackedWidget
 
 
 class DockWidget(QDockWidget):
@@ -81,8 +81,8 @@ class DockWidget(QDockWidget):
         self.toolbar = Toolbar(self, dockWidgetName, self.iface)
         self.mainGridLayout.addWidget(self.toolbar, 0, 0, 1, 1)
         
-        self.loadVfkFrame = LoadVfkFrame(self, dockWidgetName, self.iface)
-        self.mainGridLayout.addWidget(self.loadVfkFrame, 1, 0, 1, 1)
+        self.stackedWidget = StackedWidget(self, dockWidgetName, self.iface)
+        self.mainGridLayout.addWidget(self.stackedWidget, 1, 0, 1, 1)
         
         self.statusLabel = StatusLabel(self, dockWidgetName, self.iface)
         self.mainGridLayout.addWidget(self.statusLabel, 2, 0, 1, 1)

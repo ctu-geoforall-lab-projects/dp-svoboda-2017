@@ -21,8 +21,8 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import (QToolBar, QToolButton, QAction, QIcon, QPixmap)
-from PyQt4.QtCore import QSize, pyqtSignal, pyqtSlot, SIGNAL, SLOT
+from PyQt4.QtGui import (QToolBar, QToolButton, QAction, QIcon, QPixmap,
+                         QActionGroup)
 
 from qgis.core import *
 
@@ -39,11 +39,11 @@ class Toolbar(QToolBar):
         
         """
         
-        self.pW = parentWidget
-        self.dW = dockWidgetName
+        self.dW = parentWidget
+        self.dWName = dockWidgetName
         self.iface = iface
         
-        super(QToolBar, self).__init__(self.pW)
+        super(QToolBar, self).__init__(self.dW)
         
         self._setup_self()
     
@@ -57,6 +57,29 @@ class Toolbar(QToolBar):
     
     def _build_widgets(self):
         """Build own widgets."""
+        
+        self.openTabActionGroup = QActionGroup(self)
+        
+        self.loadVfkAction = QAction(self)
+        self.loadVfkAction.setObjectName(u'loadVfkAction')
+        self.loadVfkAction.setCheckable(True)
+        loadVfkIcon = QIcon()
+        loadVfkIcon.addPixmap(QPixmap(':/db.png'))
+        self.loadVfkAction.setIcon(loadVfkIcon)
+        self.openTabActionGroup.addAction(self.loadVfkAction)
+        self.addAction(self.loadVfkAction)
+        self.loadVfkAction.trigger()
+        
+        self.checkAction = QAction(self)
+        self.checkAction.setObjectName(u'checkAction')
+        self.checkAction.setCheckable(True)
+        checkIcon = QIcon()
+        checkIcon.addPixmap(QPixmap(':/check.png'))
+        self.checkAction.setIcon(checkIcon)
+        self.openTabActionGroup.addAction(self.checkAction)
+        self.addAction(self.checkAction)
+        
+        self.addSeparator()
         
         self.selectToolButton = QToolButton(self)
         self.selectToolButton.setPopupMode(1)

@@ -42,18 +42,20 @@ class LoadVfkFrame(QFrame):
     text_browseVfkLineEdit = pyqtSignal(str)
     value_loadVfkProgressBar = pyqtSignal(int)
     
-    def __init__(self, parentWidget, dockWidgetName, iface):
+    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
         """Constructor.
         
         Args:
             parentWidget (QWidget): A reference to the parent widget.
             dockWidgetName (str): A name of the dock widget.
+            dockWidget (QWidget): A reference to the dock widget.
         
         """
         
         self.pW = parentWidget
-        self.dW = dockWidgetName
+        self.dWName = dockWidgetName
         self.iface = iface
+        self.dW = dockWidget
         
         super(QFrame, self).__init__(self.pW)
         
@@ -132,7 +134,7 @@ class LoadVfkFrame(QFrame):
         """Opens a file dialog and filters VFK files."""
         
         filePath = QFileDialog.getOpenFileName(
-            self.pW, u'Načíst',
+            self.dW, u'Načíst',
             self._last_used_path(),
             u'.vfk (*.vfk)')
         
@@ -164,7 +166,7 @@ class LoadVfkFrame(QFrame):
         
         filePath = self.browseVfkLineEdit.text()
         
-        self.pW.statusLabel.text_statusLabel.emit(
+        self.dW.statusLabel.text_statusLabel.emit(
             u'Načítám data do SQLite databáze.')
         
         self._enable_load_widgets(False)
@@ -243,13 +245,13 @@ class LoadVfkFrame(QFrame):
             
             for i in xrange(layerCount):
                 self.value_loadVfkProgressBar.emit(i+1)
-                self.pW.statusLabel.text_statusLabel.emit(
+                self.dW.statusLabel.text_statusLabel.emit(
                     u'Načítám {} ({}/{})'
                     .format(layerNames[i], i+1, layerCount))
                 
                 QgsApplication.processEvents()
                 
-            self.pW.statusLabel.text_statusLabel.emit(
+            self.dW.statusLabel.text_statusLabel.emit(
                 u'Data byla úspešně načtena.')
         except:
             self._raise_load_error(
@@ -359,7 +361,7 @@ class LoadVfkFrame(QFrame):
             czeBarMsg = czeLabelMsg
         
         QgsMessageLog.logMessage(engLogMsg, pluginName)
-        self.pW.statusLabel.text_statusLabel.emit(czeLabelMsg)
+        self.dW.statusLabel.text_statusLabel.emit(czeLabelMsg)
         self.iface.messageBar().pushMessage(
             pluginName, czeBarMsg , QgsMessageBar.WARNING, duration)
         

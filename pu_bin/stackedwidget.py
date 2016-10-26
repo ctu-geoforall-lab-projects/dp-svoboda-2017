@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- StatusLabel
+ StackedWidget
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -21,20 +21,21 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QLabel
-from PyQt4.QtCore import pyqtSignal
+from PyQt4.QtGui import QStackedWidget
+from PyQt4.QtCore import QSignalMapper
+
+from loadvfk_frame import LoadVfkFrame
+from check_frame import CheckFrame
 
 
-class StatusLabel(QLabel):
-    """A label for displaying messages."""
-    
-    text_statusLabel = pyqtSignal(str)
+class StackedWidget(QStackedWidget):
+    """A stacked widget that stores several other widgets."""
     
     def __init__(self, parentWidget, dockWidgetName, iface):
         """Constructor.
         
         Args:
-            parentWidget (QWidget): A reference to the parent widget.
+            parentWidget (QToolBar): A reference to the parent widget.
             dockWidgetName (str): A name of the dock widget.
         
         """
@@ -43,25 +44,33 @@ class StatusLabel(QLabel):
         self.dWName = dockWidgetName
         self.iface = iface
         
-        super(QLabel, self).__init__(self.dW)
+        super(QStackedWidget, self).__init__(self.dW)
         
         self._setup_self()
     
     def _setup_self(self):
         """Sets up self."""
         
-        self.setObjectName(u'statusLabel')
-        self.text_statusLabel.connect(self._set_text_statusLabel)
-        self.text_statusLabel.emit(u'Vyberte VFK soubor.')
-    
-    def _set_text_statusLabel(self, text):
-        """Sets text.
+        self.setObjectName(u'stackedWidget')
         
-        Args:
-            text (str): A text to be written.
+        self.openTabSignalMapper = QSignalMapper(self)
         
-        """
+        self._build_widgets()
     
-        self.setText(text)
+    def _build_widgets(self):
+        """Build own widgets."""
+        
+        self.loadVfkFrame = LoadVfkFrame(self, self.dWName, self.iface, self.dW)
+        self.addWidget(self.loadVfkFrame)
+        self.dW.toolbar.loadVfkAction.triggered.connect(
+            self.openTabSignalMapper.map)
+        self.openTabSignalMapper.setMapping(self.dW.toolbar.loadVfkAction, 0)
+        
+        self.checkFrame = CheckFrame(self, self.dWName, self.iface, self.dW)
+        self.addWidget(self.checkFrame)
+        self.dW.toolbar.checkAction.triggered.connect(
+            self.openTabSignalMapper.map)
+        self.openTabSignalMapper.setMapping(self.dW.toolbar.checkAction, 1)
+        
+        self.openTabSignalMapper.mapped.connect(self.setCurrentIndex)
 
-     

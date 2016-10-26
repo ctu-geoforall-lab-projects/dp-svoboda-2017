@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- StatusLabel
+ CheckFrame
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -21,47 +21,47 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QLabel
-from PyQt4.QtCore import pyqtSignal
+from PyQt4.QtGui import QFrame, QGridLayout, QComboBox
 
 
-class StatusLabel(QLabel):
-    """A label for displaying messages."""
+class CheckFrame(QFrame):
+    """A frame which contains widgets for checks."""
     
-    text_statusLabel = pyqtSignal(str)
-    
-    def __init__(self, parentWidget, dockWidgetName, iface):
+    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
         """Constructor.
         
         Args:
             parentWidget (QWidget): A reference to the parent widget.
             dockWidgetName (str): A name of the dock widget.
+            dockWidget (QWidget): A reference to the dock widget.
         
         """
         
-        self.dW = parentWidget
+        self.pW = parentWidget
         self.dWName = dockWidgetName
         self.iface = iface
+        self.dW = dockWidget
         
-        super(QLabel, self).__init__(self.dW)
+        super(QFrame, self).__init__(self.pW)
         
         self._setup_self()
     
     def _setup_self(self):
         """Sets up self."""
         
-        self.setObjectName(u'statusLabel')
-        self.text_statusLabel.connect(self._set_text_statusLabel)
-        self.text_statusLabel.emit(u'Vyberte VFK soubor.')
-    
-    def _set_text_statusLabel(self, text):
-        """Sets text.
+        self.setObjectName(u'checkFrame')
+        self.setFrameShape(QFrame.StyledPanel)
+        self.setFrameShadow(QFrame.Raised)
         
-        Args:
-            text (str): A text to be written.
+        self.checkGridLayout = QGridLayout(self)
+        self.checkGridLayout.setObjectName(u'checkGridLayout')
         
-        """
+        self._build_widgets()
     
-        self.setText(text)
+    def _build_widgets(self):
+        """Build own widgets."""
+        
+        self.checkComboBox = QComboBox(self)
+        self.checkComboBox.setObjectName(u'checkComboBox')
+        self.checkGridLayout.addWidget(self.checkComboBox, 0, 0, 1, 1)
 
-     

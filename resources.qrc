@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file alias="icon.png">icon.png</file>
         <file alias="PAR.qml">data/qml/PAR.qml</file>
+        <file alias="db.png">data/icons/db.png</file>
+        <file alias="check.png">data/icons/check.png</file>
     </qresource>
 </RCC>
