@@ -23,8 +23,8 @@
 
 from PyQt4.QtGui import (QFrame, QGridLayout, QLabel, QLineEdit, QPushButton,
                          QProgressBar, QFileDialog)
-from PyQt4.QtCore import pyqtSignal, QFileInfo, QDir, QUuid, QSettings
-from PyQt4.QtSql import QSqlDatabase
+from PyQt4.QtCore import pyqtSignal, QFileInfo, QDir, QUuid, QSettings, QFile
+from PyQt4.QtSql import QSqlDatabase, QSqlQuery
 
 from qgis.gui import QgsMessageBar
 from qgis.core import *
@@ -154,9 +154,9 @@ class LoadVfkFrame(QFrame):
         
         tempText = self.browseVfkLineEdit.text()
         
-        tempFilePath = QFileInfo(tempText)
+        tempFileInfo = QFileInfo(tempText)
         
-        if tempFilePath.isFile() and tempFilePath.suffix() in ('vfk', 'VFK'): 
+        if tempFileInfo.isFile() and tempFileInfo.suffix() in ('vfk', 'VFK'): 
             self.loadVfkPushButton.setEnabled(True)
         else:
             self.loadVfkPushButton.setEnabled(False)
@@ -190,24 +190,25 @@ class LoadVfkFrame(QFrame):
         self.value_loadVfkProgressBar.emit(0)
         
         fileInfo = QFileInfo(filePath)
-        dbName = QDir(
+        dbPath = QDir(
             fileInfo.absolutePath()).filePath(fileInfo.baseName() + '.db')
-        
-        self._load_vfk_file(filePath)
-        self._open_database(dbName)
-        
         vfkLayerCode = 'PAR'
-        layerName = fileInfo.baseName() + '-' + vfkLayerCode
         
-        self._load_vfk_layer(filePath, vfkLayerCode, layerName)
+        self._load_vfk_file(filePath, dbPath, vfkLayerCode)
+        
+        layerName = fileInfo.baseName() + '|' + vfkLayerCode
+        
+        self._load_vfk_layer(dbPath, vfkLayerCode, layerName)
         
         self._enable_load_widgets(True)
     
-    def _load_vfk_file(self, filePath):
+    def _load_vfk_file(self, filePath, dbPath, vfkLayerCode):
         """Loads a VFK file.
         
         Args:
             filePath (str): A full path to the file.
+            dbPath (QDir): A full path to the database.
+            vfkLayerCode (str): A code of the layer.
         
         Raises:
             The method handles exceptions by displaying error messages
@@ -220,14 +221,28 @@ class LoadVfkFrame(QFrame):
             QgsApplication.registerOgrDrivers()
             QgsApplication.processEvents()
             
-            ogrDataSource = ogr.Open(filePath)
+            dbInfo = QFileInfo(dbPath)
+             
+            if not dbInfo.isFile():
+                vfkDriver = ogr.GetDriverByName('VFK')
+                vfkDataSource = vfkDriver.Open(filePath)
+                
+                layer = vfkDataSource.GetLayerByName(vfkLayerCode)
+                layer.GetFeatureCount()
+                
+                vfkDataSource.Destroy()
+             
+            self._open_database(dbPath)
+             
+            sqliteDriver = ogr.GetDriverByName('SQLite')
+            sqliteDataSource = sqliteDriver.Open(str(dbPath))
             
-            layerCount = ogrDataSource.GetLayerCount()
+            layerCount = sqliteDataSource.GetLayerCount()
             layerNames = []
             
             for i in xrange(layerCount):
                 layerNames.append(
-                    ogrDataSource.GetLayer(i).GetLayerDefn().GetName())
+                    sqliteDataSource.GetLayer(i).GetLayerDefn().GetName())
             
             if 'PAR' not in layerNames:
                 self._raise_load_error(
@@ -258,11 +273,11 @@ class LoadVfkFrame(QFrame):
                 u'Error loading VFK file.',
                 u'Chyba při načítání VFK souboru.')
     
-    def _open_database(self, dbName):
+    def _open_database(self, dbPath):
         """Opens a database.
         
         Args:
-            dbName (QDir): A full path to the database.
+            dbPath (QDir): A full path to the database.
         
         Raises:
             The method handles exceptions by displaying error messages
@@ -279,8 +294,28 @@ class LoadVfkFrame(QFrame):
                 return
             
             connectionName = QUuid.createUuid().toString()
-            db = QSqlDatabase.addDatabase("QSQLITE", connectionName)
-            db.setDatabaseName(dbName)
+            QSqlDatabase.addDatabase("QSQLITE", connectionName)
+            db = QSqlDatabase.database(connectionName)
+            db.setDatabaseName(dbPath)
+            db.open()
+            
+            self.setProperty('connectionName', connectionName)
+            
+            tableExistQuery = QSqlQuery(db)
+            tableExistQuery.exec_(
+                'select name'
+                'from sqlite_master'
+                'where type="table" and name in ("geometry_columns", "spatial_ref_sys")')
+            
+            if tableExistQuery.size() < 2:
+                sqlFile = QFile(':/pu-vfk.sql', self)
+                sqlFile.open(QFile.ReadOnly|QFile.Text)
+            
+                sqlQueries = sqlFile.readData(2000).split(';')
+            
+                query = QSqlQuery(db)
+                for sqlQuery in sqlQueries:
+                    query.exec_(sqlQuery)
             
             if not db.open():
                 self._raise_load_error(
@@ -291,7 +326,7 @@ class LoadVfkFrame(QFrame):
                 u'Error opening database connection.',
                 u'Chyba při otevírání databáze.')
     
-    def _load_vfk_layer(self, filePath, vfkLayerCode, layerName):
+    def _load_vfk_layer(self, dbPath, vfkLayerCode, layerName):
         """Loads a layer of the given code from VFK file into the map canvas.
         
         Also sets symbology according
@@ -299,7 +334,7 @@ class LoadVfkFrame(QFrame):
         snapping.
         
         Args:
-            filePath (str): A full path to the file.
+            dbPath (QDir): A full path to the database.
             vfkLayerCode (str): A code of the layer.
             layerName (str): A name of the layer.
         
@@ -311,7 +346,7 @@ class LoadVfkFrame(QFrame):
         """
         
         try:
-            composedURI = filePath + "|layername=" + vfkLayerCode
+            composedURI = str(dbPath) + "|layername=" + vfkLayerCode
             layer = QgsVectorLayer(composedURI, layerName, 'ogr')
             
             if layer.isValid():
