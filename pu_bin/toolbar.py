@@ -82,7 +82,9 @@ class Toolbar(QToolBar):
         self.addSeparator()
         
         self.selectToolButton = QToolButton(self)
+        self.selectToolButton.setObjectName(u'selectToolButton')
         self.selectToolButton.setPopupMode(1)
+        self.selectToolButton.setIconSize(self.iface.mainWindow().iconSize())
         
         self.selectRectangleAction = self.iface.actionSelectRectangle()
         self.selectRectangleAction.setObjectName(u'selectRectangleAction')
