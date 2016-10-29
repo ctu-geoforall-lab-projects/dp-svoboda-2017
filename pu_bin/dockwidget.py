@@ -24,9 +24,14 @@
 from PyQt4.QtGui import QDockWidget, QWidget, QGridLayout
 from PyQt4.QtCore import QMetaObject
 
+from qgis.gui import QgsMessageBar
+from qgis.core import *
+
 from status_label import StatusLabel
 from toolbar import Toolbar
 from stackedwidget import StackedWidget
+
+import traceback
 
 
 class DockWidget(QDockWidget):
@@ -86,4 +91,54 @@ class DockWidget(QDockWidget):
         
         self.statusLabel = StatusLabel(self, dockWidgetName, self.iface)
         self.mainGridLayout.addWidget(self.statusLabel, 2, 0, 1, 1)
+    
+    def _raise_pu_error(
+            self, engLogMsg, czeLabelMsg, czeBarMsg=None, duration=7):
+        """Displays error messages.
+    
+        Displays error messages in the 'puPlugin' Log Messages Panel,
+        statusLabel and Message Bar.
+        
+        For development purposes it displays traceback
+        in the 'puPlugin Development' Log Messages Tab.
+        
+        Args:
+            engLogMsg (str): A message in the 'puPlugin' Log Messages Panel.
+            czeLabelMsg (str): A message in the statusLabel.
+            czeLabelMsg (str): A message in the Message Bar.
+            duration (int): A duration of the message in the Message Bar
+                             in seconds.
+        
+        Raises:
+            The method handles exceptions by displaying error messages
+            in the 'PU Plugin' Log Messages Tab, statusLabel, Message Bar
+            and 'PU Plugin Development' Log Messages Tab.
+        
+        """
+        
+        pluginName = u'PU Plugin'
+        
+        if czeBarMsg is None:
+            czeBarMsg = czeLabelMsg
+        
+        QgsMessageLog.logMessage(engLogMsg, pluginName)
+        self.statusLabel.text_statusLabel.emit(czeLabelMsg)
+        self.iface.messageBar().pushMessage(
+            pluginName, czeBarMsg , QgsMessageBar.WARNING, duration)
+        
+        developmentTb = u'PU Plugin Development'
+        tb = traceback.format_exc()
+        
+        if 'None' not in tb:
+            QgsMessageLog.logMessage(tb, developmentTb)
+    
+    class puError(Exception):
+        def __init__(
+                self, dW, engLogMsg, czeLabelMsg, czeBarMsg=None, duration=7):
+            super(Exception, self).__init__(dW)
+            
+            self.dW = dW
+            
+            self.dW._raise_pu_error(
+                engLogMsg, czeLabelMsg, czeBarMsg=None, duration=7)
 
