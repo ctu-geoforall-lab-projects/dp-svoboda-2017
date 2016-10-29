@@ -70,6 +70,17 @@ class Toolbar(QToolBar):
         self.addAction(self.loadVfkAction)
         self.loadVfkAction.trigger()
         
+        self.qgisEditAction = self.iface.actionToggleEditing()
+        
+        self.editAction = QAction(self)
+        self.editAction.setObjectName(u'editAction')
+        self.editAction.setCheckable(True)
+        editIcon = QIcon()
+        editIcon.addPixmap(QPixmap(':/edit.png'))
+        self.editAction.setIcon(editIcon)
+        self.openTabActionGroup.addAction(self.editAction)
+        self.addAction(self.editAction)
+        
         self.checkAction = QAction(self)
         self.checkAction.setObjectName(u'checkAction')
         self.checkAction.setCheckable(True)
@@ -84,7 +95,6 @@ class Toolbar(QToolBar):
         self.selectToolButton = QToolButton(self)
         self.selectToolButton.setObjectName(u'selectToolButton')
         self.selectToolButton.setPopupMode(1)
-        self.selectToolButton.setIconSize(self.iface.mainWindow().iconSize())
         
         self.selectRectangleAction = self.iface.actionSelectRectangle()
         self.selectRectangleAction.setObjectName(u'selectRectangleAction')

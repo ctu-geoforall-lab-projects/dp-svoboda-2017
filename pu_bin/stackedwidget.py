@@ -25,6 +25,7 @@ from PyQt4.QtGui import QStackedWidget
 from PyQt4.QtCore import QSignalMapper
 
 from loadvfk_frame import LoadVfkFrame
+from edit_frame import EditFrame
 from check_frame import CheckFrame
 
 
@@ -66,11 +67,17 @@ class StackedWidget(QStackedWidget):
             self.openTabSignalMapper.map)
         self.openTabSignalMapper.setMapping(self.dW.toolbar.loadVfkAction, 0)
         
+        self.editFrame = EditFrame(self, self.dWName, self.iface, self.dW)
+        self.addWidget(self.editFrame)
+        self.dW.toolbar.editAction.triggered.connect(
+            self.openTabSignalMapper.map)
+        self.openTabSignalMapper.setMapping(self.dW.toolbar.editAction, 1)
+        
         self.checkFrame = CheckFrame(self, self.dWName, self.iface, self.dW)
         self.addWidget(self.checkFrame)
         self.dW.toolbar.checkAction.triggered.connect(
             self.openTabSignalMapper.map)
-        self.openTabSignalMapper.setMapping(self.dW.toolbar.checkAction, 1)
+        self.openTabSignalMapper.setMapping(self.dW.toolbar.checkAction, 2)
         
         self.openTabSignalMapper.mapped.connect(self.setCurrentIndex)
 
