@@ -349,8 +349,13 @@ class LoadVfkFrame(QFrame):
         
         """
         
+        blacklistedDriver = ogr.GetDriverByName('VFK')
+        blacklistedDriver.Deregister()
+        
         composedURI = str(dbPath) + "|layername=" + vfkLayerCode
         layer = QgsVectorLayer(composedURI, layerName, 'ogr')
+        
+        blacklistedDriver.Register()
         
 #         wantedFieldNames = (
 #             u'KMENOVE_CISLO_PAR', u'PODDELENI_CISLA_PAR', u'VYMERA_PARCELY')
