@@ -20,6 +20,7 @@
  *                                                                         *
  ***************************************************************************/
 """
+
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt
 from PyQt4.QtGui import QAction, QIcon, QToolButton
 

@@ -1,5 +1,5 @@
 create table geometry_columns (
-    f_table_name varchar,
+    f_table_name varchar unique,
     f_geometry_column varchar,
     geometry_type integer,
     coord_dimension integer,
