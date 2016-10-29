@@ -300,23 +300,29 @@ class LoadVfkFrame(QFrame):
         
         self.setProperty('connectionName', connectionName)
         
-        tableExistQuery = QSqlQuery(db)
-        tableExistQuery.exec_(
-            'select  name'
-            'from    sqlite_master'
-            'where   type="table"'
-                    'and'
-                    'name in ("geometry_columns", "spatial_ref_sys")')
+        checkGcSrsFile = QFile(':/check_gc_srs.sql', self)
+        checkGcSrsFile.open(QFile.ReadOnly|QFile.Text)
         
-        if tableExistQuery.size() < 2:
-            sqlFile = QFile(':/pu-vfk.sql', self)
-            sqlFile.open(QFile.ReadOnly|QFile.Text)
+        query = checkGcSrsFile.readData(200)
         
-            sqlQueries = sqlFile.readData(2000).split(';')
+        checkGcSrsQuery = QSqlQuery(db)
+        checkGcSrsQuery.exec_(query)
         
-            query = QSqlQuery(db)
-            for sqlQuery in sqlQueries:
-                query.exec_(sqlQuery)
+        checkGcSrsSize = 0
+        
+        while checkGcSrsQuery.next():
+            checkGcSrsSize += 1
+        
+        if checkGcSrsSize < 2:
+            createFillGcSrsFile = QFile(':/create_fill_gc_srs.sql', self)
+            createFillGcSrsFile.open(QFile.ReadOnly|QFile.Text)
+        
+            createFillGcSrsQueries = createFillGcSrsFile.readData(2000)\
+                .split(';')
+        
+            createFillGcSrsQuery = QSqlQuery(db)
+            for query in createFillGcSrsQueries:
+                createFillGcSrsQuery.exec_(query)
         
         if not db.open():
             raise self.dW.puError(
@@ -345,6 +351,17 @@ class LoadVfkFrame(QFrame):
         
         composedURI = str(dbPath) + "|layername=" + vfkLayerCode
         layer = QgsVectorLayer(composedURI, layerName, 'ogr')
+        
+#         wantedFieldNames = (
+#             u'KMENOVE_CISLO_PAR', u'PODDELENI_CISLA_PAR', u'VYMERA_PARCELY')
+#         fields = layer.pendingFields()
+#         allFieldNames = [field.name() for field in fields] 
+#         
+#         config = layer.editFormConfig()
+#         
+#         for i in layer.pendingAllAttributesList():
+#             if fields[i].name() not in wantedFieldNames:
+#                 config.setWidgetType(i, 'Hidden')
         
         if layer.isValid():
             style = ':/' + str(vfkLayerCode) + '.qml'
