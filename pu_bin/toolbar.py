@@ -62,6 +62,7 @@ class Toolbar(QToolBar):
         
         self.loadVfkAction = QAction(self)
         self.loadVfkAction.setObjectName(u'loadVfkAction')
+        self.loadVfkAction.setToolTip(u'Načtení VFK souboru')
         self.loadVfkAction.setCheckable(True)
         loadVfkIcon = QIcon()
         loadVfkIcon.addPixmap(QPixmap(':/db.png'))
@@ -74,6 +75,7 @@ class Toolbar(QToolBar):
         
         self.editAction = QAction(self)
         self.editAction.setObjectName(u'editAction')
+        self.editAction.setToolTip(u'Editace')
         self.editAction.setCheckable(True)
         editIcon = QIcon()
         editIcon.addPixmap(QPixmap(':/edit.png'))
@@ -83,6 +85,7 @@ class Toolbar(QToolBar):
         
         self.checkAction = QAction(self)
         self.checkAction.setObjectName(u'checkAction')
+        self.checkAction.setToolTip(u'Kontroly')
         self.checkAction.setCheckable(True)
         checkIcon = QIcon()
         checkIcon.addPixmap(QPixmap(':/check.png'))
