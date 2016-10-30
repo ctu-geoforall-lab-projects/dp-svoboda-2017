@@ -134,7 +134,7 @@ class LoadVfkFrame(QFrame):
         """Opens a file dialog and filters VFK files."""
         
         filePath = QFileDialog.getOpenFileName(
-            self.dW, u'Načíst',
+            self.dW, u'Vyberte VFK soubor.',
             self._last_used_path(),
             u'.vfk (*.vfk)')
         
@@ -260,7 +260,7 @@ class LoadVfkFrame(QFrame):
             for i in xrange(layerCount):
                 self.value_loadVfkProgressBar.emit(i+1)
                 self.dW.statusLabel.text_statusLabel.emit(
-                    u'Načítám {} ({}/{})'
+                    u'Načítám {} ({}/{}).'
                     .format(layerNames[i], i+1, layerCount))
                 
                 QgsApplication.processEvents()
