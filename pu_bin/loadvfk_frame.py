@@ -33,6 +33,8 @@ from osgeo import ogr
 
 from load_thread import LoadThread
 
+from collections import namedtuple
+
 
 class LoadVfkFrame(QFrame):
     """A frame which contains widgets for loading a VFK file."""
@@ -148,6 +150,7 @@ class LoadVfkFrame(QFrame):
         
         If so, loadVfkPushButton is enabled, otherwise loadVfkPushButton
         is disabled.
+        
         """
         
         tempText = self.browseVfkLineEdit.text()
@@ -162,12 +165,11 @@ class LoadVfkFrame(QFrame):
     def loadVfkPushButton_clicked(self):
         """Starts loading the selected VFK file in a separate thread."""
         
-        filePath = self.browseVfkLineEdit.text()
-        
-        self.dW.statusLabel.text_statusLabel.emit(
-            u'Načítám data do SQLite databáze.')
+        self.dW.statusLabel.text_statusLabel.emit(u'Načítám VFK soubor.')
         
         self._enable_load_widgets(False)
+        
+        filePath = self.browseVfkLineEdit.text()
         
         QgsApplication.processEvents()
         
@@ -182,6 +184,9 @@ class LoadVfkFrame(QFrame):
         
         Args:
             filePath (str): A full path to the file.
+        
+        Raises:
+            dw.puError: When something goes wrong.
         
         """
 
@@ -198,6 +203,9 @@ class LoadVfkFrame(QFrame):
             layerName = fileInfo.baseName() + '|' + vfkLayerCode
             
             self._load_vfk_layer(dbPath, vfkLayerCode, layerName)
+            
+            self.dW.statusLabel.text_statusLabel.emit(
+                u'Data byla úspešně načtena.')
         except self.dW.puError:
             pass
         except:
@@ -210,15 +218,13 @@ class LoadVfkFrame(QFrame):
     def _load_vfk_file(self, filePath, dbPath, vfkLayerCode):
         """Loads a VFK file.
         
+        It checks if a database of the same name as VFK file exists.
+        If not it creates it with VFK driver.
+        
         Args:
             filePath (str): A full path to the file.
             dbPath (QDir): A full path to the database.
             vfkLayerCode (str): A code of the layer.
-        
-        Raises:
-            The method handles exceptions by displaying error messages
-            in the 'PU Plugin' Log Messages Tab, statusLabel, Message Bar
-            and 'PU Plugin Development' Log Messages Tab.
         
         """
         
@@ -226,63 +232,97 @@ class LoadVfkFrame(QFrame):
         QgsApplication.processEvents()
         
         dbInfo = QFileInfo(dbPath)
-         
+
         if not dbInfo.isFile():
+            self.dW.statusLabel.text_statusLabel.emit(
+                u'Importuji data do SQLite databáze.')
+            
             vfkDriver = ogr.GetDriverByName('VFK')
             vfkDataSource = vfkDriver.Open(filePath)
+            
+            vfkDdataSourceInfo = self._check_vfkLayerCode(
+                vfkDataSource, vfkLayerCode)
+            layerCount, layerNames = vfkDdataSourceInfo
+            
+            self.loadVfkProgressBar.setRange(0, layerCount)
+            
+            for i in xrange(layerCount):
+                self.value_loadVfkProgressBar.emit(i+1)
+                self.dW.statusLabel.text_statusLabel.emit(
+                    u'Načítám {} ({}/{})'
+                    .format(layerNames[i], i+1, layerCount))
+                
+                QgsApplication.processEvents()
             
             layer = vfkDataSource.GetLayerByName(vfkLayerCode)
             layer.GetFeatureCount()
             
             vfkDataSource.Destroy()
          
-        self._open_database(dbPath)
-         
         sqliteDriver = ogr.GetDriverByName('SQLite')
         sqliteDataSource = sqliteDriver.Open(str(dbPath))
         
-        layerCount = sqliteDataSource.GetLayerCount()
+        sqliteDataSourceInfo = self._check_vfkLayerCode(
+            sqliteDataSource, vfkLayerCode)
+        layerCount, layerNames = sqliteDataSourceInfo
+        
+        self._open_database(dbPath)
+    
+    def _check_vfkLayerCode(self, dataSource, vfkLayerCode):
+        """Checks if there is a <vfkLayerCode> layer in the dataSource.
+        
+        Args:
+            dataSource (osgeo.ogr.DataSource): A data source.
+            vfkLayerCode (str): A code of the layer.
+        
+        Returns:
+            int: A number of layers in the dataSource.
+        
+        Raises:
+            dw.puError: When there is not <vfkLayerCode> layer
+                in the dataSource.
+        
+        """
+        
+        layerCount = dataSource.GetLayerCount()
+        
         layerNames = []
         
         for i in xrange(layerCount):
-            layerNames.append(
-                sqliteDataSource.GetLayer(i).GetLayerDefn().GetName())
+            layerNames.append(dataSource.GetLayer(i).GetLayerDefn().GetName())
         
-        if 'PAR' not in layerNames:
+        if vfkLayerCode not in layerNames:
             QgsApplication.processEvents()
+            dataSource.Destroy()
             raise self.dW.puError(
                 self.dW,
-                u'VFK file does not contain PAR layer, therefore it '
-                u'can not be loaded by PU Plugin. '
-                u'The file can be loaded by "Add Vector Layer"',
-                u'VFK soubor neobsahuje vrstvu parcel.',
-                u'VFK soubor neobsahuje vrstvu parcel, '
-                u'proto nemůže být pomocí PU Pluginu načten. '
-                u'Data je možné načíst pomocí "Přidat vektorovou vrstvu."')
+                u'VFK file does not contain {} layer, therefore it can not be '
+                u'loaded by PU Plugin. The file can be '
+                u'loaded by "Add Vector Layer"'.format(vfkLayerCode),
+                u'VFK soubor neobsahuje vrstvu {}.'.format(vfkLayerCode),
+                u'VFK soubor neobsahuje vrstvu {}, proto nemůže být '
+                u'pomocí PU Pluginu načten. Data je možné načíst '
+                u'pomocí "Přidat vektorovou vrstvu."'.format(vfkLayerCode))
         
-        self.loadVfkProgressBar.setRange(0, layerCount)
+        DataSourceInfo = namedtuple(
+            'DataSourceInfo', ['layerCount', 'layerNames'])
         
-        for i in xrange(layerCount):
-            self.value_loadVfkProgressBar.emit(i+1)
-            self.dW.statusLabel.text_statusLabel.emit(
-                u'Načítám {} ({}/{})'
-                .format(layerNames[i], i+1, layerCount))
-            
-            QgsApplication.processEvents()
-            
-        self.dW.statusLabel.text_statusLabel.emit(
-            u'Data byla úspešně načtena.')
+        dataSourceInfo = DataSourceInfo(layerCount, layerNames)
+        
+        return dataSourceInfo
     
     def _open_database(self, dbPath):
         """Opens a database.
+        
+        Also checks if there are 'geometry_columns' and 'spatial_ref_sys'
+        tables in the database, if not it creates and fills those tables.
         
         Args:
             dbPath (QDir): A full path to the database.
         
         Raises:
-            The method handles exceptions by displaying error messages
-            in the 'PU Plugin' Log Messages Tab, statusLabel, Message Bar
-            and 'PU Plugin Development' Log Messages Tab.
+            dw.puError: When SQLITE database driver is not available
+                or when database connection failed.
         
         """
         
@@ -343,9 +383,7 @@ class LoadVfkFrame(QFrame):
             layerName (str): A name of the layer.
         
         Raises:
-            The method handles exceptions by displaying error messages
-            in the 'PU Plugin' Log Messages Tab, statusLabel, Message Bar
-            and 'PU Plugin Development' Log Messages Tab.
+            dw.puError: When <vfkLayerCode> layer is not valid.
         
         """
         
