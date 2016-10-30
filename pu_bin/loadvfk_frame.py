@@ -200,9 +200,17 @@ class LoadVfkFrame(QFrame):
             
             self._load_vfk_file(filePath, dbPath, vfkLayerCode)
             
+            puColumnsPAR = (
+                'PU_KMENOVE_CISLO_PAR',
+                'PU_PODDELENI_CISLA_PAR',
+                'PU_VYMERA_PARCELY',
+                'PU_KATEGORIE')
+            
+            self._open_database(dbPath, puColumnsPAR)
+            
             layerName = fileInfo.baseName() + '|' + vfkLayerCode
             
-            self._load_vfk_layer(dbPath, vfkLayerCode, layerName)
+            self._load_vfk_layer(dbPath, vfkLayerCode, layerName, puColumnsPAR)
             
             self.dW.statusLabel.text_statusLabel.emit(
                 u'Data byla úspešně načtena.')
@@ -265,8 +273,6 @@ class LoadVfkFrame(QFrame):
         sqliteDataSourceInfo = self._check_vfkLayerCode(
             sqliteDataSource, vfkLayerCode)
         layerCount, layerNames = sqliteDataSourceInfo
-        
-        self._open_database(dbPath)
     
     def _check_vfkLayerCode(self, dataSource, vfkLayerCode):
         """Checks if there is a <vfkLayerCode> layer in the dataSource.
@@ -311,7 +317,7 @@ class LoadVfkFrame(QFrame):
         
         return dataSourceInfo
     
-    def _open_database(self, dbPath):
+    def _open_database(self, dbPath, puColumnsPAR):
         """Opens a database.
         
         Also checks if there are 'geometry_columns' and 'spatial_ref_sys'
@@ -319,6 +325,7 @@ class LoadVfkFrame(QFrame):
         
         Args:
             dbPath (QDir): A full path to the database.
+            puColumnsPAR (list): A list of columns that the plugin adds.
         
         Raises:
             dw.puError: When SQLITE database driver is not available
@@ -337,6 +344,12 @@ class LoadVfkFrame(QFrame):
         db = QSqlDatabase.database(connectionName)
         db.setDatabaseName(dbPath)
         db.open()
+        
+        if not db.open():
+            raise self.dW.puError(
+                self.dW,
+                u'Database connection failed.',
+                u'Nepodařilo se připojit k databázi.')
         
         self.setProperty('connectionName', connectionName)
         
@@ -361,26 +374,50 @@ class LoadVfkFrame(QFrame):
                 .split(';')
         
             createFillGcSrsQuery = QSqlQuery(db)
+            
             for query in createFillGcSrsQueries:
                 createFillGcSrsQuery.exec_(query)
         
-        if not db.open():
-            raise self.dW.puError(
-                self.dW,
-                u'Database connection failed.',
-                u'Nepodařilo se připojit k databázi.')
+        checkPuColumnsPARFile = QFile(':/check_pu_columns_PAR.sql', self)
+        checkPuColumnsPARFile.open(QFile.ReadOnly|QFile.Text)
+        
+        query = checkPuColumnsPARFile.readData(50)
+        
+        checkPuColumnsPARQuery = QSqlQuery(db)
+        checkPuColumnsPARQuery.exec_(query)
+        
+        columnsPAR = []
+
+        while checkPuColumnsPARQuery.next():
+            record = checkPuColumnsPARQuery.record()
+            name = str(record.value('name'))
+            columnsPAR.append(name)
+        
+        if not all(column in columnsPAR for column in puColumnsPAR):
+            addPuColumnPARFile = QFile(':/add_pu_columns_PAR.sql', self)
+            addPuColumnPARFile.open(QFile.ReadOnly|QFile.Text)
+            
+            addPuColumnsPARQueries = addPuColumnPARFile.readData(2000)\
+                .split(';')
+            
+            addPuColumnPARQuery = QSqlQuery(db)
+            
+            for query in addPuColumnsPARQueries:
+                addPuColumnPARQuery.exec_(query)
     
-    def _load_vfk_layer(self, dbPath, vfkLayerCode, layerName):
+    def _load_vfk_layer(self, dbPath, vfkLayerCode, layerName, puColumnsPAR):
         """Loads a layer of the given code from VFK file into the map canvas.
         
         Also sets symbology according
-        to "/plugins/puPlugin/data/qml/<vfkLayerCode>.qml" file and enables
-        snapping.
+        to "/plugins/puPlugin/data/qml/<vfkLayerCode>.qml" file, enables
+        snapping and sets all fields except for those listed in puColumnsPAR
+        non-editable.
         
         Args:
             dbPath (QDir): A full path to the database.
             vfkLayerCode (str): A code of the layer.
             layerName (str): A name of the layer.
+            puColumnsPAR (list): A list of columns that the plugin adds.
         
         Raises:
             dw.puError: When <vfkLayerCode> layer is not valid.
@@ -395,16 +432,14 @@ class LoadVfkFrame(QFrame):
         
         blacklistedDriver.Register()
         
-#         wantedFieldNames = (
-#             u'KMENOVE_CISLO_PAR', u'PODDELENI_CISLA_PAR', u'VYMERA_PARCELY')
-#         fields = layer.pendingFields()
-#         allFieldNames = [field.name() for field in fields] 
-#         
-#         config = layer.editFormConfig()
-#         
-#         for i in layer.pendingAllAttributesList():
-#             if fields[i].name() not in wantedFieldNames:
-#                 config.setWidgetType(i, 'Hidden')
+        fields = layer.pendingFields()
+        fieldNames = [field.name() for field in fields]
+        
+        formConfig = layer.editFormConfig()
+        
+        for i in layer.pendingAllAttributesList():
+            if fields[i].name() not in puColumnsPAR:
+                formConfig.setReadOnly(i)
         
         if layer.isValid():
             style = ':/' + str(vfkLayerCode) + '.qml'

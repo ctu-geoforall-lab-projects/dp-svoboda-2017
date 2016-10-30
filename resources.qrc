@@ -8,5 +8,7 @@
         <file alias="allEditsAction.svg">data/icons/allEditsAction.svg</file>
         <file alias="check_gc_srs.sql">data/sql/check_gc_srs.sql</file>
         <file alias="create_fill_gc_srs.sql">data/sql/create_fill_gc_srs.sql</file>
+        <file alias="check_pu_columns_PAR.sql">data/sql/check_pu_columns_PAR.sql</file>
+        <file alias="add_pu_columns_PAR.sql">data/sql/add_pu_columns_PAR.sql</file>
     </qresource>
 </RCC>
