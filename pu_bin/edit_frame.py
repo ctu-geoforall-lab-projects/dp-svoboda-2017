@@ -22,7 +22,8 @@
 """
 
 from PyQt4.QtGui import (QFrame, QGridLayout, QToolBar, QToolButton, QIcon,
-                         QPixmap, QMenu)
+                         QPixmap, QMenu, QPushButton)
+from PyQt4.QtCore import QSignalMapper
 
 
 class EditFrame(QFrame):
@@ -57,6 +58,8 @@ class EditFrame(QFrame):
         self.editGridLayout = QGridLayout(self)
         self.editGridLayout.setObjectName(u'editGridLayout')
         
+        self.setPuCategorySignalMapper = QSignalMapper(self)
+        
         self._build_widgets()
     
     def _build_widgets(self):
@@ -70,14 +73,15 @@ class EditFrame(QFrame):
         self.allEditsToolButton = QToolButton(self)
         self.allEditsToolButton.setObjectName(u'allEditsToolButton')
         self.allEditsToolButton.setPopupMode(2)
-        allEditsIcon = QIcon()
-        allEditsIcon.addPixmap(QPixmap(':/allEditsAction.svg'))
-        self.allEditsToolButton.setIcon(allEditsIcon)
+        self.editToolbar.addWidget(self.allEditsToolButton)
         
         for action in self.iface.digitizeToolBar().actions():
             if action.objectName() == 'mActionAllEdits':
                 self.qgisAllEditsAction = action
                 break
+        
+        self.allEditsToolButton.setIcon(self.qgisAllEditsAction.icon())
+        self.allEditsToolButton.setToolTip(self.qgisAllEditsAction.toolTip())
         
         self.qgisAllEditsAction.changed.connect(self._enable_allEditsToolButton)
         
@@ -112,8 +116,6 @@ class EditFrame(QFrame):
         self.allEditsMenu.addAction(self.cancelAllEditsAction)
         
         self.allEditsToolButton.setMenu(self.allEditsMenu)
-        
-        self.editToolbar.addWidget(self.allEditsToolButton)
         
         self.toggleEditingAction = self.iface.actionToggleEditing()
         self.toggleEditingAction.setObjectName(u'toggleEditingAction')
@@ -152,10 +154,73 @@ class EditFrame(QFrame):
         self.pasteFeaturesAction = self.iface.actionPasteFeatures()
         self.pasteFeaturesAction.setObjectName(u'pasteFeaturesAction')
         self.editToolbar.addAction(self.pasteFeaturesAction)
+        
+        self.inSolvedPushButton = QPushButton(self)
+        self.inSolvedPushButton.setObjectName(u'inSolvedPushButton')
+        self.inSolvedPushButton.setText(
+            u'Zařadit vybrané parcely do kategorie "v obvodu - řešené"')
+        self.inSolvedPushButton.clicked.connect(
+            self.setPuCategorySignalMapper.map)
+        self.setPuCategorySignalMapper.setMapping(self.inSolvedPushButton, 1)
+        self.editGridLayout.addWidget(self.inSolvedPushButton, 1, 0, 1, 1)
+        
+        self.inNotSolvedPushButton = QPushButton(self)
+        self.inNotSolvedPushButton.setObjectName(u'inNotSolvedPushButton')
+        self.inNotSolvedPushButton.setText(
+            u'Zařadit vybrané parcely do kategorie "v obvodu - neřešené"')
+        self.inNotSolvedPushButton.clicked.connect(
+            self.setPuCategorySignalMapper.map)
+        self.setPuCategorySignalMapper.setMapping(self.inNotSolvedPushButton, 2)
+        self.editGridLayout.addWidget(self.inNotSolvedPushButton, 2, 0, 1, 1)
+        
+        self.outPushButton = QPushButton(self)
+        self.outPushButton.setObjectName(u'outPushButton')
+        self.outPushButton.setText(
+            u'Zařadit vybrané parcely do kategorie "mimo obvod"')
+        self.outPushButton.clicked.connect(
+            self.setPuCategorySignalMapper.map)
+        self.setPuCategorySignalMapper.setMapping(self.outPushButton, 3)
+        self.editGridLayout.addWidget(self.outPushButton, 3, 0, 1, 1)
+        
+        self.setPuCategorySignalMapper.mapped.connect(self._set_pu_category)
     
     def _enable_allEditsToolButton(self):
+        """Enables or disables qgisAllEditsAction.
+        
+        Enables or disables qgisAllEditsAction according to
+        QGIS mActionAllEdits.
+        
+        """
+        
         if self.qgisAllEditsAction.isEnabled():
             self.allEditsToolButton.setEnabled(True)
         else:
             self.allEditsToolButton.setDisabled(True)
+    
+    def _set_pu_category(self, value):
+        """Sets a given value to 'PU_KATEGORIE' column for selected features.
+        
+        Args:
+            value(int): A value to be set.
+        
+        """
+        
+        layer = self.iface.activeLayer()
+        selectedFeatures = layer.selectedFeatures()
+        
+        fields = layer.pendingFields()
+        
+        for i in layer.pendingAllAttributesList():
+            if fields[i].name() == 'PU_KATEGORIE':
+                fieldID = i
+                break
+        
+        layer.startEditing()
+        layer.updateFields()
+        
+        for feature in selectedFeatures:
+            featureID = feature.id()
+            layer.changeAttributeValue(featureID, fieldID, value)
+        
+        layer.commitChanges()    
 
