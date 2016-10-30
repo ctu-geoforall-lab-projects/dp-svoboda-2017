@@ -436,7 +436,6 @@ class LoadVfkFrame(QFrame):
         blacklistedDriver.Register()
         
         fields = layer.pendingFields()
-        fieldNames = [field.name() for field in fields]
         
         formConfig = layer.editFormConfig()
         
