@@ -212,6 +212,9 @@ class LoadVfkFrame(QFrame):
             
             self._load_vfk_layer(dbPath, vfkLayerCode, layerName, puColumnsPAR)
             
+            self.loadVfkProgressBar.setMaximum(1)
+            self.value_loadVfkProgressBar.emit(1)
+            
             self.dW.statusLabel.text_statusLabel.emit(
                 u'Data byla úspešně načtena.')
         except self.dW.puError:
