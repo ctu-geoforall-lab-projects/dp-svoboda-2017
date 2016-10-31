@@ -22,8 +22,11 @@
 """
 
 from PyQt4.QtGui import (QFrame, QGridLayout, QToolBar, QToolButton, QIcon,
-                         QPixmap, QMenu, QPushButton)
+                         QPixmap, QMenu, QHBoxLayout, QLabel, QComboBox,
+                         QPushButton)
 from PyQt4.QtCore import QSignalMapper
+
+from qgis.core import *
 
 
 class EditFrame(QFrame):
@@ -51,12 +54,17 @@ class EditFrame(QFrame):
     def _setup_self(self):
         """Sets up self."""
         
+        self.categoryValue = 1
+        self.categoryName = 'PU_KATEGORIE'
+        
         self.setObjectName(u'editFrame')
         self.setFrameShape(QFrame.StyledPanel)
         self.setFrameShadow(QFrame.Raised)
         
         self.editGridLayout = QGridLayout(self)
         self.editGridLayout.setObjectName(u'editGridLayout')
+        self.editGridLayout.setColumnStretch(0, 1)
+        self.editGridLayout.setColumnStretch(1, 1)
         
         self.setPuCategorySignalMapper = QSignalMapper(self)
         
@@ -155,34 +163,37 @@ class EditFrame(QFrame):
         self.pasteFeaturesAction.setObjectName(u'pasteFeaturesAction')
         self.editToolbar.addAction(self.pasteFeaturesAction)
         
-        self.inSolvedPushButton = QPushButton(self)
-        self.inSolvedPushButton.setObjectName(u'inSolvedPushButton')
-        self.inSolvedPushButton.setText(
-            u'Zařadit vybrané parcely do kategorie "v obvodu - řešené"')
-        self.inSolvedPushButton.clicked.connect(
-            self.setPuCategorySignalMapper.map)
-        self.setPuCategorySignalMapper.setMapping(self.inSolvedPushButton, 1)
-        self.editGridLayout.addWidget(self.inSolvedPushButton, 1, 0, 1, 1)
+        self.categoryHBoxLayout = QHBoxLayout(self)
+        self.editGridLayout.addLayout(self.categoryHBoxLayout, 1, 0, 1, 2)
         
-        self.inNotSolvedPushButton = QPushButton(self)
-        self.inNotSolvedPushButton.setObjectName(u'inNotSolvedPushButton')
-        self.inNotSolvedPushButton.setText(
-            u'Zařadit vybrané parcely do kategorie "v obvodu - neřešené"')
-        self.inNotSolvedPushButton.clicked.connect(
-            self.setPuCategorySignalMapper.map)
-        self.setPuCategorySignalMapper.setMapping(self.inNotSolvedPushButton, 2)
-        self.editGridLayout.addWidget(self.inNotSolvedPushButton, 2, 0, 1, 1)
+        self.categoryLabel = QLabel(self)
+        self.categoryLabel.setObjectName(u'categoryLabel')
+        self.categoryLabel.setText(u'Kategorie parcel:')
+        self.categoryHBoxLayout.addWidget(self.categoryLabel)
         
-        self.outPushButton = QPushButton(self)
-        self.outPushButton.setObjectName(u'outPushButton')
-        self.outPushButton.setText(
-            u'Zařadit vybrané parcely do kategorie "mimo obvod"')
-        self.outPushButton.clicked.connect(
-            self.setPuCategorySignalMapper.map)
-        self.setPuCategorySignalMapper.setMapping(self.outPushButton, 3)
-        self.editGridLayout.addWidget(self.outPushButton, 3, 0, 1, 1)
+        self.categoryComboBox = QComboBox(self)
+        self.categoryComboBox.setObjectName(u'categoryComboBox')
+        self.categoryComboBox.addItem(u'v obvodu - řešené')
+        self.categoryComboBox.addItem(u'v obvodu - neřešené')
+        self.categoryComboBox.addItem(u'mimo obvod')
+        self.categoryComboBox.currentIndexChanged.connect(
+            self._set_categoryValue)
+        self.categoryHBoxLayout.addWidget(self.categoryComboBox, 2)
         
-        self.setPuCategorySignalMapper.mapped.connect(self._set_pu_category)
+        self.setCategoryPushButton = QPushButton(self)
+        self.setCategoryPushButton.setObjectName(u'setCategoryPushButton')
+        self.setCategoryPushButton.setText(u'Zařadit')
+        self.setCategoryPushButton.setToolTip(
+            u'Zařadit vybrané parcely do kategorie')
+        self.setCategoryPushButton.clicked.connect(self._set_pu_category)
+        self.editGridLayout.addWidget(self.setCategoryPushButton, 2, 0, 1, 1)
+        
+        self.selectCategoryPushButton = QPushButton(self)
+        self.selectCategoryPushButton.setObjectName(u'selectCategoryPushButton')
+        self.selectCategoryPushButton.setText(u'Vybrat')
+        self.selectCategoryPushButton.setToolTip(u'Vybrat parcely v kategorii')
+        self.selectCategoryPushButton.clicked.connect(self._select_category)
+        self.editGridLayout.addWidget(self.selectCategoryPushButton, 2, 1, 1, 1)
     
     def _enable_allEditsToolButton(self):
         """Enables or disables qgisAllEditsAction.
@@ -197,13 +208,18 @@ class EditFrame(QFrame):
         else:
             self.allEditsToolButton.setDisabled(True)
     
-    def _set_pu_category(self, value):
-        """Sets a given value to 'PU_KATEGORIE' column for selected features.
+    def _set_categoryValue(self):
+        """Sets categoryValue according to the current index."""
         
-        Args:
-            value(int): A value to be set.
+        self.categoryValue = self.categoryComboBox.currentIndex() + 1
         
-        """
+    def _set_pu_category(self):
+        """Sets a categoryValue to categoryName column for selected features."""
+        
+        if self.toggleEditingAction.isChecked():
+            editing = True
+        else:
+            editing = False
         
         layer = self.iface.activeLayer()
         selectedFeatures = layer.selectedFeatures()
@@ -211,7 +227,7 @@ class EditFrame(QFrame):
         fields = layer.pendingFields()
         
         for i in layer.pendingAllAttributesList():
-            if fields[i].name() == 'PU_KATEGORIE':
+            if fields[i].name() == self.categoryName:
                 fieldID = i
                 break
         
@@ -220,7 +236,24 @@ class EditFrame(QFrame):
         
         for feature in selectedFeatures:
             featureID = feature.id()
-            layer.changeAttributeValue(featureID, fieldID, value)
+            layer.changeAttributeValue(featureID, fieldID, self.categoryValue)
         
-        layer.commitChanges()    
+        layer.commitChanges()
+        
+        if editing == True:
+            self.toggleEditingAction.trigger()
+    
+    def _select_category(self):
+        """Selects features in current category."""
+        
+        layer = self.iface.activeLayer()
+        expression = QgsExpression(
+            "\"{}\"={}".format(self.categoryName, self.categoryValue))
+        
+        features = layer.getFeatures(QgsFeatureRequest(expression))
+        
+        featuresID = [feature.id() for feature in features]
+        
+        layer.setSelectedFeatures(featuresID)
+
 
