@@ -8,3 +8,4 @@ alter table PAR add column PU_VYMERA_PARCELY integer;
 update PAR set PU_VYMERA_PARCELY = VYMERA_PARCELY;
 
 alter table PAR add column PU_KATEGORIE integer default 1;
+update PAR set PU_KATEGORIE = NULL;
