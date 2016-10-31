@@ -226,10 +226,7 @@ class EditFrame(QFrame):
         
         fields = layer.pendingFields()
         
-        for i in layer.pendingAllAttributesList():
-            if fields[i].name() == self.categoryName:
-                fieldID = i
-                break
+        fieldID = layer.fieldNameIndex(self.categoryName)
         
         layer.startEditing()
         layer.updateFields()
