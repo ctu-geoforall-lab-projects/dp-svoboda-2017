@@ -165,7 +165,8 @@ class LoadVfkFrame(QFrame):
     def loadVfkPushButton_clicked(self):
         """Starts loading the selected VFK file in a separate thread."""
         
-        self.dW.statusLabel.text_statusLabel.emit(u'Načítám VFK soubor.')
+        self.dW.statusLabel.text_statusLabel.emit(
+            u'Načítám VFK soubor. Tento proces může chvíli trvat.')
         
         self._enable_load_widgets(False)
         
@@ -260,7 +261,7 @@ class LoadVfkFrame(QFrame):
             for i in xrange(layerCount):
                 self.value_loadVfkProgressBar.emit(i+1)
                 self.dW.statusLabel.text_statusLabel.emit(
-                    u'Načítám {} ({}/{}).'
+                    u'Načítám vrstvu {} ({}/{}).'
                     .format(layerNames[i], i+1, layerCount))
                 
                 QgsApplication.processEvents()
