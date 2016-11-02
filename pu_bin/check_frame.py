@@ -59,7 +59,7 @@ class CheckFrame(QFrame):
         self._build_widgets()
     
     def _build_widgets(self):
-        """Build own widgets."""
+        """Builds own widgets."""
         
         self.checkComboBox = QComboBox(self)
         self.checkComboBox.setObjectName(u'checkComboBox')

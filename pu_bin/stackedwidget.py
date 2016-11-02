@@ -59,7 +59,7 @@ class StackedWidget(QStackedWidget):
         self._build_widgets()
     
     def _build_widgets(self):
-        """Build own widgets."""
+        """Builds own widgets."""
         
         self.loadVfkFrame = LoadVfkFrame(self, self.dWName, self.iface, self.dW)
         self.addWidget(self.loadVfkFrame)

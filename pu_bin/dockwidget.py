@@ -76,7 +76,7 @@ class DockWidget(QDockWidget):
         self._build_widgets(dockWidgetName)
     
     def _build_widgets(self, dockWidgetName):
-        """Build own widgets.
+        """Builds own widgets.
         
         Args:
             dockWidgetName (str): A name of the dock widget.

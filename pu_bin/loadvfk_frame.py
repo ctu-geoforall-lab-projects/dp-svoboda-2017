@@ -74,7 +74,7 @@ class LoadVfkFrame(QFrame):
         self._build_widgets()
     
     def _build_widgets(self):
-        """Build own widgets."""
+        """Builds own widgets."""
         
         self.browseVfkLabel = QLabel(self)
         self.browseVfkLabel.setObjectName(u'browseVfkLabel')
