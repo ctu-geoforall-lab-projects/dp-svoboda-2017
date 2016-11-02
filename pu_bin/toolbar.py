@@ -94,49 +94,38 @@ class Toolbar(QToolBar):
         self.addSeparator()
         
         self.panAction = self.iface.actionPan()
-        self.panAction.setObjectName(u'panAction')
         self.addAction(self.panAction)
         
         self.panToSelectedAction = self.iface.actionPanToSelected()
-        self.panToSelectedAction.setObjectName(u'panToSelectedAction')
         self.addAction(self.panToSelectedAction)
         
         self.zoomInAction = self.iface.actionZoomIn()
-        self.zoomInAction.setObjectName(u'zoomInAction')
         self.addAction(self.zoomInAction)
         
         self.zoomOutAction = self.iface.actionZoomOut()
-        self.zoomOutAction.setObjectName(u'zoomOutAction')
         self.addAction(self.zoomOutAction)
         
         self.zoomFullExtentAction = self.iface.actionZoomFullExtent()
-        self.zoomFullExtentAction.setObjectName(u'zoomFullExtentAction')
         self.addAction(self.zoomFullExtentAction)
         
         self.zoomToSelectedAction = self.iface.actionZoomToSelected()
-        self.zoomToSelectedAction.setObjectName(u'zoomToSelectedAction')
         self.addAction(self.zoomToSelectedAction)
         
         self.zoomToLayerAction = self.iface.actionZoomToLayer()
-        self.zoomToLayerAction.setObjectName(u'zoomToLayerAction')
         self.addAction(self.zoomToLayerAction)
         
         self.zoomLastAction = self.iface.actionZoomLast()
-        self.zoomLastAction.setObjectName(u'zoomLastAction')
         self.addAction(self.zoomLastAction)
         
         self.zoomNextAction = self.iface.actionZoomNext()
-        self.zoomNextAction.setObjectName(u'zoomNextAction')
         self.addAction(self.zoomNextAction)
         
         self.drawAction = self.iface.actionDraw()
-        self.drawAction.setObjectName(u'drawAction')
         self.addAction(self.drawAction)
         
         self.addSeparator()
         
         self.identifyAction = self.iface.actionIdentify()
-        self.identifyAction.setObjectName(u'identifyAction')
         self.addAction(self.identifyAction)
         
         self.selectToolButton = QToolButton(self)
@@ -144,19 +133,15 @@ class Toolbar(QToolBar):
         self.selectToolButton.setPopupMode(1)
         
         self.selectRectangleAction = self.iface.actionSelectRectangle()
-        self.selectRectangleAction.setObjectName(u'selectRectangleAction')
         self.selectToolButton.addAction(self.selectRectangleAction)
         
         self.selectPolygonAction = self.iface.actionSelectPolygon()
-        self.selectPolygonAction.setObjectName(u'selectPolygonAction')
         self.selectToolButton.addAction(self.selectPolygonAction)
         
         self.selectFreehandAction = self.iface.actionSelectFreehand()
-        self.selectFreehandAction.setObjectName(u'selectFreehandAction')
         self.selectToolButton.addAction(self.selectFreehandAction)
         
         self.selectRadiusAction = self.iface.actionSelectRadius()
-        self.selectRadiusAction.setObjectName(u'selectRadiusAction')
         self.selectToolButton.addAction(self.selectRadiusAction)
         
         for action in self.iface.attributesToolBar().actions():
@@ -200,12 +185,9 @@ class Toolbar(QToolBar):
         self.addAction(self.deselectAllAction)
         
         self.openTableAction = self.iface.actionOpenTable()
-        self.openTableAction.setObjectName(u'openTableAction')
         self.addAction(self.openTableAction)
         
         self.openFieldCalculatorAction = self.iface.actionOpenFieldCalculator()
-        self.openFieldCalculatorAction.setObjectName(
-            u'openFieldCalculatorAction')
         self.addAction(self.openFieldCalculatorAction)
         
         for action in self.iface.attributesToolBar().actions(): 
@@ -220,11 +202,9 @@ class Toolbar(QToolBar):
         self.measureToolButton.setPopupMode(1)
         
         self.measureAction = self.iface.actionMeasure()
-        self.measureAction.setObjectName(u'measureAction')
         self.measureToolButton.addAction(self.measureAction)
         
         self.measureAreaAction = self.iface.actionMeasureArea()
-        self.measureAreaAction.setObjectName(u'measureAreaAction')
         self.measureToolButton.addAction(self.measureAreaAction)
         
         for action in self.iface.attributesToolBar().actions():
