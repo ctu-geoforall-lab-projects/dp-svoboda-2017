@@ -22,13 +22,11 @@
 """
 
 from PyQt4.QtGui import QLabel
-from PyQt4.QtCore import pyqtSignal
+from PyQt4.QtCore import QSettings
 
 
 class StatusLabel(QLabel):
     """A label for displaying messages."""
-    
-    text_statusLabel = pyqtSignal(str)
     
     def __init__(self, parentWidget, dockWidgetName, iface):
         """Constructor.
@@ -51,8 +49,8 @@ class StatusLabel(QLabel):
         """Sets up self."""
         
         self.setObjectName(u'statusLabel')
-        self.text_statusLabel.connect(self._set_text_statusLabel)
-        self.text_statusLabel.emit(u'Vyberte VFK soubor.')
+        
+        self.frameText = QSettings()
     
     def _set_text_statusLabel(self, text):
         """Sets text.
@@ -61,7 +59,17 @@ class StatusLabel(QLabel):
             text (str): A text to be written.
         
         """
-    
+        
+        sender = self.sender().objectName()
+        
+        self.frameText.setValue('puplugin/' + sender, text)
+        
         self.setText(text)
+    
+    def _change_text_statusLabel(self):
+        """Changes text according to the active tab."""
+        
+        currentWidgetName = self.dW.stackedWidget.currentWidget().objectName()
+        
+        self.setText(self.frameText.value('puplugin/' + currentWidgetName, ''))
 
-     

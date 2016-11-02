@@ -24,13 +24,15 @@
 from PyQt4.QtGui import (QFrame, QGridLayout, QToolBar, QToolButton, QIcon,
                          QPixmap, QMenu, QHBoxLayout, QLabel, QComboBox,
                          QPushButton)
-from PyQt4.QtCore import QSignalMapper
+from PyQt4.QtCore import pyqtSignal, QSignalMapper
 
 from qgis.core import *
 
 
 class EditFrame(QFrame):
     """A frame which contains widgets for editing."""
+    
+    text_statusLabel = pyqtSignal(str)
     
     def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
         """Constructor.
@@ -60,6 +62,8 @@ class EditFrame(QFrame):
         self.setObjectName(u'editFrame')
         self.setFrameShape(QFrame.StyledPanel)
         self.setFrameShadow(QFrame.Raised)
+        
+        self.text_statusLabel.connect(self.dW.statusLabel._set_text_statusLabel)
         
         self.editGridLayout = QGridLayout(self)
         self.editGridLayout.setObjectName(u'editGridLayout')
@@ -222,11 +226,26 @@ class EditFrame(QFrame):
             editing = False
         
         layer = self.iface.activeLayer()
+        
+        if not layer:
+            return
+         
         selectedFeatures = layer.selectedFeatures()
+        
+        if len(selectedFeatures) == 0:
+            self.text_statusLabel.emit(
+                u'V aktivní vrstvě nejsou vybrány žádné prvky.')
+            return
         
         fields = layer.pendingFields()
         
         fieldID = layer.fieldNameIndex(self.categoryName)
+        
+        if fieldID == -1:
+            self.text_statusLabel.emit(
+                u'Aktivní vrstva neobsahuje sloupec "{}".'
+                .format(self.categoryName))
+            return
         
         layer.startEditing()
         layer.updateFields()
@@ -239,11 +258,29 @@ class EditFrame(QFrame):
         
         if editing == True:
             self.toggleEditingAction.trigger()
+        
+        currentCategory = self.categoryComboBox.currentText()
+        
+        self.text_statusLabel.emit(
+            u'Vybrané parcely byly zařazeny do kategorie "{}".'
+            .format(currentCategory))
     
     def _select_category(self):
         """Selects features in current category."""
         
         layer = self.iface.activeLayer()
+        
+        if not layer:
+            return
+
+        fieldID = layer.fieldNameIndex(self.categoryName)
+        
+        if fieldID == -1:
+            self.text_statusLabel.emit(
+                u'Aktivní vrstva neobsahuje sloupec "{}".'
+                .format(self.categoryName))
+            return
+                
         expression = QgsExpression(
             "\"{}\"={}".format(self.categoryName, self.categoryValue))
         
@@ -252,5 +289,10 @@ class EditFrame(QFrame):
         featuresID = [feature.id() for feature in features]
         
         layer.setSelectedFeatures(featuresID)
-
+        
+        currentCategory = self.categoryComboBox.currentText()
+        
+        self.text_statusLabel.emit(
+            u'V kategorii "{}" je {} parcel.'
+            .format(currentCategory, str(len(featuresID))))
 

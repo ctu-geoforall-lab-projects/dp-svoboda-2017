@@ -80,4 +80,7 @@ class StackedWidget(QStackedWidget):
         self.openTabSignalMapper.setMapping(self.dW.toolbar.checkAction, 2)
         
         self.openTabSignalMapper.mapped.connect(self.setCurrentIndex)
+        
+        self.currentChanged.connect(
+            self.dW.statusLabel._change_text_statusLabel)
 

@@ -86,11 +86,11 @@ class DockWidget(QDockWidget):
         self.toolbar = Toolbar(self, dockWidgetName, self.iface)
         self.mainGridLayout.addWidget(self.toolbar, 0, 0, 1, 1)
         
-        self.stackedWidget = StackedWidget(self, dockWidgetName, self.iface)
-        self.mainGridLayout.addWidget(self.stackedWidget, 1, 0, 1, 1)
-        
         self.statusLabel = StatusLabel(self, dockWidgetName, self.iface)
         self.mainGridLayout.addWidget(self.statusLabel, 2, 0, 1, 1)
+        
+        self.stackedWidget = StackedWidget(self, dockWidgetName, self.iface)
+        self.mainGridLayout.addWidget(self.stackedWidget, 1, 0, 1, 1)
     
     def _raise_pu_error(
             self, engLogMsg, czeLabelMsg, czeBarMsg=None, duration=7):
