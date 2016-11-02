@@ -105,7 +105,7 @@ class DockWidget(QDockWidget):
         Args:
             engLogMsg (str): A message in the 'puPlugin' Log Messages Panel.
             czeLabelMsg (str): A message in the statusLabel.
-            czeLabelMsg (str): A message in the Message Bar.
+            czeBarMsg (str): A message in the Message Bar.
             duration (int): A duration of the message in the Message Bar
                              in seconds.
         
@@ -133,8 +133,22 @@ class DockWidget(QDockWidget):
             QgsMessageLog.logMessage(tb, developmentTb)
     
     class puError(Exception):
+        """A custom exception."""
+        
         def __init__(
                 self, dW, engLogMsg, czeLabelMsg, czeBarMsg=None, duration=7):
+            """Constructor.
+            
+            Args:
+                dW (QWidget): A reference to the dock widget.
+                engLogMsg (str): A message in the 'puPlugin' Log Messages Panel.
+                czeLabelMsg (str): A message in the statusLabel.
+                czeBarMsg (str): A message in the Message Bar.
+                duration (int): A duration of the message in the Message Bar
+                                 in seconds.
+                
+            """
+            
             super(Exception, self).__init__(dW)
             
             self.dW = dW
