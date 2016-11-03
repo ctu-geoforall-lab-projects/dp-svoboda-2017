@@ -28,7 +28,7 @@ from PyQt4.QtCore import pyqtSignal
 class CheckFrame(QFrame):
     """A frame which contains widgets for checks."""
     
-    text_statusLabel = pyqtSignal(str)
+    text_statusbar = pyqtSignal(str, int)
     
     def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
         """Constructor.
@@ -56,7 +56,7 @@ class CheckFrame(QFrame):
         self.setFrameShape(QFrame.StyledPanel)
         self.setFrameShadow(QFrame.Raised)
         
-        self.text_statusLabel.connect(self.dW.statusLabel._set_text_statusLabel)
+        self.text_statusbar.connect(self.dW.statusbar._set_text_statusbar)
         
         self.checkGridLayout = QGridLayout(self)
         self.checkGridLayout.setObjectName(u'checkGridLayout')

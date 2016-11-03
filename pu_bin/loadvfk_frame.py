@@ -39,7 +39,7 @@ from collections import namedtuple
 class LoadVfkFrame(QFrame):
     """A frame which contains widgets for loading a VFK file."""
     
-    text_statusLabel = pyqtSignal(str)
+    text_statusbar = pyqtSignal(str, int)
     text_browseVfkLineEdit = pyqtSignal(str)
     value_loadVfkProgressBar = pyqtSignal(int)
     
@@ -69,8 +69,8 @@ class LoadVfkFrame(QFrame):
         self.setFrameShape(QFrame.StyledPanel)
         self.setFrameShadow(QFrame.Raised)
         
-        self.text_statusLabel.connect(self.dW.statusLabel._set_text_statusLabel)
-        self.text_statusLabel.emit(u'Vyberte VFK soubor.')
+        self.text_statusbar.connect(self.dW.statusbar._set_text_statusbar)
+        self.text_statusbar.emit(u'Vyberte VFK soubor.', 0)
         
         self.loadVfkGridLayout = QGridLayout(self)
         self.loadVfkGridLayout.setObjectName(u'loadVfkGridLayout')
@@ -169,8 +169,8 @@ class LoadVfkFrame(QFrame):
     def loadVfkPushButton_clicked(self):
         """Starts loading the selected VFK file in a separate thread."""
         
-        self.text_statusLabel.emit(
-            u'Načítám VFK soubor. Tento proces může chvíli trvat.')
+        self.text_statusbar.emit(
+            u'Načítám VFK soubor. Tento proces může chvíli trvat.', 0)
         
         self._enable_load_widgets(False)
         
@@ -220,8 +220,8 @@ class LoadVfkFrame(QFrame):
             self.loadVfkProgressBar.setMaximum(1)
             self.value_loadVfkProgressBar.emit(1)
             
-            self.text_statusLabel.emit(
-                u'Data byla úspešně načtena.')
+            self.text_statusbar.emit(
+                u'Data byla úspešně načtena.', 0)
         except self.dW.puError:
             pass
         except:
@@ -250,8 +250,8 @@ class LoadVfkFrame(QFrame):
         dbInfo = QFileInfo(dbPath)
 
         if not dbInfo.isFile():
-            self.text_statusLabel.emit(
-                u'Importuji data do SQLite databáze.')
+            self.text_statusbar.emit(
+                u'Importuji data do SQLite databáze.', 0)
             
             vfkDriver = ogr.GetDriverByName('VFK')
             vfkDataSource = vfkDriver.Open(filePath)
@@ -264,9 +264,9 @@ class LoadVfkFrame(QFrame):
             
             for i in xrange(layerCount):
                 self.value_loadVfkProgressBar.emit(i+1)
-                self.text_statusLabel.emit(
+                self.text_statusbar.emit(
                     u'Načítám vrstvu {} ({}/{}).'
-                    .format(layerNames[i], i+1, layerCount))
+                    .format(layerNames[i], i+1, layerCount), 0)
                 
                 QgsApplication.processEvents()
             

@@ -82,5 +82,5 @@ class StackedWidget(QStackedWidget):
         self.openTabSignalMapper.mapped.connect(self.setCurrentIndex)
         
         self.currentChanged.connect(
-            self.dW.statusLabel._change_text_statusLabel)
+            self.dW.statusbar._change_text_statusbar)
 

@@ -32,7 +32,7 @@ from qgis.core import *
 class EditFrame(QFrame):
     """A frame which contains widgets for editing."""
     
-    text_statusLabel = pyqtSignal(str)
+    text_statusbar = pyqtSignal(str, int)
     
     def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
         """Constructor.
@@ -63,7 +63,7 @@ class EditFrame(QFrame):
         self.setFrameShape(QFrame.StyledPanel)
         self.setFrameShadow(QFrame.Raised)
         
-        self.text_statusLabel.connect(self.dW.statusLabel._set_text_statusLabel)
+        self.text_statusbar.connect(self.dW.statusbar._set_text_statusbar)
         
         self.editGridLayout = QGridLayout(self)
         self.editGridLayout.setObjectName(u'editGridLayout')
@@ -80,7 +80,7 @@ class EditFrame(QFrame):
         self.editToolbar = QToolBar(self)
         self.editToolbar.setObjectName(u'editToolbar')
         self.editToolbar.setIconSize(self.iface.mainWindow().iconSize())
-        self.editGridLayout.addWidget(self.editToolbar, 0, 0, 1, 1)
+        self.editGridLayout.addWidget(self.editToolbar, 0, 0, 1, 2)
         
         self.allEditsToolButton = QToolButton(self)
         self.allEditsToolButton.setObjectName(u'allEditsToolButton')
@@ -233,8 +233,8 @@ class EditFrame(QFrame):
         selectedFeatures = layer.selectedFeatures()
         
         if len(selectedFeatures) == 0:
-            self.text_statusLabel.emit(
-                u'V aktivní vrstvě nejsou vybrány žádné prvky.')
+            self.text_statusbar.emit(
+                u'V aktivní vrstvě nejsou vybrány žádné prvky.', 7000)
             return
         
         fields = layer.pendingFields()
@@ -242,9 +242,9 @@ class EditFrame(QFrame):
         fieldID = layer.fieldNameIndex(self.categoryName)
         
         if fieldID == -1:
-            self.text_statusLabel.emit(
+            self.text_statusbar.emit(
                 u'Aktivní vrstva neobsahuje sloupec "{}".'
-                .format(self.categoryName))
+                .format(self.categoryName), 7000)
             return
         
         layer.startEditing()
@@ -261,9 +261,9 @@ class EditFrame(QFrame):
         
         currentCategory = self.categoryComboBox.currentText()
         
-        self.text_statusLabel.emit(
+        self.text_statusbar.emit(
             u'Vybrané parcely byly zařazeny do kategorie "{}".'
-            .format(currentCategory))
+            .format(currentCategory), 7000)
     
     def _select_category(self):
         """Selects features in current category."""
@@ -276,9 +276,9 @@ class EditFrame(QFrame):
         fieldID = layer.fieldNameIndex(self.categoryName)
         
         if fieldID == -1:
-            self.text_statusLabel.emit(
+            self.text_statusbar.emit(
                 u'Aktivní vrstva neobsahuje sloupec "{}".'
-                .format(self.categoryName))
+                .format(self.categoryName), 7000)
             return
                 
         expression = QgsExpression(
@@ -292,7 +292,9 @@ class EditFrame(QFrame):
         
         currentCategory = self.categoryComboBox.currentText()
         
-        self.text_statusLabel.emit(
+        featuresCount = str(len(featuresID))
+        
+        self.text_statusbar.emit(
             u'V kategorii "{}" je {} parcel.'
-            .format(currentCategory, str(len(featuresID))))
+            .format(currentCategory, featuresCount), 7000)
 

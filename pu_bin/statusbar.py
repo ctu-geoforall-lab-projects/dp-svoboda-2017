@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- StatusLabel
+ Statusbar
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -21,12 +21,12 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QLabel
+from PyQt4.QtGui import QStatusBar
 from PyQt4.QtCore import QSettings
 
 
-class StatusLabel(QLabel):
-    """A label for displaying messages."""
+class Statusbar(QStatusBar):
+    """A status bar for displaying messages."""
     
     def __init__(self, parentWidget, dockWidgetName, iface):
         """Constructor.
@@ -41,35 +41,41 @@ class StatusLabel(QLabel):
         self.dWName = dockWidgetName
         self.iface = iface
         
-        super(QLabel, self).__init__(self.dW)
+        super(QStatusBar, self).__init__(self.dW)
         
         self._setup_self()
     
     def _setup_self(self):
         """Sets up self."""
         
-        self.setObjectName(u'statusLabel')
+        self.setObjectName(u'statusbar')
         
         self.frameText = QSettings()
+        
+        self.setStyleSheet("border: none")
     
-    def _set_text_statusLabel(self, text):
+    def _set_text_statusbar(self, text, duration):
         """Sets text.
         
         Args:
             text (str): A text to be written.
+            duration (int): A duration of the message in milli-seconds.
         
         """
         
         sender = self.sender().objectName()
         
-        self.frameText.setValue('puplugin/' + sender, text)
+        if duration == 0:
+            self.frameText.setValue('puplugin/' + sender, text)
+        else:
+            self.frameText.setValue('puplugin/' + sender, '')
         
-        self.setText(text)
+        self.showMessage(text, duration)
     
-    def _change_text_statusLabel(self):
+    def _change_text_statusbar(self):
         """Changes text according to the active tab."""
         
         currentWidgetName = self.dW.stackedWidget.currentWidget().objectName()
         
-        self.setText(self.frameText.value('puplugin/' + currentWidgetName, ''))
+        self.showMessage(self.frameText.value('puplugin/' + currentWidgetName, ''))
 

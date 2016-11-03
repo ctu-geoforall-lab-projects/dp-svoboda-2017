@@ -50,7 +50,7 @@ class Toolbar(QToolBar):
     def _setup_self(self):
         """Sets up self."""
         
-        self.setObjectName(u'toolBar')
+        self.setObjectName(u'toolbar')
         self.setIconSize(self.iface.mainWindow().iconSize())
         
         self._build_widgets()

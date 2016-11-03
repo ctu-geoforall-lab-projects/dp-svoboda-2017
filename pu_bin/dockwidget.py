@@ -21,13 +21,13 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QDockWidget, QWidget, QGridLayout
+from PyQt4.QtGui import QDockWidget, QWidget, QGridLayout, QStatusBar
 from PyQt4.QtCore import QMetaObject
 
 from qgis.gui import QgsMessageBar
 from qgis.core import *
 
-from status_label import StatusLabel
+from statusbar import Statusbar
 from toolbar import Toolbar
 from stackedwidget import StackedWidget
 
@@ -86,8 +86,8 @@ class DockWidget(QDockWidget):
         self.toolbar = Toolbar(self, dockWidgetName, self.iface)
         self.mainGridLayout.addWidget(self.toolbar, 0, 0, 1, 1)
         
-        self.statusLabel = StatusLabel(self, dockWidgetName, self.iface)
-        self.mainGridLayout.addWidget(self.statusLabel, 2, 0, 1, 1)
+        self.statusbar = Statusbar(self, dockWidgetName, self.iface)
+        self.mainGridLayout.addWidget(self.statusbar, 2, 0, 1, 1)
         
         self.stackedWidget = StackedWidget(self, dockWidgetName, self.iface)
         self.mainGridLayout.addWidget(self.stackedWidget, 1, 0, 1, 1)
