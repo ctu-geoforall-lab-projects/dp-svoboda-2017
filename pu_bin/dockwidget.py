@@ -126,7 +126,7 @@ class DockWidget(QDockWidget):
             czeBarMsg = czeLabelMsg
         
         QgsMessageLog.logMessage(engLogMsg, pluginName)
-        self.text_statusbar.emit(czeLabelMsg, 0)
+        self.text_statusbar.emit(czeLabelMsg, duration*1000)
         self.iface.messageBar().pushMessage(
             pluginName, czeBarMsg , QgsMessageBar.WARNING, duration)
         
