@@ -418,8 +418,9 @@ class LoadVfkFrame(QFrame):
         
         Also sets symbology according
         to "/plugins/puPlugin/data/qml/<vfkLayerCode>.qml" file, enables
-        snapping and sets all fields except for those listed in puColumnsPAR
-        non-editable.
+        snapping, sets all fields except for those listed in puColumnsPAR
+        non-editable and hides all fields except for those listed
+        in visibleColumnsPAR.
         
         Args:
             dbPath (QDir): A full path to the database.
@@ -456,6 +457,23 @@ class LoadVfkFrame(QFrame):
             QgsProject.instance().setSnapSettingsForLayer(
                 layer.id(), True, 2, 1, 10, True)
             self._set_options()
+            
+            columnsPAR = (
+                'KMENOVE_CISLO_PAR',
+                'PODDELENI_CISLA_PAR',
+                'VYMERA_PARCELY')
+        
+            visibleColumnsPAR = puColumnsPAR + columnsPAR
+            
+            tableConfig = layer.attributeTableConfig()
+            columns = tableConfig.columns()
+            
+            for column in columns:
+                if column.name not in visibleColumnsPAR:
+                    column.hidden = True
+            
+            tableConfig.setColumns(columns)
+            layer.setAttributeTableConfig(tableConfig)
         else:
             raise self.dW.puError(
                 self.dW,
