@@ -22,7 +22,7 @@
 """
 
 from PyQt4.QtGui import QDockWidget, QWidget, QGridLayout, QStatusBar
-from PyQt4.QtCore import QMetaObject
+from PyQt4.QtCore import pyqtSignal
 
 from qgis.gui import QgsMessageBar
 from qgis.core import *
@@ -36,6 +36,8 @@ import traceback
 
 class DockWidget(QDockWidget):
     """The main widget of the PU Plugin."""
+    
+    text_statusbar = pyqtSignal(str, int)
     
     def __init__(self, iface):
         """Constructor.
@@ -89,6 +91,8 @@ class DockWidget(QDockWidget):
         self.statusbar = Statusbar(self, dockWidgetName, self.iface)
         self.mainGridLayout.addWidget(self.statusbar, 2, 0, 1, 1)
         
+        self.text_statusbar.connect(self.statusbar._set_text_statusbar)
+        
         self.stackedWidget = StackedWidget(self, dockWidgetName, self.iface)
         self.mainGridLayout.addWidget(self.stackedWidget, 1, 0, 1, 1)
     
@@ -122,7 +126,7 @@ class DockWidget(QDockWidget):
             czeBarMsg = czeLabelMsg
         
         QgsMessageLog.logMessage(engLogMsg, pluginName)
-        self.statusLabel.text_statusLabel.emit(czeLabelMsg)
+        self.text_statusbar.emit(czeLabelMsg, 0)
         self.iface.messageBar().pushMessage(
             pluginName, czeBarMsg , QgsMessageBar.WARNING, duration)
         
