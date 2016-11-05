@@ -168,6 +168,7 @@ class EditFrame(QFrame):
         self.editToolbar.addAction(self.pasteFeaturesAction)
         
         self.categoryHBoxLayout = QHBoxLayout(self)
+        self.categoryHBoxLayout.setObjectName(u'categoryHBoxLayout')
         self.editGridLayout.addLayout(self.categoryHBoxLayout, 1, 0, 1, 2)
         
         self.categoryLabel = QLabel(self)
@@ -182,7 +183,7 @@ class EditFrame(QFrame):
         self.categoryComboBox.addItem(u'mimo obvod')
         self.categoryComboBox.currentIndexChanged.connect(
             self._set_categoryValue)
-        self.categoryHBoxLayout.addWidget(self.categoryComboBox, 2)
+        self.categoryHBoxLayout.addWidget(self.categoryComboBox, 1)
         
         self.setCategoryPushButton = QPushButton(self)
         self.setCategoryPushButton.setObjectName(u'setCategoryPushButton')
