@@ -21,7 +21,8 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QFrame, QGridLayout, QComboBox
+from PyQt4.QtGui import (QFrame, QGridLayout, QHBoxLayout, QLabel, QComboBox,
+                         QPushButton)
 from PyQt4.QtCore import pyqtSignal
 
 
@@ -66,7 +67,25 @@ class CheckFrame(QFrame):
     def _build_widgets(self):
         """Builds own widgets."""
         
+        self.checkHBoxLayout = QHBoxLayout(self)
+        self.checkHBoxLayout.setObjectName(u'checkHBoxLayout')
+        self.checkGridLayout.addLayout(self.checkHBoxLayout, 0, 0, 1, 2)
+        
+        self.checkLabel = QLabel(self)
+        self.checkLabel.setObjectName(u'checkLabel')
+        self.checkLabel.setText(u'Kontrola:')
+        self.checkHBoxLayout.addWidget(self.checkLabel)
+        
         self.checkComboBox = QComboBox(self)
         self.checkComboBox.setObjectName(u'checkComboBox')
-        self.checkGridLayout.addWidget(self.checkComboBox, 0, 0, 1, 1)
+        self.checkComboBox.addItem(u'obvodem')
+        self.checkComboBox.addItem(u'není v SPI (nová parcela)')
+        self.checkComboBox.addItem(u'není v mapě')
+        self.checkComboBox.addItem(u'výměra nad mezní odchylkou')
+        self.checkHBoxLayout.addWidget(self.checkComboBox, 1)
+        
+        self.checkPushButton = QPushButton(self)
+        self.checkPushButton.setObjectName(u'checkPushButton')
+        self.checkPushButton.setText(u'Provést kontrolu')
+        self.checkGridLayout.addWidget(self.checkPushButton, 2, 0, 1, 2)
 
