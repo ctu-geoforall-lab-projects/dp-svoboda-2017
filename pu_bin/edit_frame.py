@@ -40,6 +40,7 @@ class EditFrame(QFrame):
         Args:
             parentWidget (QWidget): A reference to the parent widget.
             dockWidgetName (str): A name of the dock widget.
+            iface (QgisInterface): A reference to the QgisInterface.
             dockWidget (QWidget): A reference to the dock widget.
         
         """

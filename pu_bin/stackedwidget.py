@@ -38,6 +38,7 @@ class StackedWidget(QStackedWidget):
         Args:
             parentWidget (QToolBar): A reference to the parent widget.
             dockWidgetName (str): A name of the dock widget.
+            iface (QgisInterface): A reference to the QgisInterface.
         
         """
         

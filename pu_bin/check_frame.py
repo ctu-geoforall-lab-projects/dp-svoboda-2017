@@ -22,7 +22,7 @@
 """
 
 from PyQt4.QtGui import (QFrame, QGridLayout, QHBoxLayout, QLabel, QComboBox,
-                         QPushButton)
+                         QStackedWidget, QPushButton)
 from PyQt4.QtCore import pyqtSignal
 
 
@@ -37,6 +37,7 @@ class CheckFrame(QFrame):
         Args:
             parentWidget (QWidget): A reference to the parent widget.
             dockWidgetName (str): A name of the dock widget.
+            iface (QgisInterface): A reference to the QgisInterface.
             dockWidget (QWidget): A reference to the dock widget.
         
         """
@@ -78,11 +79,15 @@ class CheckFrame(QFrame):
         
         self.checkComboBox = QComboBox(self)
         self.checkComboBox.setObjectName(u'checkComboBox')
-        self.checkComboBox.addItem(u'obvodem')
-        self.checkComboBox.addItem(u'není v SPI (nová parcela)')
+        # self.checkComboBox.addItem(u'obvodem')
+        # self.checkComboBox.addItem(u'není v SPI (nová parcela)')
         self.checkComboBox.addItem(u'není v mapě')
         self.checkComboBox.addItem(u'výměra nad mezní odchylkou')
         self.checkHBoxLayout.addWidget(self.checkComboBox, 1)
+        
+        self.checkStackedWidget = QStackedWidget(self)
+        self.checkStackedWidget.setObjectName(u'checkStackedWidget')
+        self.checkGridLayout.addWidget(self.checkStackedWidget, 1, 0, 1, 2)
         
         self.checkPushButton = QPushButton(self)
         self.checkPushButton.setObjectName(u'checkPushButton')

@@ -34,6 +34,7 @@ class Statusbar(QStatusBar):
         Args:
             parentWidget (QWidget): A reference to the parent widget.
             dockWidgetName (str): A name of the dock widget.
+            iface (QgisInterface): A reference to the QgisInterface.
         
         """
         
