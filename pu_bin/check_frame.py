@@ -25,6 +25,9 @@ from PyQt4.QtGui import (QFrame, QGridLayout, QHBoxLayout, QLabel, QComboBox,
                          QStackedWidget, QPushButton)
 from PyQt4.QtCore import pyqtSignal
 
+from notinmap_widget import NotInMapWidget
+from notinspi_widget import NotInSpiWidget
+
 
 class CheckFrame(QFrame):
     """A frame which contains widgets for checks."""
@@ -80,17 +83,36 @@ class CheckFrame(QFrame):
         self.checkComboBox = QComboBox(self)
         self.checkComboBox.setObjectName(u'checkComboBox')
         # self.checkComboBox.addItem(u'obvodem')
-        # self.checkComboBox.addItem(u'není v SPI (nová parcela)')
+        self.checkComboBox.addItem(u'není v SPI (nová parcela)')
         self.checkComboBox.addItem(u'není v mapě')
-        self.checkComboBox.addItem(u'výměra nad mezní odchylkou')
+        # self.checkComboBox.addItem(u'výměra nad mezní odchylkou')
+
         self.checkHBoxLayout.addWidget(self.checkComboBox, 1)
         
         self.checkStackedWidget = QStackedWidget(self)
         self.checkStackedWidget.setObjectName(u'checkStackedWidget')
         self.checkGridLayout.addWidget(self.checkStackedWidget, 1, 0, 1, 2)
         
+        self.notInSpiWidget = NotInSpiWidget(
+            self, self.dWName, self.iface, self.dW)
+        self.checkStackedWidget.addWidget(self.notInSpiWidget)
+        
+        self.notInMapWidget = NotInMapWidget(
+            self, self.dWName, self.iface, self.dW)
+        self.checkStackedWidget.addWidget(self.notInMapWidget)
+        
+        self.checkComboBox.currentIndexChanged.connect(
+            self.checkStackedWidget.setCurrentIndex)
+        
         self.checkPushButton = QPushButton(self)
         self.checkPushButton.setObjectName(u'checkPushButton')
-        self.checkPushButton.setText(u'Provést kontrolu')
+        self.checkPushButton.clicked.connect(self._run_check)
+        self.checkPushButton.setText(
+            u'Provést kontrolu a vybrat problémové parcely')
         self.checkGridLayout.addWidget(self.checkPushButton, 2, 0, 1, 2)
+    
+    def _run_check(self):
+        """Starts current check."""
+        
+        self.checkStackedWidget.currentWidget().execute()
 
