@@ -290,7 +290,7 @@ class EditFrame(QFrame):
         
         featuresID = [feature.id() for feature in features]
         
-        layer.setSelectedFeatures(featuresID)
+        layer.selectByIds(featuresID)
         
         currentCategory = self.categoryComboBox.currentText()
         
