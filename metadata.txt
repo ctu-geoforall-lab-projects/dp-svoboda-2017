@@ -8,7 +8,7 @@
 
 [general]
 name=PU Plugin
-qgisMinimumVersion=2.0
+qgisMinimumVersion=2.16
 description=Plugin pro pozemkove upravy
 version=0.1
 author=Ondřej Svoboda
