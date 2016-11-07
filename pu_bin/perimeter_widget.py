@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QWidget, QGridLayout
+from PyQt4.QtGui import QWidget, QLabel, QHBoxLayout
 
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
 from qgis.core import *
@@ -57,18 +57,23 @@ class PerimeterWidget(QWidget):
         
         self.setObjectName(u'perimeterWidget')
         
-        self.perimeterGridLayout = QGridLayout(self)
-        self.perimeterGridLayout.setObjectName(u'editGridLayout')
+        self.perimeterHBoxLayout = QHBoxLayout(self)
+        self.perimeterHBoxLayout.setObjectName(u'perimeterHBoxLayout')
         
         self._build_widgets()
     
     def _build_widgets(self):
         """Builds own widgets."""
         
+        self.perimeterLabel = QLabel(self)
+        self.perimeterLabel.setObjectName(u'perimeterLabel')
+        self.perimeterLabel.setText(u'Obvod:')
+        self.perimeterHBoxLayout.addWidget(self.perimeterLabel)
+        
         self.mapLayerComboBox = QgsMapLayerComboBox(self)
         self.mapLayerComboBox.setObjectName(u'mapLayerComboBox')
         self.mapLayerComboBox.setFilters(QgsMapLayerProxyModel.PolygonLayer)
-        self.perimeterGridLayout.addWidget(self.mapLayerComboBox, 0, 0, 1, 1)
+        self.perimeterHBoxLayout.addWidget(self.mapLayerComboBox, 1)
     
     def execute(self):
         """Executes the check."""
