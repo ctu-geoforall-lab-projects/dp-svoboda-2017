@@ -22,7 +22,6 @@
 """
 
 from PyQt4.QtGui import QWidget
-from PyQt4.QtCore import QSignalMapper
 
 from qgis.core import *
 
