@@ -294,9 +294,22 @@ class EditFrame(QFrame):
         
         currentCategory = self.categoryComboBox.currentText()
         
-        featuresCount = str(len(featuresID))
+        featuresCount = len(featuresID)
         
-        self.text_statusbar.emit(
-            u'V kategorii "{}" je {} parcel.'
-            .format(currentCategory, featuresCount), 7000)
+        if featuresCount == 0:
+            self.text_statusbar.emit(
+                u'V kategorii "{}" není žádná parcela.'
+                .format(currentCategory), 7000)
+        elif featuresCount == 1:
+            self.text_statusbar.emit(
+                u'V kategorii "{}" je {} parcela.'
+                .format(currentCategory, featuresCount), 7000)
+        elif 1 < featuresCount < 5:
+            self.text_statusbar.emit(
+                u'V kategorii "{}" jsou {} parcely.'
+                .format(currentCategory, featuresCount), 7000)
+        elif 5 <= featuresCount:
+            self.text_statusbar.emit(
+                u'V kategorii "{}" je {} parcel.'
+                .format(currentCategory, featuresCount), 7000)
 
