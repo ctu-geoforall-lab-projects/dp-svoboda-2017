@@ -245,8 +245,6 @@ class EditFrame(QFrame):
                 u'V aktivní vrstvě nejsou vybrány žádné prvky.', 7000)
             return
         
-        fields = layer.pendingFields()
-        
         fieldID = layer.fieldNameIndex(self.categoryName)
         
         if fieldID == -1:
