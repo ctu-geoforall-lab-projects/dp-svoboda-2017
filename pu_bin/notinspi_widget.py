@@ -60,6 +60,11 @@ class NotInSpiWidget(QWidget):
         layer = self.iface.activeLayer()
         
         if not layer:
+            self.pW.text_statusbar.emit(u'Žádná aktivní vrstva.', 7000)
+            return
+        
+        if layer.type() != 0:
+            self.pW.text_statusbar.emit(u'Aktivní vrstva není vektorová.', 7000)
             return
                 
         expression = QgsExpression("\"ID\" is null")

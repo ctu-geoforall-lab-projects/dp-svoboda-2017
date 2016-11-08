@@ -230,7 +230,13 @@ class EditFrame(QFrame):
         layer = self.iface.activeLayer()
         
         if not layer:
+            self.text_statusbar.emit(u'Žádná aktivní vrstva.', 7000)
             return
+        
+        if layer.type() != 0:
+            self.text_statusbar.emit(u'Aktivní vrstva není vektorová.', 7000)
+            return
+        
          
         selectedFeatures = layer.selectedFeatures()
         
@@ -273,6 +279,11 @@ class EditFrame(QFrame):
         layer = self.iface.activeLayer()
         
         if not layer:
+            self.text_statusbar.emit(u'Žádná aktivní vrstva.', 7000)
+            return
+        
+        if layer.type() != 0:
+            self.text_statusbar.emit(u'Aktivní vrstva není vektorová.', 7000)
             return
 
         fieldID = layer.fieldNameIndex(self.categoryName)
