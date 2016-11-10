@@ -26,7 +26,6 @@ from PyQt4.QtGui import (QFrame, QGridLayout, QLabel, QLineEdit, QPushButton,
 from PyQt4.QtCore import pyqtSignal, QFileInfo, QDir, QUuid, QSettings, QFile
 from PyQt4.QtSql import QSqlDatabase, QSqlQuery
 
-from qgis.gui import QgsMessageBar
 from qgis.core import *
 
 from osgeo import ogr

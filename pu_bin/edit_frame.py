@@ -237,7 +237,6 @@ class EditFrame(QFrame):
             self.text_statusbar.emit(u'Aktivní vrstva není vektorová.', 7000)
             return
         
-         
         selectedFeatures = layer.selectedFeatures()
         
         if len(selectedFeatures) == 0:
