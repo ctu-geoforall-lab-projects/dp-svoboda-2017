@@ -28,6 +28,7 @@ from PyQt4.QtCore import pyqtSignal
 from perimeter_widget import PerimeterWidget
 from notinmap_widget import NotInMapWidget
 from notinspi_widget import NotInSpiWidget
+from area_widget import AreaWidget
 
 
 class CheckFrame(QFrame):
@@ -86,7 +87,7 @@ class CheckFrame(QFrame):
         self.checkComboBox.addItem(u'obvodem')
         self.checkComboBox.addItem(u'není v SPI (nová parcela)')
         self.checkComboBox.addItem(u'není v mapě')
-        # self.checkComboBox.addItem(u'výměra nad mezní odchylkou')
+        self.checkComboBox.addItem(u'výměra nad mezní odchylkou')
 
         self.checkHBoxLayout.addWidget(self.checkComboBox, 1)
         
@@ -105,6 +106,10 @@ class CheckFrame(QFrame):
         self.notInMapWidget = NotInMapWidget(
             self, self.dWName, self.iface, self.dW)
         self.checkStackedWidget.addWidget(self.notInMapWidget)
+        
+        self.areaWidget = AreaWidget(
+            self, self.dWName, self.iface, self.dW)
+        self.checkStackedWidget.addWidget(self.areaWidget)
         
         self.checkComboBox.currentIndexChanged.connect(
             self.checkStackedWidget.setCurrentIndex)
