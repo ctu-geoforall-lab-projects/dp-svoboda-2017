@@ -304,7 +304,7 @@ class EditFrame(QFrame):
         
         featuresCount = len(featuresID)
         
-        duration = 7000
+        duration = 10000
         
         if featuresCount == 0:
             self.text_statusbar.emit(
