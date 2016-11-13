@@ -122,7 +122,33 @@ class CheckFrame(QFrame):
         self.checkGridLayout.addWidget(self.checkPushButton, 2, 0, 1, 2)
     
     def _run_check(self):
-        """Starts current check."""
+        """Starts current check.
         
-        self.checkStackedWidget.currentWidget().execute()
+        First it check if there is an active layer, then if the active layer
+        contains all required columns and then it executes the check.
+        
+        """
+        
+        try:
+            layer = self.iface.activeLayer()
+            
+            if not layer:
+                self.text_statusbar.emit(u'Žádná aktivní vrstva.', 7000)
+                return
+            
+            fieldNames = [field.name() for field in layer.pendingFields()]
+            
+            if not all(column in fieldNames for column in self.pW.rqdColumnsPAR):
+                self.text_statusbar.emit(
+                    u'Aktivní vrstva neobsahuje potřebné sloupce.', 7000)
+                return
+            
+            self.checkStackedWidget.currentWidget().execute(layer)
+        except:
+            currentCheckName = self.checkComboBox.currentText()
+            
+            raise self.dW.puError(
+                self.dW,
+                u'Error executing check "{}".'.format(currentCheckName),
+                u'Chyba při provádění kontroly "{}".'.format(currentCheckName))
 

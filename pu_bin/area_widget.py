@@ -73,37 +73,18 @@ class AreaWidget(QWidget):
         self.areaLineEdit.setValidator(doubleValidator)
         self.areaHBoxLayout.addWidget(self.areaLineEdit, 1)
     
-    def execute(self):
-        """Executes the check."""
+    def execute(self, layer):
+        """Executes the check.
+        
+        Args:
+            layer(QgsVectorLayer): A reference to the active layer.
+        
+        """
         
         if self.dW.stackedWidget.editFrame.toggleEditingAction.isChecked():
             editing = True
         else:
             editing = False
-        
-        layer = self.iface.activeLayer()
-        
-        if not layer:
-            self.pW.text_statusbar.emit(u'Žádná aktivní vrstva.', 7000)
-            return
-        
-        if layer.type() != 0:
-            self.pW.text_statusbar.emit(u'Aktivní vrstva není vektorová.', 7000)
-            return
-        
-        areaFieldName = 'VYMERA_PARCELY'
-        puAreaFieldName = 'PU_VYMERA_PARCELY'
-        
-        requiredFieldNames = (areaFieldName, puAreaFieldName)
-        
-        fieldNames = [field.name() for field in layer.pendingFields()]
-        
-        for requiredFieldName in requiredFieldNames:
-            if not requiredFieldName in fieldNames:
-                self.pW.text_statusbar.emit(
-                    u'Aktivní vrstva neobsahuje sloupec "{}".'
-                    .format(requiredFieldName), 7000)
-                return
         
         threshhold = self.areaLineEdit.text()
         
@@ -121,10 +102,10 @@ class AreaWidget(QWidget):
         
         for feature in features:
             sgiArea = int(round(feature.geometry().area()))
-            spiArea = feature.attribute(areaFieldName)
+            spiArea = feature.attribute('VYMERA_PARCELY')
             if sgiArea != spiArea:
                 featureID = feature.id()
-                fieldID = layer.fieldNameIndex(puAreaFieldName)
+                fieldID = layer.fieldNameIndex('PU_VYMERA_PARCELY')
                 layer.changeAttributeValue(featureID, fieldID, sgiArea)
                 
                 limitDifference =  spiArea*(float(threshhold)/100)

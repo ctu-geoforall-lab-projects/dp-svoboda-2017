@@ -75,18 +75,13 @@ class PerimeterWidget(QWidget):
         self.mapLayerComboBox.setFilters(QgsMapLayerProxyModel.PolygonLayer)
         self.perimeterHBoxLayout.addWidget(self.mapLayerComboBox, 1)
     
-    def execute(self):
-        """Executes the check."""
+    def execute(self, layer):
+        """Executes the check.
         
-        layer = self.iface.activeLayer()
+        Args:
+            layer(QgsVectorLayer): A reference to the active layer.
         
-        if not layer:
-            self.pW.text_statusbar.emit(u'Žádná aktivní vrstva.', 7000)
-            return
-        
-        if layer.type() != 0:
-            self.pW.text_statusbar.emit(u'Aktivní vrstva není vektorová.', 7000)
-            return
+        """
         
         perimeter = self.mapLayerComboBox.currentLayer()
         
