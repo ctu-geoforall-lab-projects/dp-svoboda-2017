@@ -205,17 +205,11 @@ class LoadVfkFrame(QFrame):
             
             self._load_vfk_file(filePath, dbPath, vfkLayerCode)
             
-            puColumnsPAR = (
-                'PU_KMENOVE_CISLO_PAR',
-                'PU_PODDELENI_CISLA_PAR',
-                'PU_VYMERA_PARCELY',
-                'PU_KATEGORIE')
-            
-            self._open_database(dbPath, puColumnsPAR)
+            self._open_database(dbPath)
             
             layerName = fileInfo.baseName() + '|' + vfkLayerCode
             
-            self._load_vfk_layer(dbPath, vfkLayerCode, layerName, puColumnsPAR)
+            self._load_vfk_layer(dbPath, vfkLayerCode, layerName)
             
             self.loadVfkProgressBar.setMaximum(1)
             self.value_loadVfkProgressBar.emit(1)
@@ -325,7 +319,7 @@ class LoadVfkFrame(QFrame):
         
         return dataSourceInfo
     
-    def _open_database(self, dbPath, puColumnsPAR):
+    def _open_database(self, dbPath):
         """Opens a database.
         
         Also checks if there are 'geometry_columns' and 'spatial_ref_sys'
@@ -333,7 +327,6 @@ class LoadVfkFrame(QFrame):
         
         Args:
             dbPath (QDir): A full path to the database.
-            puColumnsPAR (list): A list of columns that the plugin adds.
         
         Raises:
             dw.puError: When SQLITE database driver is not available
@@ -401,7 +394,7 @@ class LoadVfkFrame(QFrame):
             name = str(record.value('name'))
             columnsPAR.append(name)
         
-        if not all(column in columnsPAR for column in puColumnsPAR):
+        if not all(column in columnsPAR for column in self.pW.puColumnsPAR):
             addPuColumnPARFile = QFile(':/add_pu_columns_PAR.sql', self)
             addPuColumnPARFile.open(QFile.ReadOnly|QFile.Text)
             
@@ -413,20 +406,19 @@ class LoadVfkFrame(QFrame):
             for query in addPuColumnsPARQueries:
                 addPuColumnPARQuery.exec_(query)
     
-    def _load_vfk_layer(self, dbPath, vfkLayerCode, layerName, puColumnsPAR):
+    def _load_vfk_layer(self, dbPath, vfkLayerCode, layerName):
         """Loads a layer of the given code from VFK file into the map canvas.
         
         Also sets symbology according
         to "/plugins/puPlugin/data/qml/<vfkLayerCode>.qml" file, enables
-        snapping, sets all fields except for those listed in puColumnsPAR
-        non-editable and hides all fields except for those listed
-        in visibleColumnsPAR.
+        snapping, sets all fields except for those listed
+        in self.pW.puColumnsPAR non-editable and hides all fields
+        except for those listed in self.pW.rqdColumnsPAR.
         
         Args:
             dbPath (QDir): A full path to the database.
             vfkLayerCode (str): A code of the layer.
             layerName (str): A name of the layer.
-            puColumnsPAR (list): A list of columns that the plugin adds.
         
         Raises:
             dw.puError: When <vfkLayerCode> layer is not valid.
@@ -446,7 +438,7 @@ class LoadVfkFrame(QFrame):
         formConfig = layer.editFormConfig()
         
         for i in layer.pendingAllAttributesList():
-            if fields[i].name() not in puColumnsPAR:
+            if fields[i].name() not in self.pW.puColumnsPAR:
                 formConfig.setReadOnly(i)
         
         if layer.isValid():
@@ -458,18 +450,11 @@ class LoadVfkFrame(QFrame):
                 layer.id(), True, 2, 1, 10, True)
             self._set_options()
             
-            columnsPAR = (
-                'KMENOVE_CISLO_PAR',
-                'PODDELENI_CISLA_PAR',
-                'VYMERA_PARCELY')
-        
-            visibleColumnsPAR = puColumnsPAR + columnsPAR
-            
             tableConfig = layer.attributeTableConfig()
             columns = tableConfig.columns()
             
             for column in columns:
-                if column.name not in visibleColumnsPAR:
+                if column.name not in self.pW.rqdColumnsPAR:
                     column.hidden = True
             
             tableConfig.setColumns(columns)

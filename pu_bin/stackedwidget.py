@@ -46,6 +46,19 @@ class StackedWidget(QStackedWidget):
         self.dWName = dockWidgetName
         self.iface = iface
         
+        self.puColumnsPAR = (
+            'PU_KMENOVE_CISLO_PAR',
+            'PU_PODDELENI_CISLA_PAR',
+            'PU_VYMERA_PARCELY',
+            'PU_KATEGORIE')
+        
+        self.columnsPAR = (
+            'KMENOVE_CISLO_PAR',
+            'PODDELENI_CISLA_PAR',
+            'VYMERA_PARCELY')
+        
+        self.rqdColumnsPAR = self.puColumnsPAR + self.columnsPAR
+        
         super(QStackedWidget, self).__init__(self.dW)
         
         self._setup_self()
