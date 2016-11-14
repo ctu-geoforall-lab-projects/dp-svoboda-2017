@@ -23,6 +23,7 @@
 
 from PyQt4.QtGui import (QWidget, QHBoxLayout, QLabel, QLineEdit,
                          QDoubleValidator)
+from PyQt4.QtCore import QPyNullVariant
 
 
 class AreaWidget(QWidget):
@@ -101,12 +102,19 @@ class AreaWidget(QWidget):
         features = layer.getFeatures()
         
         for feature in features:
-            sgiArea = int(round(feature.geometry().area()))
+            featureGeometry = feature.geometry()
+            if featureGeometry == None:
+                continue
+            
+            sgiArea = int(round(featureGeometry.area()))
             spiArea = feature.attribute('VYMERA_PARCELY')
             if sgiArea != spiArea:
                 featureID = feature.id()
                 fieldID = layer.fieldNameIndex('PU_VYMERA_PARCELY')
                 layer.changeAttributeValue(featureID, fieldID, sgiArea)
+                
+                if type(spiArea) == QPyNullVariant:
+                    continue
                 
                 limitDifference =  spiArea*(float(threshhold)/100)
                 
