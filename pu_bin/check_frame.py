@@ -124,26 +124,17 @@ class CheckFrame(QFrame):
     def _run_check(self):
         """Starts current check.
         
-        First it check if there is an active layer, then if the active layer
-        contains all required columns and then it executes the check.
+        First it calls a function that checks if there is an active layer
+        and if the active layer contains all required columns. If that function
+        returns True, check is executed.
         
         """
         
         try:
-            layer = self.iface.activeLayer()
+            succes, layer = self.pW.check_active_layer(self)
             
-            if not layer:
-                self.text_statusbar.emit(u'Žádná aktivní vrstva.', 7000)
-                return
-            
-            fieldNames = [field.name() for field in layer.pendingFields()]
-            
-            if not all(column in fieldNames for column in self.pW.rqdColumnsPAR):
-                self.text_statusbar.emit(
-                    u'Aktivní vrstva neobsahuje potřebné sloupce.', 7000)
-                return
-            
-            self.checkStackedWidget.currentWidget().execute(layer)
+            if succes == True:
+                self.checkStackedWidget.currentWidget().execute(layer)
         except:
             currentCheckName = self.checkComboBox.currentText()
             

@@ -222,104 +222,92 @@ class EditFrame(QFrame):
     def _set_pu_category(self):
         """Sets a categoryValue to categoryName column for selected features."""
         
-        if self.toggleEditingAction.isChecked():
-            editing = True
-        else:
-            editing = False
-        
-        layer = self.iface.activeLayer()
-        
-        if not layer:
-            self.text_statusbar.emit(u'Žádná aktivní vrstva.', 7000)
-            return
-        
-        if layer.type() != 0:
-            self.text_statusbar.emit(u'Aktivní vrstva není vektorová.', 7000)
-            return
-        
-        selectedFeatures = layer.selectedFeatures()
-        
-        if len(selectedFeatures) == 0:
+        try:
+            succes, layer = self.pW.check_active_layer(self)
+            
+            if not succes == True:
+                return
+            
+            if self.toggleEditingAction.isChecked():
+                editing = True
+            else:
+                editing = False
+            
+            selectedFeatures = layer.selectedFeatures()
+            
+            if len(selectedFeatures) == 0:
+                self.text_statusbar.emit(
+                    u'V aktivní vrstvě nejsou vybrány žádné prvky.', 7000)
+                return
+            
+            fieldID = layer.fieldNameIndex(self.categoryName)
+            
+            layer.startEditing()
+            layer.updateFields()
+            
+            for feature in selectedFeatures:
+                featureID = feature.id()
+                layer.changeAttributeValue(featureID, fieldID, self.categoryValue)
+            
+            layer.commitChanges()
+            
+            if editing == True:
+                self.toggleEditingAction.trigger()
+            
+            currentCategory = self.categoryComboBox.currentText()
+            
             self.text_statusbar.emit(
-                u'V aktivní vrstvě nejsou vybrány žádné prvky.', 7000)
-            return
-        
-        fieldID = layer.fieldNameIndex(self.categoryName)
-        
-        if fieldID == -1:
-            self.text_statusbar.emit(
-                u'Aktivní vrstva neobsahuje sloupec "{}".'
-                .format(self.categoryName), 7000)
-            return
-        
-        layer.startEditing()
-        layer.updateFields()
-        
-        for feature in selectedFeatures:
-            featureID = feature.id()
-            layer.changeAttributeValue(featureID, fieldID, self.categoryValue)
-        
-        layer.commitChanges()
-        
-        if editing == True:
-            self.toggleEditingAction.trigger()
-        
-        currentCategory = self.categoryComboBox.currentText()
-        
-        self.text_statusbar.emit(
-            u'Vybrané parcely byly zařazeny do kategorie "{}".'
-            .format(currentCategory), 7000)
+                u'Vybrané parcely byly zařazeny do kategorie "{}".'
+                .format(currentCategory), 7000)
+        except:
+            self.dW._raise_pu_error(
+                u'Error setting parcel category.',
+                u'Chyba při zařazování do kategorie parcel.')
     
     def _select_category(self):
         """Selects features in current category."""
         
-        layer = self.iface.activeLayer()
-        
-        if not layer:
-            self.text_statusbar.emit(u'Žádná aktivní vrstva.', 7000)
-            return
-        
-        if layer.type() != 0:
-            self.text_statusbar.emit(u'Aktivní vrstva není vektorová.', 7000)
-            return
-
-        fieldID = layer.fieldNameIndex(self.categoryName)
-        
-        if fieldID == -1:
-            self.text_statusbar.emit(
-                u'Aktivní vrstva neobsahuje sloupec "{}".'
-                .format(self.categoryName), 7000)
-            return
-                
-        expression = QgsExpression(
-            "\"{}\"={}".format(self.categoryName, self.categoryValue))
-        
-        features = layer.getFeatures(QgsFeatureRequest(expression))
-        
-        featuresID = [feature.id() for feature in features]
-        
-        layer.selectByIds(featuresID)
-        
-        currentCategory = self.categoryComboBox.currentText()
-        
-        featuresCount = len(featuresID)
-        
-        duration = 10000
-        
-        if featuresCount == 0:
-            self.text_statusbar.emit(
-                u'V kategorii "{}" není žádná parcela.'
-                .format(currentCategory), duration)
-        elif featuresCount == 1:
-            self.text_statusbar.emit(
-                u'V kategorii "{}" je {} parcela.'
-                .format(currentCategory, featuresCount), duration)
-        elif 1 < featuresCount < 5:
-            self.text_statusbar.emit(
-                u'V kategorii "{}" jsou {} parcely.'
-                .format(currentCategory, featuresCount), duration)
-        elif 5 <= featuresCount:
-            self.text_statusbar.emit(
-                u'V kategorii "{}" je {} parcel.'
-                .format(currentCategory, featuresCount), duration)
+        try:
+            succes, layer = self.pW.check_active_layer(self)
+            
+            if not succes == True:
+                return
+    
+            fieldID = layer.fieldNameIndex(self.categoryName)
+                    
+            expression = QgsExpression(
+                "\"{}\"={}".format(self.categoryName, self.categoryValue))
+            
+            features = layer.getFeatures(QgsFeatureRequest(expression))
+            
+            featuresID = [feature.id() for feature in features]
+            
+            layer.selectByIds(featuresID)
+            
+            currentCategory = self.categoryComboBox.currentText()
+            
+            featuresCount = len(featuresID)
+            
+            duration = 10000
+            
+            if featuresCount == 0:
+                self.text_statusbar.emit(
+                    u'V kategorii "{}" není žádná parcela.'
+                    .format(currentCategory), duration)
+            elif featuresCount == 1:
+                self.text_statusbar.emit(
+                    u'V kategorii "{}" je {} parcela.'
+                    .format(currentCategory, featuresCount), duration)
+            elif 1 < featuresCount < 5:
+                self.text_statusbar.emit(
+                    u'V kategorii "{}" jsou {} parcely.'
+                    .format(currentCategory, featuresCount), duration)
+            elif 5 <= featuresCount:
+                self.text_statusbar.emit(
+                    u'V kategorii "{}" je {} parcel.'
+                    .format(currentCategory, featuresCount), duration)
+        except:
+            self.dW._raise_pu_error(
+                u'Error selecting parcels in category.',
+                u'Chyba při vybírání parcel v kategorii.')
 
