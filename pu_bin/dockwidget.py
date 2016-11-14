@@ -100,8 +100,8 @@ class DockWidget(QDockWidget):
             self, engLogMsg, czeLabelMsg, czeBarMsg=None, duration=7):
         """Displays error messages.
     
-        Displays error messages in the 'puPlugin' Log Messages Panel,
-        statusLabel and Message Bar.
+        Displays error messages in the Log Messages Panel, statusLabel
+        and Message Bar.
         
         For development purposes it displays traceback
         in the 'puPlugin Development' Log Messages Tab.
@@ -133,8 +133,7 @@ class DockWidget(QDockWidget):
         developmentTb = u'PU Plugin Development'
         tb = traceback.format_exc()
         
-        if 'None' not in tb:
-            QgsMessageLog.logMessage(tb, developmentTb)
+        QgsMessageLog.logMessage(tb, developmentTb)
     
     class puError(Exception):
         """A custom exception."""
