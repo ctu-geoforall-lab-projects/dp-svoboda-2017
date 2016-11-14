@@ -62,7 +62,7 @@ class NotInSpiWidget(QWidget):
         
         """
                 
-        expression = QgsExpression("\"ID\" is null")
+        expression = QgsExpression("\"KMENOVE_CISLO_PAR\" is null")
         
         features = layer.getFeatures(QgsFeatureRequest(expression))
         
