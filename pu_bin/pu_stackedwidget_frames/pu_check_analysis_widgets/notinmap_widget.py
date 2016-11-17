@@ -61,29 +61,39 @@ class NotInMapWidget(QWidget):
             layer(QgsVectorLayer): A reference to the active layer.
         
         """
-                
-        expression = QgsExpression("$geometry is null")
         
-        features = layer.getFeatures(QgsFeatureRequest(expression))
-        
-        featuresID = [feature.id() for feature in features]
-        
-        layer.selectByIds(featuresID)
-        
-        featuresCount = len(featuresID)
-        
-        duration = 10000
-        
-        if featuresCount == 0:
-            self.pW.text_statusbar.emit(
-                u'V mapě jsou všechny parcely.', duration)
-        elif featuresCount == 1:
-            self.pW.text_statusbar.emit(
-                u'V mapě není {} parcela.'.format(featuresCount), duration)
-        elif 1 < featuresCount < 5:
-            self.pW.text_statusbar.emit(
-                u'V mapě nejsou {} parcely.'.format(featuresCount), duration)
-        elif 5 <= featuresCount:
-            self.pW.text_statusbar.emit(
-                u'V mapě není {} parcel.'.format(featuresCount), duration)
+        try:
+            self.pW.text_statusbar.emit(u'Provádím kontrolu - není v mapě.', 0)
+            
+            expression = QgsExpression("$geometry is null")
+            
+            features = layer.getFeatures(QgsFeatureRequest(expression))
+            
+            featuresID = [feature.id() for feature in features]
+            
+            layer.selectByIds(featuresID)
+            
+            featuresCount = len(featuresID)
+            
+            duration = 10000
+            
+            if featuresCount == 0:
+                self.pW.text_statusbar.emit(
+                    u'V mapě jsou všechny parcely.', duration)
+            elif featuresCount == 1:
+                self.pW.text_statusbar.emit(
+                    u'V mapě není {} parcela.'.format(featuresCount), duration)
+            elif 1 < featuresCount < 5:
+                self.pW.text_statusbar.emit(
+                    u'V mapě nejsou {} parcely.'.format(featuresCount), duration)
+            elif 5 <= featuresCount:
+                self.pW.text_statusbar.emit(
+                    u'V mapě není {} parcel.'.format(featuresCount), duration)
+        except:
+            currentCheckName = self.pW.checkComboBox.currentText()
+            
+            raise self.dW.puError(
+                self.dW,
+                u'Error executing "{}".'.format(currentCheckName),
+                u'Chyba při provádění "{}".'.format(currentCheckName))
 

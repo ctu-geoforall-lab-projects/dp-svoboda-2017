@@ -85,27 +85,37 @@ class PerimeterWidget(QWidget):
         
         """
         
-        perimeter = self.perimeterMapLayerComboBox.currentLayer()
-        
-        processing.runalg(
-            'qgis:selectbylocation', layer, perimeter, u'within', 0, 0)
-        
-        layer.invertSelection()
-        
-        featuresCount = layer.selectedFeatureCount()
-        
-        duration = 10000
-        
-        if featuresCount == 0:
-            self.pW.text_statusbar.emit(
-                u'Uvnitř obvodu jsou všechny parcely.', duration)
-        elif featuresCount == 1:
-            self.pW.text_statusbar.emit(
-                u'Uvnitř obvodu není {} parcela'.format(featuresCount), duration)
-        elif 1 < featuresCount < 5:
-            self.pW.text_statusbar.emit(
-                u'Uvnitř obvodu nejsou {} parcely.'.format(featuresCount), duration)
-        elif 5 <= featuresCount:
-            self.pW.text_statusbar.emit(
-                u'Uvnitř obvodu není {} parcel.'.format(featuresCount), duration)
+        try:
+            self.pW.text_statusbar.emit(u'Provádím kontrolu - obvodem.', 0)
+            
+            perimeter = self.perimeterMapLayerComboBox.currentLayer()
+            
+            processing.runalg(
+                'qgis:selectbylocation', layer, perimeter, u'within', 0, 0)
+            
+            layer.invertSelection()
+            
+            featuresCount = layer.selectedFeatureCount()
+            
+            duration = 10000
+            
+            if featuresCount == 0:
+                self.pW.text_statusbar.emit(
+                    u'Uvnitř obvodu jsou všechny parcely.', duration)
+            elif featuresCount == 1:
+                self.pW.text_statusbar.emit(
+                    u'Uvnitř obvodu není {} parcela'.format(featuresCount), duration)
+            elif 1 < featuresCount < 5:
+                self.pW.text_statusbar.emit(
+                    u'Uvnitř obvodu nejsou {} parcely.'.format(featuresCount), duration)
+            elif 5 <= featuresCount:
+                self.pW.text_statusbar.emit(
+                    u'Uvnitř obvodu není {} parcel.'.format(featuresCount), duration)
+        except:
+            currentCheckName = self.pW.checkComboBox.currentText()
+            
+            raise self.dW.puError(
+                self.dW,
+                u'Error executing "{}".'.format(currentCheckName),
+                u'Chyba při provádění "{}".'.format(currentCheckName))
 

@@ -29,6 +29,8 @@ from pu_check_analysis_widgets import (perimeter_widget, notinspi_widget,
                                        notinmap_widget, area_widget,
                                        distance_widget)
 
+from execute_thread import Executehread
+
 
 class CheckFrame(QFrame):
     """A frame which contains widgets for checks."""
@@ -133,22 +135,16 @@ class CheckFrame(QFrame):
         
         First it calls a function that checks if there is an active layer
         and if the active layer contains all required columns. If that function
-        returns True, check is executed.
+        returns True, check is executed in a separate thread.
         
         """
         
-        try:
-            succes, layer = self.pW.check_active_layer(self)
-            
-            if succes == True:
-                self.checkStackedWidget.currentWidget().execute(layer)
-        except:
-            currentCheckName = self.checkComboBox.currentText()
-            
-            raise self.dW.puError(
-                self.dW,
-                u'Error executing check "{}".'.format(currentCheckName),
-                u'Chyba při provádění kontroly "{}".'.format(currentCheckName))
+        succes, layer = self.pW.check_active_layer(self)
+        
+        if succes == True:
+            self.executeThread = Executehread(layer)
+            self.executeThread.work.connect(self.checkStackedWidget.currentWidget().execute)
+            self.executeThread.start()
     
     def _set_text_checkPushButton(self, currentIndex):
         """Sets checkPushButton's text.

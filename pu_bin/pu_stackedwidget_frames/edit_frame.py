@@ -28,6 +28,8 @@ from PyQt4.QtCore import pyqtSignal, QSignalMapper
 
 from qgis.core import *
 
+from execute_thread import Executehread
+
 
 class EditFrame(QFrame):
     """A frame which contains widgets for editing."""
@@ -191,7 +193,8 @@ class EditFrame(QFrame):
         self.setCategoryPushButton.setText(u'Zařadit')
         self.setCategoryPushButton.setToolTip(
             u'Zařadit vybrané parcely do kategorie')
-        self.setCategoryPushButton.clicked.connect(self._set_pu_category)
+        self.setCategoryPushButton.clicked.connect(
+            self._run_setting_pu_category)
         self.editGridLayout.addWidget(self.setCategoryPushButton, 2, 0, 1, 1)
         
         self.selectCategoryPushButton = QPushButton(self)
@@ -219,15 +222,26 @@ class EditFrame(QFrame):
         
         self.categoryValue = self.categoryComboBox.currentIndex() + 1
         
-    def _set_pu_category(self):
-        """Sets a categoryValue to categoryName column for selected features."""
+    def _run_setting_pu_category(self):
+        """Calls method for setting a categoryValue to categoryName column."""
         
+        succes, layer = self.pW.check_active_layer(self)
+        
+        if not succes == True:
+            return
+        
+        self.executeThread = Executehread(layer)
+        self.executeThread.work.connect(self._set_pu_category)
+        self.executeThread.start()
+    
+    def _set_pu_category(self, layer):
+        """Sets a categoryValue to categoryName column for selected features.
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the layer.
+        
+        """
         try:
-            succes, layer = self.pW.check_active_layer(self)
-            
-            if not succes == True:
-                return
-            
             if self.toggleEditingAction.isChecked():
                 editing = True
             else:
@@ -239,6 +253,12 @@ class EditFrame(QFrame):
                 self.text_statusbar.emit(
                     u'V aktivní vrstvě nejsou vybrány žádné prvky.', 7000)
                 return
+            
+            currentCategory = self.categoryComboBox.currentText()
+            
+            self.text_statusbar.emit(
+                u'Zařazuji vybrané parcely do kategorie "{}".'
+                .format(currentCategory), 0)
             
             fieldID = layer.fieldNameIndex(self.categoryName)
             
@@ -253,8 +273,6 @@ class EditFrame(QFrame):
             
             if editing == True:
                 self.toggleEditingAction.trigger()
-            
-            currentCategory = self.categoryComboBox.currentText()
             
             self.text_statusbar.emit(
                 u'Vybrané parcely byly zařazeny do kategorie "{}".'
