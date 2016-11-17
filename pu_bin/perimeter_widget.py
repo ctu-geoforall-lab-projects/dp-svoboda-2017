@@ -70,10 +70,12 @@ class PerimeterWidget(QWidget):
         self.perimeterLabel.setText(u'Obvod:')
         self.perimeterHBoxLayout.addWidget(self.perimeterLabel)
         
-        self.mapLayerComboBox = QgsMapLayerComboBox(self)
-        self.mapLayerComboBox.setObjectName(u'mapLayerComboBox')
-        self.mapLayerComboBox.setFilters(QgsMapLayerProxyModel.PolygonLayer)
-        self.perimeterHBoxLayout.addWidget(self.mapLayerComboBox, 1)
+        self.perimeterMapLayerComboBox = QgsMapLayerComboBox(self)
+        self.perimeterMapLayerComboBox.setObjectName(
+            u'perimeterMapLayerComboBox')
+        self.perimeterMapLayerComboBox.setFilters(
+            QgsMapLayerProxyModel.PolygonLayer)
+        self.perimeterHBoxLayout.addWidget(self.perimeterMapLayerComboBox, 1)
     
     def execute(self, layer):
         """Executes the check.
@@ -83,7 +85,7 @@ class PerimeterWidget(QWidget):
         
         """
         
-        perimeter = self.mapLayerComboBox.currentLayer()
+        perimeter = self.perimeterMapLayerComboBox.currentLayer()
         
         processing.runalg(
             'qgis:selectbylocation', layer, perimeter, u'within', 0, 0)
