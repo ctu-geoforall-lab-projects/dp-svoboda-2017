@@ -26,9 +26,7 @@ from PyQt4.QtCore import QSignalMapper
 
 from collections import namedtuple
 
-from loadvfk_frame import LoadVfkFrame
-from edit_frame import EditFrame
-from check_frame import CheckFrame
+from pu_stackedwidget_frames import loadvfk_frame, edit_frame, check_frame
 
 
 class StackedWidget(QStackedWidget):
@@ -78,19 +76,22 @@ class StackedWidget(QStackedWidget):
     def _build_widgets(self):
         """Builds own widgets."""
         
-        self.loadVfkFrame = LoadVfkFrame(self, self.dWName, self.iface, self.dW)
+        self.loadVfkFrame = loadvfk_frame.LoadVfkFrame(
+            self, self.dWName, self.iface, self.dW)
         self.addWidget(self.loadVfkFrame)
         self.dW.toolbar.loadVfkAction.triggered.connect(
             self.openTabSignalMapper.map)
         self.openTabSignalMapper.setMapping(self.dW.toolbar.loadVfkAction, 0)
         
-        self.editFrame = EditFrame(self, self.dWName, self.iface, self.dW)
+        self.editFrame = edit_frame.EditFrame(
+            self, self.dWName, self.iface, self.dW)
         self.addWidget(self.editFrame)
         self.dW.toolbar.editAction.triggered.connect(
             self.openTabSignalMapper.map)
         self.openTabSignalMapper.setMapping(self.dW.toolbar.editAction, 1)
         
-        self.checkFrame = CheckFrame(self, self.dWName, self.iface, self.dW)
+        self.checkFrame = check_frame.CheckFrame(
+            self, self.dWName, self.iface, self.dW)
         self.addWidget(self.checkFrame)
         self.dW.toolbar.checkAction.triggered.connect(
             self.openTabSignalMapper.map)

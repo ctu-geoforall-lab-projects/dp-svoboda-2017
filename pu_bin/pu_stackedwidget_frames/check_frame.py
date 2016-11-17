@@ -25,11 +25,9 @@ from PyQt4.QtGui import (QFrame, QGridLayout, QHBoxLayout, QLabel, QComboBox,
                          QStackedWidget, QPushButton)
 from PyQt4.QtCore import pyqtSignal
 
-from perimeter_widget import PerimeterWidget
-from notinmap_widget import NotInMapWidget
-from notinspi_widget import NotInSpiWidget
-from area_widget import AreaWidget
-from distance_widget import DistanceWidget
+from pu_check_analysis_widgets import (perimeter_widget, notinspi_widget,
+                                       notinmap_widget, area_widget,
+                                       distance_widget)
 
 
 class CheckFrame(QFrame):
@@ -98,23 +96,23 @@ class CheckFrame(QFrame):
         self.checkStackedWidget.setObjectName(u'checkStackedWidget')
         self.checkGridLayout.addWidget(self.checkStackedWidget, 1, 0, 1, 2)
         
-        self.perimeterWidget = PerimeterWidget(
+        self.perimeterWidget = perimeter_widget.PerimeterWidget(
             self, self.dWName, self.iface, self.dW)
         self.checkStackedWidget.addWidget(self.perimeterWidget)
         
-        self.notInSpiWidget = NotInSpiWidget(
+        self.notInSpiWidget = notinspi_widget.NotInSpiWidget(
             self, self.dWName, self.iface, self.dW)
         self.checkStackedWidget.addWidget(self.notInSpiWidget)
         
-        self.notInMapWidget = NotInMapWidget(
+        self.notInMapWidget = notinmap_widget.NotInMapWidget(
             self, self.dWName, self.iface, self.dW)
         self.checkStackedWidget.addWidget(self.notInMapWidget)
         
-        self.areaWidget = AreaWidget(
+        self.areaWidget = area_widget.AreaWidget(
             self, self.dWName, self.iface, self.dW)
         self.checkStackedWidget.addWidget(self.areaWidget)
         
-        self.distanceWidget = DistanceWidget(
+        self.distanceWidget = distance_widget.DistanceWidget(
             self, self.dWName, self.iface, self.dW)
         self.checkStackedWidget.addWidget(self.distanceWidget)
         
