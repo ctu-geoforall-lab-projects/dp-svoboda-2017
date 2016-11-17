@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- CheckFrame
+ CheckAnalysisFrame
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -32,8 +32,8 @@ from pu_check_analysis_widgets import (perimeter_widget, notinspi_widget,
 from execute_thread import Executehread
 
 
-class CheckFrame(QFrame):
-    """A frame which contains widgets for checks."""
+class CheckAnalysisFrame(QFrame):
+    """A frame which contains widgets for checks and analyzes."""
     
     text_statusbar = pyqtSignal(str, int)
     
@@ -66,76 +66,82 @@ class CheckFrame(QFrame):
         
         self.text_statusbar.connect(self.dW.statusbar._set_text_statusbar)
         
-        self.checkGridLayout = QGridLayout(self)
-        self.checkGridLayout.setObjectName(u'checkGridLayout')
+        self.checkAnalysisGridLayout = QGridLayout(self)
+        self.checkAnalysisGridLayout.setObjectName(u'checkAnalysisGridLayout')
         
         self._build_widgets()
     
     def _build_widgets(self):
         """Builds own widgets."""
         
-        self.checkHBoxLayout = QHBoxLayout(self)
-        self.checkHBoxLayout.setObjectName(u'checkHBoxLayout')
-        self.checkGridLayout.addLayout(self.checkHBoxLayout, 0, 0, 1, 2)
+        self.checkAnalysisHBoxLayout = QHBoxLayout(self)
+        self.checkAnalysisHBoxLayout.setObjectName(u'checkAnalysisHBoxLayout')
+        self.checkAnalysisGridLayout.addLayout(
+            self.checkAnalysisHBoxLayout, 0, 0, 1, 2)
         
-        self.checkLabel = QLabel(self)
-        self.checkLabel.setObjectName(u'checkLabel')
-        self.checkLabel.setText(u'Kontrola/analýza:')
-        self.checkHBoxLayout.addWidget(self.checkLabel)
+        self.checkAnalysisLabel = QLabel(self)
+        self.checkAnalysisLabel.setObjectName(u'checkAnalysisLabel')
+        self.checkAnalysisLabel.setText(u'Kontrola/analýza:')
+        self.checkAnalysisHBoxLayout.addWidget(self.checkAnalysisLabel)
         
-        self.checkComboBox = QComboBox(self)
-        self.checkComboBox.setObjectName(u'checkComboBox')
-        self.checkComboBox.addItem(u'kontrola - obvodem')
-        self.checkComboBox.addItem(u'kontrola - není v SPI (nová parcela)')
-        self.checkComboBox.addItem(u'kontrola - není v mapě')
-        self.checkComboBox.addItem(u'kontrola - výměra nad mezní odchylkou')
-        self.checkComboBox.addItem(
+        self.checkAnalysisComboBox = QComboBox(self)
+        self.checkAnalysisComboBox.setObjectName(u'checkAnalysisComboBox')
+        self.checkAnalysisComboBox.addItem(u'kontrola - obvodem')
+        self.checkAnalysisComboBox.addItem(
+            u'kontrola - není v SPI (nová parcela)')
+        self.checkAnalysisComboBox.addItem(u'kontrola - není v mapě')
+        self.checkAnalysisComboBox.addItem(
+            u'kontrola - výměra nad mezní odchylkou')
+        self.checkAnalysisComboBox.addItem(
             u'analýza - měření vzdálenosti (referenční bod - těžiště parcel)')
 
-        self.checkHBoxLayout.addWidget(self.checkComboBox, 1)
+        self.checkAnalysisHBoxLayout.addWidget(self.checkAnalysisComboBox, 1)
         
-        self.checkStackedWidget = QStackedWidget(self)
-        self.checkStackedWidget.setObjectName(u'checkStackedWidget')
-        self.checkGridLayout.addWidget(self.checkStackedWidget, 1, 0, 1, 2)
+        self.checkAnalysisStackedWidget = QStackedWidget(self)
+        self.checkAnalysisStackedWidget.setObjectName(
+            u'checkAnalysisStackedWidget')
+        self.checkAnalysisGridLayout.addWidget(
+            self.checkAnalysisStackedWidget, 1, 0, 1, 2)
         
         self.perimeterWidget = perimeter_widget.PerimeterWidget(
             self, self.dWName, self.iface, self.dW)
-        self.checkStackedWidget.addWidget(self.perimeterWidget)
+        self.checkAnalysisStackedWidget.addWidget(self.perimeterWidget)
         
         self.notInSpiWidget = notinspi_widget.NotInSpiWidget(
             self, self.dWName, self.iface, self.dW)
-        self.checkStackedWidget.addWidget(self.notInSpiWidget)
+        self.checkAnalysisStackedWidget.addWidget(self.notInSpiWidget)
         
         self.notInMapWidget = notinmap_widget.NotInMapWidget(
             self, self.dWName, self.iface, self.dW)
-        self.checkStackedWidget.addWidget(self.notInMapWidget)
+        self.checkAnalysisStackedWidget.addWidget(self.notInMapWidget)
         
         self.areaWidget = area_widget.AreaWidget(
             self, self.dWName, self.iface, self.dW)
-        self.checkStackedWidget.addWidget(self.areaWidget)
+        self.checkAnalysisStackedWidget.addWidget(self.areaWidget)
         
         self.distanceWidget = distance_widget.DistanceWidget(
             self, self.dWName, self.iface, self.dW)
-        self.checkStackedWidget.addWidget(self.distanceWidget)
+        self.checkAnalysisStackedWidget.addWidget(self.distanceWidget)
         
-        self.checkComboBox.currentIndexChanged.connect(
-            self.checkStackedWidget.setCurrentIndex)
-        self.checkComboBox.currentIndexChanged.connect(
-            self._set_text_checkPushButton)
+        self.checkAnalysisComboBox.currentIndexChanged.connect(
+            self.checkAnalysisStackedWidget.setCurrentIndex)
+        self.checkAnalysisComboBox.currentIndexChanged.connect(
+            self._set_text_checkAnalysisPushButton)
         
-        self.checkPushButton = QPushButton(self)
-        self.checkPushButton.setObjectName(u'checkPushButton')
-        self.checkPushButton.clicked.connect(self._run_check)
-        self.checkPushButton.setText(
+        self.checkAnalysisPushButton = QPushButton(self)
+        self.checkAnalysisPushButton.setObjectName(u'checkAnalysisPushButton')
+        self.checkAnalysisPushButton.clicked.connect(self._run_check)
+        self.checkAnalysisPushButton.setText(
             u'Provést kontrolu a vybrat problémové parcely')
-        self.checkGridLayout.addWidget(self.checkPushButton, 2, 0, 1, 2)
+        self.checkAnalysisGridLayout.addWidget(
+            self.checkAnalysisPushButton, 2, 0, 1, 2)
     
     def _run_check(self):
-        """Starts current check.
+        """Starts current check or analysis.
         
         First it calls a function that checks if there is an active layer
         and if the active layer contains all required columns. If that function
-        returns True, check is executed in a separate thread.
+        returns True, check or analysis is executed in a separate thread.
         
         """
         
@@ -143,23 +149,25 @@ class CheckFrame(QFrame):
         
         if succes == True:
             self.executeThread = Executehread(layer)
-            self.executeThread.work.connect(self.checkStackedWidget.currentWidget().execute)
+            self.executeThread.work.connect(
+                self.checkAnalysisStackedWidget.currentWidget().execute)
             self.executeThread.start()
     
-    def _set_text_checkPushButton(self, currentIndex):
-        """Sets checkPushButton's text.
+    def _set_text_checkAnalysisPushButton(self, currentIndex):
+        """Sets checkAnalysisPushButton's text.
         
-        Sets checkPushButton's text according to checkComboBox's current index.
+        Sets checkAnalysisPushButton's text according to checkAnalysisComboBox's
+        current index.
         
         Args:
-            currentIndex (int): Current index of the checkComboBox.
+            currentIndex (int): Current index of the checkAnalysisComboBox.
         
         """
         
         if currentIndex <= 3:
-            self.checkPushButton.setText(
+            self.checkAnalysisPushButton.setText(
                 u'Provést kontrolu a vybrat problémové parcely')
         else:
-            self.checkPushButton.setText(
+            self.checkAnalysisPushButton.setText(
                 u'Provést analýzu')
 

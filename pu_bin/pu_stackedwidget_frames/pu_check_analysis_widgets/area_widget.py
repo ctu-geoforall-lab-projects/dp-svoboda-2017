@@ -138,7 +138,8 @@ class AreaWidget(QWidget):
             
             if featuresCount == 0:
                 self.pW.text_statusbar.emit(
-                    u'Mezní odchylka nebyla překročena u žádné parcely.', duration)
+                    u'Mezní odchylka nebyla překročena u žádné parcely.',
+                    duration)
             elif featuresCount == 1:
                 self.pW.text_statusbar.emit(
                     u'Mezní odchylka byla překročena u {} parcely.'
@@ -148,7 +149,7 @@ class AreaWidget(QWidget):
                     u'Mezní odchylka byla překročena u {} parcel.'
                     .format(featuresCount), duration)
         except:
-            currentCheckName = self.pW.checkComboBox.currentText()
+            currentCheckName = self.pW.checkAnalysisComboBox.currentText()
             
             raise self.dW.puError(
                 self.dW,

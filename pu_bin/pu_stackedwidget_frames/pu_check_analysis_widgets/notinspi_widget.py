@@ -91,7 +91,7 @@ class NotInSpiWidget(QWidget):
                 self.pW.text_statusbar.emit(
                     u'V SPI není {} parcel.'.format(featuresCount), duration)
         except:
-            currentCheckName = self.pW.checkComboBox.currentText()
+            currentCheckName = self.pW.checkAnalysisComboBox.currentText()
             
             raise self.dW.puError(
                 self.dW,

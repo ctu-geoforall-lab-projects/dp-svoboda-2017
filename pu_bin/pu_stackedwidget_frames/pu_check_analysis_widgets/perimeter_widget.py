@@ -112,7 +112,7 @@ class PerimeterWidget(QWidget):
                 self.pW.text_statusbar.emit(
                     u'Uvnitř obvodu není {} parcel.'.format(featuresCount), duration)
         except:
-            currentCheckName = self.pW.checkComboBox.currentText()
+            currentCheckName = self.pW.checkAnalysisComboBox.currentText()
             
             raise self.dW.puError(
                 self.dW,

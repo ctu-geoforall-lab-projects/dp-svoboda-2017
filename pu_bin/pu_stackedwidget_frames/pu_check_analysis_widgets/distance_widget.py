@@ -79,7 +79,7 @@ class DistanceWidget(QWidget):
         self.distanceHBoxLayout.addWidget(self.distanceMapLayerComboBox, 1)
     
     def execute(self, layer):
-        """Executes the check.
+        """Executes the analysis.
         
         Args:
             layer(QgsVectorLayer): A reference to the active layer.
@@ -147,10 +147,10 @@ class DistanceWidget(QWidget):
             self.pW.text_statusbar.emit(
                 u'Analýza měření vzdáleností úspěšně dokončena.', 15000)
         except:
-            currentCheckName = self.pW.checkComboBox.currentText()
+            currentAnalysisName = self.pW.checkAnalysisComboBox.currentText()
             
             raise self.dW.puError(
                 self.dW,
-                u'Error executing "{}".'.format(currentCheckName),
-                u'Chyba při provádění "{}".'.format(currentCheckName))
+                u'Error executing "{}".'.format(currentAnalysisName),
+                u'Chyba při provádění "{}".'.format(currentAnalysisName))
 

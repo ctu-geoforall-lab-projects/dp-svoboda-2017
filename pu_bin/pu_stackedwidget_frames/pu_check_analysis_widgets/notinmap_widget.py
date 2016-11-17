@@ -85,12 +85,13 @@ class NotInMapWidget(QWidget):
                     u'V mapě není {} parcela.'.format(featuresCount), duration)
             elif 1 < featuresCount < 5:
                 self.pW.text_statusbar.emit(
-                    u'V mapě nejsou {} parcely.'.format(featuresCount), duration)
+                    u'V mapě nejsou {} parcely.'.format(featuresCount),
+                    duration)
             elif 5 <= featuresCount:
                 self.pW.text_statusbar.emit(
                     u'V mapě není {} parcel.'.format(featuresCount), duration)
         except:
-            currentCheckName = self.pW.checkComboBox.currentText()
+            currentCheckName = self.pW.checkAnalysisComboBox.currentText()
             
             raise self.dW.puError(
                 self.dW,
