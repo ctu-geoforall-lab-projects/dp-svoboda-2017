@@ -29,6 +29,7 @@ from perimeter_widget import PerimeterWidget
 from notinmap_widget import NotInMapWidget
 from notinspi_widget import NotInSpiWidget
 from area_widget import AreaWidget
+from distance_widget import DistanceWidget
 
 
 class CheckFrame(QFrame):
@@ -79,15 +80,17 @@ class CheckFrame(QFrame):
         
         self.checkLabel = QLabel(self)
         self.checkLabel.setObjectName(u'checkLabel')
-        self.checkLabel.setText(u'Kontrola:')
+        self.checkLabel.setText(u'Kontrola/analýza:')
         self.checkHBoxLayout.addWidget(self.checkLabel)
         
         self.checkComboBox = QComboBox(self)
         self.checkComboBox.setObjectName(u'checkComboBox')
-        self.checkComboBox.addItem(u'obvodem')
-        self.checkComboBox.addItem(u'není v SPI (nová parcela)')
-        self.checkComboBox.addItem(u'není v mapě')
-        self.checkComboBox.addItem(u'výměra nad mezní odchylkou')
+        self.checkComboBox.addItem(u'kontrola - obvodem')
+        self.checkComboBox.addItem(u'kontrola - není v SPI (nová parcela)')
+        self.checkComboBox.addItem(u'kontrola - není v mapě')
+        self.checkComboBox.addItem(u'kontrola - výměra nad mezní odchylkou')
+        self.checkComboBox.addItem(
+            u'analýza - měření vzdálenosti (referenční bod - těžiště parcel)')
 
         self.checkHBoxLayout.addWidget(self.checkComboBox, 1)
         
@@ -111,8 +114,14 @@ class CheckFrame(QFrame):
             self, self.dWName, self.iface, self.dW)
         self.checkStackedWidget.addWidget(self.areaWidget)
         
+        self.distanceWidget = DistanceWidget(
+            self, self.dWName, self.iface, self.dW)
+        self.checkStackedWidget.addWidget(self.distanceWidget)
+        
         self.checkComboBox.currentIndexChanged.connect(
             self.checkStackedWidget.setCurrentIndex)
+        self.checkComboBox.currentIndexChanged.connect(
+            self._set_text_checkPushButton)
         
         self.checkPushButton = QPushButton(self)
         self.checkPushButton.setObjectName(u'checkPushButton')
@@ -142,4 +151,21 @@ class CheckFrame(QFrame):
                 self.dW,
                 u'Error executing check "{}".'.format(currentCheckName),
                 u'Chyba při provádění kontroly "{}".'.format(currentCheckName))
+    
+    def _set_text_checkPushButton(self, currentIndex):
+        """Sets checkPushButton's text.
+        
+        Sets checkPushButton's text according to checkComboBox's current index.
+        
+        Args:
+            currentIndex (int): Current index of the checkComboBox.
+        
+        """
+        
+        if currentIndex <= 3:
+            self.checkPushButton.setText(
+                u'Provést kontrolu a vybrat problémové parcely')
+        else:
+            self.checkPushButton.setText(
+                u'Provést analýzu')
 

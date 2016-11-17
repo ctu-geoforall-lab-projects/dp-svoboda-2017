@@ -84,7 +84,7 @@ class Toolbar(QToolBar):
         
         self.checkAction = QAction(self)
         self.checkAction.setObjectName(u'checkAction')
-        self.checkAction.setToolTip(u'Kontroly')
+        self.checkAction.setToolTip(u'Kontroly a analýzy')
         self.checkAction.setCheckable(True)
         checkIcon = QIcon()
         checkIcon.addPixmap(QPixmap(':/check.png'))

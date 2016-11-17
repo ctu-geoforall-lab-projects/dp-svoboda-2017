@@ -52,7 +52,8 @@ class StackedWidget(QStackedWidget):
             'PU_KMENOVE_CISLO_PAR',
             'PU_PODDELENI_CISLA_PAR',
             'PU_VYMERA_PARCELY',
-            'PU_KATEGORIE')
+            'PU_KATEGORIE',
+            'PU_VZDALENOST')
         
         self.columnsPAR = (
             'KMENOVE_CISLO_PAR',
