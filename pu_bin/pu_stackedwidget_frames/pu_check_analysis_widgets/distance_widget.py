@@ -86,9 +86,6 @@ class DistanceWidget(QWidget):
         
         """
         
-        self.pW.text_statusbar.emit(
-                u'Počítám vzdálenosti. Tento proces může chvíli trvat.', 0)
-        
         if self.dW.stackedWidget.editFrame.toggleEditingAction.isChecked():
             editing = True
         else:
@@ -98,11 +95,23 @@ class DistanceWidget(QWidget):
         
         refPointCount = refPointLayer.featureCount()
         
+        refPointLayerCrs = refPointLayer.crs().authid()
+        layerCrs = layer.crs().authid()
+        
+        if refPointLayerCrs != layerCrs:
+            self.pW.text_statusbar.emit(
+                u'Aktivní vrstva a vrstva referenčního bodu nemají stejný '
+                u'souřadnicový systém.', 7000)
+            return
+        
         if refPointCount != 1:
             self.pW.text_statusbar.emit(
                 u'Vrstva referenčního bodu neobsahuje právě jeden prvek.',
                 7000)
             return
+        
+        self.pW.text_statusbar.emit(
+                u'Počítám vzdálenosti. Tento proces může chvíli trvat.', 0)
         
         refPointFeatures = refPointLayer.getFeatures()
         
