@@ -108,7 +108,7 @@ class DistanceWidget(QWidget):
         """Executes the analysis.
         
         Args:
-            layer(QgsVectorLayer): A reference to the active layer.
+            layer (QgsVectorLayer): A reference to the active layer.
         
         """
         

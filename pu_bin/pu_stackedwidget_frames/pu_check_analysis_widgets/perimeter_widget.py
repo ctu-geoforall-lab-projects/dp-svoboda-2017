@@ -81,7 +81,7 @@ class PerimeterWidget(QWidget):
         """Executes the check.
         
         Args:
-            layer(QgsVectorLayer): A reference to the active layer.
+            layer (QgsVectorLayer): A reference to the active layer.
         
         """
         
@@ -97,7 +97,7 @@ class PerimeterWidget(QWidget):
             
             features = layer.selectedFeaturesIterator()
             
-            self.pW._filter_features_by_puCategory(layer, features, 3)
+            self.pW._deselect_features_by_puCategory(layer, features, 3)
             
             featuresCount = layer.selectedFeatureCount()
             

@@ -58,7 +58,7 @@ class NotInMapWidget(QWidget):
         """Executes the check.
         
         Args:
-            layer(QgsVectorLayer): A reference to the active layer.
+            layer (QgsVectorLayer): A reference to the active layer.
         
         """
         
