@@ -247,27 +247,36 @@ class EditFrame(QFrame):
             else:
                 editing = False
             
-            selectedFeatures = layer.selectedFeatures()
+            featuresCount = layer.selectedFeatureCount()
             
-            if len(selectedFeatures) == 0:
+            if featuresCount == 0:
                 self.text_statusbar.emit(
                     u'V aktivní vrstvě nejsou vybrány žádné prvky.', 7000)
                 return
             
             currentCategory = self.categoryComboBox.currentText()
             
-            self.text_statusbar.emit(
-                u'Zařazuji vybrané parcely do kategorie "{}".'
-                .format(currentCategory), 0)
+            if featuresCount == 1:
+                self.text_statusbar.emit(
+                    u'Zařazuji vybranou parcelu do kategorie "{}".'
+                    .format(currentCategory), 0)
+            else:
+                self.text_statusbar.emit(
+                    u'Zařazuji vybrané parcely do kategorie "{}".'
+                    .format(currentCategory), 0)
             
             fieldID = layer.fieldNameIndex(self.categoryName)
             
             layer.startEditing()
             layer.updateFields()
             
+            selectedFeatures = layer.selectedFeatures()
+            
             for feature in selectedFeatures:
-                featureID = feature.id()
-                layer.changeAttributeValue(featureID, fieldID, self.categoryValue)
+                if feature.attribute(self.categoryName) != self.categoryValue:
+                    featureID = feature.id()
+                    layer.changeAttributeValue(
+                        featureID, fieldID, self.categoryValue)
             
             layer.commitChanges()
             
