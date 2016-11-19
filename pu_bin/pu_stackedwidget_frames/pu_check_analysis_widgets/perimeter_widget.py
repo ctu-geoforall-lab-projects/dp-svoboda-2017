@@ -95,6 +95,10 @@ class PerimeterWidget(QWidget):
             
             layer.invertSelection()
             
+            features = layer.selectedFeaturesIterator()
+            
+            self.pW._filter_features_by_puCategory(layer, features, 3)
+            
             featuresCount = layer.selectedFeatureCount()
             
             duration = 10000

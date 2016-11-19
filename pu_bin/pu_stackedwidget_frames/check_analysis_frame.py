@@ -170,4 +170,11 @@ class CheckAnalysisFrame(QFrame):
         else:
             self.checkAnalysisPushButton.setText(
                 u'Provést analýzu')
+    
+    def _filter_features_by_puCategory(self, layer, features, puCategory):
+        """"""
+        
+        for feature in features:
+            if feature.attribute('PU_KATEGORIE') == puCategory:
+                layer.deselect(feature.id())
 
