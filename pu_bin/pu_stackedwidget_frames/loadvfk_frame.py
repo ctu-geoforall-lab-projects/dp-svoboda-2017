@@ -440,6 +440,7 @@ class LoadVfkFrame(QFrame):
         for i in layer.pendingAllAttributesList():
             if fields[i].name() not in self.pW.puColumnsPAR:
                 formConfig.setReadOnly(i)
+                formConfig.setWidgetType(i, 'Hidden')
         
         if layer.isValid():
             style = ':/' + str(vfkLayerCode) + '.qml'
