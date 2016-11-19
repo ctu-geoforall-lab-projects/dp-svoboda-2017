@@ -394,7 +394,7 @@ class LoadVfkFrame(QFrame):
             name = str(record.value('name'))
             columnsPAR.append(name)
         
-        if not all(column in columnsPAR for column in self.pW.puColumnsPAR):
+        if not all(column in columnsPAR for column in self.pW.allPuColumnsPAR):
             addPuColumnPARFile = QFile(':/add_pu_columns_PAR.sql', self)
             addPuColumnPARFile.open(QFile.ReadOnly|QFile.Text)
             
@@ -412,8 +412,8 @@ class LoadVfkFrame(QFrame):
         Also sets symbology according
         to "/plugins/puPlugin/data/qml/<vfkLayerCode>.qml" file, enables
         snapping, sets all fields except for those listed
-        in self.pW.puColumnsPAR non-editable and hides all fields
-        except for those listed in self.pW.rqdColumnsPAR.
+        in self.pW.editablePuColumnsPAR non-editable and hides all fields
+        except for those listed in self.pW.visibleColumnsPAR.
         
         Args:
             dbPath (QDir): A full path to the database.
@@ -438,8 +438,9 @@ class LoadVfkFrame(QFrame):
         formConfig = layer.editFormConfig()
         
         for i in layer.pendingAllAttributesList():
-            if fields[i].name() not in self.pW.puColumnsPAR:
+            if fields[i].name() not in self.pW.editablePuColumnsPAR:
                 formConfig.setReadOnly(i)
+            if fields[i].name() not in self.pW.visibleColumnsPAR:
                 formConfig.setWidgetType(i, 'Hidden')
         
         if layer.isValid():
@@ -455,7 +456,7 @@ class LoadVfkFrame(QFrame):
             columns = tableConfig.columns()
             
             for column in columns:
-                if column.name not in self.pW.rqdColumnsPAR:
+                if column.name not in self.pW.visibleColumnsPAR:
                     column.hidden = True
             
             tableConfig.setColumns(columns)

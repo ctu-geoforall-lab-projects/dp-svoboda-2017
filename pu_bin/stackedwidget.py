@@ -47,19 +47,23 @@ class StackedWidget(QStackedWidget):
         self.dWName = dockWidgetName
         self.iface = iface
         
-        self.puColumnsPAR = (
+        self.editablePuColumnsPAR = (
             'PU_KMENOVE_CISLO_PAR',
-            'PU_PODDELENI_CISLA_PAR',
-            'PU_VYMERA_PARCELY',
-            'PU_KATEGORIE',
-            'PU_VZDALENOST')
+            'PU_PODDELENI_CISLA_PAR')
+        
+        self.visiblePuColumnsPAR = \
+            self.editablePuColumnsPAR + ('PU_VYMERA_PARCELY', 'PU_VZDALENOST')
+        
+        self.allPuColumnsPAR = self.visiblePuColumnsPAR + ('PU_KATEGORIE',)
         
         self.columnsPAR = (
             'KMENOVE_CISLO_PAR',
             'PODDELENI_CISLA_PAR',
             'VYMERA_PARCELY')
         
-        self.rqdColumnsPAR = self.puColumnsPAR + self.columnsPAR
+        self.visibleColumnsPAR = self.visiblePuColumnsPAR + self.columnsPAR
+        
+        self.rqdColumnsPAR = self.allPuColumnsPAR + self.columnsPAR
         
         super(QStackedWidget, self).__init__(self.dW)
         
