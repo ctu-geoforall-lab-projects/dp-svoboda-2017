@@ -65,7 +65,7 @@ class StackedWidget(QStackedWidget):
         
         self.rqdColumnsPAR = self.allPuColumnsPAR + self.columnsPAR
         
-        super(QStackedWidget, self).__init__(self.dW)
+        super(StackedWidget, self).__init__(self.dW)
         
         self._setup_self()
     

@@ -58,7 +58,7 @@ class LoadVfkFrame(QFrame):
         self.iface = iface
         self.dW = dockWidget
         
-        super(QFrame, self).__init__(self.pW)
+        super(LoadVfkFrame, self).__init__(self.pW)
         
         self._setup_self()
     

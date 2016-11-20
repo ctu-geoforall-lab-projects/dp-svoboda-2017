@@ -45,7 +45,7 @@ class NotInSpiWidget(QWidget):
         self.iface = iface
         self.dW = dockWidget
         
-        super(QWidget, self).__init__(self.pW)
+        super(NotInSpiWidget, self).__init__(self.pW)
         
         self._setup_self()
     

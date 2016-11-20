@@ -45,7 +45,7 @@ class AreaWidget(QWidget):
         self.iface = iface
         self.dW = dockWidget
         
-        super(QWidget, self).__init__(self.pW)
+        super(AreaWidget, self).__init__(self.pW)
         
         self._setup_self()
     

@@ -42,7 +42,7 @@ class Statusbar(QStatusBar):
         self.dWName = dockWidgetName
         self.iface = iface
         
-        super(QStatusBar, self).__init__(self.dW)
+        super(Statusbar, self).__init__(self.dW)
         
         self._setup_self()
     

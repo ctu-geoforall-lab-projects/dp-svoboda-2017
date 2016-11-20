@@ -44,7 +44,7 @@ class Toolbar(QToolBar):
         self.dWName = dockWidgetName
         self.iface = iface
         
-        super(QToolBar, self).__init__(self.dW)
+        super(Toolbar, self).__init__(self.dW)
         
         self._setup_self()
     

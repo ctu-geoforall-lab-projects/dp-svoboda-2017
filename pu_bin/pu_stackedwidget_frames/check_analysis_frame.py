@@ -53,7 +53,7 @@ class CheckAnalysisFrame(QFrame):
         self.iface = iface
         self.dW = dockWidget
         
-        super(QFrame, self).__init__(self.pW)
+        super(CheckAnalysisFrame, self).__init__(self.pW)
         
         self._setup_self()
     
