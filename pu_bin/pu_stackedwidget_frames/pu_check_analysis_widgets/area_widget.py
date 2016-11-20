@@ -88,9 +88,9 @@ class AreaWidget(QWidget):
             else:
                 editing = False
             
-            threshhold = self.areaLineEdit.text()
+            threshold = self.areaLineEdit.text()
             
-            if not threshhold:
+            if not threshold:
                 self.pW.text_statusbar.emit(
                     u'Není zadána mezní odchylka.', 7000)
                 return
@@ -120,7 +120,7 @@ class AreaWidget(QWidget):
                     if type(spiArea) == QPyNullVariant:
                         continue
                     
-                    limitDifference =  spiArea*(float(threshhold)/100)
+                    limitDifference =  spiArea*(float(threshold)/100)
                     
                     if abs(sgiArea - spiArea) > limitDifference:
                         problematicParcelsID.append(featureID)
