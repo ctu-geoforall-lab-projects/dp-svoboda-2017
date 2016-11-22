@@ -52,7 +52,8 @@ class StackedWidget(QStackedWidget):
             'PU_PODDELENI_CISLA_PAR')
         
         self.visiblePuColumnsPAR = \
-            self.editablePuColumnsPAR + ('PU_VYMERA_PARCELY', 'PU_VZDALENOST')
+            self.editablePuColumnsPAR + \
+            ('PU_VYMERA_PARCELY', 'PU_VZDALENOST', 'PU_CENA')
         
         self.allPuColumnsPAR = self.visiblePuColumnsPAR + ('PU_KATEGORIE',)
         
