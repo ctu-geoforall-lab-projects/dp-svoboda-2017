@@ -219,7 +219,7 @@ class BpejWidget(QWidget):
                 if roundedPrice != 0:
                     layer.changeAttributeValue(featureID, fieldID, roundedPrice)
             
-            #layer.commitChanges()
+            layer.commitChanges()
             
             if editing == True:
                 self.dW.stackedWidget.editFrame.toggleEditingAction.trigger()
