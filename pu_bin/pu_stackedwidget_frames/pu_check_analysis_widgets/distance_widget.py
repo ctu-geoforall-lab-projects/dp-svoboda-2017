@@ -169,7 +169,7 @@ class DistanceWidget(QWidget):
                     featureCentroid = featureGeometry.centroid().asPoint()
                     distanceDouble = sqrt(refPoint.sqrDist(featureCentroid))
                     distance = int(round(distanceDouble))
-                                    
+                    
                     layer.changeAttributeValue(featureID, fieldID, distance)
             
             layer.commitChanges()
