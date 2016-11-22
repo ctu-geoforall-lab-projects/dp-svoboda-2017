@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QWidget, QLabel, QGridLayout, QHBoxLayout, QRadioButton
+from PyQt4.QtGui import QWidget, QLabel, QHBoxLayout
 
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
 from qgis.core import *
@@ -58,51 +58,25 @@ class DistanceWidget(QWidget):
         
         self.setObjectName(u'distanceWidget')
         
-        self.distanceGridLayout = QGridLayout(self)
-        self.distanceGridLayout.setObjectName(u'distanceGridLayout')
+        self.distanceHBoxLayout = QHBoxLayout(self)
+        self.distanceHBoxLayout.setObjectName(u'distanceHBoxLayout')
         
         self._build_widgets()
     
     def _build_widgets(self):
         """Builds own widgets."""
         
-        self.refPointHBoxLayout = QHBoxLayout(self)
-        self.refPointHBoxLayout.setObjectName(u'refPointHBoxLayout')
-        self.distanceGridLayout.addLayout(
-            self.refPointHBoxLayout, 0, 0, 1, 3)
-        
         self.refPointLabel = QLabel(self)
         self.refPointLabel.setObjectName(u'refPointLabel')
         self.refPointLabel.setText(u'Referenční bod:')
-        self.refPointHBoxLayout.addWidget(self.refPointLabel)
+        self.distanceHBoxLayout.addWidget(self.refPointLabel)
         
         self.refPointMapLayerComboBox = QgsMapLayerComboBox(self)
         self.refPointMapLayerComboBox.setObjectName(
             u'refPointMapLayerComboBox')
         self.refPointMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PointLayer)
-        self.refPointHBoxLayout.addWidget(self.refPointMapLayerComboBox, 1)
-        
-        self.computeHBoxLayout = QHBoxLayout(self)
-        self.computeHBoxLayout.setObjectName(u'computeHBoxLayout')
-        self.distanceGridLayout.addLayout(
-            self.computeHBoxLayout, 1, 0, 1, 3)
-        
-        self.computeLabel = QLabel(self)
-        self.computeLabel.setObjectName(u'computeLabel')
-        self.computeLabel.setText(u'Provést pro:')
-        self.computeHBoxLayout.addWidget(self.computeLabel)
-        
-        self.allRadioButton = QRadioButton(self)
-        self.allRadioButton.setObjectName(u'allRadioButton')
-        self.allRadioButton.setText(u'všechny prvky')
-        self.allRadioButton.setChecked(True)
-        self.computeHBoxLayout.addWidget(self.allRadioButton)
-        
-        self.selectedRadioButton = QRadioButton(self)
-        self.selectedRadioButton.setObjectName(u'selectedRadioButton')
-        self.selectedRadioButton.setText(u'vybrané prvky')
-        self.computeHBoxLayout.addWidget(self.selectedRadioButton)
+        self.distanceHBoxLayout.addWidget(self.refPointMapLayerComboBox, 1)
     
     def execute(self, layer):
         """Executes the analysis.
@@ -137,14 +111,10 @@ class DistanceWidget(QWidget):
                     7000)
                 return
             
-            if self.allRadioButton.isChecked():
-                features = layer.getFeatures()
-            elif self.selectedRadioButton.isChecked():
-                if layer.selectedFeatureCount() == 0:
-                    self.pW.text_statusbar.emit(
-                        u'V aktivní vrstvě nejsou vybrány žádné prvky.', 7000)
-                    return
+            if layer.selectedFeatureCount() != 0:
                 features = layer.selectedFeaturesIterator()
+            else:
+                features = layer.getFeatures()
             
             self.pW.text_statusbar.emit(
                 u'Provádím analýzu - měření vzdálenosti '
