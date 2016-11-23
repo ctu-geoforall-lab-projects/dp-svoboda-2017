@@ -112,10 +112,7 @@ class BpejWidget(QWidget):
         """
         
         try:
-            if self.dW.stackedWidget.editFrame.toggleEditingAction.isChecked():
-                editing = True
-            else:
-                editing = False
+            editing = self.dW.stackedWidget.check_editing()
             
             bpejField = self.bpejFieldComboBox.currentField()
             

@@ -83,10 +83,7 @@ class AreaWidget(QWidget):
         """
         
         try:
-            if self.dW.stackedWidget.editFrame.toggleEditingAction.isChecked():
-                editing = True
-            else:
-                editing = False
+            editing = self.dW.stackedWidget.check_editing()
             
             threshold = self.areaLineEdit.text()
             

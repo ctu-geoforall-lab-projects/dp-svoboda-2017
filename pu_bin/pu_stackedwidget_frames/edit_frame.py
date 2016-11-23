@@ -242,10 +242,7 @@ class EditFrame(QFrame):
         
         """
         try:
-            if self.toggleEditingAction.isChecked():
-                editing = True
-            else:
-                editing = False
+            editing = self.dW.stackedWidget.check_editing()
             
             featuresCount = layer.selectedFeatureCount()
             

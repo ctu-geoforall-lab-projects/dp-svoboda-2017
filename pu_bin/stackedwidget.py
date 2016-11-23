@@ -149,4 +149,17 @@ class StackedWidget(QStackedWidget):
         
         successLayer = SuccessLayer(True, layer)
         return successLayer
+    
+    def check_editing(self):
+        """Checks if editing is enabled.
+        
+        Returns:
+            bool: True when editing is enabled, False otherwise.
+        
+        """
+        
+        if self.editFrame.toggleEditingAction.isChecked():
+            return True
+        else:
+            return False
 
