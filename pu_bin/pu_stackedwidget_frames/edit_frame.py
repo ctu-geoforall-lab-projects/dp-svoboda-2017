@@ -315,7 +315,7 @@ class EditFrame(QFrame):
             
             currentCategory = self.categoryComboBox.currentText()
             
-            featuresCount = len(featuresID)
+            featuresCount = layer.selectedFeatureCount()
             
             duration = 10000
             

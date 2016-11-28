@@ -74,7 +74,7 @@ class NotInSpiWidget(QWidget):
             
             layer.selectByIds(featuresID)
             
-            featuresCount = len(featuresID)
+            featuresCount = layer.selectedFeatureCount()
             
             duration = 10000
             
