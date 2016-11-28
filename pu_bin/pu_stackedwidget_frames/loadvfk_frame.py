@@ -440,7 +440,6 @@ class LoadVfkFrame(QFrame):
         for i in layer.pendingAllAttributesList():
             if fields[i].name() not in self.pW.editablePuColumnsPAR:
                 formConfig.setReadOnly(i)
-            if fields[i].name() not in self.pW.visibleColumnsPAR:
                 formConfig.setWidgetType(i, 'Hidden')
         
         if layer.isValid():
