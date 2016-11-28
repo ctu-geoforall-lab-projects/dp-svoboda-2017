@@ -280,9 +280,14 @@ class EditFrame(QFrame):
             if editing == True:
                 self.toggleEditingAction.trigger()
             
-            self.text_statusbar.emit(
-                u'Vybrané parcely byly zařazeny do kategorie "{}".'
-                .format(currentCategory), 7000)
+            if featuresCount == 1:
+                self.text_statusbar.emit(
+                    u'Vybraná parcela byla zařazena do kategorie "{}".'
+                    .format(currentCategory), 7000)
+            else:
+                self.text_statusbar.emit(
+                    u'Vybrané parcely byly zařazeny do kategorie "{}".'
+                    .format(currentCategory), 7000)
         except:
             self.dW._raise_pu_error(
                 u'Error setting parcel category.',
@@ -300,7 +305,7 @@ class EditFrame(QFrame):
             fieldID = layer.fieldNameIndex(self.categoryName)
                     
             expression = QgsExpression(
-                "\"{}\"={}".format(self.categoryName, self.categoryValue))
+                "\"{}\" = {}".format(self.categoryName, self.categoryValue))
             
             features = layer.getFeatures(QgsFeatureRequest(expression))
             
