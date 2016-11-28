@@ -95,6 +95,8 @@ class AreaWidget(QWidget):
             self.pW.text_statusbar.emit(
                 u'Provádím kontrolu - výměra nad mezní odchylkou.', 0)
             
+            fieldID = layer.fieldNameIndex('PU_VYMERA_PARCELY')
+            
             layer.startEditing()
             layer.updateFields()
             
@@ -109,9 +111,9 @@ class AreaWidget(QWidget):
                 
                 sgiArea = int(round(featureGeometry.area()))
                 spiArea = feature.attribute('VYMERA_PARCELY')
+                
                 if sgiArea != spiArea:
                     featureID = feature.id()
-                    fieldID = layer.fieldNameIndex('PU_VYMERA_PARCELY')
                     layer.changeAttributeValue(featureID, fieldID, sgiArea)
                     
                     if type(spiArea) == QPyNullVariant:
