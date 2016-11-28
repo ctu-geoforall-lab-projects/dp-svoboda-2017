@@ -26,7 +26,7 @@ from PyQt4.QtGui import (QFrame, QGridLayout, QHBoxLayout, QLabel, QComboBox,
 from PyQt4.QtCore import pyqtSignal
 
 from pu_check_analysis_widgets import (perimeter_widget, notinspi_widget,
-                                       notinmap_widget, area_widget,
+                                       notinmap_widget, ze_widget, area_widget,
                                        distance_widget, bpej_widget)
 
 from execute_thread import Executehread
@@ -93,6 +93,8 @@ class CheckAnalysisFrame(QFrame):
         self.checkAnalysisComboBox.addItem(
             u'kontrola - výměra nad mezní odchylkou')
         self.checkAnalysisComboBox.addItem(
+            u'kontrola - bez vlastníka (pouze zjednodušená evidence)')
+        self.checkAnalysisComboBox.addItem(
             u'analýza - měření vzdálenosti (referenční bod - těžiště parcel)')
         self.checkAnalysisComboBox.addItem(
             u'analýza - oceňování podle BPEJ')
@@ -120,6 +122,10 @@ class CheckAnalysisFrame(QFrame):
         self.areaWidget = area_widget.AreaWidget(
             self, self.dWName, self.iface, self.dW)
         self.checkAnalysisStackedWidget.addWidget(self.areaWidget)
+        
+        self.zeWidget = ze_widget.ZeWidget(
+            self, self.dWName, self.iface, self.dW)
+        self.checkAnalysisStackedWidget.addWidget(self.zeWidget)
         
         self.distanceWidget = distance_widget.DistanceWidget(
             self, self.dWName, self.iface, self.dW)
