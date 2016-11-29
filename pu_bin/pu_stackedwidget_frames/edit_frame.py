@@ -203,6 +203,33 @@ class EditFrame(QFrame):
         self.selectCategoryPushButton.setToolTip(u'Vybrat parcely v kategorii')
         self.selectCategoryPushButton.clicked.connect(self._select_category)
         self.editGridLayout.addWidget(self.selectCategoryPushButton, 2, 1, 1, 1)
+        
+        self.editToolbar.addSeparator()
+        
+        for action in self.iface.advancedDigitizeToolBar().actions(): 
+            if action.objectName() == 'mActionUndo':
+                self.undoAction = action
+            if action.objectName() == 'mActionRedo':
+                self.redoAction = action
+            if action.objectName() == 'mActionReshapeFeatures':
+                self.reshapeFeaturesAction = action
+            if action.objectName() == 'mActionMergeFeatures':
+                self.mergeFeaturesAction = action
+            if action.objectName() == 'mActionMergeFeatureAttributes':
+                self.mergeFeatureAttributesAction = action
+        
+        self.editToolbar.addAction(self.undoAction)
+        
+        self.editToolbar.addAction(self.redoAction)
+        
+        self.editToolbar.addAction(self.reshapeFeaturesAction)
+        
+        self.splitFeaturesAction = self.iface.actionSplitFeatures()
+        self.editToolbar.addAction(self.splitFeaturesAction)
+        
+        self.editToolbar.addAction(self.mergeFeaturesAction)
+        
+        self.editToolbar.addAction(self.mergeFeatureAttributesAction)
     
     def _enable_allEditsToolButton(self):
         """Enables or disables qgisAllEditsAction.
