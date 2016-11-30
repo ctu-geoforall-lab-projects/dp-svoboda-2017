@@ -22,6 +22,7 @@
 """
 
 from PyQt4.QtGui import QWidget, QLabel, QHBoxLayout
+from PyQt4.QtCore import Qt
 
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
 from qgis.core import *
@@ -60,6 +61,7 @@ class DistanceWidget(QWidget):
         
         self.distanceHBoxLayout = QHBoxLayout(self)
         self.distanceHBoxLayout.setObjectName(u'distanceHBoxLayout')
+        self.distanceHBoxLayout.setAlignment(Qt.AlignTop)
         
         self._build_widgets()
     

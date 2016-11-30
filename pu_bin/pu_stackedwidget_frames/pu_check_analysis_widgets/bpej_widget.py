@@ -22,7 +22,7 @@
 """
 
 from PyQt4.QtGui import QWidget, QGridLayout, QHBoxLayout, QLabel
-from PyQt4.QtCore import QPyNullVariant
+from PyQt4.QtCore import QPyNullVariant, Qt
 
 from qgis.gui import (QgsMapLayerComboBox, QgsMapLayerProxyModel,
                       QgsFieldComboBox, QgsFieldProxyModel)
@@ -63,6 +63,7 @@ class BpejWidget(QWidget):
         
         self.bpejGridLayout = QGridLayout(self)
         self.bpejGridLayout.setObjectName(u'bpejGridLayout')
+        self.bpejGridLayout.setAlignment(Qt.AlignTop)
         
         self._build_widgets()
     

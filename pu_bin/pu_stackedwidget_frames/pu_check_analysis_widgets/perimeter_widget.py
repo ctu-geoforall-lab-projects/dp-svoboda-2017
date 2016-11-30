@@ -22,6 +22,7 @@
 """
 
 from PyQt4.QtGui import QWidget, QLabel, QHBoxLayout
+from PyQt4.QtCore import Qt
 
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
 from qgis.core import *
@@ -59,6 +60,7 @@ class PerimeterWidget(QWidget):
         
         self.perimeterHBoxLayout = QHBoxLayout(self)
         self.perimeterHBoxLayout.setObjectName(u'perimeterHBoxLayout')
+        self.perimeterHBoxLayout.setAlignment(Qt.AlignTop)
         
         self._build_widgets()
     

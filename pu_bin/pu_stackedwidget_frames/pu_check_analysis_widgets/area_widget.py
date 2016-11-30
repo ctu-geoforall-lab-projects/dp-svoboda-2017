@@ -23,7 +23,7 @@
 
 from PyQt4.QtGui import (QWidget, QHBoxLayout, QLabel, QLineEdit,
                          QDoubleValidator)
-from PyQt4.QtCore import QPyNullVariant
+from PyQt4.QtCore import QPyNullVariant, Qt
 
 
 class AreaWidget(QWidget):
@@ -56,6 +56,7 @@ class AreaWidget(QWidget):
         
         self.areaHBoxLayout = QHBoxLayout(self)
         self.areaHBoxLayout.setObjectName(u'areaHBoxLayout')
+        self.areaHBoxLayout.setAlignment(Qt.AlignTop)
         
         self._build_widgets()
     
