@@ -170,40 +170,6 @@ class EditFrame(QFrame):
         self.pasteFeaturesAction.setObjectName(u'pasteFeaturesAction')
         self.editToolbar.addAction(self.pasteFeaturesAction)
         
-        self.categoryHBoxLayout = QHBoxLayout(self)
-        self.categoryHBoxLayout.setObjectName(u'categoryHBoxLayout')
-        self.editGridLayout.addLayout(self.categoryHBoxLayout, 1, 0, 1, 2)
-        
-        self.categoryLabel = QLabel(self)
-        self.categoryLabel.setObjectName(u'categoryLabel')
-        self.categoryLabel.setText(u'Kategorie parcel:')
-        self.categoryHBoxLayout.addWidget(self.categoryLabel)
-        
-        self.categoryComboBox = QComboBox(self)
-        self.categoryComboBox.setObjectName(u'categoryComboBox')
-        self.categoryComboBox.addItem(u'v obvodu - řešené')
-        self.categoryComboBox.addItem(u'v obvodu - neřešené')
-        self.categoryComboBox.addItem(u'mimo obvod')
-        self.categoryComboBox.currentIndexChanged.connect(
-            self._set_categoryValue)
-        self.categoryHBoxLayout.addWidget(self.categoryComboBox, 1)
-        
-        self.setCategoryPushButton = QPushButton(self)
-        self.setCategoryPushButton.setObjectName(u'setCategoryPushButton')
-        self.setCategoryPushButton.setText(u'Zařadit')
-        self.setCategoryPushButton.setToolTip(
-            u'Zařadit vybrané parcely do kategorie')
-        self.setCategoryPushButton.clicked.connect(
-            self._run_setting_pu_category)
-        self.editGridLayout.addWidget(self.setCategoryPushButton, 2, 0, 1, 1)
-        
-        self.selectCategoryPushButton = QPushButton(self)
-        self.selectCategoryPushButton.setObjectName(u'selectCategoryPushButton')
-        self.selectCategoryPushButton.setText(u'Vybrat')
-        self.selectCategoryPushButton.setToolTip(u'Vybrat parcely v kategorii')
-        self.selectCategoryPushButton.clicked.connect(self._select_category)
-        self.editGridLayout.addWidget(self.selectCategoryPushButton, 2, 1, 1, 1)
-        
         self.editToolbar.addSeparator()
         
         for action in self.iface.advancedDigitizeToolBar().actions(): 
@@ -230,6 +196,42 @@ class EditFrame(QFrame):
         self.editToolbar.addAction(self.mergeFeaturesAction)
         
         self.editToolbar.addAction(self.mergeFeatureAttributesAction)
+        
+        self.categoryHBoxLayout = QHBoxLayout(self)
+        self.categoryHBoxLayout.setObjectName(u'categoryHBoxLayout')
+        self.editGridLayout.addLayout(self.categoryHBoxLayout, 1, 0, 1, 2)
+        
+        self.categoryLabel = QLabel(self)
+        self.categoryLabel.setObjectName(u'categoryLabel')
+        self.categoryLabel.setText(u'Kategorie parcel:')
+        self.categoryHBoxLayout.addWidget(self.categoryLabel)
+        
+        self.categoryComboBox = QComboBox(self)
+        self.categoryComboBox.setObjectName(u'categoryComboBox')
+        self.categoryComboBox.addItem(u'v obvodu - řešené')
+        self.categoryComboBox.addItem(u'v obvodu - neřešené')
+        self.categoryComboBox.addItem(u'mimo obvod')
+        self.categoryComboBox.currentIndexChanged.connect(
+            self._set_categoryValue)
+        self.categoryHBoxLayout.addWidget(self.categoryComboBox, 1)
+        
+        self.editGridLayout.setRowStretch(2, 1)
+        
+        self.setCategoryPushButton = QPushButton(self)
+        self.setCategoryPushButton.setObjectName(u'setCategoryPushButton')
+        self.setCategoryPushButton.setText(u'Zařadit')
+        self.setCategoryPushButton.setToolTip(
+            u'Zařadit vybrané parcely do kategorie')
+        self.setCategoryPushButton.clicked.connect(
+            self._run_setting_pu_category)
+        self.editGridLayout.addWidget(self.setCategoryPushButton, 3, 0, 1, 1)
+        
+        self.selectCategoryPushButton = QPushButton(self)
+        self.selectCategoryPushButton.setObjectName(u'selectCategoryPushButton')
+        self.selectCategoryPushButton.setText(u'Vybrat')
+        self.selectCategoryPushButton.setToolTip(u'Vybrat parcely v kategorii')
+        self.selectCategoryPushButton.clicked.connect(self._select_category)
+        self.editGridLayout.addWidget(self.selectCategoryPushButton, 3, 1, 1, 1)
     
     def _enable_allEditsToolButton(self):
         """Enables or disables qgisAllEditsAction.
@@ -366,4 +368,3 @@ class EditFrame(QFrame):
             self.dW._raise_pu_error(
                 u'Error selecting parcels in category.',
                 u'Chyba při vybírání parcel v kategorii.')
-
