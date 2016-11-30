@@ -100,18 +100,20 @@ class LoadVfkFrame(QFrame):
         self.browseVfkPushButton.setText(u'Procházet')
         self.loadVfkGridLayout.addWidget(self.browseVfkPushButton, 0, 2, 1, 1)
         
+        self.loadVfkGridLayout.setRowStretch(1, 1)
+        
         self.loadVfkProgressBar = QProgressBar(self)
         self.loadVfkProgressBar.setObjectName(u'loadVfkProgressBar')
         self.value_loadVfkProgressBar.connect(
             self._set_value_loadVfkProgressBar)
         self.value_loadVfkProgressBar.emit(0)
-        self.loadVfkGridLayout.addWidget(self.loadVfkProgressBar, 1, 0, 1, 2)
+        self.loadVfkGridLayout.addWidget(self.loadVfkProgressBar, 2, 0, 1, 2)
         
         self.loadVfkPushButton = QPushButton(self)
         self.loadVfkPushButton.setObjectName(u'loadVfkPushButton')
         self.loadVfkPushButton.clicked.connect(self.loadVfkPushButton_clicked)
         self.loadVfkPushButton.setText(u'Načíst')
-        self.loadVfkGridLayout.addWidget(self.loadVfkPushButton, 1, 2, 1, 1)
+        self.loadVfkGridLayout.addWidget(self.loadVfkPushButton, 2, 2, 1, 1)
         self.loadVfkPushButton.setDisabled(True)
         
     def _set_text_browseVfkLineEdit(self, text):
