@@ -140,13 +140,15 @@ class CheckAnalysisFrame(QFrame):
         self.checkAnalysisComboBox.currentIndexChanged.connect(
             self._set_text_checkAnalysisPushButton)
         
+        self.checkAnalysisGridLayout.setRowStretch(2, 1)
+        
         self.checkAnalysisPushButton = QPushButton(self)
         self.checkAnalysisPushButton.setObjectName(u'checkAnalysisPushButton')
         self.checkAnalysisPushButton.clicked.connect(self._run_check)
         self.checkAnalysisPushButton.setText(
             u'Provést kontrolu a vybrat problémové parcely')
         self.checkAnalysisGridLayout.addWidget(
-            self.checkAnalysisPushButton, 2, 0, 1, 2)
+            self.checkAnalysisPushButton, 3, 0, 1, 2)
     
     def _run_check(self):
         """Starts current check or analysis.
