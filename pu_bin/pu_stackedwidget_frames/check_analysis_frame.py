@@ -178,7 +178,7 @@ class CheckAnalysisFrame(QFrame):
         
         """
         
-        if currentIndex <= 3:
+        if currentIndex <= 4:
             self.checkAnalysisPushButton.setText(
                 u'Provést kontrolu a vybrat problémové parcely')
         else:
