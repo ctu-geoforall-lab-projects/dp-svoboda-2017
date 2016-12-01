@@ -22,7 +22,7 @@
 """
 
 from PyQt4.QtGui import QDockWidget, QWidget, QGridLayout, QStatusBar
-from PyQt4.QtCore import pyqtSignal
+from PyQt4.QtCore import pyqtSignal, QSettings
 
 from qgis.gui import QgsMessageBar
 from qgis.core import *
@@ -134,6 +134,27 @@ class DockWidget(QDockWidget):
         tb = traceback.format_exc()
         
         QgsMessageLog.logMessage(tb, developmentTb)
+    
+    def _get_settings(self, key):
+        """Returns value for settings key.
+                
+        Returns:
+            str: A value for settings key.
+        
+        """
+        
+        return QSettings().value('puplugin/' + key, '.')
+    
+    def _set_settings(self, key, value):
+        """Sets value for settings key.
+        
+        Args:
+            key (str): A settings key.
+            value (str): A value to be set.
+        
+        """
+        
+        QSettings().setValue('puplugin/' + key, value)
     
     class puError(Exception):
         """A custom exception."""

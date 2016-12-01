@@ -23,7 +23,7 @@
 
 from PyQt4.QtGui import (QFrame, QGridLayout, QLabel, QLineEdit, QPushButton,
                          QProgressBar, QFileDialog)
-from PyQt4.QtCore import pyqtSignal, QFileInfo, QDir, QUuid, QSettings, QFile
+from PyQt4.QtCore import pyqtSignal, QFileInfo, QDir, QUuid, QFile
 from PyQt4.QtSql import QSqlDatabase, QSqlQuery
 
 from qgis.core import *
@@ -139,15 +139,17 @@ class LoadVfkFrame(QFrame):
     def browseVfkPushButton_clicked(self):
         """Opens a file dialog and filters VFK files."""
         
+        vfkFilePath = 'vfkFilePath'
+        
         filePath = QFileDialog.getOpenFileName(
             self.dW, u'Vyberte VFK soubor.',
-            self._last_used_path(),
+            self.dW._get_settings(vfkFilePath),
             u'.vfk (*.vfk)')
         
         if not filePath:
             return
         
-        self._set_last_used_path(filePath)
+        self.dW._set_settings(vfkFilePath, filePath)
         
         self.text_browseVfkLineEdit.emit(filePath)
     
@@ -484,26 +486,6 @@ class LoadVfkFrame(QFrame):
         self.browseVfkLineEdit.setEnabled(enableBool)
         self.browseVfkPushButton.setEnabled(enableBool)
         self.loadVfkPushButton.setEnabled(enableBool)
-    
-    def _last_used_path(self):
-        """Gets last used path for file dialog.
-                
-        Returns:
-            str: A last used path.
-        
-        """
-        
-        return QSettings().value('puplugin/lastVfkFilePath', '.')
-    
-    def _set_last_used_path(self, path):
-        """Sets last used path for file dialog.
-        
-        Args:
-            path (str): A path to be set.
-        
-        """
-        
-        QSettings().setValue('puplugin/lastVfkFilePath', path)
     
     def _set_options(self):
         """Sets topological editing enabled."""
