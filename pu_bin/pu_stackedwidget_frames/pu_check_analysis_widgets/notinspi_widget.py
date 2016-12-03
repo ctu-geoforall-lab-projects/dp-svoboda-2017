@@ -64,7 +64,7 @@ class NotInSpiWidget(QWidget):
         
         try:
             self.pW.text_statusbar.emit(
-                u'Provádím kontrolu - není v SPI (nová parcela).', 0)
+                u'Provádím kontrolu - není v SPI.', 0)
             
             expression = QgsExpression("\"KMENOVE_CISLO_PAR\" is null")
             

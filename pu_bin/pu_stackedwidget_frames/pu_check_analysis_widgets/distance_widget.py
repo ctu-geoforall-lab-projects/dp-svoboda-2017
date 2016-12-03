@@ -116,8 +116,7 @@ class DistanceWidget(QWidget):
                 features = layer.getFeatures()
             
             self.pW.text_statusbar.emit(
-                u'Provádím analýzu - měření vzdálenosti '
-                u'(referenční bod - těžiště parcel).', 0)
+                u'Provádím analýzu - měření vzdálenosti.', 0)
             
             refPointFeatures = refPointLayer.getFeatures()
             
@@ -147,7 +146,7 @@ class DistanceWidget(QWidget):
                 self.dW.stackedWidget.editFrame.toggleEditingAction.trigger()
             
             self.pW.text_statusbar.emit(
-                u'Analýza měření vzdáleností úspěšně dokončena.', 15000)
+                u'Analýza měření vzdálenosti úspěšně dokončena.', 15000)
         except:
             currentAnalysisName = self.pW.checkAnalysisComboBox.currentText()
             

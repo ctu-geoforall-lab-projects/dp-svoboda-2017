@@ -64,8 +64,7 @@ class ZeWidget(QWidget):
         
         try:
             self.pW.text_statusbar.emit(
-                u'Provádím kontrolu - bez vlastníka '
-                u'(pouze zjednodušená evidence).', 0)
+                u'Provádím kontrolu - bez vlastníka.', 0)
             
             fieldName = 'ID'
             
