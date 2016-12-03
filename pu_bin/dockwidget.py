@@ -94,7 +94,7 @@ class DockWidget(QDockWidget):
         self.statusbar = Statusbar(self, dockWidgetName, self.iface)
         self.mainGridLayout.addWidget(self.statusbar, 2, 0, 1, 1)
         
-        self.text_statusbar.connect(self.statusbar._set_text_statusbar)
+        self.text_statusbar.connect(self.statusbar.set_text_statusbar)
         
         self.stackedWidget = StackedWidget(self, dockWidgetName, self.iface)
         self.mainGridLayout.addWidget(self.stackedWidget, 1, 0, 1, 1)
@@ -140,6 +140,9 @@ class DockWidget(QDockWidget):
     
     def _get_settings(self, key):
         """Returns value for settings key.
+        
+        Args:
+            key (str): A settings key.
                 
         Returns:
             str: A value for settings key.
@@ -167,6 +170,9 @@ class DockWidget(QDockWidget):
         Args:
             title (str): A title of the file dialog.
             filters (str): Available filter(s) of the file dialog.
+        
+        Returns:
+            str: A path to the selected file.
         
         """
         

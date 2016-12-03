@@ -55,7 +55,7 @@ class Statusbar(QStatusBar):
         
         self.setStyleSheet("border: none")
     
-    def _set_text_statusbar(self, text, duration):
+    def set_text_statusbar(self, text, duration):
         """Sets text.
         
         Args:
@@ -73,7 +73,7 @@ class Statusbar(QStatusBar):
         
         self.showMessage(text, duration)
     
-    def _change_text_statusbar(self):
+    def change_text_statusbar(self):
         """Changes text according to the active tab."""
         
         currentWidgetName = self.dW.stackedWidget.currentWidget().objectName()

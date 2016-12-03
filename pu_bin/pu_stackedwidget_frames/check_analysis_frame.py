@@ -64,7 +64,7 @@ class CheckAnalysisFrame(QFrame):
         self.setFrameShape(QFrame.StyledPanel)
         self.setFrameShadow(QFrame.Raised)
         
-        self.text_statusbar.connect(self.dW.statusbar._set_text_statusbar)
+        self.text_statusbar.connect(self.dW.statusbar.set_text_statusbar)
         
         self.checkAnalysisGridLayout = QGridLayout(self)
         self.checkAnalysisGridLayout.setObjectName(u'checkAnalysisGridLayout')

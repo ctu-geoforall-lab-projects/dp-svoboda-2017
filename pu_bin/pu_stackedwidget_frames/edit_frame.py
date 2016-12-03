@@ -66,7 +66,7 @@ class EditFrame(QFrame):
         self.setFrameShape(QFrame.StyledPanel)
         self.setFrameShadow(QFrame.Raised)
         
-        self.text_statusbar.connect(self.dW.statusbar._set_text_statusbar)
+        self.text_statusbar.connect(self.dW.statusbar.set_text_statusbar)
         
         self.editGridLayout = QGridLayout(self)
         self.editGridLayout.setObjectName(u'editGridLayout')

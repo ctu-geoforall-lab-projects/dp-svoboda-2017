@@ -106,7 +106,7 @@ class StackedWidget(QStackedWidget):
         self.openTabSignalMapper.mapped.connect(self.setCurrentIndex)
         
         self.currentChanged.connect(
-            self.dW.statusbar._change_text_statusbar)
+            self.dW.statusbar.change_text_statusbar)
     
     def check_active_layer(self, sender):
         """Checks active layer.

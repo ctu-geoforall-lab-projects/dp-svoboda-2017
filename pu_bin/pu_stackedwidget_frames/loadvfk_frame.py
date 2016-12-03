@@ -69,7 +69,7 @@ class LoadVfkFrame(QFrame):
         self.setFrameShape(QFrame.StyledPanel)
         self.setFrameShadow(QFrame.Raised)
         
-        self.text_statusbar.connect(self.dW.statusbar._set_text_statusbar)
+        self.text_statusbar.connect(self.dW.statusbar.set_text_statusbar)
         self.text_statusbar.emit(u'Vyberte VFK soubor.', 0)
         
         self.loadVfkGridLayout = QGridLayout(self)
@@ -90,13 +90,13 @@ class LoadVfkFrame(QFrame):
         self.text_browseVfkLineEdit.connect(
             self._set_text_browseVfkLineEdit)
         self.browseVfkLineEdit.textChanged.connect(
-            self.browseVfkLineEdit_textChanged)
+            self._browseVfkLineEdit_textChanged)
         self.loadVfkGridLayout.addWidget(self.browseVfkLineEdit, 0, 1, 1, 1)
         
         self.browseVfkPushButton = QPushButton(self)
         self.browseVfkPushButton.setObjectName(u'browseVfkPushButton')
         self.browseVfkPushButton.clicked.connect(
-            self.browseVfkPushButton_clicked)
+            self._browseVfkPushButton_clicked)
         self.browseVfkPushButton.setText(u'Procházet')
         self.loadVfkGridLayout.addWidget(self.browseVfkPushButton, 0, 2, 1, 1)
         
@@ -111,7 +111,7 @@ class LoadVfkFrame(QFrame):
         
         self.loadVfkPushButton = QPushButton(self)
         self.loadVfkPushButton.setObjectName(u'loadVfkPushButton')
-        self.loadVfkPushButton.clicked.connect(self.loadVfkPushButton_clicked)
+        self.loadVfkPushButton.clicked.connect(self._loadVfkPushButton_clicked)
         self.loadVfkPushButton.setText(u'Načíst')
         self.loadVfkGridLayout.addWidget(self.loadVfkPushButton, 2, 2, 1, 1)
         self.loadVfkPushButton.setDisabled(True)
@@ -136,7 +136,7 @@ class LoadVfkFrame(QFrame):
         
         self.loadVfkProgressBar.setValue(value)
     
-    def browseVfkPushButton_clicked(self):
+    def _browseVfkPushButton_clicked(self):
         """Opens a file dialog and filters VFK files."""
         
         title = u'Vyberte VFK soubor.'
@@ -147,7 +147,7 @@ class LoadVfkFrame(QFrame):
         if filePath:
             self.text_browseVfkLineEdit.emit(filePath)
     
-    def browseVfkLineEdit_textChanged(self):
+    def _browseVfkLineEdit_textChanged(self):
         """Checks if the text in browseVfkLineEdit is a path to valid VFK file.
         
         If so, loadVfkPushButton is enabled, otherwise loadVfkPushButton
@@ -164,7 +164,7 @@ class LoadVfkFrame(QFrame):
         else:
             self.loadVfkPushButton.setEnabled(False)
     
-    def loadVfkPushButton_clicked(self):
+    def _loadVfkPushButton_clicked(self):
         """Starts loading the selected VFK file in a separate thread."""
         
         self.text_statusbar.emit(
@@ -177,10 +177,10 @@ class LoadVfkFrame(QFrame):
         QgsApplication.processEvents()
         
         self.loadThread = LoadThread(filePath)
-        self.loadThread.work.connect(self.run_loading_vfk_layer)
+        self.loadThread.work.connect(self._run_loading_vfk_layer)
         self.loadThread.start()
     
-    def run_loading_vfk_layer(self, filePath):
+    def _run_loading_vfk_layer(self, filePath):
         """Calls methods for loading a VFK layer.
         
         Disables loading widgets until the loading is finished.
