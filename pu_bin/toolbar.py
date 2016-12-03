@@ -94,54 +94,8 @@ class Toolbar(QToolBar):
         
         self.addSeparator()
         
-        self.panToolButton = QToolButton(self)
-        self.panToolButton.setObjectName(u'panToolButton')
-        self.panToolButton.setPopupMode(1)
-        
-        self.panAction = self.iface.actionPan()
-        self.panToolButton.addAction(self.panAction)
-        self.panToolButton.setDefaultAction(self.panAction)
-        
-        self.panToSelectedAction = self.iface.actionPanToSelected()
-        self.panToolButton.addAction(self.panToSelectedAction)
-        
-        self.addWidget(self.panToolButton)
-        
-        self.zoomInAction = self.iface.actionZoomIn()
-        self.addAction(self.zoomInAction)
-        
-        self.zoomOutAction = self.iface.actionZoomOut()
-        self.addAction(self.zoomOutAction)
-        
-        self.zoomToolButton = QToolButton(self)
-        self.zoomToolButton.setObjectName(u'zoomToolButton')
-        self.zoomToolButton.setPopupMode(1)
-        
         self.zoomToSelectedAction = self.iface.actionZoomToSelected()
-        self.zoomToolButton.addAction(self.zoomToSelectedAction)
-        self.zoomToolButton.setDefaultAction(self.zoomToSelectedAction)
-        
-        self.zoomFullExtentAction = self.iface.actionZoomFullExtent()
-        self.zoomToolButton.addAction(self.zoomFullExtentAction)
-        
-        self.zoomToLayerAction = self.iface.actionZoomToLayer()
-        self.zoomToolButton.addAction(self.zoomToLayerAction)
-        
-        self.addWidget(self.zoomToolButton)
-        
-        self.zoomLastAction = self.iface.actionZoomLast()
-        self.addAction(self.zoomLastAction)
-        
-        self.zoomNextAction = self.iface.actionZoomNext()
-        self.addAction(self.zoomNextAction)
-        
-        self.drawAction = self.iface.actionDraw()
-        self.addAction(self.drawAction)
-        
-        self.addSeparator()
-        
-        self.identifyAction = self.iface.actionIdentify()
-        self.addAction(self.identifyAction)
+        self.addAction(self.zoomToSelectedAction)
         
         self.selectToolButton = QToolButton(self)
         self.selectToolButton.setObjectName(u'selectToolButton')
@@ -195,54 +149,8 @@ class Toolbar(QToolBar):
         
         self.addAction(self.deselectAllAction)
         
-        self.toolToolButton = QToolButton(self)
-        self.toolToolButton.setObjectName(u'toolToolButton')
-        self.toolToolButton.setPopupMode(1)
-        
         self.openTableAction = self.iface.actionOpenTable()
-        self.toolToolButton.addAction(self.openTableAction)
-        self.toolToolButton.setDefaultAction(self.openTableAction)
-        
-        self.openFieldCalculatorAction = self.iface.actionOpenFieldCalculator()
-        self.toolToolButton.addAction(self.openFieldCalculatorAction)
-        
-        for action in self.iface.attributesToolBar().actions(): 
-            if action.objectName() == 'mActionStatisticalSummary':
-                self.statisticalSummaryAction = action
-                break
-        
-        self.toolToolButton.addAction(self.statisticalSummaryAction)
-        
-        self.addWidget(self.toolToolButton)
-        
-        self.measureToolButton = QToolButton(self)
-        self.measureToolButton.setObjectName(u'measureToolButton')
-        self.measureToolButton.setPopupMode(1)
-        
-        self.measureAction = self.iface.actionMeasure()
-        self.measureToolButton.addAction(self.measureAction)
-        
-        self.measureAreaAction = self.iface.actionMeasureArea()
-        self.measureToolButton.addAction(self.measureAreaAction)
-        
-        for action in self.iface.attributesToolBar().actions():
-            if action.objectName() == 'ActionMeasure':
-                self.qgisMeasureToolButton = action.defaultWidget()
-                break
-        
-        for action in self.qgisMeasureToolButton.actions():
-            if action.objectName() == 'mActionMeasureAngle':
-                self.measureAngleAction = action
-                break
-        
-        self.measureToolButton.addAction(self.measureAngleAction)
-        
-        self.qgisMeasureToolButton.toggled.connect(
-            self._set_default_action_measureToolButton)
-        
-        self._set_default_action_measureToolButton()
-        
-        self.addWidget(self.measureToolButton)
+        self.addAction(self.openTableAction)
     
     def _set_default_action_selectToolButton(self):
         """Sets selectToolButton's default action."""

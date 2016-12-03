@@ -85,62 +85,31 @@ class EditFrame(QFrame):
         self.editToolbar.setIconSize(self.iface.mainWindow().iconSize())
         self.editGridLayout.addWidget(self.editToolbar, 0, 0, 1, 2)
         
-        self.allEditsToolButton = QToolButton(self)
-        self.allEditsToolButton.setObjectName(u'allEditsToolButton')
-        self.allEditsToolButton.setPopupMode(2)
-        self.editToolbar.addWidget(self.allEditsToolButton)
+        for action in self.iface.advancedDigitizeToolBar().actions(): 
+            if action.objectName() == 'mActionUndo':
+                self.undoAction = action
+            if action.objectName() == 'mActionRedo':
+                self.redoAction = action
         
-        for action in self.iface.digitizeToolBar().actions():
-            if action.objectName() == 'mActionAllEdits':
-                self.qgisAllEditsAction = action
-                break
+        self.editToolbar.addAction(self.undoAction)
         
-        self.allEditsToolButton.setIcon(self.qgisAllEditsAction.icon())
-        self.allEditsToolButton.setToolTip(self.qgisAllEditsAction.toolTip())
+        self.editToolbar.addAction(self.redoAction)
         
-        self.qgisAllEditsAction.changed.connect(self._enable_allEditsToolButton)
-        
-        self._enable_allEditsToolButton()
-        
-        self.allEditsMenu = QMenu(self)
-        
-        self.saveEditsAction = self.iface.actionSaveEdits()
-        self.saveEditsAction.setObjectName(u'saveEditsAction')
-        self.allEditsMenu.addAction(self.saveEditsAction)
-        
-        self.rollbackEditsAction = self.iface.actionRollbackEdits()
-        self.rollbackEditsAction.setObjectName(u'rollbackEditsAction')
-        self.allEditsMenu.addAction(self.rollbackEditsAction)
-        
-        self.cancelEditsAction = self.iface.actionCancelEdits()
-        self.cancelEditsAction.setObjectName(u'cancelEditsAction')
-        self.allEditsMenu.addAction(self.cancelEditsAction)
-        
-        self.allEditsMenu.addSeparator()
-        
-        self.saveAllEditsAction = self.iface.actionSaveAllEdits()
-        self.saveAllEditsAction.setObjectName(u'saveAllEditsAction')
-        self.allEditsMenu.addAction(self.saveAllEditsAction)
-        
-        self.rollbackAllEditsAction = self.iface.actionRollbackAllEdits()
-        self.rollbackAllEditsAction.setObjectName(u'rollbackAllEditsAction')
-        self.allEditsMenu.addAction(self.rollbackAllEditsAction)
-        
-        self.cancelAllEditsAction = self.iface.actionCancelAllEdits()
-        self.cancelAllEditsAction.setObjectName(u'cancelAllEditsAction')
-        self.allEditsMenu.addAction(self.cancelAllEditsAction)
-        
-        self.allEditsToolButton.setMenu(self.allEditsMenu)
+        self.editToolbar.addSeparator()
         
         self.toggleEditingAction = self.iface.actionToggleEditing()
         self.toggleEditingAction.setObjectName(u'toggleEditingAction')
         self.editToolbar.addAction(self.toggleEditingAction)
         
-        self.saveActiveLayerEditsAction = self.iface\
-            .actionSaveActiveLayerEdits()
+        self.saveActiveLayerEditsAction = \
+            self.iface.actionSaveActiveLayerEdits()
         self.saveActiveLayerEditsAction.setObjectName(
             u'saveActiveLayerEditsAction')
         self.editToolbar.addAction(self.saveActiveLayerEditsAction)
+        
+        self.cancelEditsAction = self.iface.actionCancelEdits()
+        self.cancelEditsAction.setObjectName(u'cancelEditsAction')
+        self.editToolbar.addAction(self.cancelEditsAction)
         
         self.addFeatureAction = self.iface.actionAddFeature()
         self.addFeatureAction.setObjectName(u'addFeatureAction')
@@ -157,45 +126,6 @@ class EditFrame(QFrame):
         self.deleteSelectedAction = self.iface.actionDeleteSelected()
         self.deleteSelectedAction.setObjectName(u'deleteSelectedAction')
         self.editToolbar.addAction(self.deleteSelectedAction)
-        
-        self.cutFeaturesAction = self.iface.actionCutFeatures()
-        self.cutFeaturesAction.setObjectName(u'cutFeaturesAction')
-        self.editToolbar.addAction(self.cutFeaturesAction)
-        
-        self.copyFeaturesAction = self.iface.actionCopyFeatures()
-        self.copyFeaturesAction.setObjectName(u'copyFeaturesAction')
-        self.editToolbar.addAction(self.copyFeaturesAction)
-        
-        self.pasteFeaturesAction = self.iface.actionPasteFeatures()
-        self.pasteFeaturesAction.setObjectName(u'pasteFeaturesAction')
-        self.editToolbar.addAction(self.pasteFeaturesAction)
-        
-        self.editToolbar.addSeparator()
-        
-        for action in self.iface.advancedDigitizeToolBar().actions(): 
-            if action.objectName() == 'mActionUndo':
-                self.undoAction = action
-            if action.objectName() == 'mActionRedo':
-                self.redoAction = action
-            if action.objectName() == 'mActionReshapeFeatures':
-                self.reshapeFeaturesAction = action
-            if action.objectName() == 'mActionMergeFeatures':
-                self.mergeFeaturesAction = action
-            if action.objectName() == 'mActionMergeFeatureAttributes':
-                self.mergeFeatureAttributesAction = action
-        
-        self.editToolbar.addAction(self.undoAction)
-        
-        self.editToolbar.addAction(self.redoAction)
-        
-        self.editToolbar.addAction(self.reshapeFeaturesAction)
-        
-        self.splitFeaturesAction = self.iface.actionSplitFeatures()
-        self.editToolbar.addAction(self.splitFeaturesAction)
-        
-        self.editToolbar.addAction(self.mergeFeaturesAction)
-        
-        self.editToolbar.addAction(self.mergeFeatureAttributesAction)
         
         self.categoryHBoxLayout = QHBoxLayout(self)
         self.categoryHBoxLayout.setObjectName(u'categoryHBoxLayout')
