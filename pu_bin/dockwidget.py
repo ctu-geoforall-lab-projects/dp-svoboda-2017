@@ -21,7 +21,8 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QDockWidget, QWidget, QGridLayout, QStatusBar
+from PyQt4.QtGui import (QDockWidget, QWidget, QGridLayout, QStatusBar,
+                         QFileDialog)
 from PyQt4.QtCore import pyqtSignal, QSettings
 
 from qgis.gui import QgsMessageBar
@@ -64,6 +65,8 @@ class DockWidget(QDockWidget):
         """
         
         self.setObjectName(u'dockWidget')
+        
+        self.settings = QSettings()
         
         self.mainWidget = QWidget(self)
         self.mainWidget.setObjectName(u'mainWidget')
@@ -143,7 +146,9 @@ class DockWidget(QDockWidget):
         
         """
         
-        return QSettings().value('puplugin/' + key, '.')
+        value = self.settings.value(key, '')
+        
+        return value
     
     def _set_settings(self, key, value):
         """Sets value for settings key.
@@ -154,7 +159,30 @@ class DockWidget(QDockWidget):
         
         """
         
-        QSettings().setValue('puplugin/' + key, value)
+        self.settings.setValue(key, value)
+    
+    def open_file_dialog(self, title, filters):
+        """Opens a file dialog.
+        
+        Args:
+            title (str): A title of the file dialog.
+            filters (str): Available filter(s) of the file dialog.
+        
+        """
+        
+        sender = self.sender().objectName()
+        
+        lastUsedFilePath = self._get_settings(sender + '-' + 'lastUsedFilePath')
+        lastUsedFilter = self._get_settings(sender + '-' + 'lastUsedFilter')
+        
+        filePath, usedFilter = QFileDialog.getOpenFileNameAndFilter(
+            self, title, lastUsedFilePath, filters, lastUsedFilter)
+        
+        if filePath and usedFilter:
+            self._set_settings(sender + '-' + 'lastUsedFilePath', filePath)
+            self._set_settings(sender + '-' + 'lastUsedFilter', usedFilter)
+        
+        return filePath
     
     class puError(Exception):
         """A custom exception."""

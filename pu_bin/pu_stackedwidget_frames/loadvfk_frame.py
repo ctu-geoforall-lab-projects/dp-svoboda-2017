@@ -139,19 +139,13 @@ class LoadVfkFrame(QFrame):
     def browseVfkPushButton_clicked(self):
         """Opens a file dialog and filters VFK files."""
         
-        vfkFilePath = 'vfkFilePath'
+        title = u'Vyberte VFK soubor.'
+        filters = u'.vfk (*.vfk)'
         
-        filePath = QFileDialog.getOpenFileName(
-            self.dW, u'Vyberte VFK soubor.',
-            self.dW._get_settings(vfkFilePath),
-            u'.vfk (*.vfk)')
+        filePath = self.dW.open_file_dialog(title, filters)
         
-        if not filePath:
-            return
-        
-        self.dW._set_settings(vfkFilePath, filePath)
-        
-        self.text_browseVfkLineEdit.emit(filePath)
+        if filePath:
+            self.text_browseVfkLineEdit.emit(filePath)
     
     def browseVfkLineEdit_textChanged(self):
         """Checks if the text in browseVfkLineEdit is a path to valid VFK file.
