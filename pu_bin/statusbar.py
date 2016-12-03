@@ -67,9 +67,9 @@ class Statusbar(QStatusBar):
         sender = self.sender().objectName()
         
         if duration == 0:
-            self.frameText.setValue('puplugin/' + sender, text)
+            self.frameText.setValue(sender, text)
         else:
-            self.frameText.setValue('puplugin/' + sender, '')
+            self.frameText.setValue(sender, '')
         
         self.showMessage(text, duration)
     
@@ -78,5 +78,7 @@ class Statusbar(QStatusBar):
         
         currentWidgetName = self.dW.stackedWidget.currentWidget().objectName()
         
-        self.showMessage(self.frameText.value('puplugin/' + currentWidgetName, ''))
+        text = self.frameText.value(currentWidgetName, '')
+        
+        self.showMessage(text)
 
