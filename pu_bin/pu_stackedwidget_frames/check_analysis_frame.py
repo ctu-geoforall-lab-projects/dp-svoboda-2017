@@ -23,7 +23,7 @@
 
 from PyQt4.QtGui import (QFrame, QGridLayout, QHBoxLayout, QLabel, QComboBox,
                          QStackedWidget, QPushButton)
-from PyQt4.QtCore import pyqtSignal
+from PyQt4.QtCore import pyqtSignal, Qt
 
 from pu_check_analysis_widgets import (perimeter_widget, notinspi_widget,
                                        notinmap_widget, ze_widget, area_widget,
@@ -86,18 +86,43 @@ class CheckAnalysisFrame(QFrame):
         
         self.checkAnalysisComboBox = QComboBox(self)
         self.checkAnalysisComboBox.setObjectName(u'checkAnalysisComboBox')
-        self.checkAnalysisComboBox.addItem(u'kontrola - obvodem')
-        self.checkAnalysisComboBox.addItem(
-            u'kontrola - není v SPI (nová parcela)')
-        self.checkAnalysisComboBox.addItem(u'kontrola - není v mapě')
-        self.checkAnalysisComboBox.addItem(
-            u'kontrola - výměra nad mezní odchylkou')
-        self.checkAnalysisComboBox.addItem(
-            u'kontrola - bez vlastníka (pouze zjednodušená evidence)')
-        self.checkAnalysisComboBox.addItem(
-            u'analýza - měření vzdálenosti (referenční bod - těžiště parcel)')
-        self.checkAnalysisComboBox.addItem(
-            u'analýza - oceňování podle BPEJ')
+        
+        perimeterString = u'kontrola - obvodem'
+        self.checkAnalysisComboBox.addItem(perimeterString)
+        self.checkAnalysisComboBox.setItemData(
+            0, perimeterString, Qt.ToolTipRole)
+        
+        notInSpiString = u'kontrola - není v SPI'
+        self.checkAnalysisComboBox.addItem(notInSpiString)
+        self.checkAnalysisComboBox.setItemData(
+            1, notInSpiString + u' (nová parcela)', Qt.ToolTipRole)
+        
+        notInMapString = u'kontrola - není v mapě'
+        self.checkAnalysisComboBox.addItem(notInMapString)
+        self.checkAnalysisComboBox.setItemData(
+            2, notInMapString, Qt.ToolTipRole)
+        
+        areaString = u'kontrola - výměra nad mezní odchylkou'
+        self.checkAnalysisComboBox.addItem(areaString)
+        self.checkAnalysisComboBox.setItemData(
+            3, areaString, Qt.ToolTipRole)
+        
+        zeString = u'kontrola - bez vlastníka'
+        self.checkAnalysisComboBox.addItem(zeString)
+        self.checkAnalysisComboBox.setItemData(
+            4, zeString + u' (pouze zjednodušená evidence)',
+            Qt.ToolTipRole)
+        
+        distanceString = u'analýza - měření vzdálenosti'
+        self.checkAnalysisComboBox.addItem(distanceString)
+        self.checkAnalysisComboBox.setItemData(
+            5, distanceString + u' (referenční bod - těžiště parcel)',
+            Qt.ToolTipRole)
+        
+        bpejString = u'analýza - oceňování podle BPEJ'
+        self.checkAnalysisComboBox.addItem(bpejString)
+        self.checkAnalysisComboBox.setItemData(
+            6, bpejString, Qt.ToolTipRole)
 
         self.checkAnalysisHBoxLayout.addWidget(self.checkAnalysisComboBox, 1)
         
