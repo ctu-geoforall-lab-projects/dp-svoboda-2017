@@ -64,6 +64,7 @@ class BpejWidget(QWidget):
         self.bpejGridLayout = QGridLayout(self)
         self.bpejGridLayout.setObjectName(u'bpejGridLayout')
         self.bpejGridLayout.setAlignment(Qt.AlignTop)
+        self.bpejGridLayout.setContentsMargins(0, 0, 0, 0)
         
         self._build_widgets()
     

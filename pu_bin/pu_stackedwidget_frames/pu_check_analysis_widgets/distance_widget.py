@@ -62,6 +62,7 @@ class DistanceWidget(QWidget):
         self.distanceHBoxLayout = QHBoxLayout(self)
         self.distanceHBoxLayout.setObjectName(u'distanceHBoxLayout')
         self.distanceHBoxLayout.setAlignment(Qt.AlignTop)
+        self.distanceHBoxLayout.setContentsMargins(0, 0, 0, 0)
         
         self._build_widgets()
     

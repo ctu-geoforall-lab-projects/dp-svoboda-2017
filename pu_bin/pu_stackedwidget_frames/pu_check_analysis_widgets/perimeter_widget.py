@@ -61,6 +61,7 @@ class PerimeterWidget(QWidget):
         self.perimeterHBoxLayout = QHBoxLayout(self)
         self.perimeterHBoxLayout.setObjectName(u'perimeterHBoxLayout')
         self.perimeterHBoxLayout.setAlignment(Qt.AlignTop)
+        self.perimeterHBoxLayout.setContentsMargins(0, 0, 0, 0)
         
         self._build_widgets()
     

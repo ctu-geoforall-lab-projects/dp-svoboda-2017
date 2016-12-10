@@ -57,6 +57,7 @@ class AreaWidget(QWidget):
         self.areaHBoxLayout = QHBoxLayout(self)
         self.areaHBoxLayout.setObjectName(u'areaHBoxLayout')
         self.areaHBoxLayout.setAlignment(Qt.AlignTop)
+        self.areaHBoxLayout.setContentsMargins(0, 0, 0, 0)
         
         self._build_widgets()
     
