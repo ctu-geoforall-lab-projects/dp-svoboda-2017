@@ -269,7 +269,12 @@ class LoadVfkFrame(QFrame):
          
         sqliteDriver = ogr.GetDriverByName('SQLite')
         sqliteDataSource = sqliteDriver.Open(str(dbPath))
-        
+        if sqliteDataSource is None:
+            raise self.dW.puError(
+                self.dW,
+                u"Failed loading data, '{}' is not a valid SQLite datasource".format(dbPath),
+                u"Data nelze načíst, '{}' není platný datový zdroj SQLite".format(dbPath))
+
         sqliteDataSourceInfo = self._check_vfkLayerCode(
             sqliteDataSource, vfkLayerCode)
         layerCount, layerNames = sqliteDataSourceInfo
