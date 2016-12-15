@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QWidget, QLabel, QHBoxLayout
+from PyQt4.QtGui import QWidget, QLabel, QGridLayout
 from PyQt4.QtCore import Qt
 
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
@@ -58,10 +58,10 @@ class PerimeterWidget(QWidget):
         
         self.setObjectName(u'perimeterWidget')
         
-        self.perimeterHBoxLayout = QHBoxLayout(self)
-        self.perimeterHBoxLayout.setObjectName(u'perimeterHBoxLayout')
-        self.perimeterHBoxLayout.setAlignment(Qt.AlignTop)
-        self.perimeterHBoxLayout.setContentsMargins(0, 0, 0, 0)
+        self.perimeterGridLayout = QGridLayout(self)
+        self.perimeterGridLayout.setObjectName(u'perimeterGridLayout')
+        self.perimeterGridLayout.setAlignment(Qt.AlignTop)
+        self.perimeterGridLayout.setContentsMargins(0, 0, 0, 0)
         
         self._build_widgets()
     
@@ -71,14 +71,17 @@ class PerimeterWidget(QWidget):
         self.perimeterLabel = QLabel(self)
         self.perimeterLabel.setObjectName(u'perimeterLabel')
         self.perimeterLabel.setText(u'Obvod:')
-        self.perimeterHBoxLayout.addWidget(self.perimeterLabel)
+        self.perimeterGridLayout.addWidget(self.perimeterLabel, 0, 0, 1, 1)
         
         self.perimeterMapLayerComboBox = QgsMapLayerComboBox(self)
         self.perimeterMapLayerComboBox.setObjectName(
             u'perimeterMapLayerComboBox')
         self.perimeterMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PolygonLayer)
-        self.perimeterHBoxLayout.addWidget(self.perimeterMapLayerComboBox, 1)
+        self.perimeterGridLayout.addWidget(
+            self.perimeterMapLayerComboBox, 0, 1, 1, 1)
+        
+        self.perimeterGridLayout.setColumnStretch(1, 1)
     
     def execute(self, layer):
         """Executes the check.

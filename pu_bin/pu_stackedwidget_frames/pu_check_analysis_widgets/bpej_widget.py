@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QWidget, QGridLayout, QHBoxLayout, QLabel
+from PyQt4.QtGui import QWidget, QGridLayout, QLabel
 from PyQt4.QtCore import QPyNullVariant, Qt
 
 from qgis.gui import (QgsMapLayerComboBox, QgsMapLayerProxyModel,
@@ -71,36 +71,30 @@ class BpejWidget(QWidget):
     def _build_widgets(self):
         """Builds own widgets."""
         
-        self.bpejLayerHBoxLayout = QHBoxLayout(self)
-        self.bpejLayerHBoxLayout.setObjectName(u'bpejLayerHBoxLayout')
-        self.bpejGridLayout.addLayout(self.bpejLayerHBoxLayout, 0, 0, 1, 3)
-        
         self.bpejLayerLabel = QLabel(self)
         self.bpejLayerLabel.setObjectName(u'bpejLayerLabel')
         self.bpejLayerLabel.setText(u'Vrstva BPEJ:')
-        self.bpejLayerHBoxLayout.addWidget(self.bpejLayerLabel)
+        self.bpejGridLayout.addWidget(self.bpejLayerLabel, 0, 0, 1, 1)
         
         self.bpejMapLayerComboBox = QgsMapLayerComboBox(self)
         self.bpejMapLayerComboBox.setObjectName(u'bpejMapLayerComboBox')
         self.bpejMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PolygonLayer)
-        self.bpejLayerHBoxLayout.addWidget(self.bpejMapLayerComboBox, 1)
+        self.bpejGridLayout.addWidget(self.bpejMapLayerComboBox, 0, 1, 1, 1)
         
-        self.bpejFieldHBoxLayout = QHBoxLayout(self)
-        self.bpejFieldHBoxLayout.setObjectName(u'bpejFieldHBoxLayout')
-        self.bpejGridLayout.addLayout(self.bpejFieldHBoxLayout, 1, 0, 1, 3)
+        self.bpejGridLayout.setColumnStretch(1, 1)
         
         self.bpejPriceLabel = QLabel(self)
         self.bpejPriceLabel.setObjectName(u'bpejPriceLabel')
         self.bpejPriceLabel.setText(u'Sloupec ceny [Kč/m]:')
-        self.bpejFieldHBoxLayout.addWidget(self.bpejPriceLabel)
+        self.bpejGridLayout.addWidget(self.bpejPriceLabel, 1, 0, 1, 1)
         
         self.bpejFieldComboBox = QgsFieldComboBox(self)
         self.bpejFieldComboBox.setObjectName(u'bpejFieldComboBox')    
         self.bpejFieldComboBox.setFilters(QgsFieldProxyModel.Numeric)
         self.bpejFieldComboBox.setLayer(
             self.bpejMapLayerComboBox.currentLayer())
-        self.bpejFieldHBoxLayout.addWidget(self.bpejFieldComboBox, 1)
+        self.bpejGridLayout.addWidget(self.bpejFieldComboBox, 1, 1, 1, 1)
         
         self.bpejMapLayerComboBox.layerChanged.connect(
             self.bpejFieldComboBox.setLayer)

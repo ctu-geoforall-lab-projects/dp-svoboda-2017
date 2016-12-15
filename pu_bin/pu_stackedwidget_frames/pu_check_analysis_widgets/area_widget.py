@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import (QWidget, QHBoxLayout, QLabel, QLineEdit,
+from PyQt4.QtGui import (QWidget, QGridLayout, QLabel, QLineEdit,
                          QDoubleValidator)
 from PyQt4.QtCore import QPyNullVariant, Qt
 
@@ -54,10 +54,10 @@ class AreaWidget(QWidget):
         
         self.setObjectName(u'areaWidget')
         
-        self.areaHBoxLayout = QHBoxLayout(self)
-        self.areaHBoxLayout.setObjectName(u'areaHBoxLayout')
-        self.areaHBoxLayout.setAlignment(Qt.AlignTop)
-        self.areaHBoxLayout.setContentsMargins(0, 0, 0, 0)
+        self.areaGridLayout = QGridLayout(self)
+        self.areaGridLayout.setObjectName(u'areaGridLayout')
+        self.areaGridLayout.setAlignment(Qt.AlignTop)
+        self.areaGridLayout.setContentsMargins(0, 0, 0, 0)
         
         self._build_widgets()
     
@@ -67,14 +67,16 @@ class AreaWidget(QWidget):
         self.areaLabel = QLabel(self)
         self.areaLabel.setObjectName(u'areaLabel')
         self.areaLabel.setText(u'Mezní odchylka [%]:')
-        self.areaHBoxLayout.addWidget(self.areaLabel)
+        self.areaGridLayout.addWidget(self.areaLabel, 0, 0, 1, 1)
         
         self.areaLineEdit = QLineEdit(self)
         self.areaLineEdit.setObjectName(u'areaLineEdit')
         doubleValidator = QDoubleValidator(self.areaLineEdit)
         doubleValidator.setBottom(0)
         self.areaLineEdit.setValidator(doubleValidator)
-        self.areaHBoxLayout.addWidget(self.areaLineEdit, 1)
+        self.areaGridLayout.addWidget(self.areaLineEdit, 0, 1, 1, 1)
+        
+        self.areaGridLayout.setColumnStretch(1, 1)
     
     def execute(self, layer):
         """Executes the check.

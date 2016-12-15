@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QWidget, QLabel, QHBoxLayout
+from PyQt4.QtGui import QWidget, QLabel, QGridLayout
 from PyQt4.QtCore import Qt
 
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
@@ -59,10 +59,10 @@ class DistanceWidget(QWidget):
         
         self.setObjectName(u'distanceWidget')
         
-        self.distanceHBoxLayout = QHBoxLayout(self)
-        self.distanceHBoxLayout.setObjectName(u'distanceHBoxLayout')
-        self.distanceHBoxLayout.setAlignment(Qt.AlignTop)
-        self.distanceHBoxLayout.setContentsMargins(0, 0, 0, 0)
+        self.distanceGridLayout = QGridLayout(self)
+        self.distanceGridLayout.setObjectName(u'distanceGridLayout')
+        self.distanceGridLayout.setAlignment(Qt.AlignTop)
+        self.distanceGridLayout.setContentsMargins(0, 0, 0, 0)
         
         self._build_widgets()
     
@@ -72,14 +72,17 @@ class DistanceWidget(QWidget):
         self.refPointLabel = QLabel(self)
         self.refPointLabel.setObjectName(u'refPointLabel')
         self.refPointLabel.setText(u'Referenční bod:')
-        self.distanceHBoxLayout.addWidget(self.refPointLabel)
+        self.distanceGridLayout.addWidget(self.refPointLabel, 0, 0, 1, 1)
         
         self.refPointMapLayerComboBox = QgsMapLayerComboBox(self)
         self.refPointMapLayerComboBox.setObjectName(
             u'refPointMapLayerComboBox')
         self.refPointMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PointLayer)
-        self.distanceHBoxLayout.addWidget(self.refPointMapLayerComboBox, 1)
+        self.distanceGridLayout.addWidget(
+            self.refPointMapLayerComboBox, 0, 1, 1, 1)
+        
+        self.distanceGridLayout.setColumnStretch(1, 1)
     
     def execute(self, layer):
         """Executes the analysis.
