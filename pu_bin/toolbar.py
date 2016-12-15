@@ -94,6 +94,9 @@ class Toolbar(QToolBar):
         
         self.addSeparator()
         
+        self.zoomFullExtentAction = self.iface.actionZoomFullExtent()
+        self.addAction(self.zoomFullExtentAction)
+        
         self.zoomToSelectedAction = self.iface.actionZoomToSelected()
         self.addAction(self.zoomToSelectedAction)
         
