@@ -93,7 +93,7 @@ class DistanceWidget(QWidget):
         """
         
         try:
-            editing = self.dW.stackedWidget.check_editing()
+            editing = self.dW.check_editing()
             
             refPointLayer = self.refPointMapLayerComboBox.currentLayer()
             

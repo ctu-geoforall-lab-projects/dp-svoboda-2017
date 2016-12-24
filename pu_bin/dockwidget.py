@@ -28,6 +28,8 @@ from PyQt4.QtCore import pyqtSignal, QSettings
 from qgis.gui import QgsMessageBar
 from qgis.core import *
 
+from collections import namedtuple
+
 from statusbar import Statusbar
 from toolbar import Toolbar
 from stackedwidget import StackedWidget
@@ -49,6 +51,25 @@ class DockWidget(QDockWidget):
         """
         
         self.iface = iface
+        
+        self.editablePuColumnsPAR = (
+            'PU_KMENOVE_CISLO_PAR',
+            'PU_PODDELENI_CISLA_PAR')
+        
+        self.visiblePuColumnsPAR = \
+            self.editablePuColumnsPAR + \
+            ('PU_VYMERA_PARCELY', 'PU_VZDALENOST', 'PU_CENA')
+        
+        self.allPuColumnsPAR = self.visiblePuColumnsPAR + ('PU_KATEGORIE',)
+        
+        self.columnsPAR = (
+            'KMENOVE_CISLO_PAR',
+            'PODDELENI_CISLA_PAR',
+            'VYMERA_PARCELY')
+        
+        self.visibleColumnsPAR = self.visiblePuColumnsPAR + self.columnsPAR
+        
+        self.rqdColumnsPAR = self.allPuColumnsPAR + self.columnsPAR
         
         super(DockWidget, self).__init__()
         
@@ -164,12 +185,16 @@ class DockWidget(QDockWidget):
         
         self.settings.setValue(key, value)
     
-    def open_file_dialog(self, title, filters):
+    def open_file_dialog(self, title, filters, existence):
         """Opens a file dialog.
         
         Args:
             title (str): A title of the file dialog.
             filters (str): Available filter(s) of the file dialog.
+            existence (bool): True when the file has to exist
+                (QFileDialog.getOpenFileNameAndFilter).
+                False when the file does not have to exist
+                (QFileDialog.getSaveFileNameAndFilter).
         
         Returns:
             str: A path to the selected file.
@@ -181,14 +206,92 @@ class DockWidget(QDockWidget):
         lastUsedFilePath = self._get_settings(sender + '-' + 'lastUsedFilePath')
         lastUsedFilter = self._get_settings(sender + '-' + 'lastUsedFilter')
         
-        filePath, usedFilter = QFileDialog.getOpenFileNameAndFilter(
-            self, title, lastUsedFilePath, filters, lastUsedFilter)
+        if existence:
+            filePath, usedFilter = QFileDialog.getOpenFileNameAndFilter(
+                self, title, lastUsedFilePath, filters, lastUsedFilter)
+        else:
+            filePath, usedFilter = QFileDialog.getSaveFileNameAndFilter(
+                self, title, lastUsedFilePath, filters, lastUsedFilter,
+                QFileDialog.DontConfirmOverwrite)
         
         if filePath and usedFilter:
             self._set_settings(sender + '-' + 'lastUsedFilePath', filePath)
             self._set_settings(sender + '-' + 'lastUsedFilter', usedFilter)
         
         return filePath
+    
+    def check_active_layer(self, sender):
+        """Checks active layer.
+        
+        First it checks if there is an active layer, then if the active layer
+        is vector and finally if the active layer contains all required columns.
+        
+        Args:
+            sender (object): A reference to the sender object.
+        
+        Returns:
+            namedtuple: First element is True when there is an active vector
+                layer that contains all required columns, False otherwise.
+                Second element called 'layer' is a reference
+                to the active layer.
+        
+        """
+        
+        SuccessLayer = namedtuple('successLayer', ['success', 'layer'])
+        
+        layer = self.iface.activeLayer()
+        
+        if not layer:
+            sender.text_statusbar.emit(u'Žádná aktivní vrstva.', 7000)
+            successLayer = SuccessLayer(False, layer)
+            return successLayer
+        
+        if layer.type() != 0:
+            sender.text_statusbar.emit(u'Aktivní vrstva není vektorová.', 7000)
+            successLayer = SuccessLayer(False, layer)
+            return successLayer
+        
+        fieldNames = [field.name() for field in layer.pendingFields()]
+        
+        if not all(column in fieldNames for column in self.rqdColumnsPAR):
+            sender.text_statusbar.emit(
+                u'Aktivní vrstva neobsahuje potřebné sloupce.', 7000)
+            successLayer = SuccessLayer(False, layer)
+            return successLayer
+        
+        successLayer = SuccessLayer(True, layer)
+        return successLayer
+    
+    def check_editing(self):
+        """Checks if editing is enabled.
+        
+        Returns:
+            bool: True when editing is enabled, False otherwise.
+        
+        """
+        
+        if self.stackedWidget.editFrame.toggleEditingAction.isChecked():
+            return True
+        else:
+            return False
+    
+    def select_features_by_field_and_value(self, layer, field, value):
+        """Selects features in given layer by the value and field.
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the layer.
+            field (str): A name of the field.
+            value (str) A value of the field.
+        
+        """
+        
+        expression = QgsExpression("\"{}\" = {}".format(field, value))
+        
+        features = layer.getFeatures(QgsFeatureRequest(expression))
+        
+        featuresID = [feature.id() for feature in features]
+        
+        layer.selectByIds(featuresID)
     
     class puError(Exception):
         """A custom exception."""

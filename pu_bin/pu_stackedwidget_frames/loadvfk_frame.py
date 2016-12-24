@@ -142,7 +142,7 @@ class LoadVfkFrame(QFrame):
         title = u'Vyberte VFK soubor.'
         filters = u'.vfk (*.vfk)'
         
-        filePath = self.dW.open_file_dialog(title, filters)
+        filePath = self.dW.open_file_dialog(title, filters, True)
         
         if filePath:
             self.text_browseVfkLineEdit.emit(filePath)
@@ -397,7 +397,7 @@ class LoadVfkFrame(QFrame):
             name = str(record.value('name'))
             columnsPAR.append(name)
         
-        if not all(column in columnsPAR for column in self.pW.allPuColumnsPAR):
+        if not all(column in columnsPAR for column in self.dW.allPuColumnsPAR):
             addPuColumnPARFile = QFile(':/add_pu_columns_PAR.sql', self)
             addPuColumnPARFile.open(QFile.ReadOnly|QFile.Text)
             
@@ -415,8 +415,8 @@ class LoadVfkFrame(QFrame):
         Also sets symbology according
         to "/plugins/puPlugin/data/qml/<vfkLayerCode>.qml" file, enables
         snapping, sets all fields except for those listed
-        in self.pW.editablePuColumnsPAR non-editable and hides all fields
-        except for those listed in self.pW.visibleColumnsPAR.
+        in self.dW.editablePuColumnsPAR non-editable and hides all fields
+        except for those listed in self.dW.visibleColumnsPAR.
         
         Args:
             dbPath (QDir): A full path to the database.
@@ -441,7 +441,7 @@ class LoadVfkFrame(QFrame):
         formConfig = layer.editFormConfig()
         
         for i in layer.pendingAllAttributesList():
-            if fields[i].name() not in self.pW.editablePuColumnsPAR:
+            if fields[i].name() not in self.dW.editablePuColumnsPAR:
                 formConfig.setReadOnly(i)
                 formConfig.setWidgetType(i, 'Hidden')
         
@@ -458,7 +458,7 @@ class LoadVfkFrame(QFrame):
             columns = tableConfig.columns()
             
             for column in columns:
-                if column.name not in self.pW.visibleColumnsPAR:
+                if column.name not in self.dW.visibleColumnsPAR:
                     column.hidden = True
             
             tableConfig.setColumns(columns)

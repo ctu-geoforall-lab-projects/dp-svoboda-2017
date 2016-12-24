@@ -184,7 +184,7 @@ class CheckAnalysisFrame(QFrame):
         
         """
         
-        succes, layer = self.pW.check_active_layer(self)
+        succes, layer = self.dW.check_active_layer(self)
         
         if succes == True:
             self.executeThread = Executehread(layer)

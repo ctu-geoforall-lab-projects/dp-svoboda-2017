@@ -87,7 +87,7 @@ class AreaWidget(QWidget):
         """
         
         try:
-            editing = self.dW.stackedWidget.check_editing()
+            editing = self.dW.check_editing()
             
             threshold = self.areaLineEdit.text()
             
@@ -137,7 +137,7 @@ class AreaWidget(QWidget):
             
             featuresCount = layer.selectedFeatureCount()
             
-            duration = 10000
+            duration = 15000
             
             if featuresCount == 0:
                 self.pW.text_statusbar.emit(
