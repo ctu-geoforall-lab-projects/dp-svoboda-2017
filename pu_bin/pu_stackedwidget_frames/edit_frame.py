@@ -24,7 +24,7 @@
 from PyQt4.QtGui import (QFrame, QGridLayout, QToolBar, QToolButton, QIcon,
                          QPixmap, QMenu, QLabel, QComboBox, QPushButton,
                          QHBoxLayout, QRadioButton)
-from PyQt4.QtCore import pyqtSignal, QSignalMapper, QFileInfo, QDir
+from PyQt4.QtCore import pyqtSignal, QFileInfo, QDir
 
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
 from qgis.core import *
@@ -64,8 +64,6 @@ class EditFrame(QFrame):
         
         self.categoryValue = 1
         self.categoryName = 'PU_KATEGORIE'
-        
-        self.enableCategoryWidgetsSignalMapper = QSignalMapper(self)
         
         self.setObjectName(u'editFrame')
         self.setFrameShape(QFrame.StyledPanel)
@@ -187,24 +185,13 @@ class EditFrame(QFrame):
         self.selectedRadioButton = QRadioButton(self)
         self.selectedRadioButton.setObjectName(u'selectedRadioButton')
         self.selectedRadioButton.setText(u'vybrané parcely')
-        self.selectedRadioButton.toggled.connect(
-            self.enableCategoryWidgetsSignalMapper.map)
-        self.enableCategoryWidgetsSignalMapper.setMapping(
-            self.selectedRadioButton, True)
         self.selectedRadioButton.toggle()
         self.setCategoryHBoxLayout.addWidget(self.selectedRadioButton)
         
         self.perimeterRadioButton = QRadioButton(self)
         self.perimeterRadioButton.setObjectName(u'perimeterRadioButton')
         self.perimeterRadioButton.setText(u'obvodem')
-        self.perimeterRadioButton.toggled.connect(
-            self.enableCategoryWidgetsSignalMapper.map)
-        self.enableCategoryWidgetsSignalMapper.setMapping(
-            self.perimeterRadioButton, False)
         self.setCategoryHBoxLayout.addWidget(self.perimeterRadioButton)
-        
-        self.enableCategoryWidgetsSignalMapper.mapped.connect(
-            self._enable_category_widgets)
         
         self.setCategoryPushButton = QPushButton(self)
         self.setCategoryPushButton.setObjectName(u'setCategoryPushButton')
@@ -214,21 +201,6 @@ class EditFrame(QFrame):
         self.setCategoryPushButton.clicked.connect(
             self._run_setting_pu_category)
         self.editGridLayout.addWidget(self.setCategoryPushButton, 4, 2, 1, 1)
-    
-    def _enable_category_widgets(self, enableBool):
-        """Sets enabled or disabled category widgets.
-        
-        Sets enabled or disabled following widgets:
-            categoryComboBox
-            selectCategoryPushButton
-        
-        Args:
-            enableBool (bool): True to set enabled, False to set disabled.
-        
-        """
-        
-        self.categoryComboBox.setEnabled(enableBool)
-        self.selectCategoryPushButton.setEnabled(enableBool)
     
     def _create_perimeter(self):
         """Creates a perimeter layer from the active layer."""
