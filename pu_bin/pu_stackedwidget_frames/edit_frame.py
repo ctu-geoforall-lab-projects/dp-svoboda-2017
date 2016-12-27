@@ -127,6 +127,10 @@ class EditFrame(QFrame):
         self.deleteSelectedAction.setObjectName(u'deleteSelectedAction')
         self.editToolbar.addAction(self.deleteSelectedAction)
         
+        self.splitFeaturesAction = self.iface.actionSplitFeatures()
+        self.splitFeaturesAction.setObjectName(u'splitFeaturesAction')
+        self.editToolbar.addAction(self.splitFeaturesAction)
+        
         self.perimeterLabel = QLabel(self)
         self.perimeterLabel.setObjectName(u'perimeterLabel')
         self.perimeterLabel.setText(u'Obvod:')
@@ -203,6 +207,9 @@ class EditFrame(QFrame):
         self.setCategoryPushButton.clicked.connect(
             self._run_setting_pu_category)
         self.editGridLayout.addWidget(self.setCategoryPushButton, 4, 2, 1, 1)
+    
+    def foo(self):
+        pass
     
     def _create_perimeter(self):
         """Creates a perimeter layer from the active layer."""
