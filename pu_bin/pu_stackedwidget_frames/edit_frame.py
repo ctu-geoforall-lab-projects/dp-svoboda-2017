@@ -208,9 +208,6 @@ class EditFrame(QFrame):
             self._run_setting_pu_category)
         self.editGridLayout.addWidget(self.setCategoryPushButton, 4, 2, 1, 1)
     
-    def foo(self):
-        pass
-    
     def _create_perimeter(self):
         """Creates a perimeter layer from the active layer."""
         
