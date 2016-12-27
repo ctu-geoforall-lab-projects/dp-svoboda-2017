@@ -185,19 +185,21 @@ class EditFrame(QFrame):
         self.selectedRadioButton = QRadioButton(self)
         self.selectedRadioButton.setObjectName(u'selectedRadioButton')
         self.selectedRadioButton.setText(u'vybrané parcely')
+        self.selectedRadioButton.setToolTip(
+            u'Zařadit vybrané parcely do kategorie')
         self.selectedRadioButton.toggle()
         self.setCategoryHBoxLayout.addWidget(self.selectedRadioButton)
         
         self.perimeterRadioButton = QRadioButton(self)
         self.perimeterRadioButton.setObjectName(u'perimeterRadioButton')
         self.perimeterRadioButton.setText(u'obvodem')
+        self.perimeterRadioButton.setToolTip(
+            u'Rozřadit všechny parcely do kategorií na základě obvodu')
         self.setCategoryHBoxLayout.addWidget(self.perimeterRadioButton)
         
         self.setCategoryPushButton = QPushButton(self)
         self.setCategoryPushButton.setObjectName(u'setCategoryPushButton')
         self.setCategoryPushButton.setText(u'Zařadit')
-        self.setCategoryPushButton.setToolTip(
-            u'Zařadit vybrané parcely do kategorie')
         self.setCategoryPushButton.clicked.connect(
             self._run_setting_pu_category)
         self.editGridLayout.addWidget(self.setCategoryPushButton, 4, 2, 1, 1)
