@@ -262,8 +262,14 @@ class LoadVfkFrame(QFrame):
                 
                 QgsApplication.processEvents()
             
-            layer = vfkDataSource.GetLayerByName(vfkLayerCode)
-            layer.GetFeatureCount()
+            QgsApplication.processEvents()
+            
+            vfkLayer = vfkDataSource.GetLayerByName(vfkLayerCode)
+            
+            for feature in vfkLayer:
+                feature.GetGeometryRef()
+            
+            QgsApplication.processEvents()
             
             vfkDataSource.Destroy()
          
