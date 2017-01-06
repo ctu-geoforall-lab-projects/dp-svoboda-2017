@@ -29,12 +29,14 @@ from qgis.gui import QgsMessageBar
 from qgis.core import *
 
 from collections import namedtuple
+from numbers import Number
+
+import traceback
+import sys
 
 from statusbar import Statusbar
 from toolbar import Toolbar
 from stackedwidget import StackedWidget
-
-import traceback
 
 
 class DockWidget(QDockWidget):
@@ -51,6 +53,20 @@ class DockWidget(QDockWidget):
         """
         
         self.iface = iface
+        
+        super(DockWidget, self).__init__()
+        
+        dockWidgetName = u'dockWidget'
+        
+        self._setup_self(dockWidgetName)
+       
+    def _setup_self(self, dockWidgetName):
+        """Sets up self.
+        
+        Args:
+            dockWidgetName (str): A name of the dock widget.
+        
+        """
         
         self.editablePuColumnsPAR = (
             'PU_KMENOVE_CISLO_PAR',
@@ -71,23 +87,9 @@ class DockWidget(QDockWidget):
         
         self.rqdColumnsPAR = self.allPuColumnsPAR + self.columnsPAR
         
-        super(DockWidget, self).__init__()
-        
-        dockWidgetName = u'dockWidget'
-        
-        self._setup_self(dockWidgetName)
-       
-    def _setup_self(self, dockWidgetName):
-        """Sets up self.
-        
-        Args:
-            dockWidgetName (str): A name of the dock widget.
-        
-        """
+        self.settings = QSettings()
         
         self.setObjectName(u'dockWidget')
-        
-        self.settings = QSettings()
         
         self.mainWidget = QWidget(self)
         self.mainWidget.setObjectName(u'mainWidget')
@@ -120,44 +122,61 @@ class DockWidget(QDockWidget):
         self.stackedWidget = StackedWidget(self, dockWidgetName, self.iface)
         self.mainGridLayout.addWidget(self.stackedWidget, 1, 0, 1, 1)
     
-    def _raise_pu_error(
-            self, engLogMsg, czeLabelMsg, czeBarMsg=None, duration=7):
+    def _display_error_messages(
+            self,
+            engLogMessage, czeLabelMessage, czeBarMessage=None, duration=10):
         """Displays error messages.
-    
-        Displays error messages in the Log Messages Panel, statusLabel
-        and Message Bar.
         
-        For development purposes it displays traceback
-        in the 'puPlugin Development' Log Messages Tab.
+        Displays error messages in the Log Messages Tab, the statusLabel
+        and the Message Bar.
         
         Args:
-            engLogMsg (str): A message in the 'puPlugin' Log Messages Panel.
-            czeLabelMsg (str): A message in the statusLabel.
-            czeBarMsg (str): A message in the Message Bar.
+            engLogMessage (str): A message in the 'PU Plugin' Log Messages Tab.
+            czeLabelMessage (str): A message in the statusLabel.
+            czeBarMessage (str): A message in the Message Bar.
             duration (int): A duration of the message in the Message Bar
-                             in seconds.
-        
-        Raises:
-            The method handles exceptions by displaying error messages
-            in the 'PU Plugin' Log Messages Tab, statusLabel, Message Bar
-            and 'PU Plugin Development' Log Messages Tab.
+                in seconds.
         
         """
         
         pluginName = u'PU Plugin'
         
-        if czeBarMsg is None:
-            czeBarMsg = czeLabelMsg
+        type, value, mytraceback = sys.exc_info()
         
-        QgsMessageLog.logMessage(engLogMsg, pluginName)
-        self.text_statusbar.emit(czeLabelMsg, duration*1000)
-        self.iface.messageBar().pushMessage(
-            pluginName, czeBarMsg , QgsMessageBar.WARNING, duration)
+        if type != None:
+            tb = traceback.format_exc()
+            engLogMessage = engLogMessage + '\n' + tb
         
-        developmentTb = u'PU Plugin Development'
-        tb = traceback.format_exc()
+        QgsMessageLog.logMessage(engLogMessage, pluginName)
         
-        QgsMessageLog.logMessage(tb, developmentTb)
+        self.text_statusbar.emit(czeLabelMessage, duration*1000)
+        
+        if czeBarMessage is not None:
+            self.iface.messageBar().pushMessage(
+                pluginName, czeBarMessage , QgsMessageBar.WARNING, duration)
+    
+    class puError(Exception):
+        """A custom exception."""
+        
+        def __init__(
+                self, dW,
+                engLogMessage, czeLabelMessage, czeBarMessage=None, duration=10):
+            """Constructor.
+            
+            Args:
+                dW (QWidget): A reference to the dock widget.
+                engLogMessage (str): A message in the 'puPlugin' Log Messages Panel.
+                czeLabelMessage (str): A message in the statusLabel.
+                czeBarMessage (str): A message in the Message Bar.
+                duration (int): A duration of the message in the Message Bar
+                                 in seconds.
+                
+            """
+            
+            super(Exception, self).__init__(dW)
+            
+            dW._display_error_messages(
+                engLogMessage, czeLabelMessage, czeBarMessage, duration)
     
     def _get_settings(self, key):
         """Returns value for settings key.
@@ -191,7 +210,8 @@ class DockWidget(QDockWidget):
         Args:
             title (str): A title of the file dialog.
             filters (str): Available filter(s) of the file dialog.
-            existence (bool): True when the file has to exist
+            existence (bool):
+                True when the file has to exist
                 (QFileDialog.getOpenFileNameAndFilter).
                 False when the file does not have to exist
                 (QFileDialog.getSaveFileNameAndFilter).
@@ -220,7 +240,31 @@ class DockWidget(QDockWidget):
         
         return filePath
     
-    def check_active_layer(self, sender):
+    def set_field_value_for_features(self, layer, features, field, value):
+        """Sets field value for features.
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the layer.
+            features (QgsFeatureIterator): A feature iterator.
+            field (str): A name of the field.
+            value (int): A value to be set.
+        
+        """
+        
+        fieldID = layer.fieldNameIndex(field)
+        
+        layer.startEditing()
+        layer.updateFields()
+        
+        for feature in features:
+            if feature.attribute(field) != value:
+                featureID = feature.id()
+                layer.changeAttributeValue(
+                    featureID, fieldID, value)
+        
+        layer.commitChanges()
+    
+    def check_active_layer(self, sender, layer=None):
         """Checks active layer.
         
         First it checks if there is an active layer, then if the active layer
@@ -239,23 +283,28 @@ class DockWidget(QDockWidget):
         
         SuccessLayer = namedtuple('successLayer', ['success', 'layer'])
         
-        layer = self.iface.activeLayer()
+        if not layer:
+            layer = self.iface.activeLayer()
         
         if not layer:
-            sender.text_statusbar.emit(u'Žádná aktivní vrstva.', 7000)
+            if sender:
+                sender.text_statusbar.emit(u'Žádná aktivní vrstva.', 7000)
             successLayer = SuccessLayer(False, layer)
             return successLayer
         
         if layer.type() != 0:
-            sender.text_statusbar.emit(u'Aktivní vrstva není vektorová.', 7000)
+            if sender:
+                sender.text_statusbar.emit(
+                    u'Aktivní vrstva není vektorová.', 7000)
             successLayer = SuccessLayer(False, layer)
             return successLayer
         
         fieldNames = [field.name() for field in layer.pendingFields()]
         
         if not all(column in fieldNames for column in self.rqdColumnsPAR):
-            sender.text_statusbar.emit(
-                u'Aktivní vrstva neobsahuje potřebné sloupce.', 7000)
+            if sender:
+                sender.text_statusbar.emit(
+                    u'Aktivní vrstva neobsahuje potřebné sloupce.', 7000)
             successLayer = SuccessLayer(False, layer)
             return successLayer
         
@@ -292,28 +341,4 @@ class DockWidget(QDockWidget):
         featuresID = [feature.id() for feature in features]
         
         layer.selectByIds(featuresID)
-    
-    class puError(Exception):
-        """A custom exception."""
-        
-        def __init__(
-                self, dW, engLogMsg, czeLabelMsg, czeBarMsg=None, duration=7):
-            """Constructor.
-            
-            Args:
-                dW (QWidget): A reference to the dock widget.
-                engLogMsg (str): A message in the 'puPlugin' Log Messages Panel.
-                czeLabelMsg (str): A message in the statusLabel.
-                czeBarMsg (str): A message in the Message Bar.
-                duration (int): A duration of the message in the Message Bar
-                                 in seconds.
-                
-            """
-            
-            super(Exception, self).__init__(dW)
-            
-            self.dW = dW
-            
-            self.dW._raise_pu_error(
-                engLogMsg, czeLabelMsg, czeBarMsg=None, duration=7)
 

@@ -32,8 +32,6 @@ from osgeo import ogr
 
 from load_thread import LoadThread
 
-from collections import namedtuple
-
 
 class LoadVfkFrame(QFrame):
     """A frame which contains widgets for loading a VFK file."""
@@ -87,8 +85,7 @@ class LoadVfkFrame(QFrame):
         
         self.browseVfkLineEdit = QLineEdit(self)
         self.browseVfkLineEdit.setObjectName(u'browseVfkLineEdit')
-        self.text_browseVfkLineEdit.connect(
-            self._set_text_browseVfkLineEdit)
+        self.text_browseVfkLineEdit.connect(self._set_text_browseVfkLineEdit)
         self.browseVfkLineEdit.textChanged.connect(
             self._browseVfkLineEdit_textChanged)
         self.loadVfkGridLayout.addWidget(self.browseVfkLineEdit, 0, 1, 1, 1)
@@ -104,6 +101,7 @@ class LoadVfkFrame(QFrame):
         
         self.loadVfkProgressBar = QProgressBar(self)
         self.loadVfkProgressBar.setObjectName(u'loadVfkProgressBar')
+        self.loadVfkProgressBar.setMinimum(0)
         self.value_loadVfkProgressBar.connect(
             self._set_value_loadVfkProgressBar)
         self.value_loadVfkProgressBar.emit(0)
@@ -117,17 +115,17 @@ class LoadVfkFrame(QFrame):
         self.loadVfkPushButton.setDisabled(True)
         
     def _set_text_browseVfkLineEdit(self, text):
-        """Sets text.
+        """Sets text to the browseVfkLineEdit.
         
         Args:
-            text (str): A text to be written.
+            text (str): A text to be set.
         
         """
         
         self.browseVfkLineEdit.setText(text)
     
     def _set_value_loadVfkProgressBar(self, value):
-        """Sets a value to the progress bar.
+        """Sets value to the loadVfkProgressBar.
         
         Args:
             text (str): A value to be set.
@@ -148,10 +146,10 @@ class LoadVfkFrame(QFrame):
             self.text_browseVfkLineEdit.emit(filePath)
     
     def _browseVfkLineEdit_textChanged(self):
-        """Checks if the text in browseVfkLineEdit is a path to valid VFK file.
+        """Checks if text in the browseVfkLineEdit is a path to a VFK file.
         
-        If so, loadVfkPushButton is enabled, otherwise loadVfkPushButton
-        is disabled.
+        If so, the loadVfkPushButton is enabled,
+        otherwise the loadVfkPushButton is disabled.
         
         """
         
@@ -159,7 +157,7 @@ class LoadVfkFrame(QFrame):
         
         tempFileInfo = QFileInfo(tempText)
         
-        if tempFileInfo.isFile() and tempFileInfo.suffix() in ('vfk', 'VFK'): 
+        if tempFileInfo.isFile() and tempFileInfo.suffix() in (u'vfk', u'VFK'): 
             self.loadVfkPushButton.setEnabled(True)
         else:
             self.loadVfkPushButton.setEnabled(False)
@@ -188,55 +186,59 @@ class LoadVfkFrame(QFrame):
         Args:
             filePath (str): A full path to the file.
         
-        Raises:
-            dw.puError: When something goes wrong.
-        
         """
 
         try:
             self.value_loadVfkProgressBar.emit(0)
             
             fileInfo = QFileInfo(filePath)
-            dbPath = QDir(
-                fileInfo.absolutePath()).filePath(fileInfo.baseName() + '.db')
+            dbPath = QDir(fileInfo.absolutePath())\
+                .filePath(fileInfo.completeBaseName() + '.db')
             vfkLayerCode = 'PAR'
+            vfkDriverName = 'VFK'
+            layerName = fileInfo.completeBaseName() + '|' + vfkLayerCode
             
-            self._load_vfk_file(filePath, dbPath, vfkLayerCode)
+            self._create_db_file(filePath, dbPath, vfkLayerCode, vfkDriverName)
             
             self._open_database(dbPath)
             
-            layerName = fileInfo.baseName() + '|' + vfkLayerCode
-            
-            self._load_vfk_layer(dbPath, vfkLayerCode, layerName)
+            self._load_vfk_layer(dbPath, layerName, vfkLayerCode, vfkDriverName)
             
             self.loadVfkProgressBar.setMaximum(1)
             self.value_loadVfkProgressBar.emit(1)
             
-            self.text_statusbar.emit(
-                u'Data byla úspešně načtena.', 0)
+            self.text_statusbar.emit(u'Data byla úspešně načtena.', 0)
         except self.dW.puError:
-            pass
+            QgsApplication.processEvents()
         except:
-            self.dW._raise_pu_error(
-                u'Error loading VFK file.',
-                u'Chyba při načítání VFK souboru.')
+            QgsApplication.processEvents()
+            
+            self.dW._display_error_messages(
+                u'Error loading VFK file "{}".'.format(filePath),
+                u'Chyba při načítání VFK souboru.',
+                u'Chyba při načítání VFK souboru "{}".'.format(filePath))
         finally:
+            QgsApplication.processEvents()
             self._enable_load_widgets(True)
     
-    def _load_vfk_file(self, filePath, dbPath, vfkLayerCode):
-        """Loads a VFK file.
+    def _create_db_file(self, filePath, dbPath, vfkLayerCode, vfkDriverName):
+        """Creates a database file.
         
-        It checks if a database of the same name as VFK file exists.
-        If not it creates it with VFK driver.
+        It checks if a database of the same name as the file exists.
+        If not it creates the database with a VFK driver.
         
         Args:
             filePath (str): A full path to the file.
-            dbPath (QDir): A full path to the database.
+            dbPath (str): A full path to the database.
             vfkLayerCode (str): A code of the layer.
+            vfkDriverName (str): A name of the VFK driver.
+        
+        Raises:
+            dw.puError: When the VFK driver failed to open VFK file
+                or when the SQlite driver failed to open the database.
         
         """
         
-        QgsApplication.registerOgrDrivers()
         QgsApplication.processEvents()
         
         dbInfo = QFileInfo(dbPath)
@@ -245,22 +247,32 @@ class LoadVfkFrame(QFrame):
             self.text_statusbar.emit(
                 u'Importuji data do SQLite databáze.', 0)
             
-            vfkDriver = ogr.GetDriverByName('VFK')
+            QgsApplication.registerOgrDrivers()
+            
+            vfkDriver = ogr.GetDriverByName(vfkDriverName)
             vfkDataSource = vfkDriver.Open(filePath)
             
-            vfkDdataSourceInfo = self._check_vfkLayerCode(
-                vfkDataSource, vfkLayerCode)
-            layerCount, layerNames = vfkDdataSourceInfo
+            QgsApplication.processEvents()
             
-            self.loadVfkProgressBar.setRange(0, layerCount)
+            if not vfkDataSource:
+                raise self.dW.puError(
+                    self.dW,
+                    u'Failed to load data, "{}" is not a valid VFK datasource.'
+                    .format(dbPath),
+                    u'Data nelze načíst.',
+                    u'Data nelze načíst, "{}" není platný datový zdroj VFK.'
+                    .format(dbPath))
+            
+            layerCount, layerNames = self._check_vfkLayerCode(
+                vfkDataSource, vfkLayerCode)
+            
+            self.loadVfkProgressBar.setMaximum(layerCount)
             
             for i in xrange(layerCount):
                 self.value_loadVfkProgressBar.emit(i+1)
                 self.text_statusbar.emit(
                     u'Načítám vrstvu {} ({}/{}).'
                     .format(layerNames[i], i+1, layerCount), 0)
-                
-                QgsApplication.processEvents()
             
             QgsApplication.processEvents()
             
@@ -272,21 +284,26 @@ class LoadVfkFrame(QFrame):
             QgsApplication.processEvents()
             
             vfkDataSource.Destroy()
-         
+        
         sqliteDriver = ogr.GetDriverByName('SQLite')
-        sqliteDataSource = sqliteDriver.Open(str(dbPath))
-        if sqliteDataSource is None:
+        sqliteDataSource = sqliteDriver.Open(dbPath)
+        
+        if not sqliteDataSource:
             raise self.dW.puError(
                 self.dW,
-                u"Failed loading data, '{}' is not a valid SQLite datasource".format(dbPath),
-                u"Data nelze načíst, '{}' není platný datový zdroj SQLite".format(dbPath))
+                u'Failed to load data, "{}" is not a valid SQLite datasource.'
+                .format(dbPath),
+                u'Data nelze načíst.',
+                u'Data nelze načíst, "{}" není platný datový zdroj SQLite.'
+                .format(dbPath))
 
-        sqliteDataSourceInfo = self._check_vfkLayerCode(
+        layerCount, layerNames = self._check_vfkLayerCode(
             sqliteDataSource, vfkLayerCode)
-        layerCount, layerNames = sqliteDataSourceInfo
+        
+        sqliteDataSource.Destroy()
     
     def _check_vfkLayerCode(self, dataSource, vfkLayerCode):
-        """Checks if there is a <vfkLayerCode> layer in the dataSource.
+        """Checks if there is a vfkLayerCode layer in the dataSource.
         
         Args:
             dataSource (osgeo.ogr.DataSource): A data source.
@@ -296,8 +313,7 @@ class LoadVfkFrame(QFrame):
             int: A number of layers in the dataSource.
         
         Raises:
-            dw.puError: When there is not <vfkLayerCode> layer
-                in the dataSource.
+            dw.puError: When there is no vfkLayerCode layer in the dataSource.
         
         """
         
@@ -310,10 +326,12 @@ class LoadVfkFrame(QFrame):
         
         if vfkLayerCode not in layerNames:
             QgsApplication.processEvents()
+            
             dataSource.Destroy()
+            
             raise self.dW.puError(
                 self.dW,
-                u'VFK file does not contain {} layer, therefore it can not be '
+                u'VFK file does not contain "{}" layer, therefore it can not be '
                 u'loaded by PU Plugin. The file can be '
                 u'loaded by "Add Vector Layer"'.format(vfkLayerCode),
                 u'VFK soubor neobsahuje vrstvu {}.'.format(vfkLayerCode),
@@ -321,25 +339,22 @@ class LoadVfkFrame(QFrame):
                 u'pomocí PU Pluginu načten. Data je možné načíst '
                 u'pomocí "Přidat vektorovou vrstvu."'.format(vfkLayerCode))
         
-        DataSourceInfo = namedtuple(
-            'DataSourceInfo', ['layerCount', 'layerNames'])
-        
-        dataSourceInfo = DataSourceInfo(layerCount, layerNames)
+        dataSourceInfo = (layerCount, layerNames)
         
         return dataSourceInfo
     
     def _open_database(self, dbPath):
         """Opens a database.
         
-        Also checks if there are 'geometry_columns' and 'spatial_ref_sys'
+        Also checks if there are geometry_columns and spatial_ref_sys
         tables in the database, if not it creates and fills those tables.
         
         Args:
-            dbPath (QDir): A full path to the database.
+            dbPath (str): A full path to the database.
         
         Raises:
             dw.puError: When SQLITE database driver is not available
-                or when database connection failed.
+                or when database connection failes.
         
         """
         
@@ -368,12 +383,17 @@ class LoadVfkFrame(QFrame):
         
         query = checkGcSrsFile.readData(200)
         
-        checkGcSrsQuery = QSqlQuery(db)
-        checkGcSrsQuery.exec_(query)
+        checkGcSrsFile.close()
+        
+        sqlQuery = QSqlQuery(db)
+        
+        sqlQuery.exec_(query)
+        
+        QgsApplication.processEvents()
         
         checkGcSrsSize = 0
         
-        while checkGcSrsQuery.next():
+        while sqlQuery.next():
             checkGcSrsSize += 1
         
         if checkGcSrsSize < 2:
@@ -382,24 +402,29 @@ class LoadVfkFrame(QFrame):
         
             createFillGcSrsQueries = createFillGcSrsFile.readData(2000)\
                 .split(';')
-        
-            createFillGcSrsQuery = QSqlQuery(db)
+            
+            createFillGcSrsFile.close()
             
             for query in createFillGcSrsQueries:
-                createFillGcSrsQuery.exec_(query)
+                sqlQuery.exec_(query)
+                
+                QgsApplication.processEvents()
         
         checkPuColumnsPARFile = QFile(':/check_pu_columns_PAR.sql', self)
         checkPuColumnsPARFile.open(QFile.ReadOnly|QFile.Text)
         
         query = checkPuColumnsPARFile.readData(50)
         
-        checkPuColumnsPARQuery = QSqlQuery(db)
-        checkPuColumnsPARQuery.exec_(query)
+        checkPuColumnsPARFile.close()
+        
+        sqlQuery.exec_(query)
+        
+        QgsApplication.processEvents()
         
         columnsPAR = []
 
-        while checkPuColumnsPARQuery.next():
-            record = checkPuColumnsPARQuery.record()
+        while sqlQuery.next():
+            record = sqlQuery.record()
             name = str(record.value('name'))
             columnsPAR.append(name)
         
@@ -410,34 +435,37 @@ class LoadVfkFrame(QFrame):
             addPuColumnsPARQueries = addPuColumnPARFile.readData(2000)\
                 .split(';')
             
-            addPuColumnPARQuery = QSqlQuery(db)
+            addPuColumnPARFile.close()
             
             for query in addPuColumnsPARQueries:
-                addPuColumnPARQuery.exec_(query)
+                sqlQuery.exec_(query)
+                
+                QgsApplication.processEvents()
     
-    def _load_vfk_layer(self, dbPath, vfkLayerCode, layerName):
-        """Loads a layer of the given code from VFK file into the map canvas.
+    def _load_vfk_layer(self, dbPath, layerName, vfkLayerCode, vfkDriverName):
+        """Loads a layer of the given code from database into the map canvas.
         
         Also sets symbology according
-        to "/plugins/puPlugin/data/qml/<vfkLayerCode>.qml" file, enables
+        to "../puplugin/data/qml/vfkLayerCode.qml" file, enables
         snapping, sets all fields except for those listed
-        in self.dW.editablePuColumnsPAR non-editable and hides all fields
-        except for those listed in self.dW.visibleColumnsPAR.
+        in dW.editablePuColumnsPAR non-editable and hides all fields
+        except for those listed in dW.visibleColumnsPAR.
         
         Args:
-            dbPath (QDir): A full path to the database.
-            vfkLayerCode (str): A code of the layer.
+            dbPath (str): A full path to the database.
             layerName (str): A name of the layer.
+            vfkLayerCode (str): A code of the layer.
+            vfkDriverName (str): A name of the VFK driver.
         
         Raises:
-            dw.puError: When <vfkLayerCode> layer is not valid.
+            dw.puError: When vfkLayerCode layer is not valid.
         
         """
         
-        blacklistedDriver = ogr.GetDriverByName('VFK')
+        blacklistedDriver = ogr.GetDriverByName(vfkDriverName)
         blacklistedDriver.Deregister()
         
-        composedURI = str(dbPath) + "|layername=" + vfkLayerCode
+        composedURI = dbPath + '|layername=' + vfkLayerCode
         layer = QgsVectorLayer(composedURI, layerName, 'ogr')
         
         blacklistedDriver.Register()
@@ -447,18 +475,25 @@ class LoadVfkFrame(QFrame):
         formConfig = layer.editFormConfig()
         
         for i in layer.pendingAllAttributesList():
-            if fields[i].name() not in self.dW.editablePuColumnsPAR:
+            if fields[i].name() not in \
+                self.dW.editablePuColumnsPAR + self.dW.editableColumnsPAR:
                 formConfig.setReadOnly(i)
+            
+            if fields[i].name() not in self.dW.editablePuColumnsPAR:
                 formConfig.setWidgetType(i, 'Hidden')
         
         if layer.isValid():
-            style = ':/' + str(vfkLayerCode) + '.qml'
+            style = ':/' + vfkLayerCode + '.qml'
             layer.loadNamedStyle(style)
+            
             QgsMapLayerRegistry.instance().addMapLayer(layer)
+            
+            QgsApplication.processEvents()
             
             QgsProject.instance().setSnapSettingsForLayer(
                 layer.id(), True, 2, 1, 10, True)
-            self._set_options()
+            
+            QgsProject.instance().setTopologicalEditing(True)
             
             tableConfig = layer.attributeTableConfig()
             columns = tableConfig.columns()
@@ -469,14 +504,17 @@ class LoadVfkFrame(QFrame):
             
             tableConfig.setColumns(columns)
             layer.setAttributeTableConfig(tableConfig)
+            
+            QgsApplication.processEvents()
         else:
             raise self.dW.puError(
                 self.dW,
                 u'Layer {} is not valid.'.format(vfkLayerCode),
+                u'Vrstva {} není platná.'.format(vfkLayerCode),
                 u'Vrstva {} není platná.'.format(vfkLayerCode))
     
     def _enable_load_widgets(self, enableBool):
-        """Sets enabled or disabled loading widgets.
+        """Sets loading widgets enabled or disabled.
         
         Sets enabled or disabled following widgets:
             browseVfkLineEdit
@@ -491,9 +529,4 @@ class LoadVfkFrame(QFrame):
         self.browseVfkLineEdit.setEnabled(enableBool)
         self.browseVfkPushButton.setEnabled(enableBool)
         self.loadVfkPushButton.setEnabled(enableBool)
-    
-    def _set_options(self):
-        """Sets topological editing enabled."""
-        
-        QgsProject.instance().setTopologicalEditing(True)
 

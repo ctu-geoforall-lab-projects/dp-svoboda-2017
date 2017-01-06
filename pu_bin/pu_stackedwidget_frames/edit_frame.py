@@ -298,7 +298,7 @@ class EditFrame(QFrame):
                 self.text_statusbar.emit(
                     u'Obvod byl úspešně vytvořen.', 15000)
         except:
-            self.dW._raise_pu_error(
+            self.dW._display_error_messages(
                 u'Error creating perimeter.',
                 u'Chyba při vytváření obvodu.')
     
@@ -355,7 +355,7 @@ class EditFrame(QFrame):
             if editing == True:
                 self.toggleEditingAction.trigger()
         except:
-            self.dW._raise_pu_error(
+            self.dW._display_error_messages(
                 u'Error setting parcel category.',
                 u'Chyba při zařazování do kategorie parcel.')
     
@@ -392,7 +392,7 @@ class EditFrame(QFrame):
         
         selectedFeatures = layer.selectedFeaturesIterator()
         
-        self._set_field_value_for_features(
+        self.dW.set_field_value_for_features(
             layer, selectedFeatures, self.categoryName, self.categoryValue)
         
         perimeterLayerPath = perimeterLayer.source()
@@ -452,30 +452,6 @@ class EditFrame(QFrame):
                 u'Vybrané parcely byly zařazeny do kategorie "{}".'
                 .format(currentCategory), 15000)
     
-    def _set_field_value_for_features(self, layer, features, field, value):
-        """Sets field value for features.
-        
-        Args:
-            layer (QgsVectorLayer): A reference to the layer.
-            features (QgsFeatureIterator): A feature iterator.
-            field (str): A name of the field.
-            value (int): A value to be set.
-        
-        """
-        
-        fieldID = layer.fieldNameIndex(field)
-        
-        layer.startEditing()
-        layer.updateFields()
-        
-        for feature in features:
-            if feature.attribute(field) != value:
-                featureID = feature.id()
-                layer.changeAttributeValue(
-                    featureID, fieldID, value)
-        
-        layer.commitChanges()
-    
     def _set_pu_category_by_perimeter(self, layer, perimeterLayer):
         """Sets a categoryValue to categoryName column for all features
         according to current layer in perimeterMapLayerComboBox.
@@ -496,14 +472,14 @@ class EditFrame(QFrame):
         
         features = layer.selectedFeaturesIterator()
         
-        self._set_field_value_for_features(
+        self.dW.set_field_value_for_features(
             layer, features, self.categoryName, 1)
         
         layer.invertSelection()
         
         features = layer.selectedFeaturesIterator()
         
-        self._set_field_value_for_features(
+        self.dW.set_field_value_for_features(
             layer, features, self.categoryName, 2)
         
         deleteHolesPerimeterPath = processing.runalg(
@@ -520,7 +496,7 @@ class EditFrame(QFrame):
         
         features = layer.selectedFeaturesIterator()
         
-        self._set_field_value_for_features(
+        self.dW.set_field_value_for_features(
             layer, features, self.categoryName, 3)
         
         layer.selectByIds(selectedFeaturesIDs)
@@ -563,7 +539,7 @@ class EditFrame(QFrame):
                     u'V kategorii "{}" je {} parcel.'
                     .format(currentCategory, featuresCount), duration)
         except:
-            self.dW._raise_pu_error(
+            self.dW._display_error_messages(
                 u'Error selecting parcels in category.',
                 u'Chyba při vybírání parcel v kategorii.')
 
