@@ -78,14 +78,21 @@ class DockWidget(QDockWidget):
         
         self.allPuColumnsPAR = self.visiblePuColumnsPAR + ('PU_KATEGORIE',)
         
-        self.columnsPAR = (
+        self.visibleDefaultColumnsPAR = (
             'KMENOVE_CISLO_PAR',
             'PODDELENI_CISLA_PAR',
             'VYMERA_PARCELY')
         
-        self.visibleColumnsPAR = self.visiblePuColumnsPAR + self.columnsPAR
+        self.allVisibleColumnsPAR = \
+            self.visiblePuColumnsPAR + self.visibleDefaultColumnsPAR
         
-        self.rqdColumnsPAR = self.allPuColumnsPAR + self.columnsPAR
+        self.uniqueDefaultColumnsPAR = ('rowid', 'ID', 'ogr_fid')
+        
+        self.allDefaultColumnsPAR = \
+            self.visibleDefaultColumnsPAR + self.uniqueDefaultColumnsPAR
+        
+        self.requiredColumnsPAR = \
+            self.allPuColumnsPAR + self.allDefaultColumnsPAR
         
         self.settings = QSettings()
         
@@ -301,7 +308,7 @@ class DockWidget(QDockWidget):
         
         fieldNames = [field.name() for field in layer.pendingFields()]
         
-        if not all(column in fieldNames for column in self.rqdColumnsPAR):
+        if not all(column in fieldNames for column in self.requiredColumnsPAR):
             if sender:
                 sender.text_statusbar.emit(
                     u'Aktivní vrstva neobsahuje potřebné sloupce.', 7000)

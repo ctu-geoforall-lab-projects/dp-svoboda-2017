@@ -451,7 +451,7 @@ class LoadVfkFrame(QFrame):
         to "../puplugin/data/qml/vfkLayerCode.qml" file, enables
         snapping, sets all fields except for those listed
         in dW.editablePuColumnsPAR non-editable and hides all fields
-        except for those listed in dW.visibleColumnsPAR.
+        except for those listed in dW.allVisibleColumnsPAR.
         
         Args:
             dbPath (str): A full path to the database.
@@ -477,11 +477,8 @@ class LoadVfkFrame(QFrame):
         formConfig = layer.editFormConfig()
         
         for i in layer.pendingAllAttributesList():
-            if fields[i].name() not in \
-                self.dW.editablePuColumnsPAR + self.dW.editableColumnsPAR:
-                formConfig.setReadOnly(i)
-            
             if fields[i].name() not in self.dW.editablePuColumnsPAR:
+                formConfig.setReadOnly(i)
                 formConfig.setWidgetType(i, 'Hidden')
         
         if layer.isValid():
@@ -501,7 +498,7 @@ class LoadVfkFrame(QFrame):
             columns = tableConfig.columns()
             
             for column in columns:
-                if column.name not in self.dW.visibleColumnsPAR:
+                if column.name not in self.dW.allVisibleColumnsPAR:
                     column.hidden = True
             
             tableConfig.setColumns(columns)
