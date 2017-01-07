@@ -278,6 +278,8 @@ class LoadVfkFrame(QFrame):
             
             vfkLayer = vfkDataSource.GetLayerByName(vfkLayerCode)
             
+            vfkLayer.GetFeatureCount(True)
+            
             for feature in vfkLayer:
                 feature.GetGeometryRef()
             
