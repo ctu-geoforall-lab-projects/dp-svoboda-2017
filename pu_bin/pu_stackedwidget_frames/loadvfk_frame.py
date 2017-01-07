@@ -23,7 +23,7 @@
 
 from PyQt4.QtGui import (QFrame, QGridLayout, QLabel, QLineEdit, QPushButton,
                          QProgressBar, QFileDialog)
-from PyQt4.QtCore import pyqtSignal, QFileInfo, QDir, QUuid, QFile
+from PyQt4.QtCore import pyqtSignal, QFileInfo, QDir, QUuid, QFile, Qt
 from PyQt4.QtSql import QSqlDatabase, QSqlQuery
 
 from qgis.core import *
@@ -491,10 +491,11 @@ class LoadVfkFrame(QFrame):
             
             QgsApplication.processEvents()
             
-            QgsProject.instance().setSnapSettingsForLayer(
-                layer.id(), True, 2, 1, 10, True)
-            
-            QgsProject.instance().setTopologicalEditing(True)
+            project = QgsProject.instance()
+            project.setTopologicalEditing(True)
+            project.writeEntry('Digitizing', 'SnappingMode', 'advanced') 
+            project.writeEntry('Digitizing', 'IntersectionSnapping', Qt.Checked)
+            project.setSnapSettingsForLayer(layer.id(), True, 2, 1, 10, True)
             
             tableConfig = layer.attributeTableConfig()
             columns = tableConfig.columns()
