@@ -313,8 +313,8 @@ class LoadVfkFrame(QFrame):
         
         Returns:
             tuple:
-                [1] (int): A number of layers in the dataSource.
-                [2] (list): A list of layer names in the dataSource.
+                [0] (int): A number of layers in the dataSource.
+                [1] (list): A list of layer names in the dataSource.
         
         Raises:
             dw.puError: When there is no vfkLayerCode layer in the dataSource.

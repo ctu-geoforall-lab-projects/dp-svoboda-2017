@@ -28,7 +28,6 @@ from PyQt4.QtCore import pyqtSignal, QSettings
 from qgis.gui import QgsMessageBar
 from qgis.core import *
 
-from collections import namedtuple
 from numbers import Number
 
 import traceback
@@ -281,14 +280,12 @@ class DockWidget(QDockWidget):
             sender (object): A reference to the sender object.
         
         Returns:
-            namedtuple: First element is True when there is an active vector
-                layer that contains all required columns, False otherwise.
-                Second element called 'layer' is a reference
-                to the active layer.
+            tuple:
+                [0] (bool): True when there is an active vector
+                    layer that contains all required columns, False otherwise.
+                [1] (QgsVectorLayer): A reference to the active layer.
         
         """
-        
-        SuccessLayer = namedtuple('successLayer', ['success', 'layer'])
         
         if not layer:
             layer = self.iface.activeLayer()
@@ -296,14 +293,14 @@ class DockWidget(QDockWidget):
         if not layer:
             if sender:
                 sender.text_statusbar.emit(u'Žádná aktivní vrstva.', 7000)
-            successLayer = SuccessLayer(False, layer)
+            successLayer = (False, layer)
             return successLayer
         
         if layer.type() != 0:
             if sender:
                 sender.text_statusbar.emit(
                     u'Aktivní vrstva není vektorová.', 7000)
-            successLayer = SuccessLayer(False, layer)
+            successLayer = (False, layer)
             return successLayer
         
         fieldNames = [field.name() for field in layer.pendingFields()]
@@ -312,10 +309,10 @@ class DockWidget(QDockWidget):
             if sender:
                 sender.text_statusbar.emit(
                     u'Aktivní vrstva neobsahuje potřebné sloupce.', 7000)
-            successLayer = SuccessLayer(False, layer)
+            successLayer = (False, layer)
             return successLayer
         
-        successLayer = SuccessLayer(True, layer)
+        successLayer = (True, layer)
         return successLayer
     
     def check_editing(self):
