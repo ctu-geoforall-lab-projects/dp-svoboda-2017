@@ -29,7 +29,6 @@ from qgis.gui import QgsMessageBar
 from qgis.core import *
 
 from numbers import Number
-
 import traceback
 import sys
 
@@ -95,6 +94,9 @@ class DockWidget(QDockWidget):
         
         self.settings = QSettings()
         
+        self.iface.currentLayerChanged.connect(
+            self._connect_ensure_unique_field_values)
+        
         self.setObjectName(u'dockWidget')
         
         self.mainWidget = QWidget(self)
@@ -130,7 +132,8 @@ class DockWidget(QDockWidget):
     
     def _display_error_messages(
             self,
-            engLogMessage, czeLabelMessage, czeBarMessage=None, duration=10):
+            engLogMessage, czeLabelMessage=None, czeBarMessage=None,
+            duration=10):
         """Displays error messages.
         
         Displays error messages in the Log Messages Tab, the statusLabel
@@ -149,13 +152,14 @@ class DockWidget(QDockWidget):
         
         type, value, mytraceback = sys.exc_info()
         
-        if type != None:
+        if type is not None:
             tb = traceback.format_exc()
             engLogMessage = engLogMessage + '\n' + tb
         
         QgsMessageLog.logMessage(engLogMessage, pluginName)
         
-        self.text_statusbar.emit(czeLabelMessage, duration*1000)
+        if czeLabelMessage is not None:
+            self.text_statusbar.emit(czeLabelMessage, duration*1000)
         
         if czeBarMessage is not None:
             self.iface.messageBar().pushMessage(
@@ -278,6 +282,7 @@ class DockWidget(QDockWidget):
         
         Args:
             sender (object): A reference to the sender object.
+            layer (QgsVectorLayer): A reference to the layer.
         
         Returns:
             tuple:
@@ -329,7 +334,7 @@ class DockWidget(QDockWidget):
             return False
     
     def select_features_by_field_and_value(self, layer, field, value):
-        """Selects features in given layer by the value and field.
+        """Selects features in given layer by the field value.
         
         Args:
             layer (QgsVectorLayer): A reference to the layer.
@@ -345,4 +350,129 @@ class DockWidget(QDockWidget):
         featuresID = [feature.id() for feature in features]
         
         layer.selectByIds(featuresID)
+        
+    def _connect_ensure_unique_field_values(self):
+        """Connects function for ensuring unique field values.
+        
+        First it check if the active layer was created by PU Plugin.
+        If so, it connects function that ensures unique field values
+        to beforeCommitChanges signal.
+        
+        It also connects function that clears all items from Message Bar
+        to signals committedFeaturesRemoved and committedFeaturesAdded.
+        
+        """
+        
+        try:
+            succes, layer = self.check_active_layer(None)
+            
+            if succes:
+                try:
+                    layer.beforeCommitChanges.disconnect(
+                        self._ensure_unique_field_values)
+                except TypeError:
+                    pass
+                finally:
+                    layer.beforeCommitChanges.connect(
+                        self._ensure_unique_field_values)
+                try:
+                    layer.committedFeaturesRemoved.disconnect(
+                        self.clear_message_bar)
+                except TypeError:
+                    pass
+                finally:
+                    layer.committedFeaturesRemoved.connect(
+                        self.clear_message_bar)
+                try:
+                    layer.committedFeaturesAdded.disconnect(
+                        self.clear_message_bar)
+                except TypeError:
+                    pass
+                finally:
+                    layer.committedFeaturesAdded.connect(
+                        self.clear_message_bar)
+        except:
+            raise self.puError(
+                self,
+                u'Error connecting function.')
+    
+    def clear_message_bar(self):
+        """Clears all items from Message Bar."""
+        
+        self.iface.messageBar().clearWidgets()
+    
+    def _ensure_unique_field_values(self):
+        """Ensures that field values are unique.
+        
+        Ensures that following fields are unique:
+            rowid
+        
+        Sets following fields to None for new features:
+            ID
+            ogr_fid
+        
+        """
+        
+        try:
+            layer = self.iface.activeLayer()
+            
+            selectedFeaturesIDs = layer.selectedFeaturesIds()
+                
+            features = layer.getFeatures()
+            
+            maxRowid = 1
+            
+            rowidColumn = self.uniqueDefaultColumnsPAR[0]
+            idColumn = self.uniqueDefaultColumnsPAR[1]
+            ogrfidColumn = self.uniqueDefaultColumnsPAR[2]
+            
+            rowidGroupedFeatures = {}
+            
+            for feature in features:
+                featureRowid = feature.attribute(rowidColumn)
+                
+                if isinstance(featureRowid, Number) and featureRowid > maxRowid:
+                    maxRowid = featureRowid
+                
+                if featureRowid not in rowidGroupedFeatures:
+                    rowidGroupedFeatures[featureRowid] = 1
+                else:
+                    rowidGroupedFeatures[featureRowid] += 1
+            
+            maxRowid += 1
+            
+            rowidFieldID = layer.fieldNameIndex(rowidColumn)
+            idFieldID = layer.fieldNameIndex(idColumn)
+            ogrfidFieldID = layer.fieldNameIndex(ogrfidColumn)
+            
+            for key, value in rowidGroupedFeatures.iteritems():
+                if value > 1:
+                    self.select_features_by_field_and_value(
+                        layer, rowidColumn, key)
+                    
+                    features = layer.selectedFeatures()
+                    
+                    for i in xrange(len(features)):
+                        originalFeature = features[i]
+                        
+                        newFeature = QgsFeature()
+                        newFeature.setGeometry(originalFeature.geometry())
+                        newFeature.setAttributes(originalFeature.attributes())
+                        
+                        if i != 0:
+                            newFeature.setAttribute(rowidFieldID, maxRowid)
+                            maxRowid += 1
+                        
+                        newFeature.setAttribute(idFieldID, None)
+                        newFeature.setAttribute(ogrfidFieldID, None)
+                        
+                        layer.deleteFeature(originalFeature.id())
+                         
+                        layer.addFeature(newFeature)
+            
+            layer.selectByIds(selectedFeaturesIDs)
+        except:
+            raise self.puError(
+                self,
+                u'Error in function that ensures unique field values.')
 
