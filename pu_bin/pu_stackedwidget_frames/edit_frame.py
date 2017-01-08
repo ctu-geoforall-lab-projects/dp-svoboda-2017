@@ -241,17 +241,12 @@ class EditFrame(QFrame):
                 fileInfo = QFileInfo(filePath)
                 
                 if not fileInfo.suffix() == u'shp':
-                    filePath = fileInfo.absoluteFilePath() + '.shp'
+                    filePath = fileInfo.absoluteFilePath() + u'.shp'
                     fileInfo = QFileInfo(filePath)
                 
                 if u'pu.shp' not in fileInfo.completeSuffix():
-                    filePath = \
-                        fileInfo.absolutePath() + \
-                        QDir.separator() + \
-                        fileInfo.completeBaseName() + \
-                        u'.pu.' + \
-                        fileInfo.suffix()
-                    fileInfo = QFileInfo(filePath)
+                    filePath = QDir(fileInfo.absolutePath()).\
+                        filePath(fileInfo.completeBaseName() + u'.pu.shp')
                 
                 perimeterPath = processing.runalg(
                     'qgis:dissolve',
@@ -422,15 +417,13 @@ class EditFrame(QFrame):
         perimeterFileInfo = QFileInfo(perimeterLayerPath)
         
         if u'pu.shp' not in perimeterFileInfo.completeSuffix():
-            newPerimeterPath = \
-                perimeterFileInfo.absolutePath() + \
-                QDir.separator() + \
-                perimeterFileInfo.completeBaseName() + \
-                u'.pu.shp'
+            newPerimeterPath = QDir(perimeterFileInfo.absolutePath()).\
+                filePath(perimeterFileInfo.completeBaseName() + u'.pu.shp')
             newPerimeterLayerName = perimeterLayerName + u'.pu'
         else:
             newPerimeterPath = perimeterFileInfo.absoluteFilePath()
             newPerimeterLayerName = perimeterLayerName
+            
             QgsMapLayerRegistry.instance().removeMapLayer(perimeterLayer)
         
         processing.runalg(
