@@ -466,6 +466,8 @@ class LoadVfkFrame(QFrame):
         
         """
         
+        self.text_statusbar.emit(u'Nahrávám vrstvu {}.'.format(vfkLayerCode), 0)
+        
         blacklistedDriver = ogr.GetDriverByName(vfkDriverName)
         blacklistedDriver.Deregister()
         
