@@ -113,7 +113,7 @@ class LoadVfkFrame(QFrame):
         self.loadVfkPushButton.setText(u'Načíst')
         self.loadVfkGridLayout.addWidget(self.loadVfkPushButton, 2, 2, 1, 1)
         self.loadVfkPushButton.setDisabled(True)
-        
+    
     def _set_text_browseVfkLineEdit(self, text):
         """Sets text to the browseVfkLineEdit.
         
