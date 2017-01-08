@@ -380,16 +380,23 @@ class LoadVfkFrame(QFrame):
                 u'Database connection failed.',
                 u'Nepodařilo se připojit k databázi.')
         
-        self.setProperty('connectionName', connectionName)
+        sqlQuery = QSqlQuery(db)
         
+        setIdNullFile = QFile(':/set_id_null.sql', self)
+        setIdNullFile.open(QFile.ReadOnly|QFile.Text)
+        
+        query = setIdNullFile.readData(50)
+        
+        setIdNullFile.close()
+        
+        sqlQuery.exec_(query)
+                
         checkGcSrsFile = QFile(':/check_gc_srs.sql', self)
         checkGcSrsFile.open(QFile.ReadOnly|QFile.Text)
         
         query = checkGcSrsFile.readData(200)
         
         checkGcSrsFile.close()
-        
-        sqlQuery = QSqlQuery(db)
         
         sqlQuery.exec_(query)
         

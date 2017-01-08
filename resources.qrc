@@ -6,6 +6,7 @@
         <file alias="db.png">data/icons/db.png</file>
         <file alias="edit.png">data/icons/edit.png</file>
         <file alias="check.png">data/icons/check.png</file>
+        <file alias="set_id_null.sql">data/sql/set_id_null.sql</file>
         <file alias="check_gc_srs.sql">data/sql/check_gc_srs.sql</file>
         <file alias="create_fill_gc_srs.sql">data/sql/create_fill_gc_srs.sql</file>
         <file alias="check_pu_columns_PAR.sql">data/sql/check_pu_columns_PAR.sql</file>
