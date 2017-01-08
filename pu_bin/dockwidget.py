@@ -269,8 +269,7 @@ class DockWidget(QDockWidget):
         for feature in features:
             if feature.attribute(field) != value:
                 featureID = feature.id()
-                layer.changeAttributeValue(
-                    featureID, fieldID, value)
+                layer.changeAttributeValue(featureID, fieldID, value)
         
         layer.commitChanges()
     
@@ -453,22 +452,23 @@ class DockWidget(QDockWidget):
                     features = layer.selectedFeatures()
                     
                     for i in xrange(len(features)):
+                        if i == 0:
+                            continue
+                        
                         originalFeature = features[i]
                         
                         newFeature = QgsFeature()
                         newFeature.setGeometry(originalFeature.geometry())
                         newFeature.setAttributes(originalFeature.attributes())
-                        
-                        if i != 0:
-                            newFeature.setAttribute(rowidFieldID, maxRowid)
-                            maxRowid += 1
-                        
+                        newFeature.setAttribute(rowidFieldID, maxRowid)
                         newFeature.setAttribute(idFieldID, None)
                         newFeature.setAttribute(ogrfidFieldID, None)
                         
                         layer.deleteFeature(originalFeature.id())
                          
                         layer.addFeature(newFeature)
+                        
+                        maxRowid += 1
             
             layer.selectByIds(selectedFeaturesIDs)
         except:
