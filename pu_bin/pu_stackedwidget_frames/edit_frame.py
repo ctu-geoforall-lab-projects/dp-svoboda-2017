@@ -82,7 +82,8 @@ class EditFrame(QFrame):
         
         self.editToolbar = QToolBar(self)
         self.editToolbar.setObjectName(u'editToolbar')
-        self.editToolbar.setIconSize(self.iface.mainWindow().iconSize())
+        self._set_icon_size()
+        self.iface.initializationCompleted.connect(self._set_icon_size)
         self.editGridLayout.addWidget(self.editToolbar, 0, 0, 1, 3)
         
         for action in self.iface.advancedDigitizeToolBar().actions(): 
@@ -207,6 +208,11 @@ class EditFrame(QFrame):
         self.setCategoryPushButton.clicked.connect(
             self._run_setting_pu_category)
         self.editGridLayout.addWidget(self.setCategoryPushButton, 4, 2, 1, 1)
+    
+    def _set_icon_size(self):
+        """Sets editToolbar icon size according to current QGIS settings."""
+        
+        self.editToolbar.setIconSize(self.iface.mainWindow().iconSize())
     
     def _create_perimeter(self):
         """Creates a perimeter layer from the active layer."""

@@ -52,7 +52,8 @@ class Toolbar(QToolBar):
         """Sets up self."""
         
         self.setObjectName(u'toolbar')
-        self.setIconSize(self.iface.mainWindow().iconSize())
+        self._set_icon_size()
+        self.iface.initializationCompleted.connect(self._set_icon_size)
         
         self._build_widgets()
     
@@ -154,6 +155,11 @@ class Toolbar(QToolBar):
         
         self.openTableAction = self.iface.actionOpenTable()
         self.addAction(self.openTableAction)
+    
+    def _set_icon_size(self):
+        """Sets icon size according to current QGIS settings."""
+        
+        self.setIconSize(self.iface.mainWindow().iconSize())
     
     def _set_default_action_selectToolButton(self):
         """Sets selectToolButton's default action."""
