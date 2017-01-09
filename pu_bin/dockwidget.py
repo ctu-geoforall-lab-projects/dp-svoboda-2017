@@ -171,7 +171,8 @@ class DockWidget(QDockWidget):
         
         def __init__(
                 self, dW,
-                engLogMessage, czeLabelMessage, czeBarMessage=None, duration=10):
+                engLogMessage, czeLabelMessage=None, czeBarMessage=None,
+                duration=10):
             """Constructor.
             
             Args:
