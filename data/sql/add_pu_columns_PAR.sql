@@ -1,3 +1,7 @@
+alter table PAR add column PU_ID int8;
+update PAR set PU_ID = ID;
+update PAR set ID = NULL;
+
 alter table PAR add column PU_KMENOVE_CISLO_PAR integer;
 update PAR set PU_KMENOVE_CISLO_PAR = KMENOVE_CISLO_PAR;
 
@@ -13,3 +17,4 @@ update PAR set PU_KATEGORIE = NULL;
 alter table PAR add column PU_VZDALENOST integer;
 
 alter table PAR add column PU_CENA integer;
+

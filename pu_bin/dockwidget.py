@@ -74,7 +74,8 @@ class DockWidget(QDockWidget):
             self.editablePuColumnsPAR + \
             ('PU_VYMERA_PARCELY', 'PU_VZDALENOST', 'PU_CENA')
         
-        self.allPuColumnsPAR = self.visiblePuColumnsPAR + ('PU_KATEGORIE',)
+        self.allPuColumnsPAR = \
+            self.visiblePuColumnsPAR + ('PU_KATEGORIE', 'PU_ID')
         
         self.visibleDefaultColumnsPAR = (
             'KMENOVE_CISLO_PAR',

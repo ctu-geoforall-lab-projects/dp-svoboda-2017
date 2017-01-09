@@ -381,15 +381,6 @@ class LoadVfkFrame(QFrame):
                 u'Nepodařilo se připojit k databázi.')
         
         sqlQuery = QSqlQuery(db)
-        
-        setIdNullFile = QFile(':/set_id_null.sql', self)
-        setIdNullFile.open(QFile.ReadOnly|QFile.Text)
-        
-        query = setIdNullFile.readData(50)
-        
-        setIdNullFile.close()
-        
-        sqlQuery.exec_(query)
                 
         checkGcSrsFile = QFile(':/check_gc_srs.sql', self)
         checkGcSrsFile.open(QFile.ReadOnly|QFile.Text)
@@ -473,7 +464,7 @@ class LoadVfkFrame(QFrame):
         
         """
         
-        self.text_statusbar.emit(u'Nahrávám vrstvu {}.'.format(vfkLayerCode), 0)
+        self.text_statusbar.emit(u'Přidávám vrstvu {}.'.format(vfkLayerCode), 0)
         
         blacklistedDriver = ogr.GetDriverByName(vfkDriverName)
         blacklistedDriver.Deregister()
@@ -506,7 +497,11 @@ class LoadVfkFrame(QFrame):
             project.writeEntry('Digitizing', 'IntersectionSnapping', Qt.Checked)
             project.setSnapSettingsForLayer(layer.id(), True, 2, 1, 10, True)
             
+            fields = layer.pendingFields()
+            
             tableConfig = layer.attributeTableConfig()
+            tableConfig.update(fields)
+            
             columns = tableConfig.columns()
             
             for column in columns:
