@@ -66,7 +66,13 @@ class puPlugin(object):
         self.iface.addDockWidget(Qt.TopDockWidgetArea, self.dockWidget)
     
     def unload(self):
-        """Removes the plugin menu and icon."""
+        """Removes the plugin menu and icon.
+        
+        Also disconnects functions that are connected to QgsInterface.
+        
+        """
+        
+        self.dockWidget.disconnect_connect_ensure_unique_field_values(False)
         
         self.iface.removePluginMenu(self.name, self.puAction)
         self.iface.removeToolBarIcon(self.puAction)

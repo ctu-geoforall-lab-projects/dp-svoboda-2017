@@ -28,7 +28,6 @@ from PyQt4.QtCore import pyqtSignal, QSettings
 from qgis.gui import QgsMessageBar
 from qgis.core import *
 
-from numbers import Number
 import traceback
 import sys
 
@@ -95,8 +94,9 @@ class DockWidget(QDockWidget):
         
         self.settings = QSettings()
         
+        self.disconnect_connect_ensure_unique_field_values()
         self.iface.currentLayerChanged.connect(
-            self._connect_ensure_unique_field_values)
+            self.disconnect_connect_ensure_unique_field_values)
         
         self.setObjectName(u'dockWidget')
         
@@ -352,15 +352,19 @@ class DockWidget(QDockWidget):
         
         layer.selectByIds(featuresID)
         
-    def _connect_ensure_unique_field_values(self):
-        """Connects function for ensuring unique field values.
+    def disconnect_connect_ensure_unique_field_values(self, connection=True):
+        """Disconnects (and connects) function for ensuring unique field values.
         
-        First it check if the active layer was created by PU Plugin.
-        If so, it connects function that ensures unique field values
-        to beforeCommitChanges signal.
+        First it checks if the active layer was created by PU Plugin.
+        If so, it tries to disconnect function that ensures unique field values
+        from beforeCommitChanges signal.
+        If connection is True it connects function that ensures unique field
+        values to beforeCommitChanges signal.
         
-        It also connects function that clears all items from Message Bar
-        to signals committedFeaturesRemoved and committedFeaturesAdded.
+        Args:
+            connection (bool):
+                True for connecting function that ensures unique field values
+                to beforeCommitChanges signal, False for not connecting.
         
         """
         
@@ -374,12 +378,14 @@ class DockWidget(QDockWidget):
                 except TypeError:
                     pass
                 finally:
-                    layer.beforeCommitChanges.connect(
-                        self._ensure_unique_field_values)
+                    if connection:
+                        layer.beforeCommitChanges.connect(
+                            self._ensure_unique_field_values)
         except:
             raise self.puError(
                 self,
-                u'Error connecting function.')
+                u'Error connecting/disconnecting '
+                u'_ensure_unique_field_values function.')
     
     def _ensure_unique_field_values(self):
         """Ensures that field values are unique.
@@ -400,8 +406,6 @@ class DockWidget(QDockWidget):
                 
             features = layer.getFeatures()
             
-            maxRowid = 1
-            
             rowidColumn = self.uniqueDefaultColumnsPAR[0]
             idColumn = self.uniqueDefaultColumnsPAR[1]
             ogrfidColumn = self.uniqueDefaultColumnsPAR[2]
@@ -411,15 +415,10 @@ class DockWidget(QDockWidget):
             for feature in features:
                 featureRowid = feature.attribute(rowidColumn)
                 
-                if isinstance(featureRowid, Number) and featureRowid > maxRowid:
-                    maxRowid = featureRowid
-                
                 if featureRowid not in rowidGroupedFeatures:
                     rowidGroupedFeatures[featureRowid] = 1
                 else:
                     rowidGroupedFeatures[featureRowid] += 1
-            
-            maxRowid += 1
             
             rowidFieldID = layer.fieldNameIndex(rowidColumn)
             idFieldID = layer.fieldNameIndex(idColumn)
@@ -430,6 +429,9 @@ class DockWidget(QDockWidget):
                     self.select_features_by_field_and_value(
                         layer, rowidColumn, key)
                     
+                    oldFeatures = []
+                    newFeatures = []
+                    
                     features = layer.selectedFeatures()
                     
                     for i in xrange(len(features)):
@@ -438,22 +440,41 @@ class DockWidget(QDockWidget):
                         
                         originalFeature = features[i]
                         
+                        oldFeatures.append(originalFeature.id())
+                        
                         newFeature = QgsFeature()
                         newFeature.setGeometry(originalFeature.geometry())
                         newFeature.setAttributes(originalFeature.attributes())
-                        newFeature.setAttribute(rowidFieldID, maxRowid)
+                        newFeature.setAttribute(rowidFieldID, None)
                         newFeature.setAttribute(idFieldID, None)
                         newFeature.setAttribute(ogrfidFieldID, None)
                         
-                        layer.deleteFeature(originalFeature.id())
-                         
-                        layer.addFeature(newFeature)
-                        
-                        maxRowid += 1
+                        newFeatures.append(newFeature)
+                    
+                    layer.deleteFeatures(oldFeatures)
+                    layer.addFeatures(newFeatures)
             
             layer.selectByIds(selectedFeaturesIDs)
         except:
             raise self.puError(
                 self,
                 u'Error in function that ensures unique field values.')
+    
+    def disconnect_ensure_unique_field_values(self):
+        try:
+            succes, layer = self.check_active_layer(None)
+            
+            if succes:
+                try:
+                    layer.beforeCommitChanges.disconnect(
+                        self._ensure_unique_field_values)
+                except TypeError:
+                    pass
+                finally:
+                    layer.beforeCommitChanges.connect(
+                        self._ensure_unique_field_values)
+        except:
+            raise self.puError(
+                self,
+                u'Error connecting function.')
 
