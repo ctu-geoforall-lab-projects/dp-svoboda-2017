@@ -33,5 +33,5 @@ def classFactory(iface):
     
     """
     
-    from .pu_plugin import puPlugin
+    from pu_plugin import puPlugin
     return puPlugin(iface)
