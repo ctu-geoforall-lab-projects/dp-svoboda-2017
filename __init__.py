@@ -19,17 +19,19 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
- This script initializes the plugin, making it known to QGIS.
 """
 
 
-# noinspection PyPep8Naming
-def classFactory(iface):  # pylint: disable=invalid-name
-    """Load puPlugin class from file puPlugin.
+def classFactory(iface):
+    """Loads puPlugin class.
+    
+    Args:
+        iface (QgisInterface): A reference to the QgisInterface.
 
-    :param iface: A QGIS interface instance.
-    :type iface: QgsInterface
+    Returns:
+        class: The main class of the PU Plugin.
+    
     """
-    #
+    
     from .pu_plugin import puPlugin
     return puPlugin(iface)
