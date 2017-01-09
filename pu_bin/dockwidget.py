@@ -94,9 +94,9 @@ class DockWidget(QDockWidget):
         
         self.settings = QSettings()
         
-        self.disconnect_connect_ensure_unique_field_values()
+        self._disconnect_connect_ensure_unique_field_values()
         self.iface.currentLayerChanged.connect(
-            self.disconnect_connect_ensure_unique_field_values)
+            self._disconnect_connect_ensure_unique_field_values)
         
         self.setObjectName(u'dockWidget')
         
@@ -351,8 +351,16 @@ class DockWidget(QDockWidget):
         featuresID = [feature.id() for feature in features]
         
         layer.selectByIds(featuresID)
+    
+    def disconnect_from_iface(self):
+        """Disconnects functions from QgsInterface."""
         
-    def disconnect_connect_ensure_unique_field_values(self, connection=True):
+        self._disconnect_connect_ensure_unique_field_values(False)
+        
+        self.iface.currentLayerChanged.disconnect(
+            self._disconnect_connect_ensure_unique_field_values)
+        
+    def _disconnect_connect_ensure_unique_field_values(self, connection=True):
         """Disconnects (and connects) function for ensuring unique field values.
         
         First it checks if the active layer was created by PU Plugin.
