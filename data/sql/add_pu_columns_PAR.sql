@@ -1,4 +1,4 @@
-alter table PAR add column PU_ID int8;
+alter table PAR add column PU_ID bigint;
 update PAR set PU_ID = ID;
 update PAR set ID = NULL;
 
@@ -18,3 +18,4 @@ alter table PAR add column PU_VZDALENOST integer;
 
 alter table PAR add column PU_CENA integer;
 
+commit;

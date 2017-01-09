@@ -375,31 +375,10 @@ class DockWidget(QDockWidget):
                 finally:
                     layer.beforeCommitChanges.connect(
                         self._ensure_unique_field_values)
-                try:
-                    layer.committedFeaturesRemoved.disconnect(
-                        self.clear_message_bar)
-                except TypeError:
-                    pass
-                finally:
-                    layer.committedFeaturesRemoved.connect(
-                        self.clear_message_bar)
-                try:
-                    layer.committedFeaturesAdded.disconnect(
-                        self.clear_message_bar)
-                except TypeError:
-                    pass
-                finally:
-                    layer.committedFeaturesAdded.connect(
-                        self.clear_message_bar)
         except:
             raise self.puError(
                 self,
                 u'Error connecting function.')
-    
-    def clear_message_bar(self):
-        """Clears all items from Message Bar."""
-        
-        self.iface.messageBar().clearWidgets()
     
     def _ensure_unique_field_values(self):
         """Ensures that field values are unique.
