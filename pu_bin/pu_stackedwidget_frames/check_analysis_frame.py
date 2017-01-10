@@ -226,7 +226,11 @@ class CheckAnalysisFrame(QFrame):
         
         """
         
+        featureIDs = []
+        
         for feature in features:
             if feature.attribute('PU_KATEGORIE') == puCategory:
-                layer.deselect(feature.id())
+                featureIDs.append(feature.id())
+        
+        layer.deselect(featureIDs)
 

@@ -92,15 +92,29 @@ class PerimeterWidget(QWidget):
         """
         
         try:
+            perimeterLayer = self.perimeterMapLayerComboBox.currentLayer()
+            
+            perimeterLayerCrs = perimeterLayer.crs().authid()
+            layerCrs = layer.crs().authid()
+            
+            if perimeterLayerCrs != layerCrs:
+                self.pW.text_statusbar.emit(
+                    u'Aktivní vrstva a vrstva obvodu nemají stejný '
+                    u'souřadnicový systém.', 7000)
+                return
+            
             self.pW.text_statusbar.emit(u'Provádím kontrolu - obvodem.', 0)
             
-            perimeter = self.perimeterMapLayerComboBox.currentLayer()
+            perimeterLayerFeatureCount = perimeterLayer.featureCount()
             
-            processing.runalg(
-                'qgis:selectbylocation', layer, perimeter, u'within', 0, 0)
-            
-            layer.invertSelection()
-            
+            if perimeterLayerFeatureCount == 0:
+                layer.selectAll()
+            else:
+                processing.runalg(
+                    'qgis:selectbylocation', layer, perimeterLayer, u'within', 0, 0)
+                
+                layer.invertSelection()
+                
             features = layer.selectedFeaturesIterator()
             
             self.pW._deselect_features_by_puCategory(layer, features, 3)
