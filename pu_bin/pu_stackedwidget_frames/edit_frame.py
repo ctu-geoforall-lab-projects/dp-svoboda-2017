@@ -254,6 +254,8 @@ class EditFrame(QFrame):
                 
                 layer.selectByIds(selectedFeaturesIDs)
                 
+                fileInfo = QFileInfo(filePath)
+                
                 perimeterName = fileInfo.completeBaseName()
                 
                 perimeterLayer = QgsVectorLayer(
@@ -391,21 +393,43 @@ class EditFrame(QFrame):
                 u'Zařazuji vybrané parcely do kategorie "{}".'
                 .format(currentCategory), 0)
         
+        selectedFeaturesIDs = layer.selectedFeaturesIds()
+        
         selectedFeatures = layer.selectedFeaturesIterator()
         
         self.dW.set_field_value_for_features(
             layer, selectedFeatures, self.categoryName, self.categoryValue)
         
+        layer.selectByIds(selectedFeaturesIDs)
+        
+        selectedFeatures = layer.selectedFeaturesIterator()
+        
         perimeterLayerPath = perimeterLayer.source()
         perimeterLayerName = perimeterLayer.name()
+        perimeterLayerFeatureCount = perimeterLayer.featureCount()
         
-        tempPerimeterPath = processing.runalg(
-            'qgis:dissolve', perimeterLayer, True, None, None)['OUTPUT']
+        tempPerimeterLayerName = perimeterLayerName + u'.pu.temp'
         
-        tempPerimeterLayer = QgsVectorLayer(
-            tempPerimeterPath, perimeterLayerName + u'.pu.temp', 'ogr')
+        if perimeterLayerFeatureCount == 0:
+            perimeterLayerCrs = perimeterLayer.crs().authid()
+            
+            tempPerimeterLayer = QgsVectorLayer(
+                'Polygon?crs=' + perimeterLayerCrs,
+                tempPerimeterLayerName,
+                'memory')
+            
+            QgsMapLayerRegistry.instance().addMapLayer(tempPerimeterLayer)
+        else:
+            tempPerimeterPath = processing.runalg(
+                'qgis:dissolve', perimeterLayer, True, None, None)['OUTPUT']
+            
+            tempPerimeterLayer = QgsVectorLayer(
+                tempPerimeterPath, tempPerimeterLayerName, 'ogr')
+        
+        QgsApplication.processEvents()
         
         tempPerimeterLayer.startEditing()
+        tempPerimeterLayer.updateFields()
         
         for feature in selectedFeatures:
             copiedFeature = QgsFeature(tempPerimeterLayer.pendingFields())
@@ -429,6 +453,10 @@ class EditFrame(QFrame):
         processing.runalg(
             'qgis:dissolve',
             tempPerimeterLayer, True, None, newPerimeterPath)
+        
+        QgsApplication.processEvents()
+        
+        QgsMapLayerRegistry.instance().removeMapLayer(tempPerimeterLayer)
         
         newPerimeterLayer = QgsVectorLayer(
             newPerimeterPath, newPerimeterLayerName, 'ogr')

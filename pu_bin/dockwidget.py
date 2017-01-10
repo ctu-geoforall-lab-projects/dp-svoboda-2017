@@ -275,6 +275,8 @@ class DockWidget(QDockWidget):
                 layer.changeAttributeValue(featureID, fieldID, value)
         
         layer.commitChanges()
+        
+        QgsApplication.processEvents()
     
     def check_layer(self, sender=None, layer=False):
         """Checks active or given layer.
@@ -373,6 +375,8 @@ class DockWidget(QDockWidget):
         
         self.iface.currentLayerChanged.disconnect(
             self._disconnect_connect_ensure_unique_field_values)
+        
+        QgsApplication.processEvents()
         
     def _disconnect_connect_ensure_unique_field_values(self, connection=True):
         """Disconnects (and connects) function for ensuring unique field values.
@@ -473,6 +477,8 @@ class DockWidget(QDockWidget):
                     
                     layer.deleteFeatures(oldFeatures)
                     layer.addFeatures(newFeatures)
+            
+            QgsApplication.processEvents()
             
             layer.selectByIds(selectedFeaturesIDs)
         except:
