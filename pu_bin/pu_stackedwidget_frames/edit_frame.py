@@ -342,9 +342,13 @@ class EditFrame(QFrame):
         try:
             perimeterLayer = self.perimeterMapLayerComboBox.currentLayer()
             
-            if not perimeterLayer.isValid():
-                self.text_statusbar.emit(
-                    u'Vrstva obvodu není platná.', 7000)
+            perimeterLayerCrs = perimeterLayer.crs().authid()
+            layerCrs = layer.crs().authid()
+            
+            if perimeterLayerCrs != layerCrs:
+                self.pW.text_statusbar.emit(
+                    u'Aktivní vrstva a vrstva obvodu nemají stejný '
+                    u'souřadnicový systém.', 7000)
                 return
             
             editing = self.dW.check_editing()
