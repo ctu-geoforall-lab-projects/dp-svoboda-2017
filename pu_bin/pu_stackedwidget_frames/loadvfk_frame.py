@@ -495,7 +495,7 @@ class LoadVfkFrame(QFrame):
             project.setTopologicalEditing(True)
             project.writeEntry('Digitizing', 'SnappingMode', 'advanced') 
             project.writeEntry('Digitizing', 'IntersectionSnapping', Qt.Checked)
-            project.setSnapSettingsForLayer(layer.id(), True, 2, 1, 10, True)
+            project.setSnapSettingsForLayer(layer.id(), True, 2, 1, 10, False)
             
             fields = layer.pendingFields()
             

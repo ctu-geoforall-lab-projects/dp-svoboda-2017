@@ -218,7 +218,7 @@ class EditFrame(QFrame):
         """Creates a perimeter layer from the active layer."""
         
         try:
-            succes, layer = self.dW.check_active_layer(self)
+            succes, layer = self.dW.check_layer(self)
             
             if not succes == True:
                 return
@@ -311,7 +311,7 @@ class EditFrame(QFrame):
     def _run_setting_pu_category(self):
         """Calls method for setting a categoryValue to categoryName column."""
         
-        succes, layer = self.dW.check_active_layer(self)
+        succes, layer = self.dW.check_layer(self)
         
         if not succes == True:
             return
@@ -507,7 +507,7 @@ class EditFrame(QFrame):
         """Selects features in current category."""
         
         try:
-            succes, layer = self.dW.check_active_layer(self)
+            succes, layer = self.dW.check_layer(self)
             
             if not succes == True:
                 return

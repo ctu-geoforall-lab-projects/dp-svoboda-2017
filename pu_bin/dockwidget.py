@@ -94,6 +94,7 @@ class DockWidget(QDockWidget):
         
         self.settings = QSettings()
         
+        self.lastActiveLayer = None
         self._disconnect_connect_ensure_unique_field_values()
         self.iface.currentLayerChanged.connect(
             self._disconnect_connect_ensure_unique_field_values)
@@ -275,25 +276,32 @@ class DockWidget(QDockWidget):
         
         layer.commitChanges()
     
-    def check_active_layer(self, sender, layer=None):
-        """Checks active layer.
+    def check_layer(self, sender=None, layer=False):
+        """Checks active or given layer.
         
-        First it checks if there is an active layer, then if the active layer
-        is vector and finally if the active layer contains all required columns.
+        If layer is False, the active layer is taken.
+        
+        First it checks if there is a layer, then if the layer is valid,
+        then if the layer is vector and finally if the active layer contains
+        all required columns.
+        
+        Emitted messages are for checking active layer.
+        In other words, when sender is not None, layer should be False,
+        otherwise emitted messages will not make sense.
         
         Args:
-            sender (object): A reference to the sender object.
+            sender (object): A reference to the sender object. 
             layer (QgsVectorLayer): A reference to the layer.
         
         Returns:
             tuple:
-                [0] (bool): True when there is an active vector
-                    layer that contains all required columns, False otherwise.
-                [1] (QgsVectorLayer): A reference to the active layer.
+                [0] (bool): True when there is a vector layer that contains
+                    all required columns, False otherwise.
+                [1] (QgsVectorLayer): A reference to the layer.
         
         """
         
-        if not layer:
+        if layer == False:
             layer = self.iface.activeLayer()
         
         if not layer:
@@ -302,7 +310,13 @@ class DockWidget(QDockWidget):
             successLayer = (False, layer)
             return successLayer
         
-        if layer.type() != 0:
+        if not layer.isValid():
+            if sender:
+                sender.text_statusbar.emit(u'Aktivní vrstva není platná.', 7000)
+            successLayer = (False, layer)
+            return successLayer
+        
+        if not layer.type() == 0:
             if sender:
                 sender.text_statusbar.emit(
                     u'Aktivní vrstva není vektorová.', 7000)
@@ -363,9 +377,10 @@ class DockWidget(QDockWidget):
     def _disconnect_connect_ensure_unique_field_values(self, connection=True):
         """Disconnects (and connects) function for ensuring unique field values.
         
-        First it checks if the active layer was created by PU Plugin.
-        If so, it tries to disconnect function that ensures unique field values
+        First it checks if lastActiveLayer was created by PU Plugin.
+        If so, it disconnects function that ensures unique field values
         from beforeCommitChanges signal.
+        Then it checks if the active layer was created by PU Plugin.
         If connection is True it connects function that ensures unique field
         values to beforeCommitChanges signal.
         
@@ -377,18 +392,17 @@ class DockWidget(QDockWidget):
         """
         
         try:
-            succes, layer = self.check_active_layer(None)
+            succes, layer = self.check_layer(None, self.lastActiveLayer)
             
             if succes:
-                try:
-                    layer.beforeCommitChanges.disconnect(
-                        self._ensure_unique_field_values)
-                except TypeError:
-                    pass
-                finally:
-                    if connection:
-                        layer.beforeCommitChanges.connect(
-                            self._ensure_unique_field_values)
+                layer.beforeCommitChanges.disconnect(
+                    self._ensure_unique_field_values)
+            
+            succes, self.lastActiveLayer = self.check_layer(None)
+            
+            if succes and connection:
+                self.lastActiveLayer.beforeCommitChanges.connect(
+                    self._ensure_unique_field_values)
         except:
             raise self.puError(
                 self,
@@ -398,10 +412,8 @@ class DockWidget(QDockWidget):
     def _ensure_unique_field_values(self):
         """Ensures that field values are unique.
         
-        Ensures that following fields are unique:
-            rowid
-        
         Sets following fields to None for new features:
+            rowid
             ID
             ogr_fid
         
@@ -467,22 +479,4 @@ class DockWidget(QDockWidget):
             raise self.puError(
                 self,
                 u'Error in function that ensures unique field values.')
-    
-    def disconnect_ensure_unique_field_values(self):
-        try:
-            succes, layer = self.check_active_layer(None)
-            
-            if succes:
-                try:
-                    layer.beforeCommitChanges.disconnect(
-                        self._ensure_unique_field_values)
-                except TypeError:
-                    pass
-                finally:
-                    layer.beforeCommitChanges.connect(
-                        self._ensure_unique_field_values)
-        except:
-            raise self.puError(
-                self,
-                u'Error connecting function.')
 
