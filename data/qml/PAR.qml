@@ -100,6 +100,9 @@
     <edittype widgetv2type="Hidden" name="ogr_fid">
       <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
+    <edittype widgetv2type="Hidden" name="PU_ID">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
     <edittype widgetv2type="TextEdit" name="PU_KMENOVE_CISLO_PAR">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
@@ -121,16 +124,17 @@
   </edittypes>
   <renderer-v2 forceraster="0" symbollevels="0" type="RuleRenderer" enableorderby="0">
     <rules key="{794a0e50-5e6d-43f2-9bd4-2fea107535e0}">
-      <rule filter="DRUPOZ_KOD = 2" key="{c343143f-2192-4513-90a7-27f52793a138}" symbol="0" label="orná půda"/>
-      <rule filter="DRUPOZ_KOD = 3" key="{d08315d4-9204-425a-af55-bd316d6200a1}" symbol="1" label="chmelnice"/>
-      <rule filter="DRUPOZ_KOD = 3" key="{425c26fd-c301-4a45-9fa6-e614e22f8df1}" symbol="2" label="vinice"/>
+      <rule filter="DRUPOZ_KOD = 2" key="{82cb13fa-fb9a-4d9e-b43e-ea712e0e8dbd}" symbol="0" label="orná půda"/>
+      <rule filter="DRUPOZ_KOD = 3" key="{f0ccaeb6-73f4-412d-b995-9f62530b3bd6}" symbol="1" label="chmelnice"/>
+      <rule filter="DRUPOZ_KOD = 4" key="{425c26fd-c301-4a45-9fa6-e614e22f8df1}" symbol="2" label="vinice"/>
       <rule filter="DRUPOZ_KOD = 5" key="{c5c6493e-b97e-49b1-a27c-a1c0388ab007}" symbol="3" label="zahrada"/>
-      <rule filter="DRUPOZ_KOD = 6" key="{826b5c6c-4b74-409f-8c45-edc071a10cfe}" symbol="4" label="ovocný sad"/>
-      <rule filter="DRUPOZ_KOD = 7" key="{c58e5191-dace-4838-949e-35ca18730f01}" symbol="5" label="trvalý travní porost"/>
-      <rule filter="DRUPOZ_KOD = 10" key="{1e901a61-195a-47ca-a640-7ce43b901176}" symbol="6" label="lesní pozemek"/>
+      <rule filter="DRUPOZ_KOD = 6" key="{a2736feb-ef21-4282-a7d2-83aa296dd281}" symbol="4" label="ovocný sad"/>
+      <rule filter="DRUPOZ_KOD = 7" key="{a2af6640-fe7d-42c2-91a5-cd08ee26f30b}" symbol="5" label="trvalý travní porost"/>
+      <rule filter="DRUPOZ_KOD = 10" key="{dce34664-c62e-4d49-8455-c262e91049f1}" symbol="6" label="lesní pozemek"/>
       <rule filter="DRUPOZ_KOD = 11" key="{f7d1f3bb-c2a3-4c78-bc75-870504d6b4c5}" symbol="7" label="vodní plocha"/>
       <rule filter="DRUPOZ_KOD = 13" key="{132342a8-1f56-4380-928d-bfd4c62d9bfe}" symbol="8" label="zastavěná plocha"/>
       <rule filter="DRUPOZ_KOD = 14" key="{5c0bb3ec-2cc1-4f93-a0b6-b7f2f7773fba}" symbol="9" label="ostatní plocha"/>
+      <rule filter="DRUPOZ_KOD is null" key="{bd2103c5-6312-48d8-91db-73e613d15bb3}" symbol="10" label="bez druhu pozemku"/>
     </rules>
     <symbols>
       <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
@@ -152,6 +156,21 @@
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="color" v="208,254,114,255"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_style" v="solid"/>
+          <prop k="outline_width" v="0.26"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="style" v="solid"/>
+        </layer>
+      </symbol>
+      <symbol alpha="1" clip_to_extent="1" type="fill" name="10">
+        <layer pass="0" class="SimpleFill" locked="0">
+          <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="color" v="154,137,123,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -540,12 +559,13 @@
     <alias field="PS_ID" index="30" name=""/>
     <alias field="IDENT_PS" index="31" name=""/>
     <alias field="ogr_fid" index="32" name=""/>
-    <alias field="PU_KMENOVE_CISLO_PAR" index="33" name=""/>
-    <alias field="PU_PODDELENI_CISLA_PAR" index="34" name=""/>
-    <alias field="PU_VYMERA_PARCELY" index="35" name=""/>
-    <alias field="PU_KATEGORIE" index="36" name=""/>
-    <alias field="PU_VZDALENOST" index="37" name=""/>
-    <alias field="PU_CENA" index="38" name=""/>
+    <alias field="PU_ID" index="33" name=""/>
+    <alias field="PU_KMENOVE_CISLO_PAR" index="34" name=""/>
+    <alias field="PU_PODDELENI_CISLA_PAR" index="35" name=""/>
+    <alias field="PU_VYMERA_PARCELY" index="36" name=""/>
+    <alias field="PU_KATEGORIE" index="37" name=""/>
+    <alias field="PU_VZDALENOST" index="38" name=""/>
+    <alias field="PU_CENA" index="39" name=""/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
@@ -571,7 +591,7 @@
       <column width="-1" hidden="1" type="field" name="DIL_PARCELY"/>
       <column width="-1" hidden="1" type="field" name="MAPLIS_KOD"/>
       <column width="-1" hidden="1" type="field" name="ZPURVY_KOD"/>
-      <column width="-1" hidden="0" type="field" name="DRUPOZ_KOD"/>
+      <column width="-1" hidden="1" type="field" name="DRUPOZ_KOD"/>
       <column width="-1" hidden="1" type="field" name="ZPVYPA_KOD"/>
       <column width="-1" hidden="1" type="field" name="TYP_PARCELY"/>
       <column width="-1" hidden="0" type="field" name="VYMERA_PARCELY"/>
@@ -592,6 +612,7 @@
       <column width="-1" hidden="0" type="field" name="PU_VZDALENOST"/>
       <column width="-1" hidden="0" type="field" name="PU_CENA"/>
       <column width="-1" hidden="1" type="actions"/>
+      <column width="-1" hidden="1" type="field" name="PU_ID"/>
     </columns>
   </attributetableconfig>
   <editform>.</editform>
