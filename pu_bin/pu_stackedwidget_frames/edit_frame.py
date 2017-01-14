@@ -37,7 +37,7 @@ from execute_thread import Executehread
 class EditFrame(QFrame):
     """A frame which contains widgets for editing."""
     
-    text_statusbar = pyqtSignal(str, int)
+    set_text_statusbar = pyqtSignal(str, int)
     
     def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
         """Constructor.
@@ -69,7 +69,7 @@ class EditFrame(QFrame):
         self.setFrameShape(QFrame.StyledPanel)
         self.setFrameShadow(QFrame.Raised)
         
-        self.text_statusbar.connect(self.dW.statusbar.set_text_statusbar)
+        self.set_text_statusbar.connect(self.dW.statusBar.set_text_statusbar)
         
         self.editGridLayout = QGridLayout(self)
         self.editGridLayout.setObjectName(u'editGridLayout')
@@ -80,11 +80,11 @@ class EditFrame(QFrame):
     def _build_widgets(self):
         """Builds own widgets."""
         
-        self.editToolbar = QToolBar(self)
-        self.editToolbar.setObjectName(u'editToolbar')
+        self.editToolBar = QToolBar(self)
+        self.editToolBar.setObjectName(u'editToolBar')
         self._set_icon_size()
         self.iface.initializationCompleted.connect(self._set_icon_size)
-        self.editGridLayout.addWidget(self.editToolbar, 0, 0, 1, 3)
+        self.editGridLayout.addWidget(self.editToolBar, 0, 0, 1, 3)
         
         for action in self.iface.advancedDigitizeToolBar().actions(): 
             if action.objectName() == 'mActionUndo':
@@ -92,45 +92,45 @@ class EditFrame(QFrame):
             if action.objectName() == 'mActionRedo':
                 self.redoAction = action
         
-        self.editToolbar.addAction(self.undoAction)
+        self.editToolBar.addAction(self.undoAction)
         
-        self.editToolbar.addAction(self.redoAction)
+        self.editToolBar.addAction(self.redoAction)
         
-        self.editToolbar.addSeparator()
+        self.editToolBar.addSeparator()
         
         self.toggleEditingAction = self.iface.actionToggleEditing()
         self.toggleEditingAction.setObjectName(u'toggleEditingAction')
-        self.editToolbar.addAction(self.toggleEditingAction)
+        self.editToolBar.addAction(self.toggleEditingAction)
         
         self.saveActiveLayerEditsAction = \
             self.iface.actionSaveActiveLayerEdits()
         self.saveActiveLayerEditsAction.setObjectName(
             u'saveActiveLayerEditsAction')
-        self.editToolbar.addAction(self.saveActiveLayerEditsAction)
+        self.editToolBar.addAction(self.saveActiveLayerEditsAction)
         
         self.cancelEditsAction = self.iface.actionCancelEdits()
         self.cancelEditsAction.setObjectName(u'cancelEditsAction')
-        self.editToolbar.addAction(self.cancelEditsAction)
+        self.editToolBar.addAction(self.cancelEditsAction)
         
         self.addFeatureAction = self.iface.actionAddFeature()
         self.addFeatureAction.setObjectName(u'addFeatureAction')
-        self.editToolbar.addAction(self.addFeatureAction)
+        self.editToolBar.addAction(self.addFeatureAction)
         
         self.moveFeatureAction = self.iface.actionMoveFeature()
         self.moveFeatureAction.setObjectName(u'moveFeatureAction')
-        self.editToolbar.addAction(self.moveFeatureAction)
+        self.editToolBar.addAction(self.moveFeatureAction)
         
         self.nodeToolAction = self.iface.actionNodeTool()
         self.nodeToolAction.setObjectName(u'nodeToolAction')
-        self.editToolbar.addAction(self.nodeToolAction)
+        self.editToolBar.addAction(self.nodeToolAction)
         
         self.deleteSelectedAction = self.iface.actionDeleteSelected()
         self.deleteSelectedAction.setObjectName(u'deleteSelectedAction')
-        self.editToolbar.addAction(self.deleteSelectedAction)
+        self.editToolBar.addAction(self.deleteSelectedAction)
         
         self.splitFeaturesAction = self.iface.actionSplitFeatures()
         self.splitFeaturesAction.setObjectName(u'splitFeaturesAction')
-        self.editToolbar.addAction(self.splitFeaturesAction)
+        self.editToolBar.addAction(self.splitFeaturesAction)
         
         self.perimeterLabel = QLabel(self)
         self.perimeterLabel.setObjectName(u'perimeterLabel')
@@ -210,9 +210,9 @@ class EditFrame(QFrame):
         self.editGridLayout.addWidget(self.setCategoryPushButton, 4, 2, 1, 1)
     
     def _set_icon_size(self):
-        """Sets editToolbar icon size according to current QGIS settings."""
+        """Sets editToolBar icon size according to current QGIS settings."""
         
-        self.editToolbar.setIconSize(self.iface.mainWindow().iconSize())
+        self.editToolBar.setIconSize(self.iface.mainWindow().iconSize())
     
     def _create_perimeter(self):
         """Creates a perimeter layer from the active layer."""
@@ -298,15 +298,22 @@ class EditFrame(QFrame):
                 if editing == True:
                     self.toggleEditingAction.trigger()
                 
-                self.text_statusbar.emit(
-                    u'Obvod byl úspešně vytvořen.', 15000)
+                self.set_text_statusbar.emit(
+                    u'Obvod byl úspešně vytvořen.', 15)
         except:
-            self.dW._display_error_messages(
+            self.dW.display_error_messages(
                 u'Error creating perimeter.',
                 u'Chyba při vytváření obvodu.')
     
     def _set_categoryValue(self):
-        """Sets categoryValue according to the current index."""
+        """Sets categoryValue according to the current index.
+        
+        puCategory:
+            1 - v obvodu - řešené
+            2 - v obvodu - neřešené
+            3 - mimo obvod
+        
+        """
         
         self.categoryValue = self.categoryComboBox.currentIndex() + 1
         
@@ -335,9 +342,6 @@ class EditFrame(QFrame):
         Args:
             layer (QgsVectorLayer): A reference to the layer.
         
-        Raises:
-            dw.puError: When something goes wrong.
-        
         """
         try:
             perimeterLayer = self.perimeterMapLayerComboBox.currentLayer()
@@ -346,9 +350,9 @@ class EditFrame(QFrame):
             layerCrs = layer.crs().authid()
             
             if perimeterLayerCrs != layerCrs:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'Aktivní vrstva a vrstva obvodu nemají stejný '
-                    u'souřadnicový systém.', 7000)
+                    u'souřadnicový systém.', 10)
                 return
             
             editing = self.dW.check_editing()
@@ -362,7 +366,7 @@ class EditFrame(QFrame):
             if editing == True:
                 self.toggleEditingAction.trigger()
         except:
-            self.dW._display_error_messages(
+            self.dW.display_error_messages(
                 u'Error setting parcel category.',
                 u'Chyba při zařazování do kategorie parcel.')
     
@@ -382,18 +386,18 @@ class EditFrame(QFrame):
         featuresCount = layer.selectedFeatureCount()
         
         if featuresCount == 0:
-            self.text_statusbar.emit(
-                u'V aktivní vrstvě nejsou vybrány žádné prvky.', 7000)
+            self.set_text_statusbar.emit(
+                u'V aktivní vrstvě nejsou vybrány žádné prvky.', 10)
             return
         
         currentCategory = self.categoryComboBox.currentText()
         
         if featuresCount == 1:
-            self.text_statusbar.emit(
+            self.set_text_statusbar.emit(
                 u'Zařazuji vybranou parcelu do kategorie "{}".'
                 .format(currentCategory), 0)
         else:
-            self.text_statusbar.emit(
+            self.set_text_statusbar.emit(
                 u'Zařazuji vybrané parcely do kategorie "{}".'
                 .format(currentCategory), 0)
         
@@ -478,13 +482,13 @@ class EditFrame(QFrame):
                 self.iface.setActiveLayer(layer)
         
         if featuresCount == 1:
-            self.text_statusbar.emit(
+            self.set_text_statusbar.emit(
                 u'Vybraná parcela byla zařazena do kategorie "{}".'
-                .format(currentCategory), 15000)
+                .format(currentCategory), 20)
         else:
-            self.text_statusbar.emit(
+            self.set_text_statusbar.emit(
                 u'Vybrané parcely byly zařazeny do kategorie "{}".'
-                .format(currentCategory), 15000)
+                .format(currentCategory), 20)
     
     def _set_pu_category_by_perimeter(self, layer, perimeterLayer):
         """Sets a categoryValue to categoryName column for all features
@@ -497,7 +501,7 @@ class EditFrame(QFrame):
         
         """
         
-        self.text_statusbar.emit(u'Zařazuji parcely na základě obvodu.', 0)
+        self.set_text_statusbar.emit(u'Zařazuji parcely na základě obvodu.', 0)
         
         selectedFeaturesIDs = layer.selectedFeaturesIds()
         
@@ -535,8 +539,8 @@ class EditFrame(QFrame):
         
         layer.selectByIds(selectedFeaturesIDs)
         
-        self.text_statusbar.emit(
-            u'Zařazení parcel na základě obvodu úspěšně dokončeno.', 30000)
+        self.set_text_statusbar.emit(
+            u'Zařazení parcel na základě obvodu úspěšně dokončeno.', 30)
         
     def _select_category(self):
         """Selects features in current category."""
@@ -554,26 +558,26 @@ class EditFrame(QFrame):
             
             featuresCount = layer.selectedFeatureCount()
             
-            duration = 10000
+            duration = 10
             
             if featuresCount == 0:
-                self.text_statusbar.emit(
+                self.set_text_statusbar.emit(
                     u'V kategorii "{}" není žádná parcela.'
                     .format(currentCategory), duration)
             elif featuresCount == 1:
-                self.text_statusbar.emit(
+                self.set_text_statusbar.emit(
                     u'V kategorii "{}" je {} parcela.'
                     .format(currentCategory, featuresCount), duration)
             elif 1 < featuresCount < 5:
-                self.text_statusbar.emit(
+                self.set_text_statusbar.emit(
                     u'V kategorii "{}" jsou {} parcely.'
                     .format(currentCategory, featuresCount), duration)
             elif 5 <= featuresCount:
-                self.text_statusbar.emit(
+                self.set_text_statusbar.emit(
                     u'V kategorii "{}" je {} parcel.'
                     .format(currentCategory, featuresCount), duration)
         except:
-            self.dW._display_error_messages(
+            self.dW.display_error_messages(
                 u'Error selecting parcels in category.',
                 u'Chyba při vybírání parcel v kategorii.')
 

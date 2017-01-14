@@ -63,7 +63,7 @@ class NotInSpiWidget(QWidget):
         """
         
         try:
-            self.pW.text_statusbar.emit(
+            self.pW.set_text_statusbar.emit(
                 u'Provádím kontrolu - není v SPI.', 0)
             
             expression = QgsExpression("\"KMENOVE_CISLO_PAR\" is null")
@@ -76,19 +76,19 @@ class NotInSpiWidget(QWidget):
             
             featuresCount = layer.selectedFeatureCount()
             
-            duration = 10000
+            duration = 10
             
             if featuresCount == 0:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'V SPI jsou všechny parcely.', duration)
             elif featuresCount == 1:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'V SPI není {} parcela.'.format(featuresCount), duration)
             elif 1 < featuresCount < 5:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'V SPI nejsou {} parcely.'.format(featuresCount), duration)
             elif 5 <= featuresCount:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'V SPI není {} parcel.'.format(featuresCount), duration)
         except:
             currentCheckName = self.pW.checkAnalysisComboBox.currentText()

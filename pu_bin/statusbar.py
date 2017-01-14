@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- Statusbar
+ StatusBar
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -25,7 +25,7 @@ from PyQt4.QtGui import QStatusBar
 from PyQt4.QtCore import QSettings
 
 
-class Statusbar(QStatusBar):
+class StatusBar(QStatusBar):
     """A status bar for displaying messages."""
     
     def __init__(self, parentWidget, dockWidgetName, iface):
@@ -42,7 +42,7 @@ class Statusbar(QStatusBar):
         self.dWName = dockWidgetName
         self.iface = iface
         
-        super(Statusbar, self).__init__(self.dW)
+        super(StatusBar, self).__init__(self.dW)
         
         self._setup_self()
     
@@ -60,7 +60,7 @@ class Statusbar(QStatusBar):
         
         Args:
             text (str): A text to be written.
-            duration (int): A duration of the message in milli-seconds.
+            duration (int): A duration of the message in seconds.
         
         """
         
@@ -70,6 +70,8 @@ class Statusbar(QStatusBar):
             self.frameText.setValue(sender, text)
         else:
             self.frameText.setValue(sender, '')
+        
+        duration *= 1000
         
         self.showMessage(text, duration)
     

@@ -63,7 +63,8 @@ class NotInMapWidget(QWidget):
         """
         
         try:
-            self.pW.text_statusbar.emit(u'Provádím kontrolu - není v mapě.', 0)
+            self.pW.set_text_statusbar.emit(
+                u'Provádím kontrolu - není v mapě.', 0)
             
             expression = QgsExpression("$geometry is null")
             
@@ -75,20 +76,20 @@ class NotInMapWidget(QWidget):
             
             featuresCount = layer.selectedFeatureCount()
             
-            duration = 10000
+            duration = 10
             
             if featuresCount == 0:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'V mapě jsou všechny parcely.', duration)
             elif featuresCount == 1:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'V mapě není {} parcela.'.format(featuresCount), duration)
             elif 1 < featuresCount < 5:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'V mapě nejsou {} parcely.'.format(featuresCount),
                     duration)
             elif 5 <= featuresCount:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'V mapě není {} parcel.'.format(featuresCount), duration)
         except:
             currentCheckName = self.pW.checkAnalysisComboBox.currentText()

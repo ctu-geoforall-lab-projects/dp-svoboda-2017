@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- Toolbar
+ ToolBar
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -27,7 +27,7 @@ from PyQt4.QtGui import (QToolBar, QToolButton, QAction, QIcon, QPixmap,
 from qgis.core import *
 
 
-class Toolbar(QToolBar):
+class ToolBar(QToolBar):
     """A widget which contains tools."""
     
     def __init__(self, parentWidget, dockWidgetName, iface):
@@ -44,7 +44,7 @@ class Toolbar(QToolBar):
         self.dWName = dockWidgetName
         self.iface = iface
         
-        super(Toolbar, self).__init__(self.dW)
+        super(ToolBar, self).__init__(self.dW)
         
         self._setup_self()
     

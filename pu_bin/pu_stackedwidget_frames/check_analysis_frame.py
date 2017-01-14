@@ -35,7 +35,7 @@ from execute_thread import Executehread
 class CheckAnalysisFrame(QFrame):
     """A frame which contains widgets for checks and analyzes."""
     
-    text_statusbar = pyqtSignal(str, int)
+    set_text_statusbar = pyqtSignal(str, int)
     
     def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
         """Constructor.
@@ -64,7 +64,7 @@ class CheckAnalysisFrame(QFrame):
         self.setFrameShape(QFrame.StyledPanel)
         self.setFrameShadow(QFrame.Raised)
         
-        self.text_statusbar.connect(self.dW.statusbar.set_text_statusbar)
+        self.set_text_statusbar.connect(self.dW.statusBar.set_text_statusbar)
         
         self.checkAnalysisGridLayout = QGridLayout(self)
         self.checkAnalysisGridLayout.setObjectName(u'checkAnalysisGridLayout')

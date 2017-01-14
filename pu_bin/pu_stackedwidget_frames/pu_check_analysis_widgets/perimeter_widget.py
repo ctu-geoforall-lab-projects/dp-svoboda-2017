@@ -98,12 +98,12 @@ class PerimeterWidget(QWidget):
             layerCrs = layer.crs().authid()
             
             if perimeterLayerCrs != layerCrs:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'Aktivní vrstva a vrstva obvodu nemají stejný '
-                    u'souřadnicový systém.', 7000)
+                    u'souřadnicový systém.', 10)
                 return
             
-            self.pW.text_statusbar.emit(u'Provádím kontrolu - obvodem.', 0)
+            self.pW.set_text_statusbar.emit(u'Provádím kontrolu - obvodem.', 0)
             
             perimeterLayerFeatureCount = perimeterLayer.featureCount()
             
@@ -121,20 +121,23 @@ class PerimeterWidget(QWidget):
             
             featuresCount = layer.selectedFeatureCount()
             
-            duration = 10000
+            duration = 10
             
             if featuresCount == 0:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'Uvnitř obvodu jsou všechny parcely.', duration)
             elif featuresCount == 1:
-                self.pW.text_statusbar.emit(
-                    u'Uvnitř obvodu není {} parcela'.format(featuresCount), duration)
+                self.pW.set_text_statusbar.emit(
+                    u'Uvnitř obvodu není {} parcela'.format(featuresCount),
+                    duration)
             elif 1 < featuresCount < 5:
-                self.pW.text_statusbar.emit(
-                    u'Uvnitř obvodu nejsou {} parcely.'.format(featuresCount), duration)
+                self.pW.set_text_statusbar.emit(
+                    u'Uvnitř obvodu nejsou {} parcely.'.format(featuresCount),
+                    duration)
             elif 5 <= featuresCount:
-                self.pW.text_statusbar.emit(
-                    u'Uvnitř obvodu není {} parcel.'.format(featuresCount), duration)
+                self.pW.set_text_statusbar.emit(
+                    u'Uvnitř obvodu není {} parcel.'.format(featuresCount),
+                    duration)
         except:
             currentCheckName = self.pW.checkAnalysisComboBox.currentText()
             

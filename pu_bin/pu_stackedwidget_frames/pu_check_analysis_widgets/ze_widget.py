@@ -63,7 +63,7 @@ class ZeWidget(QWidget):
         """
         
         try:
-            self.pW.text_statusbar.emit(
+            self.pW.set_text_statusbar.emit(
                 u'Provádím kontrolu - bez vlastníka.', 0)
             
             fieldName = 'ID'
@@ -92,21 +92,23 @@ class ZeWidget(QWidget):
             
             featuresCount = layer.selectedFeatureCount()
             
-            duration = 10000
+            duration = 10
             
             if featuresCount == 0:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'Bez vlastníka není žádná parcela.', duration)
             elif featuresCount == 1:
-                self.pW.text_statusbar.emit(
-                    u'Bez vlastníka je {} parcela.'.format(featuresCount), duration)
+                self.pW.set_text_statusbar.emit(
+                    u'Bez vlastníka je {} parcela.'.format(featuresCount),
+                    duration)
             elif 1 < featuresCount < 5:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'Bez vlastníka jsou {} parcely.'.format(featuresCount),
                     duration)
             elif 5 <= featuresCount:
-                self.pW.text_statusbar.emit(
-                    u'Bez vlastníka je {} parcel.'.format(featuresCount), duration)
+                self.pW.set_text_statusbar.emit(
+                    u'Bez vlastníka je {} parcel.'.format(featuresCount),
+                    duration)
         except:
             currentCheckName = self.pW.checkAnalysisComboBox.currentText()
             

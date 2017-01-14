@@ -103,15 +103,15 @@ class DistanceWidget(QWidget):
             layerCrs = layer.crs().authid()
             
             if refPointLayerCrs != layerCrs:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'Aktivní vrstva a vrstva referenčního bodu nemají stejný '
-                    u'souřadnicový systém.', 7000)
+                    u'souřadnicový systém.', 10)
                 return
             
             if refPointCount != 1:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'Vrstva referenčního bodu neobsahuje právě jeden prvek.',
-                    7000)
+                    10)
                 return
             
             if layer.selectedFeatureCount() != 0:
@@ -119,7 +119,7 @@ class DistanceWidget(QWidget):
             else:
                 features = layer.getFeatures()
             
-            self.pW.text_statusbar.emit(
+            self.pW.set_text_statusbar.emit(
                 u'Provádím analýzu - měření vzdálenosti.', 0)
             
             refPointFeatures = refPointLayer.getFeatures()
@@ -149,8 +149,8 @@ class DistanceWidget(QWidget):
             if editing == True:
                 self.dW.stackedWidget.editFrame.toggleEditingAction.trigger()
             
-            self.pW.text_statusbar.emit(
-                u'Analýza měření vzdálenosti úspěšně dokončena.', 15000)
+            self.pW.set_text_statusbar.emit(
+                u'Analýza měření vzdálenosti úspěšně dokončena.', 20)
         except:
             currentAnalysisName = self.pW.checkAnalysisComboBox.currentText()
             

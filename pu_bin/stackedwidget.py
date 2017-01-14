@@ -64,26 +64,26 @@ class StackedWidget(QStackedWidget):
         self.loadVfkFrame = loadvfk_frame.LoadVfkFrame(
             self, self.dWName, self.iface, self.dW)
         self.addWidget(self.loadVfkFrame)
-        self.dW.toolbar.loadVfkAction.triggered.connect(
+        self.dW.toolBar.loadVfkAction.triggered.connect(
             self.openTabSignalMapper.map)
-        self.openTabSignalMapper.setMapping(self.dW.toolbar.loadVfkAction, 0)
+        self.openTabSignalMapper.setMapping(self.dW.toolBar.loadVfkAction, 0)
         
         self.editFrame = edit_frame.EditFrame(
             self, self.dWName, self.iface, self.dW)
         self.addWidget(self.editFrame)
-        self.dW.toolbar.editAction.triggered.connect(
+        self.dW.toolBar.editAction.triggered.connect(
             self.openTabSignalMapper.map)
-        self.openTabSignalMapper.setMapping(self.dW.toolbar.editAction, 1)
+        self.openTabSignalMapper.setMapping(self.dW.toolBar.editAction, 1)
         
         self.checkAnalysisFrame = check_analysis_frame.CheckAnalysisFrame(
             self, self.dWName, self.iface, self.dW)
         self.addWidget(self.checkAnalysisFrame)
-        self.dW.toolbar.checkAction.triggered.connect(
+        self.dW.toolBar.checkAction.triggered.connect(
             self.openTabSignalMapper.map)
-        self.openTabSignalMapper.setMapping(self.dW.toolbar.checkAction, 2)
+        self.openTabSignalMapper.setMapping(self.dW.toolBar.checkAction, 2)
         
         self.openTabSignalMapper.mapped.connect(self.setCurrentIndex)
         
         self.currentChanged.connect(
-            self.dW.statusbar.change_text_statusbar)
+            self.dW.statusBar.change_text_statusbar)
 

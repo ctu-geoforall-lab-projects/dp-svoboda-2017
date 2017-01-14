@@ -113,8 +113,8 @@ class BpejWidget(QWidget):
             bpejField = self.bpejFieldComboBox.currentField()
             
             if bpejField == u'':
-                self.pW.text_statusbar.emit(
-                    u'Není vybrán sloupec ceny.', 7000)
+                self.pW.set_text_statusbar.emit(
+                    u'Není vybrán sloupec ceny.', 10)
                 return
             
             bpejField = bpejField[:10]
@@ -140,12 +140,12 @@ class BpejWidget(QWidget):
             layerCrs = layer.crs().authid()
             
             if bpejLayerCrs != layerCrs:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'Aktivní vrstva a vrstva BPEJ nemají stejný '
-                    u'souřadnicový systém.', 7000)
+                    u'souřadnicový systém.', 10)
                 return
             
-            self.pW.text_statusbar.emit(
+            self.pW.set_text_statusbar.emit(
                 u'Provádím analýzu - oceňování podle BPEJ.', 0)
             
             unionOutput = processing.runalg(
@@ -217,8 +217,8 @@ class BpejWidget(QWidget):
             if editing == True:
                 self.dW.stackedWidget.editFrame.toggleEditingAction.trigger()
             
-            self.pW.text_statusbar.emit(
-                u'Analýza oceňování podle BPEJ úspěšně dokončena.', 15000)
+            self.pW.set_text_statusbar.emit(
+                u'Analýza oceňování podle BPEJ úspěšně dokončena.', 20)
         except:
             currentAnalysisName = self.pW.checkAnalysisComboBox.currentText()
             

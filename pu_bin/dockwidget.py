@@ -31,15 +31,15 @@ from qgis.core import *
 import traceback
 import sys
 
-from statusbar import Statusbar
-from toolbar import Toolbar
+from statusbar import StatusBar
+from toolbar import ToolBar
 from stackedwidget import StackedWidget
 
 
 class DockWidget(QDockWidget):
     """The main widget of the PU Plugin."""
     
-    text_statusbar = pyqtSignal(str, int)
+    set_text_statusbar = pyqtSignal(str, int)
     
     def __init__(self, iface):
         """Constructor.
@@ -121,30 +121,30 @@ class DockWidget(QDockWidget):
         
         """
         
-        self.toolbar = Toolbar(self, dockWidgetName, self.iface)
-        self.mainGridLayout.addWidget(self.toolbar, 0, 0, 1, 1)
+        self.toolBar = ToolBar(self, dockWidgetName, self.iface)
+        self.mainGridLayout.addWidget(self.toolBar, 0, 0, 1, 1)
         
-        self.statusbar = Statusbar(self, dockWidgetName, self.iface)
-        self.mainGridLayout.addWidget(self.statusbar, 2, 0, 1, 1)
+        self.statusBar = StatusBar(self, dockWidgetName, self.iface)
+        self.mainGridLayout.addWidget(self.statusBar, 2, 0, 1, 1)
         
-        self.text_statusbar.connect(self.statusbar.set_text_statusbar)
+        self.set_text_statusbar.connect(self.statusBar.set_text_statusbar)
         
         self.stackedWidget = StackedWidget(self, dockWidgetName, self.iface)
         self.mainGridLayout.addWidget(self.stackedWidget, 1, 0, 1, 1)
     
-    def _display_error_messages(
+    def display_error_messages(
             self,
-            engLogMessage, czeLabelMessage=None, czeBarMessage=None,
-            duration=10):
+            engLogMessage, czeStatusBarMessage=None, czeMessageBarMessage=None,
+            duration=20):
         """Displays error messages.
         
-        Displays error messages in the Log Messages Tab, the statusLabel
+        Displays error messages in the Log Messages Tab, the statusBar
         and the Message Bar.
         
         Args:
             engLogMessage (str): A message in the 'PU Plugin' Log Messages Tab.
-            czeLabelMessage (str): A message in the statusLabel.
-            czeBarMessage (str): A message in the Message Bar.
+            czeStatusBarMessage (str): A message in the statusBar.
+            czeMessageBarMessage (str): A message in the Message Bar.
             duration (int): A duration of the message in the Message Bar
                 in seconds.
         
@@ -154,42 +154,43 @@ class DockWidget(QDockWidget):
         
         type, value, mytraceback = sys.exc_info()
         
-        if type is not None:
+        if type:
             tb = traceback.format_exc()
             engLogMessage = engLogMessage + '\n' + tb
         
         QgsMessageLog.logMessage(engLogMessage, pluginName)
         
-        if czeLabelMessage is not None:
-            self.text_statusbar.emit(czeLabelMessage, duration*1000)
+        if czeStatusBarMessage:
+            self.set_text_statusbar.emit(czeStatusBarMessage, duration)
         
-        if czeBarMessage is not None:
+        if czeMessageBarMessage:
             self.iface.messageBar().pushMessage(
-                pluginName, czeBarMessage , QgsMessageBar.WARNING, duration)
+                pluginName, czeMessageBarMessage ,
+                QgsMessageBar.WARNING, duration)
     
     class puError(Exception):
         """A custom exception."""
         
         def __init__(
                 self, dW,
-                engLogMessage, czeLabelMessage=None, czeBarMessage=None,
-                duration=10):
+                engLogMessage, czeStatusBarMessage=None, czeMessageBarMessage=None,
+                duration=20):
             """Constructor.
             
             Args:
                 dW (QWidget): A reference to the dock widget.
-                engLogMessage (str): A message in the 'puPlugin' Log Messages Panel.
-                czeLabelMessage (str): A message in the statusLabel.
-                czeBarMessage (str): A message in the Message Bar.
+                engLogMessage (str): A message in the 'PU Plugin' Log Messages Tab.
+                czeStatusBarMessage (str): A message in the statusBar.
+                czeMessageBarMessage (str): A message in the Message Bar.
                 duration (int): A duration of the message in the Message Bar
-                                 in seconds.
+                    in seconds.
                 
             """
             
             super(Exception, self).__init__(dW)
             
-            dW._display_error_messages(
-                engLogMessage, czeLabelMessage, czeBarMessage, duration)
+            dW.display_error_messages(
+                engLogMessage, czeStatusBarMessage, czeMessageBarMessage, duration)
     
     def _get_settings(self, key):
         """Returns value for settings key.
@@ -306,22 +307,26 @@ class DockWidget(QDockWidget):
         if layer == False:
             layer = self.iface.activeLayer()
         
+        duration = 10
+        
         if not layer:
             if sender:
-                sender.text_statusbar.emit(u'Žádná aktivní vrstva.', 7000)
+                sender.set_text_statusbar.emit(
+                    u'Žádná aktivní vrstva.', duration)
             successLayer = (False, layer)
             return successLayer
         
         if not layer.isValid():
             if sender:
-                sender.text_statusbar.emit(u'Aktivní vrstva není platná.', 7000)
+                sender.set_text_statusbar.emit(
+                    u'Aktivní vrstva není platná.', duration)
             successLayer = (False, layer)
             return successLayer
         
         if not layer.type() == 0:
             if sender:
-                sender.text_statusbar.emit(
-                    u'Aktivní vrstva není vektorová.', 7000)
+                sender.set_text_statusbar.emit(
+                    u'Aktivní vrstva není vektorová.', duration)
             successLayer = (False, layer)
             return successLayer
         
@@ -329,8 +334,8 @@ class DockWidget(QDockWidget):
         
         if not all(column in fieldNames for column in self.requiredColumnsPAR):
             if sender:
-                sender.text_statusbar.emit(
-                    u'Aktivní vrstva neobsahuje potřebné sloupce.', 7000)
+                sender.set_text_statusbar.emit(
+                    u'Aktivní vrstva neobsahuje potřebné sloupce.', duration)
             successLayer = (False, layer)
             return successLayer
         

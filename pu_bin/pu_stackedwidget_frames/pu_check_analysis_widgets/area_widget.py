@@ -92,11 +92,11 @@ class AreaWidget(QWidget):
             threshold = self.areaLineEdit.text()
             
             if not threshold:
-                self.pW.text_statusbar.emit(
-                    u'Není zadána mezní odchylka.', 7000)
+                self.pW.set_text_statusbar.emit(
+                    u'Není zadána mezní odchylka.', 10)
                 return
             
-            self.pW.text_statusbar.emit(
+            self.pW.set_text_statusbar.emit(
                 u'Provádím kontrolu - výměra nad mezní odchylkou.', 0)
             
             fieldID = layer.fieldNameIndex('PU_VYMERA_PARCELY')
@@ -137,18 +137,18 @@ class AreaWidget(QWidget):
             
             featuresCount = layer.selectedFeatureCount()
             
-            duration = 15000
+            duration = 10
             
             if featuresCount == 0:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'Mezní odchylka nebyla překročena u žádné parcely.',
                     duration)
             elif featuresCount == 1:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'Mezní odchylka byla překročena u {} parcely.'
                     .format(featuresCount), duration)
             elif 1 < featuresCount:
-                self.pW.text_statusbar.emit(
+                self.pW.set_text_statusbar.emit(
                     u'Mezní odchylka byla překročena u {} parcel.'
                     .format(featuresCount), duration)
         except:

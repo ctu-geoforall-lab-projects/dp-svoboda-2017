@@ -36,7 +36,7 @@ from load_thread import LoadThread
 class LoadVfkFrame(QFrame):
     """A frame which contains widgets for loading a VFK file."""
     
-    text_statusbar = pyqtSignal(str, int)
+    set_text_statusbar = pyqtSignal(str, int)
     text_browseVfkLineEdit = pyqtSignal(str)
     value_loadVfkProgressBar = pyqtSignal(int)
     
@@ -67,8 +67,8 @@ class LoadVfkFrame(QFrame):
         self.setFrameShape(QFrame.StyledPanel)
         self.setFrameShadow(QFrame.Raised)
         
-        self.text_statusbar.connect(self.dW.statusbar.set_text_statusbar)
-        self.text_statusbar.emit(u'Vyberte VFK soubor.', 0)
+        self.set_text_statusbar.connect(self.dW.statusBar.set_text_statusbar)
+        self.set_text_statusbar.emit(u'Vyberte VFK soubor.', 0)
         
         self.loadVfkGridLayout = QGridLayout(self)
         self.loadVfkGridLayout.setObjectName(u'loadVfkGridLayout')
@@ -165,7 +165,7 @@ class LoadVfkFrame(QFrame):
     def _loadVfkPushButton_clicked(self):
         """Starts loading the selected VFK file in a separate thread."""
         
-        self.text_statusbar.emit(
+        self.set_text_statusbar.emit(
             u'Načítám VFK soubor. Tento proces může chvíli trvat.', 0)
         
         self._enable_load_widgets(False)
@@ -207,13 +207,13 @@ class LoadVfkFrame(QFrame):
             self.loadVfkProgressBar.setMaximum(1)
             self.value_loadVfkProgressBar.emit(1)
             
-            self.text_statusbar.emit(u'Data byla úspešně načtena.', 0)
+            self.set_text_statusbar.emit(u'Data byla úspešně načtena.', 0)
         except self.dW.puError:
             QgsApplication.processEvents()
         except:
             QgsApplication.processEvents()
             
-            self.dW._display_error_messages(
+            self.dW.display_error_messages(
                 u'Error loading VFK file "{}".'.format(filePath),
                 u'Chyba při načítání VFK souboru.',
                 u'Chyba při načítání VFK souboru "{}".'.format(filePath))
@@ -244,7 +244,7 @@ class LoadVfkFrame(QFrame):
         dbInfo = QFileInfo(dbPath)
 
         if not dbInfo.isFile():
-            self.text_statusbar.emit(
+            self.set_text_statusbar.emit(
                 u'Importuji data do SQLite databáze.', 0)
             
             QgsApplication.registerOgrDrivers()
@@ -270,7 +270,7 @@ class LoadVfkFrame(QFrame):
             
             for i in xrange(layerCount):
                 self.value_loadVfkProgressBar.emit(i+1)
-                self.text_statusbar.emit(
+                self.set_text_statusbar.emit(
                     u'Načítám vrstvu {} ({}/{}).'
                     .format(layerNames[i], i+1, layerCount), 0)
             
@@ -366,6 +366,7 @@ class LoadVfkFrame(QFrame):
             raise self.dW.puError(
                 self.dW,
                 u'SQLITE database driver is not available.',
+                u'Databázový ovladač QSQLITE není dostupný.',
                 u'Databázový ovladač QSQLITE není dostupný.')
         
         connectionName = QUuid.createUuid().toString()
@@ -378,6 +379,7 @@ class LoadVfkFrame(QFrame):
             raise self.dW.puError(
                 self.dW,
                 u'Database connection failed.',
+                u'Nepodařilo se připojit k databázi.',
                 u'Nepodařilo se připojit k databázi.')
         
         sqlQuery = QSqlQuery(db)
@@ -464,7 +466,8 @@ class LoadVfkFrame(QFrame):
         
         """
         
-        self.text_statusbar.emit(u'Přidávám vrstvu {}.'.format(vfkLayerCode), 0)
+        self.set_text_statusbar.emit(
+            u'Přidávám vrstvu {}.'.format(vfkLayerCode), 0)
         
         blacklistedDriver = ogr.GetDriverByName(vfkDriverName)
         blacklistedDriver.Deregister()
