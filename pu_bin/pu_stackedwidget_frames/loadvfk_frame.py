@@ -87,13 +87,13 @@ class LoadVfkFrame(QFrame):
         self.browseVfkLineEdit.setObjectName(u'browseVfkLineEdit')
         self.text_browseVfkLineEdit.connect(self._set_text_browseVfkLineEdit)
         self.browseVfkLineEdit.textChanged.connect(
-            self._browseVfkLineEdit_textChanged)
+            self._check_vfk_file_path)
         self.loadVfkGridLayout.addWidget(self.browseVfkLineEdit, 0, 1, 1, 1)
         
         self.browseVfkPushButton = QPushButton(self)
         self.browseVfkPushButton.setObjectName(u'browseVfkPushButton')
         self.browseVfkPushButton.clicked.connect(
-            self._browseVfkPushButton_clicked)
+            self._browse_vfk_files)
         self.browseVfkPushButton.setText(u'Procházet')
         self.loadVfkGridLayout.addWidget(self.browseVfkPushButton, 0, 2, 1, 1)
         
@@ -109,7 +109,7 @@ class LoadVfkFrame(QFrame):
         
         self.loadVfkPushButton = QPushButton(self)
         self.loadVfkPushButton.setObjectName(u'loadVfkPushButton')
-        self.loadVfkPushButton.clicked.connect(self._loadVfkPushButton_clicked)
+        self.loadVfkPushButton.clicked.connect(self._start_loading_vfk_layer)
         self.loadVfkPushButton.setText(u'Načíst')
         self.loadVfkGridLayout.addWidget(self.loadVfkPushButton, 2, 2, 1, 1)
         self.loadVfkPushButton.setDisabled(True)
@@ -134,7 +134,7 @@ class LoadVfkFrame(QFrame):
         
         self.loadVfkProgressBar.setValue(value)
     
-    def _browseVfkPushButton_clicked(self):
+    def _browse_vfk_files(self):
         """Opens a file dialog and filters VFK files."""
         
         title = u'Vyberte VFK soubor.'
@@ -145,7 +145,7 @@ class LoadVfkFrame(QFrame):
         if filePath:
             self.text_browseVfkLineEdit.emit(filePath)
     
-    def _browseVfkLineEdit_textChanged(self):
+    def _check_vfk_file_path(self):
         """Checks if text in the browseVfkLineEdit is a path to a VFK file.
         
         If so, the loadVfkPushButton is enabled,
@@ -162,7 +162,7 @@ class LoadVfkFrame(QFrame):
         else:
             self.loadVfkPushButton.setEnabled(False)
     
-    def _loadVfkPushButton_clicked(self):
+    def _start_loading_vfk_layer(self):
         """Starts loading the selected VFK file in a separate thread."""
         
         self.set_text_statusbar.emit(

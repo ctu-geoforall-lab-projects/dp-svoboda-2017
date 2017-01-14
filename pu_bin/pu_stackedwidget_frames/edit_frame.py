@@ -206,13 +206,26 @@ class EditFrame(QFrame):
         self.setCategoryPushButton.setObjectName(u'setCategoryPushButton')
         self.setCategoryPushButton.setText(u'Zařadit')
         self.setCategoryPushButton.clicked.connect(
-            self._run_setting_pu_category)
+            self._start_setting_pu_category)
         self.editGridLayout.addWidget(self.setCategoryPushButton, 4, 2, 1, 1)
     
     def _set_icon_size(self):
         """Sets editToolBar icon size according to current QGIS settings."""
         
         self.editToolBar.setIconSize(self.iface.mainWindow().iconSize())
+    
+    
+    def _set_categoryValue(self):
+        """Sets categoryValue according to the current index.
+        
+        categoryValue - description:
+            1 - v obvodu - řešené
+            2 - v obvodu - neřešené
+            3 - mimo obvod
+        
+        """
+        
+        self.categoryValue = self.categoryComboBox.currentIndex() + 1
     
     def _create_perimeter(self):
         """Creates a perimeter layer from the active layer."""
@@ -233,7 +246,7 @@ class EditFrame(QFrame):
             if filePath:
                 selectedFeaturesIDs = layer.selectedFeaturesIds()
                 
-                self.dW.select_features_by_field_and_value(
+                self.dW.select_features_by_field_value(
                     layer, self.categoryName, 1)
                 
                 featuresCount = layer.selectedFeatureCount()
@@ -304,21 +317,9 @@ class EditFrame(QFrame):
             self.dW.display_error_messages(
                 u'Error creating perimeter.',
                 u'Chyba při vytváření obvodu.')
-    
-    def _set_categoryValue(self):
-        """Sets categoryValue according to the current index.
         
-        puCategory:
-            1 - v obvodu - řešené
-            2 - v obvodu - neřešené
-            3 - mimo obvod
-        
-        """
-        
-        self.categoryValue = self.categoryComboBox.currentIndex() + 1
-        
-    def _run_setting_pu_category(self):
-        """Calls method for setting a categoryValue to categoryName column."""
+    def _start_setting_pu_category(self):
+        """Starts setting PU category in a separate thread.."""
         
         succes, layer = self.dW.check_layer(self)
         
@@ -326,11 +327,11 @@ class EditFrame(QFrame):
             return
         
         self.executeThread = Executehread(layer)
-        self.executeThread.work.connect(self._set_pu_category)
+        self.executeThread.work.connect(self._run_setting_pu_category)
         self.executeThread.start()
     
-    def _set_pu_category(self, layer):
-        """Sets a categoryValue to categoryName column.
+    def _run_setting_pu_category(self, layer):
+        """Calls methods for setting PU category.
         
         When selectedRadioButton is checked it sets a categoryValue
         to categoryName column for selected features.
@@ -510,15 +511,17 @@ class EditFrame(QFrame):
         
         features = layer.selectedFeaturesIterator()
         
+        layer.startEditing()
+        
         self.dW.set_field_value_for_features(
-            layer, features, self.categoryName, 1)
+            layer, features, self.categoryName, 1, False)
         
         layer.invertSelection()
         
         features = layer.selectedFeaturesIterator()
         
         self.dW.set_field_value_for_features(
-            layer, features, self.categoryName, 2)
+            layer, features, self.categoryName, 2, False)
         
         deleteHolesPerimeterPath = processing.runalg(
             'qgis:deleteholes', perimeterLayer, None)['OUTPUT']
@@ -535,7 +538,9 @@ class EditFrame(QFrame):
         features = layer.selectedFeaturesIterator()
         
         self.dW.set_field_value_for_features(
-            layer, features, self.categoryName, 3)
+            layer, features, self.categoryName, 3, False)
+        
+        layer.commitChanges()
         
         layer.selectByIds(selectedFeaturesIDs)
         
@@ -551,7 +556,7 @@ class EditFrame(QFrame):
             if not succes == True:
                 return
             
-            self.dW.select_features_by_field_and_value(
+            self.dW.select_features_by_field_value(
                 layer, self.categoryName, self.categoryValue)
             
             currentCategory = self.categoryComboBox.currentText()

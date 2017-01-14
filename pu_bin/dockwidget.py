@@ -254,7 +254,8 @@ class DockWidget(QDockWidget):
         
         return filePath
     
-    def set_field_value_for_features(self, layer, features, field, value):
+    def set_field_value_for_features(
+            self, layer, features, field, value, startCommit=True):
         """Sets field value for features.
         
         Args:
@@ -267,7 +268,9 @@ class DockWidget(QDockWidget):
         
         fieldID = layer.fieldNameIndex(field)
         
-        layer.startEditing()
+        if startCommit:
+            layer.startEditing()
+        
         layer.updateFields()
         
         for feature in features:
@@ -275,7 +278,8 @@ class DockWidget(QDockWidget):
                 featureID = feature.id()
                 layer.changeAttributeValue(featureID, fieldID, value)
         
-        layer.commitChanges()
+        if startCommit:
+            layer.commitChanges()
         
         QgsApplication.processEvents()
     
@@ -355,7 +359,7 @@ class DockWidget(QDockWidget):
         else:
             return False
     
-    def select_features_by_field_and_value(self, layer, field, value):
+    def select_features_by_field_value(self, layer, field, value):
         """Selects features in given layer by the field value.
         
         Args:
@@ -455,7 +459,7 @@ class DockWidget(QDockWidget):
             
             for key, value in rowidGroupedFeatures.iteritems():
                 if value > 1:
-                    self.select_features_by_field_and_value(
+                    self.select_features_by_field_value(
                         layer, rowidColumn, key)
                     
                     oldFeatures = []
