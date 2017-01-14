@@ -142,6 +142,8 @@ class EditFrame(QFrame):
             u'perimeterMapLayerComboBox')
         self.perimeterMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PolygonLayer)
+        self.perimeterMapLayerComboBox.layerChanged.connect(
+            self._connect_perimeter_map_layer_combo_box)
         self.editGridLayout.addWidget(
             self.perimeterMapLayerComboBox, 1, 1, 1, 1)
         
@@ -226,6 +228,14 @@ class EditFrame(QFrame):
         """
         
         self.categoryValue = self.categoryComboBox.currentIndex() + 1
+    
+    def _connect_perimeter_map_layer_combo_box(self):
+        """Connects to perimeterMapLayerComboBox in perimeterWidget."""
+        
+        layer = self.perimeterMapLayerComboBox.currentLayer()
+        
+        self.dW.stackedWidget.checkAnalysisFrame.\
+            perimeterWidget.perimeterMapLayerComboBox.setLayer(layer)
     
     def _create_perimeter(self):
         """Creates a perimeter layer from the active layer."""

@@ -78,6 +78,8 @@ class PerimeterWidget(QWidget):
             u'perimeterMapLayerComboBox')
         self.perimeterMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PolygonLayer)
+        self.perimeterMapLayerComboBox.layerChanged.connect(
+            self._connect_perimeter_map_layer_combo_box)
         self.perimeterGridLayout.addWidget(
             self.perimeterMapLayerComboBox, 0, 1, 1, 1)
         
@@ -145,4 +147,12 @@ class PerimeterWidget(QWidget):
                 self.dW,
                 u'Error executing "{}".'.format(currentCheckName),
                 u'Chyba při provádění "{}".'.format(currentCheckName))
+    
+    def _connect_perimeter_map_layer_combo_box(self):
+        """Connects to perimeterMapLayerComboBox in editFrame."""
+        
+        layer = self.perimeterMapLayerComboBox.currentLayer()
+        
+        self.dW.stackedWidget.editFrame.\
+            perimeterMapLayerComboBox.setLayer(layer)
 
