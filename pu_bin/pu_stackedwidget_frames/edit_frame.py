@@ -351,7 +351,7 @@ class EditFrame(QFrame):
             layerCrs = layer.crs().authid()
             
             if perimeterLayerCrs != layerCrs:
-                self.pW.set_text_statusbar.emit(
+                self.set_text_statusbar.emit(
                     u'Aktivní vrstva a vrstva obvodu nemají stejný '
                     u'souřadnicový systém.', 10)
                 return
@@ -413,63 +413,68 @@ class EditFrame(QFrame):
         
         layer.selectByIds(selectedFeaturesIDs)
         
-        if tempCategoryValue == 1:
-            selectedFeatures = layer.selectedFeaturesIterator()
+        selectedFeatures = layer.selectedFeaturesIterator()
+        
+        perimeterLayerPath = perimeterLayer.source()
+        perimeterLayerName = perimeterLayer.name()
+        perimeterLayerFeatureCount = perimeterLayer.featureCount()
+        
+        tempPerimeterLayerName = perimeterLayerName + u'.pu.temp'
+        
+        if perimeterLayerFeatureCount == 0 or tempCategoryValue in (2, 3):
+            tempPerimeterLayer = self._create_temp_polygon_layer(
+                layer, tempPerimeterLayerName)
             
-            perimeterLayerPath = perimeterLayer.source()
-            perimeterLayerName = perimeterLayer.name()
-            perimeterLayerFeatureCount = perimeterLayer.featureCount()
+            QgsMapLayerRegistry.instance().addMapLayer(tempPerimeterLayer)
+        else:
+            tempPerimeterPath = processing.runalg(
+                'qgis:dissolve', perimeterLayer, True, None, None)['OUTPUT']
             
-            tempPerimeterLayerName = perimeterLayerName + u'.pu.temp'
+            tempPerimeterLayer = QgsVectorLayer(
+                tempPerimeterPath, tempPerimeterLayerName, 'ogr')
+        
+        QgsApplication.processEvents()
+        
+        tempPerimeterLayer.startEditing()
+        tempPerimeterLayer.updateFields()
+        
+        for feature in selectedFeatures:
+            copiedFeature = QgsFeature(tempPerimeterLayer.pendingFields())
+            copiedFeature.setGeometry(feature.geometry())
+            tempPerimeterLayer.addFeature(copiedFeature)
+        
+        tempPerimeterLayer.commitChanges()
+        
+        perimeterFileInfo = QFileInfo(perimeterLayerPath)
+        
+        if u'pu.shp' not in perimeterFileInfo.completeSuffix():
+            newPerimeterPath = QDir(perimeterFileInfo.absolutePath()).\
+                filePath(perimeterFileInfo.completeBaseName() + u'.pu.shp')
+            newPerimeterLayerName = perimeterLayerName + u'.pu'
             
-            if perimeterLayerFeatureCount == 0:
-                perimeterLayerCrs = perimeterLayer.crs().authid()
-                
-                tempPerimeterLayer = QgsVectorLayer(
-                    'Polygon?crs=' + perimeterLayerCrs,
-                    tempPerimeterLayerName,
-                    'memory')
-                
-                QgsMapLayerRegistry.instance().addMapLayer(tempPerimeterLayer)
-            else:
-                tempPerimeterPath = processing.runalg(
-                    'qgis:dissolve', perimeterLayer, True, None, None)['OUTPUT']
-                
-                tempPerimeterLayer = QgsVectorLayer(
-                    tempPerimeterPath, tempPerimeterLayerName, 'ogr')
+            loadedLayer = False
+        else:
+            newPerimeterPath = perimeterFileInfo.absoluteFilePath()
+            newPerimeterLayerName = perimeterLayerName
             
-            QgsApplication.processEvents()
-            
-            tempPerimeterLayer.startEditing()
-            tempPerimeterLayer.updateFields()
-            
-            for feature in selectedFeatures:
-                copiedFeature = QgsFeature(tempPerimeterLayer.pendingFields())
-                copiedFeature.setGeometry(feature.geometry())
-                tempPerimeterLayer.addFeature(copiedFeature)
-            
-            tempPerimeterLayer.commitChanges()
-            
-            perimeterFileInfo = QFileInfo(perimeterLayerPath)
-            
-            if u'pu.shp' not in perimeterFileInfo.completeSuffix():
-                newPerimeterPath = QDir(perimeterFileInfo.absolutePath()).\
-                    filePath(perimeterFileInfo.completeBaseName() + u'.pu.shp')
-                newPerimeterLayerName = perimeterLayerName + u'.pu'
-            else:
-                newPerimeterPath = perimeterFileInfo.absoluteFilePath()
-                newPerimeterLayerName = perimeterLayerName
-                
-                QgsMapLayerRegistry.instance().removeMapLayer(perimeterLayer)
-            
+            loadedLayer = True
+        
+        if tempCategoryValue in (2, 3):
+            processing.runalg(
+                'qgis:difference',
+                perimeterLayer, tempPerimeterLayer, False, newPerimeterPath)
+        else:
             processing.runalg(
                 'qgis:dissolve',
                 tempPerimeterLayer, True, None, newPerimeterPath)
-            
-            QgsApplication.processEvents()
-            
-            QgsMapLayerRegistry.instance().removeMapLayer(tempPerimeterLayer)
-            
+        
+        QgsApplication.processEvents()
+        
+        QgsMapLayerRegistry.instance().removeMapLayer(tempPerimeterLayer)
+        
+        if loadedLayer:
+            self.iface.actionDraw().trigger()
+        else:
             newPerimeterLayer = QgsVectorLayer(
                 newPerimeterPath, newPerimeterLayerName, 'ogr')
             
@@ -477,10 +482,10 @@ class EditFrame(QFrame):
                 style = ':/perimeter.qml'
                 newPerimeterLayer.loadNamedStyle(style)
                 QgsMapLayerRegistry.instance().addMapLayer(newPerimeterLayer)
-                
-                self.perimeterMapLayerComboBox.setLayer(newPerimeterLayer)
-        
-                self.iface.setActiveLayer(layer)
+            
+            self.perimeterMapLayerComboBox.setLayer(newPerimeterLayer)
+    
+        self.iface.setActiveLayer(layer)
         
         if featuresCount == 1:
             self.set_text_statusbar.emit(
@@ -490,6 +495,29 @@ class EditFrame(QFrame):
             self.set_text_statusbar.emit(
                 u'Vybrané parcely byly zařazeny do kategorie "{}".'
                 .format(currentCategory), 20)
+    
+    def _create_temp_polygon_layer(self, layer, tempPolygonLayerName):
+        """Creates a temporary polygon layer.
+        
+        Creates a temporary polygon layer with the same CRS as the input layer.
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the input layer.
+            tempPolygonLayerName (str): A name of the temporary layer.
+        
+        Returns:
+            QgsVectorLayer: A reference to the temporary polygon layer.
+        
+        """
+        
+        layerCrs = layer.crs().authid()
+        
+        tempPolygonLayer = QgsVectorLayer(
+            'Polygon?crs=' + layerCrs,
+            tempPolygonLayerName,
+            'memory')
+        
+        return tempPolygonLayer
     
     def _set_pu_category_by_perimeter(self, layer, perimeterLayer):
         """Sets a categoryValue to categoryName column for all features
