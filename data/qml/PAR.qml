@@ -336,7 +336,7 @@
     <property key="labeling/distMapUnitScale" value="0,0,0,0,0,0"/>
     <property key="labeling/drawLabels" value="true"/>
     <property key="labeling/enabled" value="true"/>
-    <property key="labeling/fieldName" value="CASE WHEN (length(&quot;PODDELENI_CISLA_PAR&quot; ) = 0  OR &quot;PODDELENI_CISLA_PAR&quot; = '0' OR &quot;PODDELENI_CISLA_PAR&quot; IS NULL) THEN  KMENOVE_CISLO_PAR ELSE &quot;KMENOVE_CISLO_PAR&quot;  || '/' || &quot;PODDELENI_CISLA_PAR&quot; END"/>
+    <property key="labeling/fieldName" value="CASE WHEN (length(&quot;PU_PODDELENI_CISLA_PAR&quot; ) = 0 OR &quot;PU_PODDELENI_CISLA_PAR&quot; = '0' OR &quot;PU_PODDELENI_CISLA_PAR&quot; IS NULL) THEN &quot;PU_KMENOVE_CISLO_PAR&quot; ELSE &quot;PU_KMENOVE_CISLO_PAR&quot; || '/' || &quot;PU_PODDELENI_CISLA_PAR&quot; END"/>
     <property key="labeling/fitInPolygonOnly" value="false"/>
     <property key="labeling/fontCapitals" value="0"/>
     <property key="labeling/fontFamily" value="Monospace"/>
