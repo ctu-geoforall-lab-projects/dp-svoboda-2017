@@ -21,8 +21,8 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import (QDockWidget, QWidget, QGridLayout, QStatusBar,
-                         QFileDialog)
+from PyQt4.QtGui import (QDockWidget, QWidget, QSizePolicy, QGridLayout,
+                         QStatusBar, QFileDialog)
 from PyQt4.QtCore import pyqtSignal, QSettings
 
 from qgis.gui import QgsMessageBar
@@ -100,6 +100,7 @@ class DockWidget(QDockWidget):
             self._disconnect_connect_ensure_unique_field_values)
         
         self.setObjectName(u'dockWidget')
+        self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         
         self.mainWidget = QWidget(self)
         self.mainWidget.setObjectName(u'mainWidget')
