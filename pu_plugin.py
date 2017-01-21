@@ -46,7 +46,7 @@ class puPlugin(object):
         
         self.name = u'PU Plugin'
 
-        self.plugin_dir = os.path.dirname(__file__)
+        self.pluginDir = os.path.dirname(__file__)
     
     def initGui(self):
         """Initializes GUI."""
@@ -61,7 +61,7 @@ class puPlugin(object):
         self.iface.addToolBarIcon(self.puAction)
         self.iface.addPluginToMenu(self.name, self.puAction)
         
-        self.dockWidget = dockwidget.DockWidget(self.iface)
+        self.dockWidget = dockwidget.DockWidget(self.iface, self.pluginDir)
         
         self.iface.addDockWidget(Qt.TopDockWidgetArea, self.dockWidget)
     

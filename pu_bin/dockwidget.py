@@ -41,15 +41,17 @@ class DockWidget(QDockWidget):
     
     set_text_statusbar = pyqtSignal(str, int)
     
-    def __init__(self, iface):
+    def __init__(self, iface, pluginDir):
         """Constructor.
         
         Args:
             iface (QgisInterface): A reference to the QgisInterface.
+            pluginDir (str): A PU Plugin directory.
         
         """
         
         self.iface = iface
+        self.pluginDir = pluginDir
         
         super(DockWidget, self).__init__()
         

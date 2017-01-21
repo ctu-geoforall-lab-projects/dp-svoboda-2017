@@ -383,8 +383,11 @@ class LoadVfkFrame(QFrame):
                 u'Nepodařilo se připojit k databázi.')
         
         sqlQuery = QSqlQuery(db)
+        
+        sqlDir = self.dW.pluginDir + QDir.separator() + \
+            u'data' + QDir.separator() + u'sql' + QDir.separator()
                 
-        checkGcSrsFile = QFile(':/check_gc_srs.sql', self)
+        checkGcSrsFile = QFile(sqlDir + u'check_gc_srs.sql', self)
         checkGcSrsFile.open(QFile.ReadOnly|QFile.Text)
         
         query = checkGcSrsFile.readData(200)
@@ -401,7 +404,8 @@ class LoadVfkFrame(QFrame):
             checkGcSrsSize += 1
         
         if checkGcSrsSize < 2:
-            createFillGcSrsFile = QFile(':/create_fill_gc_srs.sql', self)
+            createFillGcSrsFile = QFile(
+                sqlDir + u'create_fill_gc_srs.sql', self)
             createFillGcSrsFile.open(QFile.ReadOnly|QFile.Text)
         
             createFillGcSrsQueries = createFillGcSrsFile.readData(2000)\
@@ -414,7 +418,8 @@ class LoadVfkFrame(QFrame):
                 
                 QgsApplication.processEvents()
         
-        checkPuColumnsPARFile = QFile(':/check_pu_columns_PAR.sql', self)
+        checkPuColumnsPARFile = QFile(
+            sqlDir + u'check_pu_columns_PAR.sql', self)
         checkPuColumnsPARFile.open(QFile.ReadOnly|QFile.Text)
         
         query = checkPuColumnsPARFile.readData(50)
@@ -433,7 +438,7 @@ class LoadVfkFrame(QFrame):
             columnsPAR.append(name)
         
         if not all(column in columnsPAR for column in self.dW.allPuColumnsPAR):
-            addPuColumnPARFile = QFile(':/add_pu_columns_PAR.sql', self)
+            addPuColumnPARFile = QFile(sqlDir + u'add_pu_columns_PAR.sql', self)
             addPuColumnPARFile.open(QFile.ReadOnly|QFile.Text)
             
             addPuColumnsPARQueries = addPuColumnPARFile.readData(2000)\
