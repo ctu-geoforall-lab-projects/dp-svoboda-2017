@@ -164,9 +164,9 @@ class EditFrame(QFrame):
         
         self.categoryComboBox = QComboBox(self)
         self.categoryComboBox.setObjectName(u'categoryComboBox')
-        self.categoryComboBox.addItem(u'v obvodu - řešené')
-        self.categoryComboBox.addItem(u'v obvodu - neřešené')
         self.categoryComboBox.addItem(u'mimo obvod')
+        self.categoryComboBox.addItem(u'v obvodu - neřešené')
+        self.categoryComboBox.addItem(u'v obvodu - řešené')
         self.categoryComboBox.currentIndexChanged.connect(
             self._set_categoryValue)
         self.editGridLayout.addWidget(self.categoryComboBox, 2, 1, 1, 1)
@@ -221,13 +221,13 @@ class EditFrame(QFrame):
         """Sets categoryValue according to the current index.
         
         categoryValue - description:
-            1 - v obvodu - řešené
-            2 - v obvodu - neřešené
-            3 - mimo obvod
+            0 - mimo obvod
+            1 - v obvodu - neřešené
+            2 - v obvodu - řešené
         
         """
         
-        self.categoryValue = self.categoryComboBox.currentIndex() + 1
+        self.categoryValue = self.categoryComboBox.currentIndex()
     
     def _connect_perimeter_map_layer_combo_box(self):
         """Connects to perimeterMapLayerComboBox in perimeterWidget."""

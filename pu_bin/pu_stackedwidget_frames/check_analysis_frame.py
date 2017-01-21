@@ -213,10 +213,10 @@ class CheckAnalysisFrame(QFrame):
     def _deselect_features_by_puCategory(self, layer, features, puCategory):
         """Deselects features by given puCategory.
         
-        puCategory:
-            1 - v obvodu - řešené
-            2 - v obvodu - neřešené
-            3 - mimo obvod
+        categoryValue - description:
+            0 - mimo obvod
+            1 - v obvodu - neřešené
+            2 - v obvodu - řešené
         
         Args:
             layer (QgsVectorLayer): A reference to the active layer.
