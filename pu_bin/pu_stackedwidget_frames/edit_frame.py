@@ -254,13 +254,6 @@ class EditFrame(QFrame):
             filePath = self.dW.open_file_dialog(title, filters, False)
             
             if filePath:
-                selectedFeaturesIDs = layer.selectedFeaturesIds()
-                
-                self.dW.select_features_by_field_value(
-                    layer, self.categoryName, 1)
-                
-                featuresCount = layer.selectedFeatureCount()
-                
                 fileInfo = QFileInfo(filePath)
                 
                 if not fileInfo.suffix() == u'shp':
@@ -271,43 +264,35 @@ class EditFrame(QFrame):
                     filePath = QDir(fileInfo.absolutePath()).\
                         filePath(fileInfo.completeBaseName() + u'.pu.shp')
                 
-                perimeterPath = processing.runalg(
+                fileInfo = QFileInfo(filePath)
+                
+                tempPerimeterName = fileInfo.completeBaseName() + u'.temp'
+                
+                perimeterName = fileInfo.completeBaseName()
+                
+                selectedFeaturesIDs = layer.selectedFeaturesIds()
+                
+                layer.removeSelection()
+                
+                tempPerimeterPath = processing.runalg(
                     'qgis:dissolve',
-                    layer, False, self.categoryName, filePath)['OUTPUT']
+                    layer, False, self.categoryName, None)['OUTPUT']
+                    
+                tempPerimeterLayer = QgsVectorLayer(
+                    tempPerimeterPath, tempPerimeterName, 'ogr')
+                
+                QgsApplication.processEvents()
                 
                 layer.selectByIds(selectedFeaturesIDs)
                 
-                fileInfo = QFileInfo(filePath)
-                
-                perimeterName = fileInfo.completeBaseName()
+                perimeterPath = processing.runalg(
+                    'qgis:multiparttosingleparts',
+                    tempPerimeterLayer, filePath)['OUTPUT']
                 
                 perimeterLayer = QgsVectorLayer(
                     perimeterPath, perimeterName, 'ogr')
                 
-                if featuresCount == 0:
-                    perimeterLayer.startEditing()
-                    
-                    features = perimeterLayer.getFeatures()
-                    featuresID = [feature.id() for feature in features]
-                    perimeterLayer.deleteFeatures(featuresID)
-                    
-                    perimeterLayer.commitChanges()
-                
-                perimeterLayer.startEditing()
-                
-                fields = layer.pendingFields()
-                
-                perimeterLayerAttributesIDs = []
-                
-                for i in perimeterLayer.pendingAllAttributesList():
-                    if fields[i].name() == u'rowid':
-                        continue
-                    perimeterLayerAttributesIDs.append(i)
-                
-                perimeterLayer.deleteAttributes(perimeterLayerAttributesIDs)
-                
-                perimeterLayer.updateFields()
-                perimeterLayer.commitChanges()
+                QgsApplication.processEvents()
                 
                 if perimeterLayer.isValid():
                     style = ':/perimeter.qml'
@@ -315,6 +300,27 @@ class EditFrame(QFrame):
                     QgsMapLayerRegistry.instance().addMapLayer(perimeterLayer)
                     
                     self.perimeterMapLayerComboBox.setLayer(perimeterLayer)
+                    
+                    newCategoryName = self.categoryName[:10]
+                    
+                    categoryID = perimeterLayer.fieldNameIndex(newCategoryName)
+                    
+                    perimeterLayer.addAttributeAlias(
+                        categoryID, self.categoryName)
+                    
+                    fields = perimeterLayer.pendingFields()
+                    
+                    tableConfig = perimeterLayer.attributeTableConfig()
+                    tableConfig.update(fields)
+                    
+                    columns = tableConfig.columns()
+                    
+                    for column in columns:
+                        if not column.name == newCategoryName:
+                            column.hidden = True
+                    
+                    tableConfig.setColumns(columns)
+                    perimeterLayer.setAttributeTableConfig(tableConfig)
                 
                 self.iface.setActiveLayer(layer)
                 
