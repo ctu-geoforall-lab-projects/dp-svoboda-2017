@@ -1,7 +1,124 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.18.2" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.18.3" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
     <edittype widgetv2type="TextEdit" name="rowid">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="ID">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="STAV_DAT">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="DATUM_VZNI">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="DATUM_ZANI">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PRIZNAK_KO">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="RIZENI_ID_">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="RIZENI_I_1">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PKN_ID">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PAR_TYPE">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="KATUZE_KOD">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="KATUZE_K_1">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="DRUH_CISLO">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="KMENOVE_CI">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="ZDPAZE_KOD">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PODDELENI_">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="DIL_PARCEL">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="MAPLIS_KOD">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="ZPURVY_KOD">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="DRUPOZ_KOD">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="ZPVYPA_KOD">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="TYP_PARCEL">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="VYMERA_PAR">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="CENA_NEMOV">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="DEFINICNI_">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="TEL_ID">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PAR_ID">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="BUD_ID">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="IDENT_BUD">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="SOUCASTI">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PS_ID">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="IDENT_PS">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="ogr_fid">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PU_ID">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PU_KMENOVE">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PU_PODDELE">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PU_VYMERA_">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PU_KATEGOR">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PU_VZDALEN">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PU_CENA">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
   </edittypes>
@@ -10,7 +127,7 @@
       <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="color" v="90,90,90,255"/>
+          <prop k="color" v="90,90,90,0"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -19,7 +136,7 @@
           <prop k="outline_style" v="solid"/>
           <prop k="outline_width" v="0.5"/>
           <prop k="outline_width_unit" v="MM"/>
-          <prop k="style" v="dense7"/>
+          <prop k="style" v="solid"/>
         </layer>
       </symbol>
     </symbols>
@@ -38,23 +155,23 @@
     <property key="labeling/bufferColorB" value="255"/>
     <property key="labeling/bufferColorG" value="255"/>
     <property key="labeling/bufferColorR" value="255"/>
-    <property key="labeling/bufferDraw" value="false"/>
+    <property key="labeling/bufferDraw" value="true"/>
     <property key="labeling/bufferJoinStyle" value="128"/>
     <property key="labeling/bufferNoFill" value="false"/>
     <property key="labeling/bufferSize" value="1"/>
     <property key="labeling/bufferSizeInMapUnits" value="false"/>
     <property key="labeling/bufferSizeMapUnitScale" value="0,0,0,0,0,0"/>
     <property key="labeling/bufferTransp" value="0"/>
-    <property key="labeling/centroidInside" value="false"/>
+    <property key="labeling/centroidInside" value="true"/>
     <property key="labeling/centroidWhole" value="false"/>
     <property key="labeling/decimals" value="3"/>
     <property key="labeling/displayAll" value="false"/>
     <property key="labeling/dist" value="0"/>
     <property key="labeling/distInMapUnits" value="false"/>
     <property key="labeling/distMapUnitScale" value="0,0,0,0,0,0"/>
-    <property key="labeling/drawLabels" value="false"/>
-    <property key="labeling/enabled" value="false"/>
-    <property key="labeling/fieldName" value=""/>
+    <property key="labeling/drawLabels" value="true"/>
+    <property key="labeling/enabled" value="true"/>
+    <property key="labeling/fieldName" value="PU_KATEGOR"/>
     <property key="labeling/fitInPolygonOnly" value="false"/>
     <property key="labeling/fontCapitals" value="0"/>
     <property key="labeling/fontFamily" value="Ubuntu"/>
@@ -63,7 +180,7 @@
     <property key="labeling/fontLimitPixelSize" value="false"/>
     <property key="labeling/fontMaxPixelSize" value="10000"/>
     <property key="labeling/fontMinPixelSize" value="3"/>
-    <property key="labeling/fontSize" value="11"/>
+    <property key="labeling/fontSize" value="10.5"/>
     <property key="labeling/fontSizeInMapUnits" value="false"/>
     <property key="labeling/fontSizeMapUnitScale" value="0,0,0,0,0,0"/>
     <property key="labeling/fontStrikeout" value="false"/>
@@ -71,7 +188,7 @@
     <property key="labeling/fontWeight" value="63"/>
     <property key="labeling/fontWordSpacing" value="0"/>
     <property key="labeling/formatNumbers" value="false"/>
-    <property key="labeling/isExpression" value="true"/>
+    <property key="labeling/isExpression" value="false"/>
     <property key="labeling/labelOffsetInMapUnits" value="true"/>
     <property key="labeling/labelOffsetMapUnitScale" value="0,0,0,0,0,0"/>
     <property key="labeling/labelPerPart" value="false"/>
@@ -157,9 +274,9 @@
     <property key="labeling/shapeType" value="0"/>
     <property key="labeling/substitutions" value="&lt;substitutions/>"/>
     <property key="labeling/textColorA" value="255"/>
-    <property key="labeling/textColorB" value="0"/>
-    <property key="labeling/textColorG" value="0"/>
-    <property key="labeling/textColorR" value="0"/>
+    <property key="labeling/textColorB" value="23"/>
+    <property key="labeling/textColorG" value="4"/>
+    <property key="labeling/textColorR" value="229"/>
     <property key="labeling/textTransp" value="0"/>
     <property key="labeling/upsidedownLabels" value="0"/>
     <property key="labeling/useSubstitutions" value="false"/>
@@ -227,6 +344,45 @@
   <annotationform>.</annotationform>
   <aliases>
     <alias field="rowid" index="0" name=""/>
+    <alias field="ID" index="1" name=""/>
+    <alias field="STAV_DAT" index="2" name=""/>
+    <alias field="DATUM_VZNI" index="3" name=""/>
+    <alias field="DATUM_ZANI" index="4" name=""/>
+    <alias field="PRIZNAK_KO" index="5" name=""/>
+    <alias field="RIZENI_ID_" index="6" name=""/>
+    <alias field="RIZENI_I_1" index="7" name=""/>
+    <alias field="PKN_ID" index="8" name=""/>
+    <alias field="PAR_TYPE" index="9" name=""/>
+    <alias field="KATUZE_KOD" index="10" name=""/>
+    <alias field="KATUZE_K_1" index="11" name=""/>
+    <alias field="DRUH_CISLO" index="12" name=""/>
+    <alias field="KMENOVE_CI" index="13" name=""/>
+    <alias field="ZDPAZE_KOD" index="14" name=""/>
+    <alias field="PODDELENI_" index="15" name=""/>
+    <alias field="DIL_PARCEL" index="16" name=""/>
+    <alias field="MAPLIS_KOD" index="17" name=""/>
+    <alias field="ZPURVY_KOD" index="18" name=""/>
+    <alias field="DRUPOZ_KOD" index="19" name=""/>
+    <alias field="ZPVYPA_KOD" index="20" name=""/>
+    <alias field="TYP_PARCEL" index="21" name=""/>
+    <alias field="VYMERA_PAR" index="22" name=""/>
+    <alias field="CENA_NEMOV" index="23" name=""/>
+    <alias field="DEFINICNI_" index="24" name=""/>
+    <alias field="TEL_ID" index="25" name=""/>
+    <alias field="PAR_ID" index="26" name=""/>
+    <alias field="BUD_ID" index="27" name=""/>
+    <alias field="IDENT_BUD" index="28" name=""/>
+    <alias field="SOUCASTI" index="29" name=""/>
+    <alias field="PS_ID" index="30" name=""/>
+    <alias field="IDENT_PS" index="31" name=""/>
+    <alias field="ogr_fid" index="32" name=""/>
+    <alias field="PU_ID" index="33" name=""/>
+    <alias field="PU_KMENOVE" index="34" name=""/>
+    <alias field="PU_PODDELE" index="35" name=""/>
+    <alias field="PU_VYMERA_" index="36" name=""/>
+    <alias field="PU_KATEGOR" index="37" name="PU_KATEGORIE"/>
+    <alias field="PU_VZDALEN" index="38" name=""/>
+    <alias field="PU_CENA" index="39" name=""/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
@@ -234,7 +390,46 @@
   <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="0">
     <columns>
       <column width="-1" hidden="1" type="actions"/>
-      <column width="-1" hidden="0" type="field" name="rowid"/>
+      <column width="-1" hidden="1" type="field" name="rowid"/>
+      <column width="-1" hidden="1" type="field" name="ID"/>
+      <column width="-1" hidden="1" type="field" name="STAV_DAT"/>
+      <column width="-1" hidden="1" type="field" name="DATUM_VZNI"/>
+      <column width="-1" hidden="1" type="field" name="DATUM_ZANI"/>
+      <column width="-1" hidden="1" type="field" name="PRIZNAK_KO"/>
+      <column width="-1" hidden="1" type="field" name="RIZENI_ID_"/>
+      <column width="-1" hidden="1" type="field" name="RIZENI_I_1"/>
+      <column width="-1" hidden="1" type="field" name="PKN_ID"/>
+      <column width="-1" hidden="1" type="field" name="PAR_TYPE"/>
+      <column width="-1" hidden="1" type="field" name="KATUZE_KOD"/>
+      <column width="-1" hidden="1" type="field" name="KATUZE_K_1"/>
+      <column width="-1" hidden="1" type="field" name="DRUH_CISLO"/>
+      <column width="-1" hidden="1" type="field" name="KMENOVE_CI"/>
+      <column width="-1" hidden="1" type="field" name="ZDPAZE_KOD"/>
+      <column width="-1" hidden="1" type="field" name="PODDELENI_"/>
+      <column width="-1" hidden="1" type="field" name="DIL_PARCEL"/>
+      <column width="-1" hidden="1" type="field" name="MAPLIS_KOD"/>
+      <column width="-1" hidden="1" type="field" name="ZPURVY_KOD"/>
+      <column width="-1" hidden="1" type="field" name="DRUPOZ_KOD"/>
+      <column width="-1" hidden="1" type="field" name="ZPVYPA_KOD"/>
+      <column width="-1" hidden="1" type="field" name="TYP_PARCEL"/>
+      <column width="-1" hidden="1" type="field" name="VYMERA_PAR"/>
+      <column width="-1" hidden="1" type="field" name="CENA_NEMOV"/>
+      <column width="-1" hidden="1" type="field" name="DEFINICNI_"/>
+      <column width="-1" hidden="1" type="field" name="TEL_ID"/>
+      <column width="-1" hidden="1" type="field" name="PAR_ID"/>
+      <column width="-1" hidden="1" type="field" name="BUD_ID"/>
+      <column width="-1" hidden="1" type="field" name="IDENT_BUD"/>
+      <column width="-1" hidden="1" type="field" name="SOUCASTI"/>
+      <column width="-1" hidden="1" type="field" name="PS_ID"/>
+      <column width="-1" hidden="1" type="field" name="IDENT_PS"/>
+      <column width="-1" hidden="1" type="field" name="ogr_fid"/>
+      <column width="-1" hidden="1" type="field" name="PU_ID"/>
+      <column width="-1" hidden="1" type="field" name="PU_KMENOVE"/>
+      <column width="-1" hidden="1" type="field" name="PU_PODDELE"/>
+      <column width="-1" hidden="1" type="field" name="PU_VYMERA_"/>
+      <column width="-1" hidden="0" type="field" name="PU_KATEGOR"/>
+      <column width="-1" hidden="1" type="field" name="PU_VZDALEN"/>
+      <column width="-1" hidden="1" type="field" name="PU_CENA"/>
     </columns>
   </attributetableconfig>
   <editform>.</editform>
