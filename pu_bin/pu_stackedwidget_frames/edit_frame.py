@@ -62,7 +62,8 @@ class EditFrame(QFrame):
     def _setup_self(self):
         """Sets up self."""
         
-        self.categoryValue = 1
+        self.categoryValue = 0
+        self.categoryValues = (0, 1, 2)
         self.categoryName = 'PU_KATEGORIE'
         self.shortCategoryName = self.categoryName[:10]
         
@@ -235,11 +236,11 @@ class EditFrame(QFrame):
         
         layer = self.perimeterMapLayerComboBox.currentLayer()
         
-        self.dW.stackedWidget.checkAnalysisFrame.\
-            perimeterWidget.perimeterMapLayerComboBox.setLayer(layer)
+        self.dW.stackedWidget.checkAnalysisFrame\
+            .perimeterWidget.perimeterMapLayerComboBox.setLayer(layer)
     
     def _create_perimeter(self):
-        """Creates a perimeter from the active layer."""
+        """Calls methods for creating and loading perimeter layer."""
         
         try:
             succes, layer = self.dW.check_layer(self)
@@ -257,21 +258,23 @@ class EditFrame(QFrame):
             title = u'Uložit vrstvu obvodu jako...'
             filters = u'.shp (*.shp)'
             
-            perimeterFilePath = self.dW.open_file_dialog(title, filters, False)
+            perimeterLayerFilePath = self.dW.open_file_dialog(
+                title, filters, False)
             
-            if perimeterFilePath:
-                fileInfo = QFileInfo(perimeterFilePath)
+            if perimeterLayerFilePath:
+                fileInfo = QFileInfo(perimeterLayerFilePath)
                 
                 if not fileInfo.suffix() == u'shp':
-                    perimeterFilePath = fileInfo.absoluteFilePath() + u'.shp'
-                    fileInfo = QFileInfo(perimeterFilePath)
+                    perimeterLayerFilePath = \
+                        fileInfo.absoluteFilePath() + u'.shp'
+                    fileInfo = QFileInfo(perimeterLayerFilePath)
                 
                 if u'pu.shp' not in fileInfo.completeSuffix():
-                    perimeterFilePath = QDir(fileInfo.absolutePath()).\
-                        filePath(fileInfo.completeBaseName() + u'.pu.shp')
+                    perimeterLayerFilePath = QDir(fileInfo.absolutePath())\
+                        .filePath(fileInfo.completeBaseName() + u'.pu.shp')
                 
                 perimeterLayer = self._create_perimeter_layer(
-                    layer, perimeterFilePath)
+                    layer, perimeterLayerFilePath, self.categoryName)
                 
                 QgsApplication.processEvents()
                 
@@ -289,42 +292,46 @@ class EditFrame(QFrame):
                 u'Error creating perimeter.',
                 u'Chyba při vytváření obvodu.')
     
-    def _create_perimeter_layer(self, layer, perimeterFilePath):
+    def _create_perimeter_layer(
+            self, layer, perimeterLayerFilePath, categoryName):
         """Creates a perimeter layer from given layer.
         
         Args:
             layer (QgsVectorLayer): A reference to the layer.
-            perimeterFilePath (str): A full path to the perimeter layer.
+            perimeterLayerFilePath (str): A full path to the perimeter layer.
+            categoryName (str): A name of the category field the layer is about
+                to be dissolved by.
         
         Returns:
             QgsVectorLayer: A reference to the perimeter layer.
         
         """
         
-        fileInfo = QFileInfo(perimeterFilePath)
+        fileInfo = QFileInfo(perimeterLayerFilePath)
         
-        tempPerimeterName = fileInfo.completeBaseName() + u'.temp'
+        tempPerimeterLayerName = fileInfo.completeBaseName() + u'.temp'
         
-        perimeterName = fileInfo.completeBaseName()
+        perimeterLayerName = fileInfo.completeBaseName()
         
         selectedFeaturesIDs = layer.selectedFeaturesIds()
         
         layer.removeSelection()
         
-        tempPerimeterPath = processing.runalg(
+        tempPerimeterLayerPath = processing.runalg(
             'qgis:dissolve',
-            layer, False, self.categoryName, None)['OUTPUT']
+            layer, False, categoryName, None)['OUTPUT']
             
         tempPerimeterLayer = QgsVectorLayer(
-            tempPerimeterPath, tempPerimeterName, 'ogr')
+            tempPerimeterLayerPath, tempPerimeterLayerName, 'ogr')
         
         QgsApplication.processEvents()
         
-        perimeterPath = processing.runalg(
+        processing.runalg(
             'qgis:multiparttosingleparts',
-            tempPerimeterLayer, perimeterFilePath)['OUTPUT']
+            tempPerimeterLayer, perimeterLayerFilePath)
         
-        perimeterLayer = QgsVectorLayer(perimeterPath, perimeterName, 'ogr')
+        perimeterLayer = QgsVectorLayer(
+            perimeterLayerFilePath, perimeterLayerName, 'ogr')
         
         expression = QgsExpression(
             "\"{}\" is null".format(self.shortCategoryName))
@@ -441,6 +448,7 @@ class EditFrame(QFrame):
             if editing == True:
                 self.toggleEditingAction.trigger()
         except:
+            QgsApplication.processEvents()
             self.dW.display_error_messages(
                 u'Error setting parcel category.',
                 u'Chyba při zařazování do kategorie parcel.')
@@ -448,8 +456,7 @@ class EditFrame(QFrame):
     def _set_pu_category_for_selected(self, layer, perimeterLayer):
         """Sets a categoryValue to categoryName column for selected features.
         
-        Also adds selected features to the current layer
-        in perimeterMapLayerComboBox and executes Dissolve on that layer.
+        Also adds selected features to the perimeter layer.
         
         Args:
             layer (QgsVectorLayer): A reference to the layer.
@@ -476,20 +483,28 @@ class EditFrame(QFrame):
                 u'Zařazuji vybrané parcely do kategorie "{}".'
                 .format(currentCategory), 0)
         
-        tempCategoryValue = self.categoryValue
-        
         selectedFeaturesIDs = layer.selectedFeaturesIds()
-        
         selectedFeatures = layer.selectedFeaturesIterator()
         
         self.dW.set_field_value_for_features(
-            layer, selectedFeatures, self.categoryName, tempCategoryValue)
+            layer, selectedFeatures, self.categoryName, self.categoryValue)
+        
+        QgsApplication.processEvents()
+        
+        perimeterLayerFilePath = perimeterLayer.source()
+        
+        if perimeterLayer.featureCount() != 0:
+            perimeterLayer = self._cut_perimeter_layer_by_selected_features(
+                layer, perimeterLayer)
         
         layer.selectByIds(selectedFeaturesIDs)
         
-        perimeterFilePath = perimeterLayer.source()
+        self._add_selected_features_to_perimeter_layer(layer, perimeterLayer)
         
-        perimeterLayer = self._create_perimeter_layer(layer, perimeterFilePath)
+        perimeterLayer.removeSelection()
+        
+        perimeterLayer = self._create_perimeter_layer(
+            perimeterLayer, perimeterLayerFilePath, self.shortCategoryName)
         
         QgsApplication.processEvents()
         
@@ -505,6 +520,77 @@ class EditFrame(QFrame):
             self.set_text_statusbar.emit(
                 u'Vybrané parcely byly zařazeny do kategorie "{}".'
                 .format(currentCategory), 20)
+    
+    def _cut_perimeter_layer_by_selected_features(self, layer, perimeterLayer):
+        """Cuts the perimeter layer by selected features in the layer.
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the layer.
+            perimeterLayer (QgsVectorLayer): A reference to the perimeter
+                layer.
+        
+        Returns:
+            QgsVectorLayer: A clipped perimeter layer.
+        
+        """
+        
+        selectedFeaturesLayerName = layer.name() + u'-selectedFeatures.temp'
+
+        selectedFeaturesLayerFilePath = processing.runalg(
+            'qgis:saveselectedfeatures', layer, None)['OUTPUT_LAYER']
+        
+        selectedFeaturesLayer = QgsVectorLayer(
+            selectedFeaturesLayerFilePath, selectedFeaturesLayerName, 'ogr')
+        
+        QgsApplication.processEvents()
+        
+        perimeterLayer.removeSelection()
+        
+        differencePerimeterLayerName = \
+            perimeterLayer.name() + u'-difference.temp'
+    
+        differencePerimeterLayerFilePath = processing.runalg(
+            'qgis:difference',
+            perimeterLayer, selectedFeaturesLayer, True, None)['OUTPUT']
+        
+        QgsApplication.processEvents()
+    
+        differencePerimeterLayer = QgsVectorLayer(
+            differencePerimeterLayerFilePath,
+            differencePerimeterLayerName,
+            'ogr')
+        
+        return differencePerimeterLayer
+    
+    def _add_selected_features_to_perimeter_layer(self, layer, perimeterLayer):
+        """Adds selected features in the layer to the perimeter layer.
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the layer.
+            perimeterLayer (QgsVectorLayer): A reference to the perimeter
+                layer.
+        
+        """
+        
+        selectedFeatures = layer.selectedFeatures()
+        
+        categoryFieldID = perimeterLayer.fieldNameIndex(self.shortCategoryName)
+        
+        copiedFeatures = []
+        
+        for feature in selectedFeatures:
+            copiedFeature = QgsFeature()
+            copiedFeature.setAttributes(feature.attributes())
+            copiedFeature.setGeometry(feature.geometry())
+            
+            featureCategoryValue = feature.attribute(self.categoryName)
+            copiedFeature.setAttribute(categoryFieldID, featureCategoryValue)
+            
+            copiedFeatures.append(copiedFeature)
+        
+        perimeterLayer.startEditing()
+        perimeterLayer.addFeatures(copiedFeatures)
+        perimeterLayer.commitChanges()
     
     def _set_pu_category_by_perimeter(self, layer, perimeterLayer):
         """Sets a categoryValue to categoryName column for all features
@@ -523,7 +609,7 @@ class EditFrame(QFrame):
         
         selectedFeaturesIDs = layer.selectedFeaturesIds()
         
-        for categoryValue in (0, 1, 2):
+        for categoryValue in self.categoryValues:
             self.dW.select_features_by_field_value(
                 perimeterLayer, self.shortCategoryName, categoryValue)
         
