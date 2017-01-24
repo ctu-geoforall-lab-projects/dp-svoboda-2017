@@ -262,7 +262,7 @@ class EditFrame(QFrame):
                 title, filters, False)
             
             if perimeterLayerFilePath:
-                self.set_text_statusbar(u'Vytvářím vrstvu obvodu...', 0)
+                self.set_text_statusbar.emit(u'Vytvářím vrstvu obvodu...', 0)
                 
                 fileInfo = QFileInfo(perimeterLayerFilePath)
                 
@@ -280,7 +280,7 @@ class EditFrame(QFrame):
                 
                 QgsApplication.processEvents()
                 
-                self.set_text_statusbar(u'Přidávám vrstvu obvodu...', 0)
+                self.set_text_statusbar.emit(u'Přidávám vrstvu obvodu...', 0)
                 
                 self._add_perimeter_layer(perimeterLayer)
                 
@@ -292,7 +292,6 @@ class EditFrame(QFrame):
                 self.set_text_statusbar.emit(
                     u'Obvod byl úspešně vytvořen.', 15)
         except:
-            QgsApplication.processEvents()
             self.dW.display_error_messages(
                 u'Error creating perimeter.',
                 u'Chyba při vytváření obvodu.')
