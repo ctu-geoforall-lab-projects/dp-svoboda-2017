@@ -292,6 +292,7 @@ class EditFrame(QFrame):
                 self.set_text_statusbar.emit(
                     u'Obvod byl úspešně vytvořen.', 15)
         except:
+            QgsApplication.processEvents()
             self.dW.display_error_messages(
                 u'Error creating perimeter.',
                 u'Chyba při vytváření obvodu.')

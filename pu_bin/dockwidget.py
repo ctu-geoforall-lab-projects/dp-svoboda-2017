@@ -176,13 +176,16 @@ class DockWidget(QDockWidget):
         
         def __init__(
                 self, dW,
-                engLogMessage, czeStatusBarMessage=None, czeMessageBarMessage=None,
+                engLogMessage,
+                czeStatusBarMessage=None,
+                czeMessageBarMessage=None,
                 duration=20):
             """Constructor.
             
             Args:
                 dW (QWidget): A reference to the dock widget.
-                engLogMessage (str): A message in the 'PU Plugin' Log Messages Tab.
+                engLogMessage (str): A message in the 'PU Plugin' Log Messages
+                    Tab.
                 czeStatusBarMessage (str): A message in the statusBar.
                 czeMessageBarMessage (str): A message in the Message Bar.
                 duration (int): A duration of the message in the Message Bar
@@ -193,7 +196,8 @@ class DockWidget(QDockWidget):
             super(Exception, self).__init__(dW)
             
             dW.display_error_messages(
-                engLogMessage, czeStatusBarMessage, czeMessageBarMessage, duration)
+                engLogMessage, czeStatusBarMessage, czeMessageBarMessage,
+                duration)
     
     def _get_settings(self, key):
         """Returns value for settings key.
