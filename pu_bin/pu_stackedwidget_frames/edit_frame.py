@@ -203,7 +203,7 @@ class EditFrame(QFrame):
         self.perimeterRadioButton.setObjectName(u'perimeterRadioButton')
         self.perimeterRadioButton.setText(u'obvodem')
         self.perimeterRadioButton.setToolTip(
-            u'Rozřadit všechny parcely do kategorií na základě obvodu')
+            u'Zařadit všechny parcely do kategorií na základě obvodu')
         self.setCategoryHBoxLayout.addWidget(self.perimeterRadioButton)
         
         self.setCategoryPushButton = QPushButton(self)
@@ -262,6 +262,8 @@ class EditFrame(QFrame):
                 title, filters, False)
             
             if perimeterLayerFilePath:
+                self.set_text_statusbar(u'Vytvářím vrstvu obvodu...', 0)
+                
                 fileInfo = QFileInfo(perimeterLayerFilePath)
                 
                 if not fileInfo.suffix() == u'shp':
@@ -277,6 +279,8 @@ class EditFrame(QFrame):
                     layer, perimeterLayerFilePath, self.categoryName)
                 
                 QgsApplication.processEvents()
+                
+                self.set_text_statusbar(u'Přidávám vrstvu obvodu...', 0)
                 
                 self._add_perimeter_layer(perimeterLayer)
                 
@@ -294,7 +298,7 @@ class EditFrame(QFrame):
     
     def _create_perimeter_layer(
             self, layer, perimeterLayerFilePath, categoryName):
-        """Creates a perimeter layer from given layer.
+        """Creates a perimeter layer from the given layer.
         
         Args:
             layer (QgsVectorLayer): A reference to the layer.
@@ -476,11 +480,11 @@ class EditFrame(QFrame):
         
         if featuresCount == 1:
             self.set_text_statusbar.emit(
-                u'Zařazuji vybranou parcelu do kategorie "{}".'
+                u'Zařazuji vybranou parcelu do kategorie "{}"...'
                 .format(currentCategory), 0)
         else:
             self.set_text_statusbar.emit(
-                u'Zařazuji vybrané parcely do kategorie "{}".'
+                u'Zařazuji vybrané parcely do kategorie "{}"...'
                 .format(currentCategory), 0)
         
         selectedFeaturesIDs = layer.selectedFeaturesIds()
@@ -603,7 +607,8 @@ class EditFrame(QFrame):
         
         """
         
-        self.set_text_statusbar.emit(u'Zařazuji parcely na základě obvodu.', 0)
+        self.set_text_statusbar.emit(
+            u'Zařazuji parcely do kategorií na základě obvodu...', 0)
         
         perimeterSelectedFeaturesIDs = perimeterLayer.selectedFeaturesIds()
         
