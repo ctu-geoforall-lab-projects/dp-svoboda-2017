@@ -350,8 +350,11 @@ class LoadVfkFrame(QFrame):
     def _open_database(self, dbPath):
         """Opens a database.
         
-        Also checks if there are geometry_columns and spatial_ref_sys
+        Checks if there are geometry_columns and spatial_ref_sys
         tables in the database, if not it creates and fills those tables.
+        
+        Checks f there are all PU columns in PAR table,
+        if it it creates and fills those columns.
         
         Args:
             dbPath (str): A full path to the database.
