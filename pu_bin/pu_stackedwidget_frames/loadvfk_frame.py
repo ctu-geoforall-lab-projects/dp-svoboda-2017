@@ -386,13 +386,8 @@ class LoadVfkFrame(QFrame):
         
         sqlDir = self.dW.pluginDir + QDir.separator() + \
             u'data' + QDir.separator() + u'sql' + QDir.separator()
-                
-        checkGcSrsFile = QFile(sqlDir + u'check_gc_srs.sql', self)
-        checkGcSrsFile.open(QFile.ReadOnly|QFile.Text)
         
-        query = checkGcSrsFile.readData(200)
-        
-        checkGcSrsFile.close()
+        query = self._read_text_from_file(sqlDir + u'check_gc_srs.sql')
         
         sqlQuery.exec_(query)
         
@@ -404,27 +399,15 @@ class LoadVfkFrame(QFrame):
             checkGcSrsSize += 1
         
         if checkGcSrsSize < 2:
-            createFillGcSrsFile = QFile(
-                sqlDir + u'create_fill_gc_srs.sql', self)
-            createFillGcSrsFile.open(QFile.ReadOnly|QFile.Text)
-        
-            createFillGcSrsQueries = createFillGcSrsFile.readData(2000)\
-                .split(';')
+            queries = self._read_text_from_file(
+                sqlDir + u'create_fill_gc_srs.sql').split(';')
             
-            createFillGcSrsFile.close()
-            
-            for query in createFillGcSrsQueries:
+            for query in queries:
                 sqlQuery.exec_(query)
                 
                 QgsApplication.processEvents()
         
-        checkPuColumnsPARFile = QFile(
-            sqlDir + u'check_pu_columns_PAR.sql', self)
-        checkPuColumnsPARFile.open(QFile.ReadOnly|QFile.Text)
-        
-        query = checkPuColumnsPARFile.readData(50)
-        
-        checkPuColumnsPARFile.close()
+        query = self._read_text_from_file(sqlDir + u'check_pu_columns_PAR.sql')
         
         sqlQuery.exec_(query)
         
@@ -438,18 +421,34 @@ class LoadVfkFrame(QFrame):
             columnsPAR.append(name)
         
         if not all(column in columnsPAR for column in self.dW.allPuColumnsPAR):
-            addPuColumnPARFile = QFile(sqlDir + u'add_pu_columns_PAR.sql', self)
-            addPuColumnPARFile.open(QFile.ReadOnly|QFile.Text)
+            queries = self._read_text_from_file(
+                sqlDir + u'add_pu_columns_PAR.sql').split(';')
             
-            addPuColumnsPARQueries = addPuColumnPARFile.readData(2000)\
-                .split(';')
-            
-            addPuColumnPARFile.close()
-            
-            for query in addPuColumnsPARQueries:
+            for query in queries:
                 sqlQuery.exec_(query)
                 
                 QgsApplication.processEvents()
+    
+    def _read_text_from_file(self, filePath, maxSize=2000):
+        """Reads text from the given file.
+        
+        Args:
+            filePath (str): A full path to the file.
+            maxSize (int): Maximum size of read data from the file in bytes.
+        
+        Returns:
+            str: The text from the file.
+        
+        """
+        
+        file = QFile(filePath)
+        file.open(QFile.ReadOnly|QFile.Text)
+        
+        text = file.readData(maxSize)
+        
+        file.close()
+        
+        return text
     
     def _load_vfk_layer(self, dbPath, layerName, vfkLayerCode, vfkDriverName):
         """Loads a layer of the given code from database into the map canvas.
@@ -499,11 +498,7 @@ class LoadVfkFrame(QFrame):
             
             QgsApplication.processEvents()
             
-            project = QgsProject.instance()
-            project.setTopologicalEditing(True)
-            project.writeEntry('Digitizing', 'SnappingMode', 'advanced') 
-            project.writeEntry('Digitizing', 'IntersectionSnapping', Qt.Checked)
-            project.setSnapSettingsForLayer(layer.id(), True, 2, 1, 10, False)
+            self._set_layer_snapping(layer)
             
             fields = layer.pendingFields()
             
@@ -526,6 +521,20 @@ class LoadVfkFrame(QFrame):
                 u'Layer {} is not valid.'.format(vfkLayerCode),
                 u'Vrstva {} není platná.'.format(vfkLayerCode),
                 u'Vrstva {} není platná.'.format(vfkLayerCode))
+    
+    def _set_layer_snapping(self, layer):
+        """Sets layer snapping.
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the layer.
+        
+        """
+        
+        project = QgsProject.instance()
+        project.setTopologicalEditing(True)
+        project.writeEntry('Digitizing', 'SnappingMode', 'advanced') 
+        project.writeEntry('Digitizing', 'IntersectionSnapping', Qt.Checked)
+        project.setSnapSettingsForLayer(layer.id(), True, 2, 1, 10, False)
     
     def _enable_load_widgets(self, enableBool):
         """Sets loading widgets enabled or disabled.
