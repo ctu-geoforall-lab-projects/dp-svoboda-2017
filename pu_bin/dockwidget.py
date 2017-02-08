@@ -346,7 +346,7 @@ class DockWidget(QDockWidget):
         if not all(column in fieldNames for column in self.requiredColumnsPAR):
             if sender:
                 sender.set_text_statusbar.emit(
-                    u'Aktivní vrstva nebyla vytvořena PU Pluginem.', duration)
+                    u'Aktivní vrstva není VFK.', duration)
             successLayer = (False, layer)
             return successLayer
         

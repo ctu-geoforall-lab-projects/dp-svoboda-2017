@@ -246,7 +246,7 @@ class EditFrame(QFrame):
         try:
             succes, layer = self.dW.check_layer(self)
             
-            if not succes == True:
+            if not succes:
                 return
             
             if layer.featureCount() == 0:
@@ -298,7 +298,8 @@ class EditFrame(QFrame):
                 u'Chyba při vytváření obvodu.')
     
     def _create_perimeter_layer(
-            self, layer, perimeterLayerFilePath, categoryName):
+            self, layer, perimeterLayerFilePath, categoryName,
+            perimeterLayerName=None):
         """Creates a perimeter layer from the given layer.
         
         Args:
@@ -306,6 +307,7 @@ class EditFrame(QFrame):
             perimeterLayerFilePath (str): A full path to the perimeter layer.
             categoryName (str): A name of the category field the layer is about
                 to be dissolved by.
+            perimeterLayerName (str): A name of the perimeter layer.
         
         Returns:
             QgsVectorLayer: A reference to the perimeter layer.
@@ -316,7 +318,8 @@ class EditFrame(QFrame):
         
         tempPerimeterLayerName = fileInfo.completeBaseName() + u'.temp'
         
-        perimeterLayerName = fileInfo.completeBaseName()
+        if not perimeterLayerName:
+            perimeterLayerName = fileInfo.completeBaseName()
         
         selectedFeaturesIDs = layer.selectedFeaturesIds()
         
@@ -393,7 +396,7 @@ class EditFrame(QFrame):
         
         succes, layer = self.dW.check_layer(self)
         
-        if not succes == True:
+        if not succes:
             return
         
         self.executeThread = Executehread(layer)
@@ -416,31 +419,6 @@ class EditFrame(QFrame):
         """
         try:
             perimeterLayer = self.perimeterMapLayerComboBox.currentLayer()
-            
-            perimeterFieldNames = \
-                [field.name() for field in perimeterLayer.pendingFields()]
-            
-            if not all(column[:10] in perimeterFieldNames \
-                       for column in self.dW.requiredColumnsPAR):
-                self.set_text_statusbar.emit(
-                    u'Vrstva obvodu neobsahuje potřebné sloupce.', 10)
-                return
-            
-            perimeterFileInfo = QFileInfo(perimeterLayer.source())
-            
-            if u'pu.shp' not in perimeterFileInfo.completeSuffix():
-                self.set_text_statusbar.emit(
-                    u'Vrstva obvodu nebyla vytvořená PU Pluginem.', 10)
-                return
-            
-            perimeterLayerCrs = perimeterLayer.crs().authid()
-            layerCrs = layer.crs().authid()
-            
-            if perimeterLayerCrs != layerCrs:
-                self.set_text_statusbar.emit(
-                    u'Aktivní vrstva a vrstva obvodu nemají stejný '
-                    u'souřadnicový systém.', 10)
-                return
             
             editing = self.dW.check_editing()
             
@@ -496,20 +474,32 @@ class EditFrame(QFrame):
         
         QgsApplication.processEvents()
         
-        perimeterLayerFilePath = perimeterLayer.source()
+        if not self._check_perimeter_layer(perimeterLayer, layer):
+            perimeterLayerFilePath = \
+                layer.source().split('.db|')[0] + u'-obvod.pu.shp'
+            
+            perimeterLayerName = layer.name() + u'-obvod'
+            
+            perimeterLayer = self._create_perimeter_layer(
+                layer, perimeterLayerFilePath, self.categoryName,
+                perimeterLayerName)
+            
+            self._add_perimeter_layer(perimeterLayer)
+        else:
+            perimeterLayerFilePath = perimeterLayer.source()
         
-        if perimeterLayer.featureCount() != 0:
-            perimeterLayer = self._cut_perimeter_layer_by_selected_features(
-                layer, perimeterLayer)
-        
-        layer.selectByIds(selectedFeaturesIDs)
-        
-        self._add_selected_features_to_perimeter_layer(layer, perimeterLayer)
-        
-        perimeterLayer.removeSelection()
-        
-        perimeterLayer = self._create_perimeter_layer(
-            perimeterLayer, perimeterLayerFilePath, self.shortCategoryName)
+            if perimeterLayer.featureCount() != 0:
+                perimeterLayer = self._cut_perimeter_layer_by_selected_features(
+                    layer, perimeterLayer)
+            
+            layer.selectByIds(selectedFeaturesIDs)
+            
+            self._add_selected_features_to_perimeter_layer(layer, perimeterLayer)
+            
+            perimeterLayer.removeSelection()
+            
+            perimeterLayer = self._create_perimeter_layer(
+                perimeterLayer, perimeterLayerFilePath, self.shortCategoryName)
         
         QgsApplication.processEvents()
         
@@ -525,6 +515,59 @@ class EditFrame(QFrame):
             self.set_text_statusbar.emit(
                 u'Vybrané parcely byly zařazeny do kategorie "{}".'
                 .format(currentCategory), 20)
+    
+    def _check_perimeter_layer(self, perimeterLayer, layer, message=None):
+        """Checks the perimeter layer.
+        
+        Checks if the perimeter layer contains all required columns
+        and if the suffix is 'pu.shp'.
+        
+        Args:
+            perimeterLayer (QgsVectorLayer): A reference to the perimeter layer.
+            layer (QgsVectorLayer): A reference to the layer.
+        
+        Returns:
+            bool: True when the perimeter layer contains all required columns
+                and the suffix is 'pu.shp', False otherwise.
+        
+        """
+        
+        duration = 10
+        
+        if not perimeterLayer:
+            if message:
+                self.set_text_statusbar.emit(u'Žádná vrstva obvodu.', duration)
+            return False
+        
+        perimeterFieldNames = \
+            [field.name() for field in perimeterLayer.pendingFields()]
+        
+        if not all(column[:10] in perimeterFieldNames \
+                   for column in self.dW.requiredColumnsPAR):
+            if message:
+                self.set_text_statusbar.emit(
+                    u'Vrstva obvodu nebyla vytvořena PU Pluginem.', duration)
+            return False
+        
+        perimeterFileInfo = QFileInfo(perimeterLayer.source())
+        
+        if u'pu.shp' not in perimeterFileInfo.completeSuffix():
+            if message:
+                self.set_text_statusbar.emit(
+                    u'Vrstva obvodu nebyla vytvořena PU Pluginem.', duration)
+            return False
+        
+        perimeterLayerCrs = perimeterLayer.crs().authid()
+        layerCrs = layer.crs().authid()
+        
+        if perimeterLayerCrs != layerCrs:
+            if message:
+                self.set_text_statusbar.emit(
+                    u'Aktivní vrstva a vrstva obvodu nemají stejný '
+                    u'souřadnicový systém.', duration)
+            return False
+        
+        return True
     
     def _cut_perimeter_layer_by_selected_features(self, layer, perimeterLayer):
         """Cuts the perimeter layer by selected features in the layer.
@@ -608,6 +651,9 @@ class EditFrame(QFrame):
         
         """
         
+        if not self._check_perimeter_layer(perimeterLayer, layer, True):
+            return
+        
         self.set_text_statusbar.emit(
             u'Zařazuji parcely do kategorií na základě obvodu...', 0)
         
@@ -640,7 +686,7 @@ class EditFrame(QFrame):
         try:
             succes, layer = self.dW.check_layer(self)
             
-            if not succes == True:
+            if not succes:
                 return
             
             self.dW.select_features_by_field_value(

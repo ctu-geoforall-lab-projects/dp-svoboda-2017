@@ -186,7 +186,7 @@ class CheckAnalysisFrame(QFrame):
         
         succes, layer = self.dW.check_layer(self)
         
-        if succes == True:
+        if succes:
             self.executeThread = Executehread(layer)
             self.executeThread.work.connect(
                 self.checkAnalysisStackedWidget.currentWidget().execute)
