@@ -82,6 +82,7 @@ class PerimeterWidget(QWidget):
             self._connect_perimeter_map_layer_combo_box)
         self.perimeterGridLayout.addWidget(
             self.perimeterMapLayerComboBox, 0, 1, 1, 1)
+        self.perimeterMapLayerComboBox.setLayer(None)
         
         self.perimeterGridLayout.setColumnStretch(1, 1)
     

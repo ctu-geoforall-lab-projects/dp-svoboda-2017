@@ -148,6 +148,7 @@ class EditFrame(QFrame):
             self._connect_perimeter_map_layer_combo_box)
         self.editGridLayout.addWidget(
             self.perimeterMapLayerComboBox, 1, 1, 1, 1)
+        self.perimeterMapLayerComboBox.setLayer(None)
         
         self.createPerimeterPushButton = QPushButton(self)
         self.createPerimeterPushButton.setObjectName(
