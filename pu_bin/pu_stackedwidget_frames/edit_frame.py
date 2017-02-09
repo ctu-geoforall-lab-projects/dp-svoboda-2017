@@ -554,7 +554,7 @@ class EditFrame(QFrame):
         if u'pu.shp' not in perimeterFileInfo.completeSuffix():
             if message:
                 self.set_text_statusbar.emit(
-                    u'Vrstva obvodu nebyla vytvořena PU Pluginem.', duration)
+                    u'Vrstva obvodu není obvod vytvořený PU Pluginem.', duration)
             return False
         
         perimeterLayerCrs = perimeterLayer.crs().authid()
