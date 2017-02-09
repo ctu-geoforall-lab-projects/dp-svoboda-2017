@@ -209,28 +209,4 @@ class CheckAnalysisFrame(QFrame):
         else:
             self.checkAnalysisPushButton.setText(
                 u'Provést analýzu')
-    
-    def _deselect_features_by_puCategory(self, layer, features, puCategory):
-        """Deselects features by given puCategory.
-        
-        categoryValue - description:
-            0 - mimo obvod
-            1 - v obvodu - neřešené
-            2 - v obvodu - řešené
-        
-        Args:
-            layer (QgsVectorLayer): A reference to the active layer.
-            features (QgsFeatureIterator): An iterator of features to be
-                filtered.
-            puCategory (int): A value used for deselecting.
-        
-        """
-        
-        featureIDs = []
-        
-        for feature in features:
-            if feature.attribute('PU_KATEGORIE') == puCategory:
-                featureIDs.append(feature.id())
-        
-        layer.deselect(featureIDs)
 

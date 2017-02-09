@@ -114,13 +114,12 @@ class PerimeterWidget(QWidget):
                 layer.selectAll()
             else:
                 processing.runalg(
-                    'qgis:selectbylocation', layer, perimeterLayer, u'within', 0, 0)
+                    'qgis:selectbylocation',
+                    layer, perimeterLayer, u'within', 0, 0)
                 
                 layer.invertSelection()
                 
             features = layer.selectedFeaturesIterator()
-            
-            self.pW._deselect_features_by_puCategory(layer, features, 3)
             
             featuresCount = layer.selectedFeatureCount()
             
