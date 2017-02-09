@@ -167,9 +167,9 @@ class EditFrame(QFrame):
         
         self.categoryComboBox = QComboBox(self)
         self.categoryComboBox.setObjectName(u'categoryComboBox')
-        self.categoryComboBox.addItem(u'mimo obvod')
-        self.categoryComboBox.addItem(u'v obvodu - neřešené')
-        self.categoryComboBox.addItem(u'v obvodu - řešené')
+        self.categoryComboBox.addItem(u'mimo obvod (0)')
+        self.categoryComboBox.addItem(u'v obvodu - neřešené (1)')
+        self.categoryComboBox.addItem(u'v obvodu - řešené (2)')
         self.categoryComboBox.currentIndexChanged.connect(
             self._set_categoryValue)
         self.editGridLayout.addWidget(self.categoryComboBox, 2, 1, 1, 1)
