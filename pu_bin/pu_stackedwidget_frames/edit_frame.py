@@ -66,6 +66,7 @@ class EditFrame(QFrame):
         self.categoryValues = (0, 1, 2)
         self.categoryName = 'PU_KATEGORIE'
         self.shortCategoryName = self.categoryName[:10]
+        self.lastPerimeterLayer = None
         
         self.setObjectName(u'editFrame')
         self.setFrameShape(QFrame.StyledPanel)
@@ -148,7 +149,9 @@ class EditFrame(QFrame):
             self._connect_perimeter_map_layer_combo_box)
         self.editGridLayout.addWidget(
             self.perimeterMapLayerComboBox, 1, 1, 1, 1)
-        self.perimeterMapLayerComboBox.setLayer(None)
+        self.perimeterMapLayerComboBox.setLayer(self.lastPerimeterLayer)
+        QgsMapLayerRegistry.instance().layersAdded.connect(
+            self._set_perimeter_layer)
         
         self.createPerimeterPushButton = QPushButton(self)
         self.createPerimeterPushButton.setObjectName(
@@ -665,4 +668,18 @@ class EditFrame(QFrame):
             self.dW.display_error_messages(
                 u'Error selecting parcels in category.',
                 u'Chyba při vybírání parcel v kategorii.')
+    
+    def _set_perimeter_layer(self):
+        """Sets current perimeter layer.
+        
+        Sets current perimeter layer to None if the last perimeter layer was
+        None.
+        
+        """
+        
+        if self.lastPerimeterLayer == None:
+            self.perimeterMapLayerComboBox.setLayer(self.lastPerimeterLayer)
+        else:
+            self.lastPerimeterLayer = \
+                self.perimeterMapLayerComboBox.currentLayer()
 

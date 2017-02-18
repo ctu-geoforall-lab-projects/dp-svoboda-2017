@@ -48,6 +48,7 @@ class PerimeterWidget(QWidget):
         self.dWName = dockWidgetName
         self.iface = iface
         self.dW = dockWidget
+        self.lastPerimeterLayer = None
         
         super(PerimeterWidget, self).__init__(self.pW)
         
@@ -82,7 +83,9 @@ class PerimeterWidget(QWidget):
             self._connect_perimeter_map_layer_combo_box)
         self.perimeterGridLayout.addWidget(
             self.perimeterMapLayerComboBox, 0, 1, 1, 1)
-        self.perimeterMapLayerComboBox.setLayer(None)
+        self.perimeterMapLayerComboBox.setLayer(self.lastPerimeterLayer)
+        QgsMapLayerRegistry.instance().layersAdded.connect(
+            self._set_perimeter_layer)
         
         self.perimeterGridLayout.setColumnStretch(1, 1)
     
@@ -136,4 +139,18 @@ class PerimeterWidget(QWidget):
         
         self.dW.stackedWidget.editFrame.\
             perimeterMapLayerComboBox.setLayer(layer)
+    
+    def _set_perimeter_layer(self):
+        """Sets current perimeter layer.
+        
+        Sets current perimeter layer to None if the last perimeter layer was
+        None.
+        
+        """
+        
+        if self.lastPerimeterLayer == None:
+            self.perimeterMapLayerComboBox.setLayer(self.lastPerimeterLayer)
+        else:
+            self.lastPerimeterLayer = \
+                self.perimeterMapLayerComboBox.currentLayer()
 

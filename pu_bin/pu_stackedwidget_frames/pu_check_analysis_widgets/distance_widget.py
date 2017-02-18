@@ -49,6 +49,7 @@ class DistanceWidget(QWidget):
         self.dWName = dockWidgetName
         self.iface = iface
         self.dW = dockWidget
+        self.lastRefPointLayer = None
         
         super(DistanceWidget, self).__init__(self.pW)
         
@@ -81,6 +82,9 @@ class DistanceWidget(QWidget):
             QgsMapLayerProxyModel.PointLayer)
         self.distanceGridLayout.addWidget(
             self.refPointMapLayerComboBox, 0, 1, 1, 1)
+        self.refPointMapLayerComboBox.setLayer(self.lastRefPointLayer)
+        QgsMapLayerRegistry.instance().layersAdded.connect(
+            self._set_refPoint_layer)
         
         self.distanceGridLayout.setColumnStretch(1, 1)
     
@@ -95,6 +99,11 @@ class DistanceWidget(QWidget):
         editing = self.dW.check_editing()
         
         refPointLayer = self.refPointMapLayerComboBox.currentLayer()
+        
+        if refPointLayer == None:
+            self.pW.set_text_statusbar.emit(
+                u'Žádná vrstva referenčního bodu.', 10)
+            return
         
         refPointCount = refPointLayer.featureCount()
         
@@ -150,4 +159,18 @@ class DistanceWidget(QWidget):
         
         self.pW.set_text_statusbar.emit(
             u'Analýza měření vzdálenosti úspěšně dokončena.', 20)
+    
+    def _set_refPoint_layer(self):
+        """Sets current reference point layer.
+        
+        Sets current reference point layer to None if the last reference point
+        layer was None.
+        
+        """
+        
+        if self.lastRefPointLayer == None:
+            self.refPointMapLayerComboBox.setLayer(self.lastRefPointLayer)
+        else:
+            self.lastRefPointLayer = \
+                self.refPointMapLayerComboBox.currentLayer()
 

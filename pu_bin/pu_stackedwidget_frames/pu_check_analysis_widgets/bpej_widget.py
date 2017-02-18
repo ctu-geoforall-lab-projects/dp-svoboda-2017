@@ -51,6 +51,7 @@ class BpejWidget(QWidget):
         self.dWName = dockWidgetName
         self.iface = iface
         self.dW = dockWidget
+        self.lastBpejLayer = None
         
         super(BpejWidget, self).__init__(self.pW)
         
@@ -81,7 +82,9 @@ class BpejWidget(QWidget):
         self.bpejMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PolygonLayer)
         self.bpejGridLayout.addWidget(self.bpejMapLayerComboBox, 0, 1, 1, 1)
-        self.bpejMapLayerComboBox.setLayer(None)
+        self.bpejMapLayerComboBox.setLayer(self.lastBpejLayer)
+        QgsMapLayerRegistry.instance().layersAdded.connect(
+            self._set_bpej_layer)
         
         self.bpejGridLayout.setColumnStretch(1, 1)
         
@@ -219,4 +222,16 @@ class BpejWidget(QWidget):
         
         self.pW.set_text_statusbar.emit(
             u'Analýza oceňování podle BPEJ úspěšně dokončena.', 20)
+    
+    def _set_bpej_layer(self):
+        """Sets current bpej layer.
+        
+        Sets current bpej layer to None if the last bpej layer was None.
+        
+        """
+        
+        if self.lastBpejLayer == None:
+            self.bpejMapLayerComboBox.setLayer(self.lastBpejLayer)
+        else:
+            self.lastBpejLayer = self.bpejMapLayerComboBox.currentLayer()
 
