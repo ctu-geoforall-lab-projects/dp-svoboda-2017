@@ -166,7 +166,7 @@ class LoadVfkFrame(QFrame):
         """Starts loading the selected VFK file in a separate thread."""
         
         self.set_text_statusbar.emit(
-            u'Načítám VFK soubor. Tento proces může chvíli trvat.', 0)
+            u'Načítám VFK soubor. Tento proces může chvíli trvat...', 0)
         
         self._enable_load_widgets(False)
         
@@ -245,7 +245,7 @@ class LoadVfkFrame(QFrame):
 
         if not dbInfo.isFile():
             self.set_text_statusbar.emit(
-                u'Importuji data do SQLite databáze.', 0)
+                u'Importuji data do SQLite databáze...', 0)
             
             QgsApplication.registerOgrDrivers()
             
@@ -271,7 +271,7 @@ class LoadVfkFrame(QFrame):
             for i in xrange(layerCount):
                 self.value_loadVfkProgressBar.emit(i+1)
                 self.set_text_statusbar.emit(
-                    u'Načítám vrstvu {} ({}/{}).'
+                    u'Načítám vrstvu {} ({}/{})...'
                     .format(layerNames[i], i+1, layerCount), 0)
             
             QgsApplication.processEvents()
@@ -474,7 +474,7 @@ class LoadVfkFrame(QFrame):
         """
         
         self.set_text_statusbar.emit(
-            u'Přidávám vrstvu {}.'.format(vfkLayerCode), 0)
+            u'Přidávám vrstvu {}...'.format(vfkLayerCode), 0)
         
         blacklistedDriver = ogr.GetDriverByName(vfkDriverName)
         blacklistedDriver.Deregister()
