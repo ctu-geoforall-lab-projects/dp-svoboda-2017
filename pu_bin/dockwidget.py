@@ -23,7 +23,7 @@
 
 from PyQt4.QtGui import (QDockWidget, QWidget, QSizePolicy, QGridLayout,
                          QStatusBar, QFileDialog)
-from PyQt4.QtCore import pyqtSignal, QSettings
+from PyQt4.QtCore import pyqtSignal, QSettings, QFileInfo
 
 from qgis.gui import QgsMessageBar
 from qgis.core import *
@@ -352,6 +352,61 @@ class DockWidget(QDockWidget):
         
         successLayer = (True, layer)
         return successLayer
+    
+    def check_perimeter_layer(self, perimeterLayer, layer, message=None):
+        """Checks the perimeter layer.
+        
+        Checks if the perimeter layer contains all required columns,
+        if the suffix is 'pu.shp' and if the perimeter layer has same CRS
+        as the given layer.
+        
+        Args:
+            perimeterLayer (QgsVectorLayer): A reference to the perimeter layer.
+            layer (QgsVectorLayer): A reference to the layer.
+        
+        Returns:
+            bool: True when the perimeter layer contains all required columns
+                and the suffix is 'pu.shp', False otherwise.
+        
+        """
+        
+        duration = 10
+        
+        if not perimeterLayer:
+            if message:
+                self.set_text_statusbar.emit(u'Žádná vrstva obvodu.', duration)
+            return False
+        
+        perimeterFieldNames = \
+            [field.name() for field in perimeterLayer.pendingFields()]
+        
+        if not all(column[:10] in perimeterFieldNames \
+                   for column in self.requiredColumnsPAR):
+            if message:
+                self.set_text_statusbar.emit(
+                    u'Vrstva obvodu nebyla vytvořena PU Pluginem.', duration)
+            return False
+        
+        perimeterFileInfo = QFileInfo(perimeterLayer.source())
+        
+        if u'pu.shp' not in perimeterFileInfo.completeSuffix():
+            if message:
+                self.set_text_statusbar.emit(
+                    u'Vrstva obvodu není obvod vytvořený PU Pluginem.',
+                    duration)
+            return False
+        
+        perimeterLayerCrs = perimeterLayer.crs().authid()
+        layerCrs = layer.crs().authid()
+        
+        if perimeterLayerCrs != layerCrs:
+            if message:
+                self.set_text_statusbar.emit(
+                    u'Aktivní vrstva a vrstva obvodu nemají stejný '
+                    u'souřadnicový systém.', duration)
+            return False
+        
+        return True
     
     def check_editing(self):
         """Checks if editing is enabled.

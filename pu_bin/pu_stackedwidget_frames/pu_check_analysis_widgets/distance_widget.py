@@ -92,70 +92,62 @@ class DistanceWidget(QWidget):
         
         """
         
-        try:
-            editing = self.dW.check_editing()
-            
-            refPointLayer = self.refPointMapLayerComboBox.currentLayer()
-            
-            refPointCount = refPointLayer.featureCount()
-            
-            refPointLayerCrs = refPointLayer.crs().authid()
-            layerCrs = layer.crs().authid()
-            
-            if refPointLayerCrs != layerCrs:
-                self.pW.set_text_statusbar.emit(
-                    u'Aktivní vrstva a vrstva referenčního bodu nemají stejný '
-                    u'souřadnicový systém.', 10)
-                return
-            
-            if refPointCount != 1:
-                self.pW.set_text_statusbar.emit(
-                    u'Vrstva referenčního bodu neobsahuje právě jeden prvek.',
-                    10)
-                return
-            
-            if layer.selectedFeatureCount() != 0:
-                features = layer.selectedFeaturesIterator()
-            else:
-                features = layer.getFeatures()
-            
+        editing = self.dW.check_editing()
+        
+        refPointLayer = self.refPointMapLayerComboBox.currentLayer()
+        
+        refPointCount = refPointLayer.featureCount()
+        
+        refPointLayerCrs = refPointLayer.crs().authid()
+        layerCrs = layer.crs().authid()
+        
+        if refPointLayerCrs != layerCrs:
             self.pW.set_text_statusbar.emit(
-                u'Provádím analýzu - měření vzdálenosti.', 0)
+                u'Aktivní vrstva a vrstva referenčního bodu nemají stejný '
+                u'souřadnicový systém.', 10)
+            return
+        
+        if refPointCount != 1:
+            self.pW.set_text_statusbar.emit(
+                u'Vrstva referenčního bodu neobsahuje právě jeden prvek.',
+                10)
+            return
+        
+        if layer.selectedFeatureCount() != 0:
+            features = layer.selectedFeaturesIterator()
+        else:
+            features = layer.getFeatures()
+        
+        self.pW.set_text_statusbar.emit(
+            u'Provádím analýzu - měření vzdálenosti...', 0)
+        
+        refPointFeatures = refPointLayer.getFeatures()
+        
+        for feature in refPointFeatures:
+            refPoint = feature.geometry().asPoint()
+        
+        fieldID = layer.fieldNameIndex('PU_VZDALENOST')
+        
+        layer.startEditing()
+        layer.updateFields()
+        
+        for feature in features:
+            featureGeometry = feature.geometry()
             
-            refPointFeatures = refPointLayer.getFeatures()
-            
-            for feature in refPointFeatures:
-                refPoint = feature.geometry().asPoint()
-            
-            fieldID = layer.fieldNameIndex('PU_VZDALENOST')
-            
-            layer.startEditing()
-            layer.updateFields()
-            
-            for feature in features:
-                featureGeometry = feature.geometry()
+            if featureGeometry != None:
+                featureID = feature.id()
                 
-                if featureGeometry != None:
-                    featureID = feature.id()
-                    
-                    featureCentroid = featureGeometry.centroid().asPoint()
-                    distanceDouble = sqrt(refPoint.sqrDist(featureCentroid))
-                    distance = int(round(distanceDouble))
-                    
-                    layer.changeAttributeValue(featureID, fieldID, distance)
-            
-            layer.commitChanges()
-            
-            if editing == True:
-                self.dW.stackedWidget.editFrame.toggleEditingAction.trigger()
-            
-            self.pW.set_text_statusbar.emit(
-                u'Analýza měření vzdálenosti úspěšně dokončena.', 20)
-        except:
-            currentAnalysisName = self.pW.checkAnalysisComboBox.currentText()
-            
-            raise self.dW.puError(
-                self.dW,
-                u'Error executing "{}".'.format(currentAnalysisName),
-                u'Chyba při provádění "{}".'.format(currentAnalysisName))
+                featureCentroid = featureGeometry.centroid().asPoint()
+                distanceDouble = sqrt(refPoint.sqrDist(featureCentroid))
+                distance = int(round(distanceDouble))
+                
+                layer.changeAttributeValue(featureID, fieldID, distance)
+        
+        layer.commitChanges()
+        
+        if editing == True:
+            self.dW.stackedWidget.editFrame.toggleEditingAction.trigger()
+        
+        self.pW.set_text_statusbar.emit(
+            u'Analýza měření vzdálenosti úspěšně dokončena.', 20)
 

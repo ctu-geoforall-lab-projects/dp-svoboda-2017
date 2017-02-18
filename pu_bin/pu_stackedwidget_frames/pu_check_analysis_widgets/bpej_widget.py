@@ -81,6 +81,7 @@ class BpejWidget(QWidget):
         self.bpejMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PolygonLayer)
         self.bpejGridLayout.addWidget(self.bpejMapLayerComboBox, 0, 1, 1, 1)
+        self.bpejMapLayerComboBox.setLayer(None)
         
         self.bpejGridLayout.setColumnStretch(1, 1)
         
@@ -107,123 +108,115 @@ class BpejWidget(QWidget):
         
         """
         
-        try:
-            editing = self.dW.check_editing()
-            
-            bpejField = self.bpejFieldComboBox.currentField()
-            
-            if bpejField == u'':
-                self.pW.set_text_statusbar.emit(
-                    u'Není vybrán sloupec ceny.', 10)
-                return
-            
-            bpejField = bpejField[:10]
-            
-            parFields = layer.pendingFields()
-            
-            for field in parFields:
-                if bpejField.lower() == field.name().lower():
-                    if len(bpejField) <= 8:
-                        bpejField = bpejField + '_2'
-                        break
-                    elif len(bpejField) == 9:
-                        bpejField = bpejField + '_'
-                        break
-                    elif len(bpejField) == 10:
-                        bpejField = bpejField[:8]
-                        bpejField = bpejField + '_1'
-                        break
-            
-            bpejLayer = self.bpejMapLayerComboBox.currentLayer()
-            
-            bpejLayerCrs = bpejLayer.crs().authid()
-            layerCrs = layer.crs().authid()
-            
-            if bpejLayerCrs != layerCrs:
-                self.pW.set_text_statusbar.emit(
-                    u'Aktivní vrstva a vrstva BPEJ nemají stejný '
-                    u'souřadnicový systém.', 10)
-                return
-            
+        editing = self.dW.check_editing()
+        
+        bpejField = self.bpejFieldComboBox.currentField()
+        
+        if bpejField == u'':
             self.pW.set_text_statusbar.emit(
-                u'Provádím analýzu - oceňování podle BPEJ.', 0)
-            
-            unionOutput = processing.runalg(
-                'qgis:union', layer, bpejLayer, None)['OUTPUT']
-            
-            unionLayer = QgsVectorLayer(unionOutput, 'unionLayer', 'ogr')
-            
-            expression = QgsExpression(
-                "\"{}\" is null "
-                "or "
-                "(\"KMENOVE_CI\" is null and \"PU_KATEGOR\" is null)"\
-                .format(bpejField))
-            
-            featuresToDelete = unionLayer.getFeatures(
-                QgsFeatureRequest(expression))
-            
-            featuresToDeleteID = [feature.id() for feature in featuresToDelete]
-            
-            unionLayer.startEditing()
-            unionLayer.updateFields()
-            
-            unionLayer.deleteFeatures(featuresToDeleteID)
-            
-            unionLayer.commitChanges()
-            
-            multiToSingleOutput = processing.runalg(
-                'qgis:multiparttosingleparts', unionLayer, None)['OUTPUT']
-            
-            multiToSingleLayer = QgsVectorLayer(
-                multiToSingleOutput, 'multiToSingleLayer', 'ogr')
-            
-            puIDColumnName = 'rowid'
-            
-            featurePrices = defaultdict(float)
-            
-            features = multiToSingleLayer.getFeatures()
-            
-            for feature in features:
-                featurePuID = long(feature.attribute(puIDColumnName))
-                featureBpejPrice = feature.attribute(bpejField)
-                featureGeometry = feature.geometry()
-                
-                if featureGeometry != None:
-                    featureArea = featureGeometry.area()
-                    
-                    price = featureBpejPrice*featureArea
-                    
-                    featurePrices[featurePuID] += price
-            
-            fieldID = layer.fieldNameIndex('PU_CENA')
-            
-            layer.startEditing()
-            layer.updateFields()
-            
-            features = layer.getFeatures()
-            
-            for feature in features:
-                featurePuID = feature.attribute(puIDColumnName)
-                featureID = feature.id()
-                
-                price = featurePrices[featurePuID]
-                roundedPrice = round(price, -1)
-                
-                if roundedPrice != 0:
-                    layer.changeAttributeValue(featureID, fieldID, roundedPrice)
-            
-            layer.commitChanges()
-            
-            if editing == True:
-                self.dW.stackedWidget.editFrame.toggleEditingAction.trigger()
-            
+                u'Není vybrán sloupec ceny.', 10)
+            return
+        
+        bpejField = bpejField[:10]
+        
+        parFields = layer.pendingFields()
+        
+        for field in parFields:
+            if bpejField.lower() == field.name().lower():
+                if len(bpejField) <= 8:
+                    bpejField = bpejField + '_2'
+                    break
+                elif len(bpejField) == 9:
+                    bpejField = bpejField + '_'
+                    break
+                elif len(bpejField) == 10:
+                    bpejField = bpejField[:8]
+                    bpejField = bpejField + '_1'
+                    break
+        
+        bpejLayer = self.bpejMapLayerComboBox.currentLayer()
+        
+        bpejLayerCrs = bpejLayer.crs().authid()
+        layerCrs = layer.crs().authid()
+        
+        if bpejLayerCrs != layerCrs:
             self.pW.set_text_statusbar.emit(
-                u'Analýza oceňování podle BPEJ úspěšně dokončena.', 20)
-        except:
-            currentAnalysisName = self.pW.checkAnalysisComboBox.currentText()
+                u'Aktivní vrstva a vrstva BPEJ nemají stejný '
+                u'souřadnicový systém.', 10)
+            return
+        
+        self.pW.set_text_statusbar.emit(
+            u'Provádím analýzu - oceňování podle BPEJ...', 0)
+        
+        unionOutput = processing.runalg(
+            'qgis:union', layer, bpejLayer, None)['OUTPUT']
+        
+        unionLayer = QgsVectorLayer(unionOutput, 'unionLayer', 'ogr')
+        
+        expression = QgsExpression(
+            "\"{}\" is null "
+            "or "
+            "(\"KMENOVE_CI\" is null and \"PU_KATEGOR\" is null)"\
+            .format(bpejField))
+        
+        featuresToDelete = unionLayer.getFeatures(
+            QgsFeatureRequest(expression))
+        
+        featuresToDeleteID = [feature.id() for feature in featuresToDelete]
+        
+        unionLayer.startEditing()
+        unionLayer.updateFields()
+        
+        unionLayer.deleteFeatures(featuresToDeleteID)
+        
+        unionLayer.commitChanges()
+        
+        multiToSingleOutput = processing.runalg(
+            'qgis:multiparttosingleparts', unionLayer, None)['OUTPUT']
+        
+        multiToSingleLayer = QgsVectorLayer(
+            multiToSingleOutput, 'multiToSingleLayer', 'ogr')
+        
+        puIDColumnName = 'rowid'
+        
+        featurePrices = defaultdict(float)
+        
+        features = multiToSingleLayer.getFeatures()
+        
+        for feature in features:
+            featurePuID = long(feature.attribute(puIDColumnName))
+            featureBpejPrice = feature.attribute(bpejField)
+            featureGeometry = feature.geometry()
             
-            raise self.dW.puError(
-                self.dW,
-                u'Error executing "{}".'.format(currentAnalysisName),
-                u'Chyba při provádění "{}".'.format(currentAnalysisName))
+            if featureGeometry != None:
+                featureArea = featureGeometry.area()
+                
+                price = featureBpejPrice*featureArea
+                
+                featurePrices[featurePuID] += price
+        
+        fieldID = layer.fieldNameIndex('PU_CENA')
+        
+        layer.startEditing()
+        layer.updateFields()
+        
+        features = layer.getFeatures()
+        
+        for feature in features:
+            featurePuID = feature.attribute(puIDColumnName)
+            featureID = feature.id()
+            
+            price = featurePrices[featurePuID]
+            roundedPrice = round(price, -1)
+            
+            if roundedPrice != 0:
+                layer.changeAttributeValue(featureID, fieldID, roundedPrice)
+        
+        layer.commitChanges()
+        
+        if editing == True:
+            self.dW.stackedWidget.editFrame.toggleEditingAction.trigger()
+        
+        self.pW.set_text_statusbar.emit(
+            u'Analýza oceňování podle BPEJ úspěšně dokončena.', 20)
 

@@ -94,59 +94,45 @@ class PerimeterWidget(QWidget):
         
         """
         
-        try:
-            perimeterLayer = self.perimeterMapLayerComboBox.currentLayer()
+        perimeterLayer = self.perimeterMapLayerComboBox.currentLayer()
+        
+        if not self.dW.check_perimeter_layer(perimeterLayer, layer, True):
+            return
+        
+        self.pW.set_text_statusbar.emit(u'Provádím kontrolu - obvodem...', 0)
+        
+        perimeterLayerFeatureCount = perimeterLayer.featureCount()
+        
+        if perimeterLayerFeatureCount == 0:
+            layer.selectAll()
+        else:
+            processing.runalg(
+                'qgis:selectbylocation',
+                layer, perimeterLayer, u'within', 0, 0)
             
-            perimeterLayerCrs = perimeterLayer.crs().authid()
-            layerCrs = layer.crs().authid()
+            layer.invertSelection()
             
-            if perimeterLayerCrs != layerCrs:
-                self.pW.set_text_statusbar.emit(
-                    u'Aktivní vrstva a vrstva obvodu nemají stejný '
-                    u'souřadnicový systém.', 10)
-                return
-            
-            self.pW.set_text_statusbar.emit(u'Provádím kontrolu - obvodem.', 0)
-            
-            perimeterLayerFeatureCount = perimeterLayer.featureCount()
-            
-            if perimeterLayerFeatureCount == 0:
-                layer.selectAll()
-            else:
-                processing.runalg(
-                    'qgis:selectbylocation',
-                    layer, perimeterLayer, u'within', 0, 0)
-                
-                layer.invertSelection()
-                
-            features = layer.selectedFeaturesIterator()
-            
-            featuresCount = layer.selectedFeatureCount()
-            
-            duration = 10
-            
-            if featuresCount == 0:
-                self.pW.set_text_statusbar.emit(
-                    u'Uvnitř obvodu jsou všechny parcely.', duration)
-            elif featuresCount == 1:
-                self.pW.set_text_statusbar.emit(
-                    u'Uvnitř obvodu není {} parcela'.format(featuresCount),
-                    duration)
-            elif 1 < featuresCount < 5:
-                self.pW.set_text_statusbar.emit(
-                    u'Uvnitř obvodu nejsou {} parcely.'.format(featuresCount),
-                    duration)
-            elif 5 <= featuresCount:
-                self.pW.set_text_statusbar.emit(
-                    u'Uvnitř obvodu není {} parcel.'.format(featuresCount),
-                    duration)
-        except:
-            currentCheckName = self.pW.checkAnalysisComboBox.currentText()
-            
-            raise self.dW.puError(
-                self.dW,
-                u'Error executing "{}".'.format(currentCheckName),
-                u'Chyba při provádění "{}".'.format(currentCheckName))
+        features = layer.selectedFeaturesIterator()
+        
+        featuresCount = layer.selectedFeatureCount()
+        
+        duration = 10
+        
+        if featuresCount == 0:
+            self.pW.set_text_statusbar.emit(
+                u'Uvnitř obvodu jsou všechny parcely.', duration)
+        elif featuresCount == 1:
+            self.pW.set_text_statusbar.emit(
+                u'Uvnitř obvodu není {} parcela'.format(featuresCount),
+                duration)
+        elif 1 < featuresCount < 5:
+            self.pW.set_text_statusbar.emit(
+                u'Uvnitř obvodu nejsou {} parcely.'.format(featuresCount),
+                duration)
+        elif 5 <= featuresCount:
+            self.pW.set_text_statusbar.emit(
+                u'Uvnitř obvodu není {} parcel.'.format(featuresCount),
+                duration)
     
     def _connect_perimeter_map_layer_combo_box(self):
         """Connects to perimeterMapLayerComboBox in editFrame."""

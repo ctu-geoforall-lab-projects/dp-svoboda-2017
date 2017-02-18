@@ -190,7 +190,18 @@ class CheckAnalysisFrame(QFrame):
             self.executeThread = Executehread(layer)
             self.executeThread.work.connect(
                 self.checkAnalysisStackedWidget.currentWidget().execute)
-            self.executeThread.start()
+            
+            try:
+                self.executeThread.start()
+            except:
+                QgsApplication.processEvents()
+                
+                currentCheckAnalysisName = \
+                    self.pW.checkAnalysisComboBox.currentText()
+                
+                self.dW.display_error_messages(
+                    u'Error executing "{}".'.format(currentCheckName),
+                    u'Chyba při provádění "{}".'.format(currentCheckName))
     
     def _set_text_checkAnalysisPushButton(self, currentIndex):
         """Sets checkAnalysisPushButton's text.
