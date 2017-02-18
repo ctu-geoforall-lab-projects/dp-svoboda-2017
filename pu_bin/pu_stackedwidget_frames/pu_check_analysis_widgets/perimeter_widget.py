@@ -101,16 +101,11 @@ class PerimeterWidget(QWidget):
         
         self.pW.set_text_statusbar.emit(u'Provádím kontrolu - obvodem...', 0)
         
-        perimeterLayerFeatureCount = perimeterLayer.featureCount()
+        processing.runalg(
+            'qgis:selectbylocation',
+            layer, perimeterLayer, u'within', 0, 0)
         
-        if perimeterLayerFeatureCount == 0:
-            layer.selectAll()
-        else:
-            processing.runalg(
-                'qgis:selectbylocation',
-                layer, perimeterLayer, u'within', 0, 0)
-            
-            layer.invertSelection()
+        layer.invertSelection()
             
         features = layer.selectedFeaturesIterator()
         
