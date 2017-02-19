@@ -154,7 +154,7 @@ class DistanceWidget(QWidget):
         
         layer.commitChanges()
         
-        if editing == True:
+        if editing:
             self.dW.stackedWidget.editFrame.toggleEditingAction.trigger()
         
         self.pW.set_text_statusbar.emit(

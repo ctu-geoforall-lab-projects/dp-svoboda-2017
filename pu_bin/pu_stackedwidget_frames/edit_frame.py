@@ -290,7 +290,7 @@ class EditFrame(QFrame):
                 
                 self.iface.setActiveLayer(layer)
                 
-                if editing == True:
+                if editing:
                     self.toggleEditingAction.trigger()
                 
                 self.set_text_statusbar.emit(

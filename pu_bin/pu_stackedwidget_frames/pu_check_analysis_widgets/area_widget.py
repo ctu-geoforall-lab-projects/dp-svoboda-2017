@@ -129,7 +129,7 @@ class AreaWidget(QWidget):
         
         layer.commitChanges()
         
-        if editing == True:
+        if editing:
             self.dW.stackedWidget.editFrame.toggleEditingAction.trigger()
             
         layer.selectByIds(problematicParcelsID)
