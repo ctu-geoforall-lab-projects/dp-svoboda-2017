@@ -166,7 +166,7 @@ class BpejWidget(QWidget):
         featurePrices, missingBpejCodes = self._calculate_feature_prices(
             puIDColumnName, multiToSingleLayer, bpejField, bpejCodePrices)
         
-        fieldID = layer.fieldNameIndex('PU_CENA')
+        fieldID = layer.fieldNameIndex(self.dW.visiblePuColumnsPAR[4])
         
         layer.startEditing()
         layer.updateFields()

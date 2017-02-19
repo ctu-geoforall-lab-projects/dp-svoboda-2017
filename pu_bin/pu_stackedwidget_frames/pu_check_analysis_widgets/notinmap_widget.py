@@ -67,11 +67,7 @@ class NotInMapWidget(QWidget):
         
         expression = QgsExpression("$geometry is null")
         
-        features = layer.getFeatures(QgsFeatureRequest(expression))
-        
-        featuresID = [feature.id() for feature in features]
-        
-        layer.selectByIds(featuresID)
+        self.dW.select_features_by_expression(layer, expression)
         
         featuresCount = layer.selectedFeatureCount()
         

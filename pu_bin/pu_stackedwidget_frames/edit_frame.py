@@ -347,14 +347,7 @@ class EditFrame(QFrame):
         expression = QgsExpression(
             "\"{}\" is null".format(self.shortCategoryName))
         
-        deleteFeatures = perimeterLayer.getFeatures(
-            QgsFeatureRequest(expression))
-        
-        deleteFeaturesIDs = [feature.id() for feature in deleteFeatures]
-        
-        perimeterLayer.startEditing()
-        perimeterLayer.deleteFeatures(deleteFeaturesIDs)
-        perimeterLayer.commitChanges()
+        self.dW.delete_features_by_expression(perimeterLayer, expression)
         
         layer.selectByIds(selectedFeaturesIDs)
         
@@ -431,7 +424,7 @@ class EditFrame(QFrame):
             if self.perimeterRadioButton.isChecked():
                 self._set_pu_category_by_perimeter(layer, perimeterLayer)
             
-            if editing == True:
+            if editing:
                 self.toggleEditingAction.trigger()
         except:
             QgsApplication.processEvents()
