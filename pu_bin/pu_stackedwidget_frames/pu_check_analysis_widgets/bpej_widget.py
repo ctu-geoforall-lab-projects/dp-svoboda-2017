@@ -22,15 +22,17 @@
 """
 
 from PyQt4.QtGui import QWidget, QGridLayout, QLabel
-from PyQt4.QtCore import QPyNullVariant, Qt
+from PyQt4.QtCore import QPyNullVariant, Qt, QDir
 
 from qgis.gui import (QgsMapLayerComboBox, QgsMapLayerProxyModel,
-                      QgsFieldComboBox, QgsFieldProxyModel)
+                      QgsFieldComboBox, QgsFieldProxyModel, QgsMessageBar)
 from qgis.core import *
 
 import processing
 
 from collections import defaultdict
+import csv
+import time
 
 
 class BpejWidget(QWidget):
@@ -90,12 +92,11 @@ class BpejWidget(QWidget):
         
         self.bpejPriceLabel = QLabel(self)
         self.bpejPriceLabel.setObjectName(u'bpejPriceLabel')
-        self.bpejPriceLabel.setText(u'Sloupec ceny [Kč/m]:')
+        self.bpejPriceLabel.setText(u'Sloupec kódu BPEJ:')
         self.bpejGridLayout.addWidget(self.bpejPriceLabel, 1, 0, 1, 1)
         
         self.bpejFieldComboBox = QgsFieldComboBox(self)
         self.bpejFieldComboBox.setObjectName(u'bpejFieldComboBox')    
-        self.bpejFieldComboBox.setFilters(QgsFieldProxyModel.Numeric)
         self.bpejFieldComboBox.setLayer(
             self.bpejMapLayerComboBox.currentLayer())
         self.bpejGridLayout.addWidget(self.bpejFieldComboBox, 1, 1, 1, 1)
@@ -120,23 +121,6 @@ class BpejWidget(QWidget):
                 u'Není vybrán sloupec ceny.', 10)
             return
         
-        bpejField = bpejField[:10]
-        
-        parFields = layer.pendingFields()
-        
-        for field in parFields:
-            if bpejField.lower() == field.name().lower():
-                if len(bpejField) <= 8:
-                    bpejField = bpejField + '_2'
-                    break
-                elif len(bpejField) == 9:
-                    bpejField = bpejField + '_'
-                    break
-                elif len(bpejField) == 10:
-                    bpejField = bpejField[:8]
-                    bpejField = bpejField + '_1'
-                    break
-        
         bpejLayer = self.bpejMapLayerComboBox.currentLayer()
         
         bpejLayerCrs = bpejLayer.crs().authid()
@@ -151,6 +135,8 @@ class BpejWidget(QWidget):
         self.pW.set_text_statusbar.emit(
             u'Provádím analýzu - oceňování podle BPEJ...', 0)
         
+        bpejField = self._edit_bpej_field(bpejField, layer)
+        
         unionOutput = processing.runalg(
             'qgis:union', layer, bpejLayer, None)['OUTPUT']
         
@@ -159,20 +145,13 @@ class BpejWidget(QWidget):
         expression = QgsExpression(
             "\"{}\" is null "
             "or "
-            "(\"KMENOVE_CI\" is null and \"PU_KATEGOR\" is null)"\
-            .format(bpejField))
+            "(\"{}\" is null and \"{}\" is null)"\
+            .format(
+                bpejField,
+                self.dW.visibleDefaultColumnsPAR[0][:10],
+                self.dW.allPuColumnsPAR[3][:10]))
         
-        featuresToDelete = unionLayer.getFeatures(
-            QgsFeatureRequest(expression))
-        
-        featuresToDeleteID = [feature.id() for feature in featuresToDelete]
-        
-        unionLayer.startEditing()
-        unionLayer.updateFields()
-        
-        unionLayer.deleteFeatures(featuresToDeleteID)
-        
-        unionLayer.commitChanges()
+        self.dW.delete_features_by_expression(unionLayer, expression)
         
         multiToSingleOutput = processing.runalg(
             'qgis:multiparttosingleparts', unionLayer, None)['OUTPUT']
@@ -180,23 +159,12 @@ class BpejWidget(QWidget):
         multiToSingleLayer = QgsVectorLayer(
             multiToSingleOutput, 'multiToSingleLayer', 'ogr')
         
+        bpejCodePrices = self._read_bpej_csv()
+        
         puIDColumnName = 'rowid'
         
-        featurePrices = defaultdict(float)
-        
-        features = multiToSingleLayer.getFeatures()
-        
-        for feature in features:
-            featurePuID = long(feature.attribute(puIDColumnName))
-            featureBpejPrice = feature.attribute(bpejField)
-            featureGeometry = feature.geometry()
-            
-            if featureGeometry != None:
-                featureArea = featureGeometry.area()
-                
-                price = featureBpejPrice*featureArea
-                
-                featurePrices[featurePuID] += price
+        featurePrices, missingBpejCodes = self._calculate_feature_prices(
+            puIDColumnName, multiToSingleLayer, bpejField, bpejCodePrices)
         
         fieldID = layer.fieldNameIndex('PU_CENA')
         
@@ -217,11 +185,150 @@ class BpejWidget(QWidget):
         
         layer.commitChanges()
         
-        if editing == True:
+        if editing:
             self.dW.stackedWidget.editFrame.toggleEditingAction.trigger()
+        
+        if len(missingBpejCodes) != 0:
+            missingBpejCodesStr = ', '.join(missingBpejCodes)
+            
+            expression = QgsExpression(
+                "\"{}\" in ({})".format(bpejField, missingBpejCodesStr))
+            
+            self.dW.select_features_by_expression(bpejLayer, expression)
+            
+            self.iface.messageBar().pushMessage(
+                u'BPEJ kód vybraných prvků ve vrstvě BPEJ nebyl nalezen.',
+                QgsMessageBar.WARNING, 15)
         
         self.pW.set_text_statusbar.emit(
             u'Analýza oceňování podle BPEJ úspěšně dokončena.', 20)
+    
+    def _edit_bpej_field(self, bpejField, layer):
+        """Edits BPEJ field name according to the layer fields.
+        
+        Args:
+            bpejField (str): A name of the BPEJ field.
+            layer (QgsVectorLayer): A reference to the active layer.
+        
+        Returns:
+            str: An edited BPEJ field name
+        
+        """
+        
+        bpejField = bpejField[:10]
+        
+        parFields = layer.pendingFields()
+        
+        for field in parFields:
+            if bpejField.lower() == field.name().lower():
+                if len(bpejField) <= 8:
+                    bpejField = bpejField + '_2'
+                    break
+                elif len(bpejField) == 9:
+                    bpejField = bpejField + '_'
+                    break
+                elif len(bpejField) == 10:
+                    bpejField = bpejField[:8] + '_1'
+                    break
+        
+        return bpejField
+    
+    def _read_bpej_csv(self):
+        """Reads the BPEJ CSV file.
+        
+        Returns:
+            dict: A dictionary with BPEJ codes as keys (str)
+                and prices as values (flt).
+        
+        """
+        
+        bpejCsvFilePath = self.dW.pluginDir + QDir.separator() + \
+            u'data' + QDir.separator() + u'bpej' + QDir.separator() + \
+            u'SC_BPEJ.csv'
+        
+        with open(bpejCsvFilePath, 'rb') as bpejCsvFile:
+            bpejCsvReader = csv.reader(bpejCsvFile, delimiter=';')
+            
+            columnNames = bpejCsvReader.next()
+            
+            codeColumnIndex = columnNames.index('KOD')
+            priceColumnIndex = columnNames.index('CENA')
+            validFromColumnIndex = columnNames.index('PLATNOST_OD')
+            validToColumnIndex = columnNames.index('PLATNOST_DO')
+            
+            formatStr = '%d.%m.%Y'
+            
+            todayDate = time.strptime(time.strftime(formatStr), formatStr)
+            
+            bpejCodePrices = {}
+            
+            for row in bpejCsvReader:
+                if len(row) == 0:
+                    break
+                
+                validFromDateStr = row[validFromColumnIndex]
+                validFromDate = time.strptime(validFromDateStr, formatStr)
+                
+                validToDateStr = row[validToColumnIndex]
+                
+                if validToDateStr == '':
+                    validToDate = todayDate
+                else:
+                    validToDate = time.strptime(validToDateStr, formatStr)
+                
+                if validFromDate <= todayDate <= validToDate:
+                    code = row[codeColumnIndex]
+                    price = row[priceColumnIndex]
+                    
+                    bpejCodePrices[code] = float(price)
+        
+        return bpejCodePrices
+    
+    def _calculate_feature_prices(self, puIDColumnName, multiToSingleLayer, bpejField, bpejCodePrices):
+        """Calculates feature prices.
+        
+        Args:
+            puIDColumnName (str): A name of PU ID column.
+            multiToSingleLayer (QgsVectorLayer): A reference to the single
+                features layer.
+            bpejField (str): A name of the BPEJ field.
+            bpejCodePrices (dict): A dictionary with BPEJ codes as keys (str)
+                and prices as values (flt).
+        
+        Returns:
+            defaultdict: A defaultdict with feature PU IDs as keys (long)
+                and prices as values (float).
+            set: A set of BPEJ codes that are not in BPEJ SCV file.
+        
+        """
+        
+        featurePrices = defaultdict(float)
+        
+        missingBpejCodes = set()
+        
+        features = multiToSingleLayer.getFeatures()
+        
+        for feature in features:
+            featurePuID = long(feature.attribute(puIDColumnName))
+            featureBpejCode = str(feature.attribute(bpejField))
+            featureGeometry = feature.geometry()
+            
+            if featureGeometry != None:
+                featureArea = featureGeometry.area()
+                
+                editedFeatureBpejCode = featureBpejCode.replace('.', '')
+                
+                if editedFeatureBpejCode in bpejCodePrices:
+                    featureBpejPrice = bpejCodePrices[editedFeatureBpejCode]
+                else:
+                    featureBpejPrice = 0.0
+                    missingBpejCodes.add(featureBpejCode)
+                
+                price = featureBpejPrice*featureArea
+                
+                featurePrices[featurePuID] += price
+        
+        return featurePrices, missingBpejCodes
     
     def _set_bpej_layer(self):
         """Sets current bpej layer.

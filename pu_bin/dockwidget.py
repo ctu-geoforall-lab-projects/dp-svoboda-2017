@@ -270,6 +270,8 @@ class DockWidget(QDockWidget):
             features (QgsFeatureIterator): A feature iterator.
             field (str): A name of the field.
             value (int): A value to be set.
+            startCommit (bool): True for start editing and commit changes,
+                False otherwise.
         
         """
         
@@ -422,7 +424,7 @@ class DockWidget(QDockWidget):
             return False
     
     def select_features_by_field_value(self, layer, field, value):
-        """Selects features in given layer by the field value.
+        """Selects features in the given layer by the field value.
         
         Args:
             layer (QgsVectorLayer): A reference to the layer.
@@ -438,6 +440,45 @@ class DockWidget(QDockWidget):
         featuresID = [feature.id() for feature in features]
         
         layer.selectByIds(featuresID)
+    
+    def select_features_by_expression(self, layer, expression):
+        """Selects features in the given layer by the expression.
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the layer.
+            expression (QgsExpression): An expression.
+        
+        """
+        
+        features = layer.getFeatures(QgsFeatureRequest(expression))
+        
+        featuresID = [feature.id() for feature in features]
+        
+        layer.selectByIds(featuresID)
+    
+    def delete_features_by_expression(
+            self, layer, expression, startCommit=True):
+        """Deletes features from the given layer by the expression.
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the layer.
+            expression (QgsExpression): An expression.
+            startCommit (bool): True for start editing and commit changes,
+                False otherwise.
+        
+        """
+        
+        features = layer.getFeatures(QgsFeatureRequest(expression))
+        
+        featuresID = [feature.id() for feature in features]
+        
+        if startCommit:
+            layer.startEditing()
+        
+        layer.deleteFeatures(featuresID)
+        
+        if startCommit:
+            layer.commitChanges()
     
     def disconnect_from_iface(self):
         """Disconnects functions from QgsInterface."""
@@ -521,8 +562,7 @@ class DockWidget(QDockWidget):
             
             for key, value in rowidGroupedFeatures.iteritems():
                 if value > 1:
-                    self.select_features_by_field_value(
-                        layer, rowidColumn, key)
+                    self.select_features_by_field_value(layer, rowidColumn, key)
                     
                     oldFeatures = []
                     newFeatures = []
