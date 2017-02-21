@@ -363,7 +363,7 @@ class EditFrame(QFrame):
         tempPerimeterLayerName = fileInfo.completeBaseName() + u'.temp'
         
         if not perimeterLayerName:
-            perimeterLayerName = fileInfo.completeBaseName()
+            perimeterLayerName = fileInfo.baseName()
         
         selectedFeaturesIDs = layer.selectedFeaturesIds()
         
