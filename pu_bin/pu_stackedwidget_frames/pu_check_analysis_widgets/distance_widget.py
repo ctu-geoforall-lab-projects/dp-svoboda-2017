@@ -167,7 +167,7 @@ class DistanceWidget(QWidget):
         for feature in refPointFeatures:
             refPoint = feature.geometry().asPoint()
         
-        fieldID = layer.fieldNameIndex('PU_VZDALENOST')
+        fieldID = layer.fieldNameIndex(self.dW.visiblePuColumnsPAR[3])
         
         layer.startEditing()
         layer.updateFields()

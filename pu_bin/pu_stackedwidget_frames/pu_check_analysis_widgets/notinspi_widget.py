@@ -65,7 +65,8 @@ class NotInSpiWidget(QWidget):
         self.pW.set_text_statusbar.emit(
             u'Provádím kontrolu - není v SPI...', 0)
         
-        expression = QgsExpression("\"KMENOVE_CISLO_PAR\" is null")
+        expression = QgsExpression(
+            "\"{}\" is null".format(self.dW.visibleDefaultColumnsPAR[0]))
         
         self.dW.select_features_by_expression(layer, expression)
         
