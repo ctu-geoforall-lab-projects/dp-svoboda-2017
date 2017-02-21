@@ -79,15 +79,60 @@ class PerimeterWidget(QWidget):
             u'perimeterMapLayerComboBox')
         self.perimeterMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PolygonLayer)
-        self.perimeterMapLayerComboBox.layerChanged.connect(
-            self._connect_perimeter_map_layer_combo_box)
+        self.perimeterMapLayerComboBox.activated.connect(
+            self._sync_perimeter_map_layer_combo_box)
+        QgsMapLayerRegistry.instance().layersAdded.connect(
+            self._rollback_perimeter_layer)
+        QgsMapLayerRegistry.instance().layersRemoved.connect(
+            self._reset_perimeter_layer)
+        self.set_perimeter_layer(self.lastPerimeterLayer)
         self.perimeterGridLayout.addWidget(
             self.perimeterMapLayerComboBox, 0, 1, 1, 1)
-        self.perimeterMapLayerComboBox.setLayer(self.lastPerimeterLayer)
-        QgsMapLayerRegistry.instance().layersAdded.connect(
-            self._set_perimeter_layer)
         
         self.perimeterGridLayout.setColumnStretch(1, 1)
+    
+    def set_perimeter_layer(self, perimeterLayer):
+        """Sets the perimeter layer in the perimeterMapLayerComboBox.
+        
+        Args:
+            perimeterLayer (QgsVectorLayer): A reference to the perimeter layer.
+        
+        """
+        
+        self.lastPerimeterLayer = perimeterLayer
+        
+        self.perimeterMapLayerComboBox.setLayer(perimeterLayer)
+    
+    def _sync_perimeter_map_layer_combo_box(self):
+        """Synchronizes perimeter map layer combo boxes.
+        
+        Synchronizes with the perimeterMapLayerComboBox in the editFrame.
+        
+        """
+        
+        perimeterLayer = self.perimeterMapLayerComboBox.currentLayer()
+        
+        if perimeterLayer != self.lastPerimeterLayer:
+            self.lastPerimeterLayer = perimeterLayer
+            
+            self.dW.stackedWidget.editFrame.set_perimeter_layer(perimeterLayer)
+    
+    def _reset_perimeter_layer(self):
+        """Resets the perimeter layer."""
+        
+        layers = self.iface.legendInterface().layers()
+        
+        if self.lastPerimeterLayer not in layers:
+            self.set_perimeter_layer(None)
+    
+    def _rollback_perimeter_layer(self):
+        """Rollbacks the perimeter layer."""
+        
+        if self.lastPerimeterLayer == None:
+            self.perimeterMapLayerComboBox.setLayer(self.lastPerimeterLayer)
+        else:
+            self.lastPerimeterLayer = \
+                self.perimeterMapLayerComboBox.currentLayer()
     
     def execute(self, layer):
         """Executes the check.
@@ -131,26 +176,4 @@ class PerimeterWidget(QWidget):
             self.pW.set_text_statusbar.emit(
                 u'Uvnitř obvodu není {} parcel.'.format(featuresCount),
                 duration)
-    
-    def _connect_perimeter_map_layer_combo_box(self):
-        """Connects to perimeterMapLayerComboBox in editFrame."""
-        
-        layer = self.perimeterMapLayerComboBox.currentLayer()
-        
-        self.dW.stackedWidget.editFrame.\
-            perimeterMapLayerComboBox.setLayer(layer)
-    
-    def _set_perimeter_layer(self):
-        """Sets current perimeter layer.
-        
-        Sets current perimeter layer to None if the last perimeter layer was
-        None.
-        
-        """
-        
-        if self.lastPerimeterLayer == None:
-            self.perimeterMapLayerComboBox.setLayer(self.lastPerimeterLayer)
-        else:
-            self.lastPerimeterLayer = \
-                self.perimeterMapLayerComboBox.currentLayer()
 

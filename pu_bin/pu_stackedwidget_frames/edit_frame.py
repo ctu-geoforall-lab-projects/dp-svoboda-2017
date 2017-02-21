@@ -31,7 +31,7 @@ from qgis.core import *
 
 import processing
 
-from execute_thread import Executehread
+from execute_thread import ExecuteThread
 
 
 class EditFrame(QFrame):
@@ -145,13 +145,15 @@ class EditFrame(QFrame):
             u'perimeterMapLayerComboBox')
         self.perimeterMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PolygonLayer)
-        self.perimeterMapLayerComboBox.layerChanged.connect(
-            self._connect_perimeter_map_layer_combo_box)
+        self.perimeterMapLayerComboBox.activated.connect(
+            self._sync_perimeter_map_layer_combo_box)
+        QgsMapLayerRegistry.instance().layersAdded.connect(
+            self._rollback_perimeter_layer)
+        QgsMapLayerRegistry.instance().layersRemoved.connect(
+            self._reset_perimeter_layer)
+        self.set_perimeter_layer(self.lastPerimeterLayer)
         self.editGridLayout.addWidget(
             self.perimeterMapLayerComboBox, 1, 1, 1, 1)
-        self.perimeterMapLayerComboBox.setLayer(self.lastPerimeterLayer)
-        QgsMapLayerRegistry.instance().layersAdded.connect(
-            self._set_perimeter_layer)
         
         self.createPerimeterPushButton = QPushButton(self)
         self.createPerimeterPushButton.setObjectName(
@@ -235,13 +237,49 @@ class EditFrame(QFrame):
         
         self.categoryValue = self.categoryComboBox.currentIndex()
     
-    def _connect_perimeter_map_layer_combo_box(self):
-        """Connects to perimeterMapLayerComboBox in perimeterWidget."""
+    def set_perimeter_layer(self, perimeterLayer):
+        """Sets the perimeter layer in the perimeterMapLayerComboBox.
         
-        layer = self.perimeterMapLayerComboBox.currentLayer()
+        Args:
+            perimeterLayer (QgsVectorLayer): A reference to the perimeter layer.
         
-        self.dW.stackedWidget.checkAnalysisFrame\
-            .perimeterWidget.perimeterMapLayerComboBox.setLayer(layer)
+        """
+        
+        self.lastPerimeterLayer = perimeterLayer
+        
+        self.perimeterMapLayerComboBox.setLayer(perimeterLayer)
+    
+    def _sync_perimeter_map_layer_combo_box(self):
+        """Synchronizes perimeter map layer combo boxes.
+        
+        Synchronizes with the perimeterMapLayerComboBox in the perimeterWidget.
+        
+        """
+        
+        perimeterLayer = self.perimeterMapLayerComboBox.currentLayer()
+        
+        if perimeterLayer != self.lastPerimeterLayer:
+            self.lastPerimeterLayer = perimeterLayer
+        
+            self.dW.stackedWidget.checkAnalysisFrame\
+                .perimeterWidget.set_perimeter_layer(perimeterLayer)
+    
+    def _reset_perimeter_layer(self):
+        """Resets the perimeter layer."""
+        
+        layers = self.iface.legendInterface().layers()
+        
+        if self.lastPerimeterLayer not in layers:
+            self.set_perimeter_layer(None)
+    
+    def _rollback_perimeter_layer(self):
+        """Rollbacks the perimeter layer."""
+        
+        if self.lastPerimeterLayer == None:
+            self.perimeterMapLayerComboBox.setLayer(self.lastPerimeterLayer)
+        else:
+            self.lastPerimeterLayer = \
+                self.perimeterMapLayerComboBox.currentLayer()
     
     def _create_perimeter(self):
         """Calls methods for creating and loading perimeter layer."""
@@ -395,7 +433,7 @@ class EditFrame(QFrame):
         if not succes:
             return
         
-        self.executeThread = Executehread(layer)
+        self.executeThread = ExecuteThread(layer)
         self.executeThread.work.connect(self._run_setting_pu_category)
         self.executeThread.start()
     
@@ -661,18 +699,4 @@ class EditFrame(QFrame):
             self.dW.display_error_messages(
                 u'Error selecting parcels in category.',
                 u'Chyba při vybírání parcel v kategorii.')
-    
-    def _set_perimeter_layer(self):
-        """Sets current perimeter layer.
-        
-        Sets current perimeter layer to None if the last perimeter layer was
-        None.
-        
-        """
-        
-        if self.lastPerimeterLayer == None:
-            self.perimeterMapLayerComboBox.setLayer(self.lastPerimeterLayer)
-        else:
-            self.lastPerimeterLayer = \
-                self.perimeterMapLayerComboBox.currentLayer()
 

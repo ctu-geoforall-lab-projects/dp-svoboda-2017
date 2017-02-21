@@ -83,10 +83,12 @@ class BpejWidget(QWidget):
         self.bpejMapLayerComboBox.setObjectName(u'bpejMapLayerComboBox')
         self.bpejMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PolygonLayer)
-        self.bpejGridLayout.addWidget(self.bpejMapLayerComboBox, 0, 1, 1, 1)
-        self.bpejMapLayerComboBox.setLayer(self.lastBpejLayer)
         QgsMapLayerRegistry.instance().layersAdded.connect(
-            self._set_bpej_layer)
+            self._rollback_bpej_layer)
+        QgsMapLayerRegistry.instance().layersRemoved.connect(
+            self._reset_bpej_layer)
+        self.set_bpej_layer(self.lastBpejLayer)
+        self.bpejGridLayout.addWidget(self.bpejMapLayerComboBox, 0, 1, 1, 1)
         
         self.bpejGridLayout.setColumnStretch(1, 1)
         
@@ -103,6 +105,34 @@ class BpejWidget(QWidget):
         
         self.bpejMapLayerComboBox.layerChanged.connect(
             self.bpejFieldComboBox.setLayer)
+    
+    def set_bpej_layer(self, bpejLayer):
+        """Sets the BPEJ layer in the bpejMapLayerComboBox.
+        
+        Args:
+            bpejLayer (QgsVectorLayer): A reference to the BPEJ layer.
+        
+        """
+        
+        self.lastBpejLayer = bpejLayer
+        
+        self.bpejMapLayerComboBox.setLayer(bpejLayer)
+    
+    def _reset_bpej_layer(self):
+        """Resets the BPEJ layer."""
+        
+        layers = self.iface.legendInterface().layers()
+        
+        if self.lastBpejLayer not in layers:
+            self.set_bpej_layer(None)
+    
+    def _rollback_bpej_layer(self):
+        """Rollbacks the BPEJ layer."""
+        
+        if self.lastBpejLayer == None:
+            self.bpejMapLayerComboBox.setLayer(self.lastBpejLayer)
+        else:
+            self.lastBpejLayer = self.bpejMapLayerComboBox.currentLayer()
     
     def execute(self, layer):
         """Executes the analysis.
@@ -329,16 +359,4 @@ class BpejWidget(QWidget):
                 featurePrices[featurePuID] += price
         
         return featurePrices, missingBpejCodes
-    
-    def _set_bpej_layer(self):
-        """Sets current bpej layer.
-        
-        Sets current bpej layer to None if the last bpej layer was None.
-        
-        """
-        
-        if self.lastBpejLayer == None:
-            self.bpejMapLayerComboBox.setLayer(self.lastBpejLayer)
-        else:
-            self.lastBpejLayer = self.bpejMapLayerComboBox.currentLayer()
 

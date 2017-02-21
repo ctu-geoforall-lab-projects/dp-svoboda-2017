@@ -29,7 +29,7 @@ from pu_check_analysis_widgets import (perimeter_widget, notinspi_widget,
                                        notinmap_widget, ze_widget, area_widget,
                                        distance_widget, bpej_widget)
 
-from execute_thread import Executehread
+from execute_thread import ExecuteThread
 
 
 class CheckAnalysisFrame(QFrame):
@@ -187,7 +187,7 @@ class CheckAnalysisFrame(QFrame):
         succes, layer = self.dW.check_layer(self)
         
         if succes:
-            self.executeThread = Executehread(layer)
+            self.executeThread = ExecuteThread(layer)
             self.executeThread.work.connect(
                 self.checkAnalysisStackedWidget.currentWidget().execute)
             

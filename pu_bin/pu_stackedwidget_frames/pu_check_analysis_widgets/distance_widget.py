@@ -80,13 +80,45 @@ class DistanceWidget(QWidget):
             u'refPointMapLayerComboBox')
         self.refPointMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PointLayer)
+        QgsMapLayerRegistry.instance().layersAdded.connect(
+            self._rollback_ref_point_layer)
+        QgsMapLayerRegistry.instance().layersRemoved.connect(
+            self._reset_ref_point_layer)
+        self.set_ref_point_layer(self.lastRefPointLayer)
         self.distanceGridLayout.addWidget(
             self.refPointMapLayerComboBox, 0, 1, 1, 1)
-        self.refPointMapLayerComboBox.setLayer(self.lastRefPointLayer)
-        QgsMapLayerRegistry.instance().layersAdded.connect(
-            self._set_refPoint_layer)
         
         self.distanceGridLayout.setColumnStretch(1, 1)
+    
+    def set_ref_point_layer(self, refPointLayer):
+        """Sets the reference point layer in the refPointMapLayerComboBox.
+        
+        Args:
+            refPointLayer (QgsVectorLayer): A reference to the reference
+                point layer.
+        
+        """
+        
+        self.lastRefPointLayer = refPointLayer
+        
+        self.refPointMapLayerComboBox.setLayer(refPointLayer)
+    
+    def _reset_ref_point_layer(self):
+        """Resets the reference point layer."""
+        
+        layers = self.iface.legendInterface().layers()
+        
+        if self.lastRefPointLayer not in layers:
+            self.set_ref_point_layer(None)
+    
+    def _rollback_ref_point_layer(self):
+        """Rollbacks the reference point layer."""
+        
+        if self.lastRefPointLayer == None:
+            self.refPointMapLayerComboBox.setLayer(self.lastRefPointLayer)
+        else:
+            self.lastRefPointLayer = \
+                self.refPointMapLayerComboBox.currentLayer()
     
     def execute(self, layer):
         """Executes the analysis.

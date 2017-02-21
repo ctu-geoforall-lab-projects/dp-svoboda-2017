@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- Executehread
+ ExecuteThread
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -24,7 +24,7 @@
 from PyQt4.QtCore import QThread, pyqtSignal
 
 
-class Executehread(QThread):
+class ExecuteThread(QThread):
     """A subclass of QThread for executing processes."""
     
     work = pyqtSignal(object)
@@ -37,7 +37,7 @@ class Executehread(QThread):
         
         """
         
-        super(Executehread, self).__init__()
+        super(ExecuteThread, self).__init__()
 
         self.layer = layer
 
