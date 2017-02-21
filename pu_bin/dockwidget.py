@@ -428,7 +428,6 @@ class DockWidget(QDockWidget):
         
         for layer in layers:
             if filePath == layer.source():
-                QgsMessageLog.logMessage('{} == {}'.format(filePath, layer.source()), 'test')
                 loaded = True
                 break
         
