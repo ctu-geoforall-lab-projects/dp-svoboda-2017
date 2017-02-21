@@ -324,7 +324,10 @@ class EditFrame(QFrame):
                 
                 self.set_text_statusbar.emit(u'Přidávám vrstvu obvodu...', 0)
                 
-                self._add_perimeter_layer(perimeterLayer)
+                if self.dW.check_loaded_layers(perimeterLayerFilePath):
+                    self.iface.actionDraw().trigger()
+                else:
+                    self._add_perimeter_layer(perimeterLayer)
                 
                 self.iface.setActiveLayer(layer)
                 
@@ -518,7 +521,8 @@ class EditFrame(QFrame):
                 layer, perimeterLayerFilePath, self.categoryName,
                 perimeterLayerName)
             
-            self._add_perimeter_layer(perimeterLayer)
+            if not self.dW.check_loaded_layers(perimeterLayerFilePath):
+                self._add_perimeter_layer(perimeterLayer)
         else:
             perimeterLayerFilePath = perimeterLayer.source()
         

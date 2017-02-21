@@ -410,6 +410,30 @@ class DockWidget(QDockWidget):
         
         return True
     
+    def check_loaded_layers(self, filePath):
+        """Checks if the given layer is already loaded.
+        
+        Args:
+            filePath (str): A full path of the file to be checked.
+        
+        Returns:
+            bool: True when there is a layer with the same source as given
+            file path, False otherwise.
+        
+        """
+        
+        layers = self.iface.legendInterface().layers()
+        
+        loaded = False
+        
+        for layer in layers:
+            if filePath == layer.source():
+                QgsMessageLog.logMessage('{} == {}'.format(filePath, layer.source()), 'test')
+                loaded = True
+                break
+        
+        return loaded
+    
     def check_editing(self):
         """Checks if editing is enabled.
         
