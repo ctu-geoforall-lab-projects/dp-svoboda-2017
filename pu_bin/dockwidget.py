@@ -417,21 +417,21 @@ class DockWidget(QDockWidget):
             filePath (str): A full path of the file to be checked.
         
         Returns:
-            bool: True when there is a layer with the same source as given
-            file path, False otherwise.
+            QgsVectorLayer: A reference to the layer with the same source as
+                the given path, None when there is not such a layer.
         
         """
         
         layers = self.iface.legendInterface().layers()
         
-        loaded = False
+        loadedLayer = None
         
         for layer in layers:
             if filePath == layer.source():
-                loaded = True
+                loadedLayer = layer
                 break
         
-        return loaded
+        return loadedLayer
     
     def check_editing(self):
         """Checks if editing is enabled.

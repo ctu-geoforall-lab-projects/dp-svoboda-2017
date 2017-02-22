@@ -106,15 +106,18 @@ class BpejWidget(QWidget):
         self.bpejMapLayerComboBox.layerChanged.connect(
             self.bpejFieldComboBox.setLayer)
     
-    def set_bpej_layer(self, bpejLayer):
+    def set_bpej_layer(self, bpejLayer, lastBpejLayer=True):
         """Sets the BPEJ layer in the bpejMapLayerComboBox.
         
         Args:
             bpejLayer (QgsVectorLayer): A reference to the BPEJ layer.
+            lastBpejLayer (bool): True to set self.lastBpejLayer,
+                False otherwise.
         
         """
         
-        self.lastBpejLayer = bpejLayer
+        if lastBpejLayer:
+            self.lastBpejLayer = bpejLayer
         
         self.bpejMapLayerComboBox.setLayer(bpejLayer)
     
@@ -130,7 +133,7 @@ class BpejWidget(QWidget):
         """Rollbacks the BPEJ layer."""
         
         if self.lastBpejLayer == None:
-            self.bpejMapLayerComboBox.setLayer(self.lastBpejLayer)
+            self.set_bpej_layer(self.lastBpejLayer, False)
         else:
             self.lastBpejLayer = self.bpejMapLayerComboBox.currentLayer()
     

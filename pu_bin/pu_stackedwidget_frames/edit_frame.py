@@ -237,15 +237,18 @@ class EditFrame(QFrame):
         
         self.categoryValue = self.categoryComboBox.currentIndex()
     
-    def set_perimeter_layer(self, perimeterLayer):
+    def set_perimeter_layer(self, perimeterLayer, lastPerimeterLayer=True):
         """Sets the perimeter layer in the perimeterMapLayerComboBox.
         
         Args:
             perimeterLayer (QgsVectorLayer): A reference to the perimeter layer.
+            lastPerimeterLayer (bool): True to set self.lastPerimeterLayer,
+                False otherwise.
         
         """
         
-        self.lastPerimeterLayer = perimeterLayer
+        if lastPerimeterLayer:
+            self.lastPerimeterLayer = perimeterLayer
         
         self.perimeterMapLayerComboBox.setLayer(perimeterLayer)
     
@@ -276,7 +279,7 @@ class EditFrame(QFrame):
         """Rollbacks the perimeter layer."""
         
         if self.lastPerimeterLayer == None:
-            self.perimeterMapLayerComboBox.setLayer(self.lastPerimeterLayer)
+            self.set_perimeter_layer(self.lastPerimeterLayer, False)
         else:
             self.lastPerimeterLayer = \
                 self.perimeterMapLayerComboBox.currentLayer()
@@ -324,10 +327,17 @@ class EditFrame(QFrame):
                 
                 self.set_text_statusbar.emit(u'Přidávám vrstvu obvodu...', 0)
                 
-                if self.dW.check_loaded_layers(perimeterLayerFilePath):
+                loadedLayer = self.dW.check_loaded_layers(
+                    perimeterLayerFilePath)
+                
+                if loadedLayer:
                     self.iface.actionDraw().trigger()
+                    self.set_perimeter_layer(loadedLayer, False)
                 else:
                     self._add_perimeter_layer(perimeterLayer)
+                    self.set_perimeter_layer(perimeterLayer, False)
+                
+                self._sync_perimeter_map_layer_combo_box()
                 
                 self.iface.setActiveLayer(layer)
                 
@@ -408,7 +418,8 @@ class EditFrame(QFrame):
             perimeterLayer.loadNamedStyle(style)
             QgsMapLayerRegistry.instance().addMapLayer(perimeterLayer)
             
-            self.perimeterMapLayerComboBox.setLayer(perimeterLayer)
+            self.set_perimeter_layer(perimeterLayer, False)
+            self._sync_perimeter_map_layer_combo_box()
             
             categoryID = perimeterLayer.fieldNameIndex(self.shortCategoryName)
             
@@ -521,8 +532,16 @@ class EditFrame(QFrame):
                 layer, perimeterLayerFilePath, self.categoryName,
                 perimeterLayerName)
             
-            if not self.dW.check_loaded_layers(perimeterLayerFilePath):
+            loadedLayer = self.dW.check_loaded_layers(perimeterLayerFilePath)
+            
+            if loadedLayer:
+                self.iface.actionDraw().trigger()
+                self.set_perimeter_layer(loadedLayer, False)
+            else:
                 self._add_perimeter_layer(perimeterLayer)
+                self.set_perimeter_layer(perimeterLayer, False)
+            
+            self._sync_perimeter_map_layer_combo_box()
         else:
             perimeterLayerFilePath = perimeterLayer.source()
         

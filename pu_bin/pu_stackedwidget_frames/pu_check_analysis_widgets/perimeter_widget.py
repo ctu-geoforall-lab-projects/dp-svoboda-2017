@@ -91,15 +91,18 @@ class PerimeterWidget(QWidget):
         
         self.perimeterGridLayout.setColumnStretch(1, 1)
     
-    def set_perimeter_layer(self, perimeterLayer):
+    def set_perimeter_layer(self, perimeterLayer, lastPerimeterLayer=True):
         """Sets the perimeter layer in the perimeterMapLayerComboBox.
         
         Args:
             perimeterLayer (QgsVectorLayer): A reference to the perimeter layer.
+            lastPerimeterLayer (bool): True to set self.lastPerimeterLayer,
+                False otherwise.
         
         """
         
-        self.lastPerimeterLayer = perimeterLayer
+        if lastPerimeterLayer:
+            self.lastPerimeterLayer = perimeterLayer
         
         self.perimeterMapLayerComboBox.setLayer(perimeterLayer)
     
@@ -129,7 +132,7 @@ class PerimeterWidget(QWidget):
         """Rollbacks the perimeter layer."""
         
         if self.lastPerimeterLayer == None:
-            self.perimeterMapLayerComboBox.setLayer(self.lastPerimeterLayer)
+            self.set_perimeter_layer(self.lastPerimeterLayer, False)
         else:
             self.lastPerimeterLayer = \
                 self.perimeterMapLayerComboBox.currentLayer()

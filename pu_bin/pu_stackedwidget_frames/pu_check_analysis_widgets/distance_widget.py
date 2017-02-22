@@ -90,16 +90,19 @@ class DistanceWidget(QWidget):
         
         self.distanceGridLayout.setColumnStretch(1, 1)
     
-    def set_ref_point_layer(self, refPointLayer):
+    def set_ref_point_layer(self, refPointLayer, lastRefPointLayer=True):
         """Sets the reference point layer in the refPointMapLayerComboBox.
         
         Args:
             refPointLayer (QgsVectorLayer): A reference to the reference
                 point layer.
+            lastRefPointLayer (bool): True to set self.lastRefPointLayer,
+                False otherwise.
         
         """
         
-        self.lastRefPointLayer = refPointLayer
+        if lastRefPointLayer:
+            self.lastRefPointLayer = refPointLayer
         
         self.refPointMapLayerComboBox.setLayer(refPointLayer)
     
@@ -115,7 +118,7 @@ class DistanceWidget(QWidget):
         """Rollbacks the reference point layer."""
         
         if self.lastRefPointLayer == None:
-            self.refPointMapLayerComboBox.setLayer(self.lastRefPointLayer)
+            self.set_ref_point_layer(self.lastRefPointLayer, False)
         else:
             self.lastRefPointLayer = \
                 self.refPointMapLayerComboBox.currentLayer()
