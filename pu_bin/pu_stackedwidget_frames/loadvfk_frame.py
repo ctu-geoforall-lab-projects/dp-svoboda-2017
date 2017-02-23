@@ -387,10 +387,9 @@ class LoadVfkFrame(QFrame):
         
         sqlQuery = QSqlQuery(db)
         
-        sqlDir = self.dW.pluginDir + QDir.separator() + \
-            u'data' + QDir.separator() + u'sql' + QDir.separator()
+        sqlDir = QDir(self.dW.pluginDir + u'/data/sql')
         
-        query = self._read_text_from_file(sqlDir + u'check_gc_srs.sql')
+        query = self._read_text_from_file(sqlDir.filePath(u'check_gc_srs.sql'))
         
         sqlQuery.exec_(query)
         
@@ -403,14 +402,15 @@ class LoadVfkFrame(QFrame):
         
         if checkGcSrsSize < 2:
             queries = self._read_text_from_file(
-                sqlDir + u'create_fill_gc_srs.sql').split(';')
+                sqlDir.filePath(u'create_fill_gc_srs.sql')).split(';')
             
             for query in queries:
                 sqlQuery.exec_(query)
                 
                 QgsApplication.processEvents()
         
-        query = self._read_text_from_file(sqlDir + u'check_pu_columns_PAR.sql')
+        query = self._read_text_from_file(
+            sqlDir.filePath(u'check_pu_columns_PAR.sql'))
         
         sqlQuery.exec_(query)
         
@@ -425,7 +425,7 @@ class LoadVfkFrame(QFrame):
         
         if not all(column in columnsPAR for column in self.dW.allPuColumnsPAR):
             queries = self._read_text_from_file(
-                sqlDir + u'add_pu_columns_PAR.sql').split(';')
+                sqlDir.filePath(u'add_pu_columns_PAR.sql')).split(';')
             
             for query in queries:
                 sqlQuery.exec_(query)
