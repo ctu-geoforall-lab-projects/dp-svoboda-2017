@@ -145,38 +145,50 @@ class PerimeterWidget(QWidget):
         
         """
         
-        perimeterLayer = self.perimeterMapLayerComboBox.currentLayer()
-        
-        if not self.dW.check_perimeter_layer(perimeterLayer, layer, True):
-            return
-        
-        self.pW.set_text_statusbar.emit(u'Provádím kontrolu - obvodem...', 0)
-        
-        processing.runalg(
-            'qgis:selectbylocation',
-            layer, perimeterLayer, u'within', 0, 0)
-        
-        layer.invertSelection()
+        try:
+            perimeterLayer = self.perimeterMapLayerComboBox.currentLayer()
             
-        features = layer.selectedFeaturesIterator()
-        
-        featuresCount = layer.selectedFeatureCount()
-        
-        duration = 10
-        
-        if featuresCount == 0:
-            self.pW.set_text_statusbar.emit(
-                u'Uvnitř obvodu jsou všechny parcely.', duration)
-        elif featuresCount == 1:
-            self.pW.set_text_statusbar.emit(
-                u'Uvnitř obvodu není {} parcela'.format(featuresCount),
-                duration)
-        elif 1 < featuresCount < 5:
-            self.pW.set_text_statusbar.emit(
-                u'Uvnitř obvodu nejsou {} parcely.'.format(featuresCount),
-                duration)
-        elif 5 <= featuresCount:
-            self.pW.set_text_statusbar.emit(
-                u'Uvnitř obvodu není {} parcel.'.format(featuresCount),
-                duration)
+            if not self.dW.check_perimeter_layer(perimeterLayer, layer, True):
+                return
+            
+            self.pW.set_text_statusbar.emit(u'Provádím kontrolu - obvodem...', 0)
+            
+            processing.runalg(
+                'qgis:selectbylocation',
+                layer, perimeterLayer, u'within', 0, 0)
+            
+            layer.invertSelection()
+                
+            features = layer.selectedFeaturesIterator()
+            
+            featuresCount = layer.selectedFeatureCount()
+            
+            duration = 10
+            
+            if featuresCount == 0:
+                self.pW.set_text_statusbar.emit(
+                    u'Uvnitř obvodu jsou všechny parcely.', duration)
+            elif featuresCount == 1:
+                self.pW.set_text_statusbar.emit(
+                    u'Uvnitř obvodu není {} parcela'.format(featuresCount),
+                    duration)
+            elif 1 < featuresCount < 5:
+                self.pW.set_text_statusbar.emit(
+                    u'Uvnitř obvodu nejsou {} parcely.'.format(featuresCount),
+                    duration)
+            elif 5 <= featuresCount:
+                self.pW.set_text_statusbar.emit(
+                    u'Uvnitř obvodu není {} parcel.'.format(featuresCount),
+                    duration)
+        except self.dW.puError:
+            QgsApplication.processEvents()
+        except:
+            QgsApplication.processEvents()
+            
+            currentCheckAnalysisName = \
+                self.pW.checkAnalysisComboBox.currentText()
+            
+            self.dW.display_error_messages(
+                u'Error executing "{}".'.format(currentCheckAnalysisName),
+                u'Chyba při provádění "{}".'.format(currentCheckAnalysisName))
 

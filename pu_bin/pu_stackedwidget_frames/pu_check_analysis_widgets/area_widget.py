@@ -86,68 +86,80 @@ class AreaWidget(QWidget):
         
         """
         
-        editing = self.dW.check_editing()
-        
-        threshold = self.areaLineEdit.text()
-        
-        if not threshold:
+        try:
+            editing = self.dW.check_editing()
+            
+            threshold = self.areaLineEdit.text()
+            
+            if not threshold:
+                self.pW.set_text_statusbar.emit(
+                    u'Není zadána mezní odchylka.', 10)
+                return
+            
             self.pW.set_text_statusbar.emit(
-                u'Není zadána mezní odchylka.', 10)
-            return
-        
-        self.pW.set_text_statusbar.emit(
-            u'Provádím kontrolu - výměra nad mezní odchylkou.', 0)
-        
-        fieldID = layer.fieldNameIndex('PU_VYMERA_PARCELY')
-        
-        layer.startEditing()
-        layer.updateFields()
-        
-        problematicParcelsID = []
-        
-        features = layer.getFeatures()
-        
-        for feature in features:
-            featureGeometry = feature.geometry()
-            if featureGeometry == None:
-                continue
+                u'Provádím kontrolu - výměra nad mezní odchylkou.', 0)
             
-            sgiArea = int(round(featureGeometry.area()))
-            spiArea = feature.attribute('VYMERA_PARCELY')
+            fieldID = layer.fieldNameIndex('PU_VYMERA_PARCELY')
             
-            if sgiArea != spiArea:
-                featureID = feature.id()
-                layer.changeAttributeValue(featureID, fieldID, sgiArea)
-                
-                if type(spiArea) == QPyNullVariant:
+            layer.startEditing()
+            layer.updateFields()
+            
+            problematicParcelsID = []
+            
+            features = layer.getFeatures()
+            
+            for feature in features:
+                featureGeometry = feature.geometry()
+                if featureGeometry == None:
                     continue
                 
-                limitDifference =  spiArea*(float(threshold)/100)
+                sgiArea = int(round(featureGeometry.area()))
+                spiArea = feature.attribute('VYMERA_PARCELY')
                 
-                if abs(sgiArea - spiArea) > limitDifference:
-                    problematicParcelsID.append(featureID)
-        
-        layer.commitChanges()
-        
-        if editing:
-            self.dW.stackedWidget.editFrame.toggleEditingAction.trigger()
+                if sgiArea != spiArea:
+                    featureID = feature.id()
+                    layer.changeAttributeValue(featureID, fieldID, sgiArea)
+                    
+                    if type(spiArea) == QPyNullVariant:
+                        continue
+                    
+                    limitDifference =  spiArea*(float(threshold)/100)
+                    
+                    if abs(sgiArea - spiArea) > limitDifference:
+                        problematicParcelsID.append(featureID)
             
-        layer.selectByIds(problematicParcelsID)
-        
-        featuresCount = layer.selectedFeatureCount()
-        
-        duration = 10
-        
-        if featuresCount == 0:
-            self.pW.set_text_statusbar.emit(
-                u'Mezní odchylka nebyla překročena u žádné parcely.',
-                duration)
-        elif featuresCount == 1:
-            self.pW.set_text_statusbar.emit(
-                u'Mezní odchylka byla překročena u {} parcely.'
-                .format(featuresCount), duration)
-        elif 1 < featuresCount:
-            self.pW.set_text_statusbar.emit(
-                u'Mezní odchylka byla překročena u {} parcel.'
-                .format(featuresCount), duration)
+            layer.commitChanges()
+            
+            if editing:
+                self.dW.stackedWidget.editFrame.toggleEditingAction.trigger()
+                
+            layer.selectByIds(problematicParcelsID)
+            
+            featuresCount = layer.selectedFeatureCount()
+            
+            duration = 10
+            
+            if featuresCount == 0:
+                self.pW.set_text_statusbar.emit(
+                    u'Mezní odchylka nebyla překročena u žádné parcely.',
+                    duration)
+            elif featuresCount == 1:
+                self.pW.set_text_statusbar.emit(
+                    u'Mezní odchylka byla překročena u {} parcely.'
+                    .format(featuresCount), duration)
+            elif 1 < featuresCount:
+                self.pW.set_text_statusbar.emit(
+                    u'Mezní odchylka byla překročena u {} parcel.'
+                    .format(featuresCount), duration)
+        except self.dW.puError:
+            QgsApplication.processEvents()
+        except:
+            QgsApplication.processEvents()
+            
+            currentCheckAnalysisName = \
+                self.pW.checkAnalysisComboBox.currentText()
+            
+            self.dW.display_error_messages(
+                u'Error executing "{}".'.format(currentCheckAnalysisName),
+                u'Chyba při provádění "{}".'.format(currentCheckAnalysisName))
 

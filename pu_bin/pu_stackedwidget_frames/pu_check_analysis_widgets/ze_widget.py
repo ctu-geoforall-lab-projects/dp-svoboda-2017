@@ -62,50 +62,62 @@ class ZeWidget(QWidget):
         
         """
         
-        self.pW.set_text_statusbar.emit(
-            u'Provádím kontrolu - bez vlastníka.', 0)
-        
-        fieldName = 'ID'
-        
-        layer.removeSelection()
-        
-        expression = QgsExpression("\"PAR_TYPE\" = 'PKN'")
-        
-        features = layer.getFeatures(QgsFeatureRequest(expression))
-        
-        pknFeaturesID = [feature.attribute(fieldName) for feature in features]
-        
-        featuresID = []
-        
-        expression = QgsExpression("\"PAR_TYPE\" = 'PZE'")
-        
-        features = layer.getFeatures(QgsFeatureRequest(expression))
-        
-        for feature in features:
-            featureVfkID = feature.attribute(fieldName)
+        try:
+            self.pW.set_text_statusbar.emit(
+                u'Provádím kontrolu - bez vlastníka.', 0)
             
-            if featureVfkID not in pknFeaturesID:
-                featuresID.append(feature.id())
-        
-        layer.selectByIds(featuresID)
-        
-        featuresCount = layer.selectedFeatureCount()
-        
-        duration = 10
-        
-        if featuresCount == 0:
-            self.pW.set_text_statusbar.emit(
-                u'Bez vlastníka není žádná parcela.', duration)
-        elif featuresCount == 1:
-            self.pW.set_text_statusbar.emit(
-                u'Bez vlastníka je {} parcela.'.format(featuresCount),
-                duration)
-        elif 1 < featuresCount < 5:
-            self.pW.set_text_statusbar.emit(
-                u'Bez vlastníka jsou {} parcely.'.format(featuresCount),
-                duration)
-        elif 5 <= featuresCount:
-            self.pW.set_text_statusbar.emit(
-                u'Bez vlastníka je {} parcel.'.format(featuresCount),
-                duration)
+            fieldName = 'ID'
+            
+            layer.removeSelection()
+            
+            expression = QgsExpression("\"PAR_TYPE\" = 'PKN'")
+            
+            features = layer.getFeatures(QgsFeatureRequest(expression))
+            
+            pknFeaturesID = [feature.attribute(fieldName) for feature in features]
+            
+            featuresID = []
+            
+            expression = QgsExpression("\"PAR_TYPE\" = 'PZE'")
+            
+            features = layer.getFeatures(QgsFeatureRequest(expression))
+            
+            for feature in features:
+                featureVfkID = feature.attribute(fieldName)
+                
+                if featureVfkID not in pknFeaturesID:
+                    featuresID.append(feature.id())
+            
+            layer.selectByIds(featuresID)
+            
+            featuresCount = layer.selectedFeatureCount()
+            
+            duration = 10
+            
+            if featuresCount == 0:
+                self.pW.set_text_statusbar.emit(
+                    u'Bez vlastníka není žádná parcela.', duration)
+            elif featuresCount == 1:
+                self.pW.set_text_statusbar.emit(
+                    u'Bez vlastníka je {} parcela.'.format(featuresCount),
+                    duration)
+            elif 1 < featuresCount < 5:
+                self.pW.set_text_statusbar.emit(
+                    u'Bez vlastníka jsou {} parcely.'.format(featuresCount),
+                    duration)
+            elif 5 <= featuresCount:
+                self.pW.set_text_statusbar.emit(
+                    u'Bez vlastníka je {} parcel.'.format(featuresCount),
+                    duration)
+        except self.dW.puError:
+            QgsApplication.processEvents()
+        except:
+            QgsApplication.processEvents()
+            
+            currentCheckAnalysisName = \
+                self.pW.checkAnalysisComboBox.currentText()
+            
+            self.dW.display_error_messages(
+                u'Error executing "{}".'.format(currentCheckAnalysisName),
+                u'Chyba při provádění "{}".'.format(currentCheckAnalysisName))
 

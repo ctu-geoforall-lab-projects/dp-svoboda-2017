@@ -62,28 +62,40 @@ class NotInMapWidget(QWidget):
         
         """
         
-        self.pW.set_text_statusbar.emit(
-            u'Provádím kontrolu - není v mapě...', 0)
-        
-        expression = QgsExpression("$geometry is null")
-        
-        self.dW.select_features_by_expression(layer, expression)
-        
-        featuresCount = layer.selectedFeatureCount()
-        
-        duration = 10
-        
-        if featuresCount == 0:
+        try:
             self.pW.set_text_statusbar.emit(
-                u'V mapě jsou všechny parcely.', duration)
-        elif featuresCount == 1:
-            self.pW.set_text_statusbar.emit(
-                u'V mapě není {} parcela.'.format(featuresCount), duration)
-        elif 1 < featuresCount < 5:
-            self.pW.set_text_statusbar.emit(
-                u'V mapě nejsou {} parcely.'.format(featuresCount),
-                duration)
-        elif 5 <= featuresCount:
-            self.pW.set_text_statusbar.emit(
-                u'V mapě není {} parcel.'.format(featuresCount), duration)
+                u'Provádím kontrolu - není v mapě...', 0)
+            
+            expression = QgsExpression("$geometry is null")
+            
+            self.dW.select_features_by_expression(layer, expression)
+            
+            featuresCount = layer.selectedFeatureCount()
+            
+            duration = 10
+            
+            if featuresCount == 0:
+                self.pW.set_text_statusbar.emit(
+                    u'V mapě jsou všechny parcely.', duration)
+            elif featuresCount == 1:
+                self.pW.set_text_statusbar.emit(
+                    u'V mapě není {} parcela.'.format(featuresCount), duration)
+            elif 1 < featuresCount < 5:
+                self.pW.set_text_statusbar.emit(
+                    u'V mapě nejsou {} parcely.'.format(featuresCount),
+                    duration)
+            elif 5 <= featuresCount:
+                self.pW.set_text_statusbar.emit(
+                    u'V mapě není {} parcel.'.format(featuresCount), duration)
+        except self.dW.puError:
+            QgsApplication.processEvents()
+        except:
+            QgsApplication.processEvents()
+            
+            currentCheckAnalysisName = \
+                self.pW.checkAnalysisComboBox.currentText()
+            
+            self.dW.display_error_messages(
+                u'Error executing "{}".'.format(currentCheckAnalysisName),
+                u'Chyba při provádění "{}".'.format(currentCheckAnalysisName))
 

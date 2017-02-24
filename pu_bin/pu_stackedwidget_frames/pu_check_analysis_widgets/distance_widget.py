@@ -131,69 +131,81 @@ class DistanceWidget(QWidget):
         
         """
         
-        editing = self.dW.check_editing()
-        
-        refPointLayer = self.refPointMapLayerComboBox.currentLayer()
-        
-        if refPointLayer == None:
-            self.pW.set_text_statusbar.emit(
-                u'Žádná vrstva referenčního bodu.', 10)
-            return
-        
-        refPointCount = refPointLayer.featureCount()
-        
-        refPointLayerCrs = refPointLayer.crs().authid()
-        layerCrs = layer.crs().authid()
-        
-        if refPointLayerCrs != layerCrs:
-            self.pW.set_text_statusbar.emit(
-                u'Aktivní vrstva a vrstva referenčního bodu nemají stejný '
-                u'souřadnicový systém.', 10)
-            return
-        
-        if refPointCount != 1:
-            self.pW.set_text_statusbar.emit(
-                u'Vrstva referenčního bodu neobsahuje právě jeden prvek.',
-                10)
-            return
-        
-        if layer.selectedFeatureCount() != 0:
-            features = layer.selectedFeaturesIterator()
-        else:
-            features = layer.getFeatures()
-        
-        self.pW.set_text_statusbar.emit(
-            u'Provádím analýzu - měření vzdálenosti...', 0)
-        
-        refPointFeatures = refPointLayer.getFeatures()
-        
-        for feature in refPointFeatures:
-            refPoint = feature.geometry().asPoint()
-        
-        fieldID = layer.fieldNameIndex(self.dW.visiblePuColumnsPAR[3])
-        
-        layer.startEditing()
-        layer.updateFields()
-        
-        for feature in features:
-            featureGeometry = feature.geometry()
+        try:
+            editing = self.dW.check_editing()
             
-            if featureGeometry != None:
-                featureID = feature.id()
+            refPointLayer = self.refPointMapLayerComboBox.currentLayer()
+            
+            if refPointLayer == None:
+                self.pW.set_text_statusbar.emit(
+                    u'Žádná vrstva referenčního bodu.', 10)
+                return
+            
+            refPointCount = refPointLayer.featureCount()
+            
+            refPointLayerCrs = refPointLayer.crs().authid()
+            layerCrs = layer.crs().authid()
+            
+            if refPointLayerCrs != layerCrs:
+                self.pW.set_text_statusbar.emit(
+                    u'Aktivní vrstva a vrstva referenčního bodu nemají stejný '
+                    u'souřadnicový systém.', 10)
+                return
+            
+            if refPointCount != 1:
+                self.pW.set_text_statusbar.emit(
+                    u'Vrstva referenčního bodu neobsahuje právě jeden prvek.',
+                    10)
+                return
+            
+            if layer.selectedFeatureCount() != 0:
+                features = layer.selectedFeaturesIterator()
+            else:
+                features = layer.getFeatures()
+            
+            self.pW.set_text_statusbar.emit(
+                u'Provádím analýzu - měření vzdálenosti...', 0)
+            
+            refPointFeatures = refPointLayer.getFeatures()
+            
+            for feature in refPointFeatures:
+                refPoint = feature.geometry().asPoint()
+            
+            fieldID = layer.fieldNameIndex(self.dW.visiblePuColumnsPAR[3])
+            
+            layer.startEditing()
+            layer.updateFields()
+            
+            for feature in features:
+                featureGeometry = feature.geometry()
                 
-                featureCentroid = featureGeometry.centroid().asPoint()
-                distanceDouble = sqrt(refPoint.sqrDist(featureCentroid))
-                distance = int(round(distanceDouble))
-                
-                layer.changeAttributeValue(featureID, fieldID, distance)
-        
-        layer.commitChanges()
-        
-        if editing:
-            self.dW.stackedWidget.editFrame.toggleEditingAction.trigger()
-        
-        self.pW.set_text_statusbar.emit(
-            u'Analýza měření vzdálenosti úspěšně dokončena.', 20)
+                if featureGeometry != None:
+                    featureID = feature.id()
+                    
+                    featureCentroid = featureGeometry.centroid().asPoint()
+                    distanceDouble = sqrt(refPoint.sqrDist(featureCentroid))
+                    distance = int(round(distanceDouble))
+                    
+                    layer.changeAttributeValue(featureID, fieldID, distance)
+            
+            layer.commitChanges()
+            
+            if editing:
+                self.dW.stackedWidget.editFrame.toggleEditingAction.trigger()
+            
+            self.pW.set_text_statusbar.emit(
+                u'Analýza měření vzdálenosti úspěšně dokončena.', 20)
+        except self.dW.puError:
+            QgsApplication.processEvents()
+        except:
+            QgsApplication.processEvents()
+            
+            currentCheckAnalysisName = \
+                self.pW.checkAnalysisComboBox.currentText()
+            
+            self.dW.display_error_messages(
+                u'Error executing "{}".'.format(currentCheckAnalysisName),
+                u'Chyba při provádění "{}".'.format(currentCheckAnalysisName))
     
     def _set_refPoint_layer(self):
         """Sets current reference point layer.
