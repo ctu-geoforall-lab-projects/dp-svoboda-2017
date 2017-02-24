@@ -25,7 +25,7 @@ from PyQt4.QtGui import QStackedWidget
 from PyQt4.QtCore import QSignalMapper
 
 from pu_stackedwidget_frames import (loadvfk_frame, edit_frame,
-                                     check_analysis_frame)
+                                     checkanalysis_frame)
 
 
 class StackedWidget(QStackedWidget):
@@ -75,7 +75,7 @@ class StackedWidget(QStackedWidget):
             self.openTabSignalMapper.map)
         self.openTabSignalMapper.setMapping(self.dW.toolBar.editAction, 1)
         
-        self.checkAnalysisFrame = check_analysis_frame.CheckAnalysisFrame(
+        self.checkAnalysisFrame = checkanalysis_frame.CheckAnalysisFrame(
             self, self.dWName, self.iface, self.dW)
         self.addWidget(self.checkAnalysisFrame)
         self.dW.toolBar.checkAction.triggered.connect(

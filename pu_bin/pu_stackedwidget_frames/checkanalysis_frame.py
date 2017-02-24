@@ -25,7 +25,7 @@ from PyQt4.QtGui import (QFrame, QGridLayout, QHBoxLayout, QLabel, QComboBox,
                          QStackedWidget, QPushButton)
 from PyQt4.QtCore import pyqtSignal, Qt
 
-from pu_check_analysis_widgets import (perimeter_widget, notinspi_widget,
+from pu_checkanalysis_widgets import (perimeter_widget, notinspi_widget,
                                        notinmap_widget, ze_widget, area_widget,
                                        distance_widget, bpej_widget)
 
