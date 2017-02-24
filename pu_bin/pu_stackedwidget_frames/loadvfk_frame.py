@@ -276,12 +276,7 @@ class LoadVfkFrame(QFrame):
             
             QgsApplication.processEvents()
             
-            vfkLayer = vfkDataSource.GetLayerByName(vfkLayerCode)
-            
-            vfkLayer.GetFeatureCount(True)
-            
-            for feature in vfkLayer:
-                feature.GetGeometryRef()
+            self._build_geometry(vfkLayerCode, vfkDataSource)
             
             QgsApplication.processEvents()
             
@@ -346,6 +341,22 @@ class LoadVfkFrame(QFrame):
         dataSourceInfo = (layerCount, layerNames)
         
         return dataSourceInfo
+    
+    def _build_geometry(self, layerCode, dataSource):
+        """Builds a geometry for the layer in the data source..
+        
+        Args:
+            layerCode (str): A code of the layer.
+            dataSource (ogr.DataSource) A reference to the OGR data source.
+        
+        """
+        
+        codeLayer = dataSource.GetLayerByName(layerCode)
+        
+        codeLayer.GetFeatureCount(True)
+        
+        for feature in codeLayer:
+            feature.GetGeometryRef()
     
     def _open_database(self, dbPath):
         """Opens a database.
