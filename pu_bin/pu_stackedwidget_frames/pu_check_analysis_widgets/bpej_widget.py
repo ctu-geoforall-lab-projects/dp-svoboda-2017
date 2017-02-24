@@ -31,8 +31,9 @@ from qgis.core import *
 import processing
 
 from collections import defaultdict
+from datetime import datetime
+
 import os
-import time
 import urllib
 import zipfile
 import csv
@@ -221,7 +222,7 @@ class BpejWidget(QWidget):
                 price = featurePrices[featurePuID]
                 roundedPrice = round(price, -1)
                 
-                if roundedPrice != 0 and roundedPrice != featurePrice:
+                if roundedPrice != featurePrice:
                     layer.changeAttributeValue(
                         featureID, priceFieldID, roundedPrice)
             
@@ -332,16 +333,14 @@ class BpejWidget(QWidget):
         
         modificationEpochTime = os.path.getmtime(bpejCsvFilePath)
         
-        modificationStrDate = time.strftime(
-            formatTimeStr, time.localtime(modificationEpochTime))
+        modificationDateTime = datetime.fromtimestamp(modificationEpochTime)
         
-        modificationStructTime = time.strptime(
-            modificationStrDate, formatTimeStr)
+        todayDateTime = datetime.now()
         
-        todayStructDate = time.strptime(
-            time.strftime(formatTimeStr), formatTimeStr)
+        bpejTodayDateTime = todayDateTime.replace(
+            hour=03, minute=06, second=0, microsecond=0)
         
-        if modificationStructTime == todayStructDate:
+        if modificationDateTime > bpejTodayDateTime:
             return True
         else:
             return False
@@ -356,6 +355,9 @@ class BpejWidget(QWidget):
             bpejZipFilePath (str): A full path to the BPEJ ZIP file.
             bpejCsvFileName (str): A name of the BPEJ CSV file.
         
+        Raises:
+            dw.puError: When a connection to the CUZK failed.
+        
         """
         
         try:
@@ -365,19 +367,14 @@ class BpejWidget(QWidget):
         else:
             testGoogleConnection.close()
         
-        successfulBpejConnection = True
-        
         try:
             testBpejConnection = urllib.urlopen(bpejZipUrl)
         except:
-            successfulBpejConnection = False
-            
             raise self.dW.puError(
                 self.dW,
-                u'Connection to "{}" failed.'.format(bpejZipUrl),
+                u'A Connection to "{}" failed.'.format(bpejZipUrl),
                 u'Nepodařilo se připojit k "{}"'.format(bpejZipUrl))
-        
-        if successfulBpejConnection:
+        else:
             testBpejConnection.close()
             
             urllib.urlretrieve(bpejZipUrl, bpejZipFilePath)
@@ -449,8 +446,7 @@ class BpejWidget(QWidget):
             validFromColumnIndex = columnNames.index('PLATNOST_OD')
             validToColumnIndex = columnNames.index('PLATNOST_DO')
             
-            todayDate = time.strptime(
-                time.strftime(formatTimeStr), formatTimeStr)
+            todayDate = datetime.now().date()
             
             bpejCodePrices = {}
             
@@ -459,14 +455,16 @@ class BpejWidget(QWidget):
                     break
                 
                 validFromDateStr = row[validFromColumnIndex]
-                validFromDate = time.strptime(validFromDateStr, formatTimeStr)
+                validFromDate = datetime.strptime(
+                    validFromDateStr, formatTimeStr).date()
                 
                 validToDateStr = row[validToColumnIndex]
                 
                 if validToDateStr == '':
                     validToDate = todayDate
                 else:
-                    validToDate = time.strptime(validToDateStr, formatTimeStr)
+                    validToDate = datetime.strptime(
+                        validToDateStr, formatTimeStr).date()
                 
                 if validFromDate <= todayDate <= validToDate:
                     code = row[codeColumnIndex]
