@@ -174,6 +174,9 @@ class BpejWidget(QWidget):
             self.pW.set_text_statusbar.emit(
                 u'Provádím analýzu - oceňování podle BPEJ...', 0)
             
+            layer.removeSelection()
+            bpejLayer.removeSelection()
+            
             bpejField = self._edit_bpej_field(bpejField, layer)
             
             unionOutput = processing.runalg(
@@ -184,11 +187,10 @@ class BpejWidget(QWidget):
             expression = QgsExpression(
                 "\"{}\" is null "
                 "or "
-                "(\"{}\" is null and \"{}\" is null)"\
+                "\"{}\" is null"\
                 .format(
                     bpejField,
-                    self.dW.visibleDefaultColumnsPAR[0][:10],
-                    self.dW.allPuColumnsPAR[3][:10]))
+                    self.dW.visibleDefaultColumnsPAR[0][:10]))
             
             self.dW.delete_features_by_expression(unionLayer, expression)
             

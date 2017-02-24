@@ -158,10 +158,10 @@ class DistanceWidget(QWidget):
                     10)
                 return
             
-            if layer.selectedFeatureCount() != 0:
-                features = layer.selectedFeaturesIterator()
-            else:
-                features = layer.getFeatures()
+            layer.removeSelection()
+            refPointLayer.removeSelection()
+            
+            features = layer.getFeatures()
             
             self.pW.set_text_statusbar.emit(
                 u'Provádím analýzu - měření vzdálenosti...', 0)

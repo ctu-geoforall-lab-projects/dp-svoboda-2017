@@ -151,7 +151,11 @@ class PerimeterWidget(QWidget):
             if not self.dW.check_perimeter_layer(perimeterLayer, layer, True):
                 return
             
-            self.pW.set_text_statusbar.emit(u'Provádím kontrolu - obvodem...', 0)
+            self.pW.set_text_statusbar.emit(
+                u'Provádím kontrolu - obvodem...', 0)
+            
+            layer.removeSelection()
+            perimeterLayer.removeSelection()
             
             processing.runalg(
                 'qgis:selectbylocation',

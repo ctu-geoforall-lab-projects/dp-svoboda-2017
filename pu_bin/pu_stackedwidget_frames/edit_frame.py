@@ -551,7 +551,8 @@ class EditFrame(QFrame):
             
             layer.selectByIds(selectedFeaturesIDs)
             
-            self._add_selected_features_to_perimeter_layer(layer, perimeterLayer)
+            self._add_selected_features_to_perimeter_layer(
+                layer, perimeterLayer)
             
             perimeterLayer.removeSelection()
             
