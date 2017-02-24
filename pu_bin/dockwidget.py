@@ -343,9 +343,9 @@ class DockWidget(QDockWidget):
             successLayer = (False, layer)
             return successLayer
         
-        fieldNames = [field.name() for field in layer.pendingFields()]
+        fieldNames = [field.name().upper() for field in layer.pendingFields()]
         
-        if not all(column in fieldNames for column in self.requiredColumnsPAR):
+        if not all(column.upper() in fieldNames for column in self.requiredColumnsPAR):
             if sender:
                 sender.set_text_statusbar.emit(
                     u'Aktivní vrstva není VFK.', duration)
@@ -543,8 +543,7 @@ class DockWidget(QDockWidget):
                 self.lastActiveLayer.beforeCommitChanges.connect(
                     self._ensure_unique_field_values)
         except:
-            raise self.puError(
-                self,
+            self.display_error_messages(
                 u'Error connecting/disconnecting '
                 u'_ensure_unique_field_values function.')
     
@@ -616,7 +615,6 @@ class DockWidget(QDockWidget):
             
             layer.selectByIds(selectedFeaturesIDs)
         except:
-            raise self.puError(
-                self,
+            self.display_error_messages(
                 u'Error in function that ensures unique field values.')
 
