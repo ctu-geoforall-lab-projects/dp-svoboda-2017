@@ -22,9 +22,8 @@
 """
 
 from PyQt4.QtGui import (QFrame, QGridLayout, QToolBar, QToolButton, QIcon,
-                         QPixmap, QMenu, QLabel, QComboBox, QPushButton,
-                         QHBoxLayout, QRadioButton)
-from PyQt4.QtCore import pyqtSignal, QFileInfo, QDir
+                         QPixmap, QMenu, QLabel, QComboBox, QPushButton)
+from PyQt4.QtCore import pyqtSignal, QFileInfo, QDir, Qt
 
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
 from qgis.core import *
@@ -66,6 +65,7 @@ class EditFrame(QFrame):
         self.categoryValues = (0, 1, 2)
         self.categoryName = self.dW.requiredColumnsPAR[5]
         self.shortCategoryName = self.categoryName[:10]
+        self.setCategoryValue = 0
         self.lastPerimeterLayer = None
         
         self.setObjectName(u'editFrame')
@@ -194,23 +194,18 @@ class EditFrame(QFrame):
         self.setCategoryLabel.setText(u'Zařadit:')
         self.editGridLayout.addWidget(self.setCategoryLabel, 4, 0, 1, 1)
         
-        self.setCategoryHBoxLayout = QHBoxLayout(self)
-        self.editGridLayout.addLayout(self.setCategoryHBoxLayout, 4, 1)
-        
-        self.selectedRadioButton = QRadioButton(self)
-        self.selectedRadioButton.setObjectName(u'selectedRadioButton')
-        self.selectedRadioButton.setText(u'vybrané parcely')
-        self.selectedRadioButton.setToolTip(
-            u'Zařadit vybrané parcely do kategorie')
-        self.selectedRadioButton.toggle()
-        self.setCategoryHBoxLayout.addWidget(self.selectedRadioButton)
-        
-        self.perimeterRadioButton = QRadioButton(self)
-        self.perimeterRadioButton.setObjectName(u'perimeterRadioButton')
-        self.perimeterRadioButton.setText(u'obvodem')
-        self.perimeterRadioButton.setToolTip(
-            u'Zařadit všechny parcely do kategorií na základě obvodu')
-        self.setCategoryHBoxLayout.addWidget(self.perimeterRadioButton)
+        self.setCategoryComboBox = QComboBox(self)
+        self.setCategoryComboBox.setObjectName(u'setCategoryComboBox')
+        self.setCategoryComboBox.addItem(u'vybrané parcely')
+        self.setCategoryComboBox.setItemData(
+            0, u'Zařadit vybrané parcely do kategorie', Qt.ToolTipRole)
+        self.setCategoryComboBox.addItem(u'obvodem')
+        self.setCategoryComboBox.setItemData(
+            1, u'Zařadit všechny parcely do kategorií na základě obvodu',
+            Qt.ToolTipRole)
+        self.setCategoryComboBox.currentIndexChanged.connect(
+            self._set_setCategoryValue)
+        self.editGridLayout.addWidget(self.setCategoryComboBox, 4, 1, 1, 1)
         
         self.setCategoryPushButton = QPushButton(self)
         self.setCategoryPushButton.setObjectName(u'setCategoryPushButton')
@@ -236,6 +231,17 @@ class EditFrame(QFrame):
         """
         
         self.categoryValue = self.categoryComboBox.currentIndex()
+    
+    def _set_setCategoryValue(self):
+        """Sets setCategoryValue according to the current index.
+        
+        setCategoryValue - description:
+            0 - vybrané parcely
+            1 - obvodem
+        
+        """
+        
+        self.setCategoryValue = self.setCategoryComboBox.currentIndex()
     
     def set_perimeter_layer(self, perimeterLayer, lastPerimeterLayer=True):
         """Sets the perimeter layer in the perimeterMapLayerComboBox.
@@ -454,10 +460,10 @@ class EditFrame(QFrame):
     def _run_setting_pu_category(self, layer):
         """Calls methods for setting PU category.
         
-        When selectedRadioButton is checked it sets a categoryValue
+        When setCategoryValue equals 0 it sets a categoryValue
         to categoryName column for selected features.
         
-        When perimeterRadioButton is checked it sets a categoryValue
+        When setCategoryValue equals 1 it sets a categoryValue
         to categoryName column for all features according to current layer
         in perimeterMapLayerComboBox.
         
@@ -470,16 +476,17 @@ class EditFrame(QFrame):
             
             editing = self.dW.check_editing()
             
-            if self.selectedRadioButton.isChecked():
+            if self.setCategoryValue == 0:
                 self._set_pu_category_for_selected(layer, perimeterLayer)
             
-            if self.perimeterRadioButton.isChecked():
+            if self.setCategoryValue == 1:
                 self._set_pu_category_by_perimeter(layer, perimeterLayer)
             
             if editing:
                 self.toggleEditingAction.trigger()
         except:
             QgsApplication.processEvents()
+            
             self.dW.display_error_messages(
                 u'Error setting parcel category.',
                 u'Chyba při zařazování do kategorie parcel.')
@@ -662,7 +669,8 @@ class EditFrame(QFrame):
         self.set_text_statusbar.emit(
             u'Zařazuji parcely do kategorií na základě obvodu...', 0)
         
-        perimeterSelectedFeaturesIDs = perimeterLayer.selectedFeaturesIds()
+        layer.removeSelection()
+        perimeterLayer.removeSelection()
         
         selectedFeaturesIDs = layer.selectedFeaturesIds()
         
@@ -677,10 +685,6 @@ class EditFrame(QFrame):
         
             self.dW.set_field_value_for_features(
                 layer, features, self.categoryName, categoryValue)
-        
-        perimeterLayer.selectByIds(perimeterSelectedFeaturesIDs)
-        
-        layer.selectByIds(selectedFeaturesIDs)
         
         self.set_text_statusbar.emit(
             u'Zařazení parcel na základě obvodu úspěšně dokončeno.', 30)
