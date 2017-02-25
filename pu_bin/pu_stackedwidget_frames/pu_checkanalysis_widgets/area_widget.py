@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import (QWidget, QGridLayout, QLabel, QLineEdit,
+from PyQt4.QtGui import (QWidget, QVBoxLayout, QLabel, QLineEdit,
                          QDoubleValidator)
 from PyQt4.QtCore import QPyNullVariant, Qt
 
@@ -54,29 +54,25 @@ class AreaWidget(QWidget):
         
         self.setObjectName(u'areaWidget')
         
-        self.areaGridLayout = QGridLayout(self)
-        self.areaGridLayout.setObjectName(u'areaGridLayout')
-        self.areaGridLayout.setAlignment(Qt.AlignTop)
-        self.areaGridLayout.setContentsMargins(0, 0, 0, 0)
+        self.areaVBoxLayout = QVBoxLayout(self)
+        self.areaVBoxLayout.setObjectName(u'areaVBoxLayout')
+        self.areaVBoxLayout.setAlignment(Qt.AlignTop)
+        self.areaVBoxLayout.setContentsMargins(0, 0, 0, 0)
         
         self._build_widgets()
     
     def _build_widgets(self):
         """Builds own widgets."""
         
-        self.areaLabel = QLabel(self)
-        self.areaLabel.setObjectName(u'areaLabel')
-        self.areaLabel.setText(u'Mezní odchylka [%]:')
-        self.areaGridLayout.addWidget(self.areaLabel, 0, 0, 1, 1)
+        height = self.pW.checkAnalysisComboBox.height()
         
         self.areaLineEdit = QLineEdit(self)
         self.areaLineEdit.setObjectName(u'areaLineEdit')
+        self.areaLineEdit.setFixedHeight(height)
         doubleValidator = QDoubleValidator(self.areaLineEdit)
         doubleValidator.setBottom(0)
         self.areaLineEdit.setValidator(doubleValidator)
-        self.areaGridLayout.addWidget(self.areaLineEdit, 0, 1, 1, 1)
-        
-        self.areaGridLayout.setColumnStretch(1, 1)
+        self.areaVBoxLayout.addWidget(self.areaLineEdit)
     
     def execute(self, layer):
         """Executes the check.
@@ -162,4 +158,50 @@ class AreaWidget(QWidget):
             self.dW.display_error_messages(
                 u'Error executing "{}".'.format(currentCheckAnalysisName),
                 u'Chyba při provádění "{}".'.format(currentCheckAnalysisName))
+
+class AreaLabelWidget(QWidget):
+    """A label widget for 'area' check."""
+    
+    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
+        """Constructor.
+        
+        Args:
+            parentWidget (QWidget): A reference to the parent widget.
+            dockWidgetName (str): A name of the dock widget.
+            iface (QgisInterface): A reference to the QgisInterface.
+            dockWidget (QWidget): A reference to the dock widget.
+        
+        """
+        
+        self.pW = parentWidget
+        self.dWName = dockWidgetName
+        self.iface = iface
+        self.dW = dockWidget
+        
+        super(AreaLabelWidget, self).__init__(self.pW)
+        
+        self._setup_self()
+    
+    def _setup_self(self):
+        """Sets up self."""
+        
+        self.setObjectName(u'areaLabelWidget')
+        
+        self.areaVBoxLayout = QVBoxLayout(self)
+        self.areaVBoxLayout.setObjectName(u'areaVBoxLayout')
+        self.areaVBoxLayout.setAlignment(Qt.AlignTop)
+        self.areaVBoxLayout.setContentsMargins(0, 0, 0, 0)
+        
+        self._build_widgets()
+    
+    def _build_widgets(self):
+        """Builds own widgets."""
+        
+        height = self.pW.checkAnalysisComboBox.height()
+        
+        self.areaLabel = QLabel(self)
+        self.areaLabel.setObjectName(u'areaLabel')
+        self.areaLabel.setFixedHeight(height)
+        self.areaLabel.setText(u'Mezní odchylka [%]:')
+        self.areaVBoxLayout.addWidget(self.areaLabel)
 

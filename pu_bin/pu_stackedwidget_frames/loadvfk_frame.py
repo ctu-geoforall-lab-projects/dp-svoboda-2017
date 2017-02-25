@@ -80,11 +80,13 @@ class LoadVfkFrame(QFrame):
         
         self.browseVfkLabel = QLabel(self)
         self.browseVfkLabel.setObjectName(u'browseVfkLabel')
+        self.browseVfkLabel.setFixedHeight(self.browseVfkLabel.height())
         self.browseVfkLabel.setText(u'VFK soubor:')
         self.loadVfkGridLayout.addWidget(self.browseVfkLabel, 0, 0, 1, 1)
         
         self.browseVfkLineEdit = QLineEdit(self)
         self.browseVfkLineEdit.setObjectName(u'browseVfkLineEdit')
+        self.browseVfkLineEdit.setFixedHeight(self.browseVfkLineEdit.height())
         self.text_browseVfkLineEdit.connect(self._set_text_browseVfkLineEdit)
         self.browseVfkLineEdit.textChanged.connect(
             self._check_vfk_file_path)
@@ -92,6 +94,8 @@ class LoadVfkFrame(QFrame):
         
         self.browseVfkPushButton = QPushButton(self)
         self.browseVfkPushButton.setObjectName(u'browseVfkPushButton')
+        self.browseVfkPushButton.setFixedHeight(
+            self.browseVfkPushButton.height())
         self.browseVfkPushButton.clicked.connect(
             self._browse_vfk_files)
         self.browseVfkPushButton.setText(u'Procházet')
@@ -101,6 +105,8 @@ class LoadVfkFrame(QFrame):
         
         self.loadVfkProgressBar = QProgressBar(self)
         self.loadVfkProgressBar.setObjectName(u'loadVfkProgressBar')
+        self.loadVfkProgressBar.setFixedHeight(
+            self.loadVfkProgressBar.height())
         self.loadVfkProgressBar.setMinimum(0)
         self.value_loadVfkProgressBar.connect(
             self._set_value_loadVfkProgressBar)
@@ -109,6 +115,7 @@ class LoadVfkFrame(QFrame):
         
         self.loadVfkPushButton = QPushButton(self)
         self.loadVfkPushButton.setObjectName(u'loadVfkPushButton')
+        self.loadVfkPushButton.setFixedHeight(self.loadVfkPushButton.height())
         self.loadVfkPushButton.clicked.connect(self._start_loading_vfk_layer)
         self.loadVfkPushButton.setText(u'Načíst')
         self.loadVfkGridLayout.addWidget(self.loadVfkPushButton, 2, 2, 1, 1)

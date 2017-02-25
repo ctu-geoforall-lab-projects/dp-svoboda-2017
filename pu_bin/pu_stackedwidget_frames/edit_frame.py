@@ -137,12 +137,15 @@ class EditFrame(QFrame):
         
         self.perimeterLabel = QLabel(self)
         self.perimeterLabel.setObjectName(u'perimeterLabel')
+        self.perimeterLabel.setFixedHeight(self.perimeterLabel.height())
         self.perimeterLabel.setText(u'Obvod:')
         self.editGridLayout.addWidget(self.perimeterLabel, 1, 0, 1, 1)
         
         self.perimeterMapLayerComboBox = QgsMapLayerComboBox(self)
         self.perimeterMapLayerComboBox.setObjectName(
             u'perimeterMapLayerComboBox')
+        self.perimeterMapLayerComboBox.setFixedHeight(
+            self.perimeterMapLayerComboBox.height())
         self.perimeterMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PolygonLayer)
         self.perimeterMapLayerComboBox.activated.connect(
@@ -158,6 +161,8 @@ class EditFrame(QFrame):
         self.createPerimeterPushButton = QPushButton(self)
         self.createPerimeterPushButton.setObjectName(
             u'createPerimeterPushButton')
+        self.createPerimeterPushButton.setFixedHeight(
+            self.createPerimeterPushButton.height())
         self.createPerimeterPushButton.setText(u'Vytvořit')
         self.createPerimeterPushButton.setToolTip(
             u'Vytvořit vrstvu obvodu (.shp) z aktivní vrstvy a načíst')
@@ -167,11 +172,13 @@ class EditFrame(QFrame):
         
         self.categoryLabel = QLabel(self)
         self.categoryLabel.setObjectName(u'categoryLabel')
+        self.categoryLabel.setFixedHeight(self.categoryLabel.height())
         self.categoryLabel.setText(u'Kategorie parcel:')
         self.editGridLayout.addWidget(self.categoryLabel, 2, 0, 1, 1)
         
         self.categoryComboBox = QComboBox(self)
         self.categoryComboBox.setObjectName(u'categoryComboBox')
+        self.categoryComboBox.setFixedHeight(self.categoryComboBox.height())
         self.categoryComboBox.addItem(u'mimo obvod (0)')
         self.categoryComboBox.addItem(u'v obvodu - neřešené (1)')
         self.categoryComboBox.addItem(u'v obvodu - řešené (2)')
@@ -181,6 +188,8 @@ class EditFrame(QFrame):
         
         self.selectCategoryPushButton = QPushButton(self)
         self.selectCategoryPushButton.setObjectName(u'selectCategoryPushButton')
+        self.selectCategoryPushButton.setFixedHeight(
+            self.selectCategoryPushButton.height())
         self.selectCategoryPushButton.setText(u'Zobrazit')
         self.selectCategoryPushButton.setToolTip(
             u'Zobrazit (vybrat) parcely v kategorii')
@@ -191,11 +200,14 @@ class EditFrame(QFrame):
         
         self.setCategoryLabel = QLabel(self)
         self.setCategoryLabel.setObjectName(u'setCategoryLabel')
+        self.setCategoryLabel.setFixedHeight(self.setCategoryLabel.height())
         self.setCategoryLabel.setText(u'Zařadit:')
         self.editGridLayout.addWidget(self.setCategoryLabel, 4, 0, 1, 1)
         
         self.setCategoryComboBox = QComboBox(self)
         self.setCategoryComboBox.setObjectName(u'setCategoryComboBox')
+        self.setCategoryComboBox.setFixedHeight(
+            self.setCategoryComboBox.height())
         self.setCategoryComboBox.addItem(u'vybrané parcely')
         self.setCategoryComboBox.setItemData(
             0, u'Zařadit vybrané parcely do kategorie', Qt.ToolTipRole)
@@ -209,6 +221,8 @@ class EditFrame(QFrame):
         
         self.setCategoryPushButton = QPushButton(self)
         self.setCategoryPushButton.setObjectName(u'setCategoryPushButton')
+        self.setCategoryPushButton.setFixedHeight(
+            self.setCategoryPushButton.height())
         self.setCategoryPushButton.setText(u'Zařadit')
         self.setCategoryPushButton.clicked.connect(
             self._start_setting_pu_category)

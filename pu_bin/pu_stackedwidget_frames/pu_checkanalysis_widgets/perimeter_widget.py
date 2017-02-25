@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QWidget, QLabel, QGridLayout
+from PyQt4.QtGui import QWidget, QLabel, QVBoxLayout
 from PyQt4.QtCore import Qt
 
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
@@ -59,24 +59,22 @@ class PerimeterWidget(QWidget):
         
         self.setObjectName(u'perimeterWidget')
         
-        self.perimeterGridLayout = QGridLayout(self)
-        self.perimeterGridLayout.setObjectName(u'perimeterGridLayout')
-        self.perimeterGridLayout.setAlignment(Qt.AlignTop)
-        self.perimeterGridLayout.setContentsMargins(0, 0, 0, 0)
+        self.perimeterVBoxLayout = QVBoxLayout(self)
+        self.perimeterVBoxLayout.setObjectName(u'perimeterVBoxLayout')
+        self.perimeterVBoxLayout.setAlignment(Qt.AlignTop)
+        self.perimeterVBoxLayout.setContentsMargins(0, 0, 0, 0)
         
         self._build_widgets()
     
     def _build_widgets(self):
         """Builds own widgets."""
         
-        self.perimeterLabel = QLabel(self)
-        self.perimeterLabel.setObjectName(u'perimeterLabel')
-        self.perimeterLabel.setText(u'Obvod:')
-        self.perimeterGridLayout.addWidget(self.perimeterLabel, 0, 0, 1, 1)
+        height = self.pW.checkAnalysisComboBox.height()
         
         self.perimeterMapLayerComboBox = QgsMapLayerComboBox(self)
         self.perimeterMapLayerComboBox.setObjectName(
             u'perimeterMapLayerComboBox')
+        self.perimeterMapLayerComboBox.setFixedHeight(height)
         self.perimeterMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PolygonLayer)
         self.perimeterMapLayerComboBox.activated.connect(
@@ -86,10 +84,7 @@ class PerimeterWidget(QWidget):
         QgsMapLayerRegistry.instance().layersRemoved.connect(
             self._reset_perimeter_layer)
         self.set_perimeter_layer(self.lastPerimeterLayer)
-        self.perimeterGridLayout.addWidget(
-            self.perimeterMapLayerComboBox, 0, 1, 1, 1)
-        
-        self.perimeterGridLayout.setColumnStretch(1, 1)
+        self.perimeterVBoxLayout.addWidget(self.perimeterMapLayerComboBox)
     
     def set_perimeter_layer(self, perimeterLayer, lastPerimeterLayer=True):
         """Sets the perimeter layer in the perimeterMapLayerComboBox.
@@ -195,4 +190,51 @@ class PerimeterWidget(QWidget):
             self.dW.display_error_messages(
                 u'Error executing "{}".'.format(currentCheckAnalysisName),
                 u'Chyba při provádění "{}".'.format(currentCheckAnalysisName))
+
+class PerimeterLabelWidget(QWidget):
+    """A label widget for 'perimeter' check."""
+    
+    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
+        """Constructor.
+        
+        Args:
+            parentWidget (QWidget): A reference to the parent widget.
+            dockWidgetName (str): A name of the dock widget.
+            iface (QgisInterface): A reference to the QgisInterface.
+            dockWidget (QWidget): A reference to the dock widget.
+        
+        """
+        
+        self.pW = parentWidget
+        self.dWName = dockWidgetName
+        self.iface = iface
+        self.dW = dockWidget
+        self.lastPerimeterLayer = None
+        
+        super(PerimeterLabelWidget, self).__init__(self.pW)
+        
+        self._setup_self()
+    
+    def _setup_self(self):
+        """Sets up self."""
+        
+        self.setObjectName(u'perimeterLabelWidget')
+        
+        self.perimeterVBoxLayout = QVBoxLayout(self)
+        self.perimeterVBoxLayout.setObjectName(u'perimeterVBoxLayout')
+        self.perimeterVBoxLayout.setAlignment(Qt.AlignTop)
+        self.perimeterVBoxLayout.setContentsMargins(0, 0, 0, 0)
+        
+        self._build_widgets()
+    
+    def _build_widgets(self):
+        """Builds own widgets."""
+        
+        minHeight = self.pW.checkAnalysisComboBox.height()
+        
+        self.perimeterLabel = QLabel(self)
+        self.perimeterLabel.setObjectName(u'perimeterLabel')
+        self.perimeterLabel.setFixedHeight(minHeight)
+        self.perimeterLabel.setText(u'Obvod:')
+        self.perimeterVBoxLayout.addWidget(self.perimeterLabel)
 

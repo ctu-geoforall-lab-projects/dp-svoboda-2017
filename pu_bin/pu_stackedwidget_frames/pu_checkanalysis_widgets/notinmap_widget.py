@@ -99,3 +99,31 @@ class NotInMapWidget(QWidget):
                 u'Error executing "{}".'.format(currentCheckAnalysisName),
                 u'Chyba při provádění "{}".'.format(currentCheckAnalysisName))
 
+class NotInMapLabelWidget(QWidget):
+    """A label widget for 'not in map' check."""
+    
+    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
+        """Constructor.
+        
+        Args:
+            parentWidget (QWidget): A reference to the parent widget.
+            dockWidgetName (str): A name of the dock widget.
+            iface (QgisInterface): A reference to the QgisInterface.
+            dockWidget (QWidget): A reference to the dock widget.
+        
+        """
+        
+        self.pW = parentWidget
+        self.dWName = dockWidgetName
+        self.iface = iface
+        self.dW = dockWidget
+        
+        super(NotInMapLabelWidget, self).__init__(self.pW)
+        
+        self._setup_self()
+    
+    def _setup_self(self):
+        """Sets up self."""
+        
+        self.setObjectName(u'notInMapLabelWidget')
+

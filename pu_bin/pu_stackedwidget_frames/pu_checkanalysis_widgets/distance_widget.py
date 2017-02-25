@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QWidget, QLabel, QGridLayout
+from PyQt4.QtGui import QWidget, QLabel, QVBoxLayout
 from PyQt4.QtCore import Qt
 
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
@@ -60,24 +60,22 @@ class DistanceWidget(QWidget):
         
         self.setObjectName(u'distanceWidget')
         
-        self.distanceGridLayout = QGridLayout(self)
-        self.distanceGridLayout.setObjectName(u'distanceGridLayout')
-        self.distanceGridLayout.setAlignment(Qt.AlignTop)
-        self.distanceGridLayout.setContentsMargins(0, 0, 0, 0)
+        self.distanceVBoxLayout = QVBoxLayout(self)
+        self.distanceVBoxLayout.setObjectName(u'distanceVBoxLayout')
+        self.distanceVBoxLayout.setAlignment(Qt.AlignTop)
+        self.distanceVBoxLayout.setContentsMargins(0, 0, 0, 0)
         
         self._build_widgets()
     
     def _build_widgets(self):
         """Builds own widgets."""
         
-        self.refPointLabel = QLabel(self)
-        self.refPointLabel.setObjectName(u'refPointLabel')
-        self.refPointLabel.setText(u'Referenční bod:')
-        self.distanceGridLayout.addWidget(self.refPointLabel, 0, 0, 1, 1)
+        height = self.pW.checkAnalysisComboBox.height()
         
         self.refPointMapLayerComboBox = QgsMapLayerComboBox(self)
         self.refPointMapLayerComboBox.setObjectName(
             u'refPointMapLayerComboBox')
+        self.refPointMapLayerComboBox.setFixedHeight(height)
         self.refPointMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PointLayer)
         QgsMapLayerRegistry.instance().layersAdded.connect(
@@ -85,10 +83,7 @@ class DistanceWidget(QWidget):
         QgsMapLayerRegistry.instance().layersRemoved.connect(
             self._reset_ref_point_layer)
         self.set_ref_point_layer(self.lastRefPointLayer)
-        self.distanceGridLayout.addWidget(
-            self.refPointMapLayerComboBox, 0, 1, 1, 1)
-        
-        self.distanceGridLayout.setColumnStretch(1, 1)
+        self.distanceVBoxLayout.addWidget(self.refPointMapLayerComboBox)
     
     def set_ref_point_layer(self, refPointLayer, lastRefPointLayer=True):
         """Sets the reference point layer in the refPointMapLayerComboBox.
@@ -220,4 +215,51 @@ class DistanceWidget(QWidget):
         else:
             self.lastRefPointLayer = \
                 self.refPointMapLayerComboBox.currentLayer()
+
+class DistanceLabelWidget(QWidget):
+    """A label widget for 'distance' analysis."""
+    
+    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
+        """Constructor.
+        
+        Args:
+            parentWidget (QWidget): A reference to the parent widget.
+            dockWidgetName (str): A name of the dock widget.
+            iface (QgisInterface): A reference to the QgisInterface.
+            dockWidget (QWidget): A reference to the dock widget.
+        
+        """
+        
+        self.pW = parentWidget
+        self.dWName = dockWidgetName
+        self.iface = iface
+        self.dW = dockWidget
+        self.lastRefPointLayer = None
+        
+        super(DistanceLabelWidget, self).__init__(self.pW)
+        
+        self._setup_self()
+    
+    def _setup_self(self):
+        """Sets up self."""
+        
+        self.setObjectName(u'distanceLabelWidget')
+        
+        self.distanceVBoxLayout = QVBoxLayout(self)
+        self.distanceVBoxLayout.setObjectName(u'distanceVBoxLayout')
+        self.distanceVBoxLayout.setAlignment(Qt.AlignTop)
+        self.distanceVBoxLayout.setContentsMargins(0, 0, 0, 0)
+        
+        self._build_widgets()
+    
+    def _build_widgets(self):
+        """Builds own widgets."""
+        
+        height = self.pW.checkAnalysisComboBox.height()
+        
+        self.refPointLabel = QLabel(self)
+        self.refPointLabel.setObjectName(u'refPointLabel')
+        self.refPointLabel.setFixedHeight(height)
+        self.refPointLabel.setText(u'Referenční bod:')
+        self.distanceVBoxLayout.addWidget(self.refPointLabel)
 
