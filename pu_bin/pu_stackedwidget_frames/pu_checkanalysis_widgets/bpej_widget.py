@@ -81,7 +81,7 @@ class BpejWidget(QWidget):
         
         self.bpejLayerLabel = QLabel(self)
         self.bpejLayerLabel.setObjectName(u'bpejLayerLabel')
-        self.bpejLayerLabel.setText(u'Vrstva BPEJ:')
+        self.bpejLayerLabel.setText(u'BPEJ:')
         self.bpejGridLayout.addWidget(self.bpejLayerLabel, 0, 0, 1, 1)
         
         self.bpejMapLayerComboBox = QgsMapLayerComboBox(self)
