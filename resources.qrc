@@ -1,10 +1,10 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="PU_Plugin.png">data/icons/PU_Plugin.png</file>
+        <file alias="puplugin.png">data/icons/puplugin.png</file>
         <file alias="PAR.qml">data/qml/PAR.qml</file>
         <file alias="perimeter.qml">data/qml/perimeter.qml</file>
-        <file alias="db.png">data/icons/db.png</file>
+        <file alias="loadvfk.png">data/icons/loadvfk.png</file>
         <file alias="edit.png">data/icons/edit.png</file>
-        <file alias="check.png">data/icons/check.png</file>
+        <file alias="checkanalysis.png">data/icons/checkanalysis.png</file>
     </qresource>
 </RCC>

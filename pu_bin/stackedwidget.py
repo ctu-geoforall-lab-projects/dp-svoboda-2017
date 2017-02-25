@@ -78,9 +78,10 @@ class StackedWidget(QStackedWidget):
         self.checkAnalysisFrame = checkanalysis_frame.CheckAnalysisFrame(
             self, self.dWName, self.iface, self.dW)
         self.addWidget(self.checkAnalysisFrame)
-        self.dW.toolBar.checkAction.triggered.connect(
+        self.dW.toolBar.checkAnalysisAction.triggered.connect(
             self.openTabSignalMapper.map)
-        self.openTabSignalMapper.setMapping(self.dW.toolBar.checkAction, 2)
+        self.openTabSignalMapper.setMapping(
+            self.dW.toolBar.checkAnalysisAction, 2)
         
         self.openTabSignalMapper.mapped.connect(self.setCurrentIndex)
         

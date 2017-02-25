@@ -30,7 +30,7 @@ tags=pu
 
 homepage=https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017
 category=Plugins
-icon=:/PU_Plugin.png
+icon=:/puplugin.png
 # experimental flag
 experimental=True
 
