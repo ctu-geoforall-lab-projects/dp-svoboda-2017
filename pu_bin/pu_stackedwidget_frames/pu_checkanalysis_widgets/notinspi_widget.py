@@ -67,7 +67,7 @@ class NotInSpiWidget(QWidget):
                 u'Provádím kontrolu - není v SPI...', 0)
             
             expression = QgsExpression(
-                "\"{}\" is null".format(self.dW.visibleDefaultColumnsPAR[0]))
+                "\"{}\" is null".format(self.dW.requiredColumnsPAR[7]))
             
             self.dW.select_features_by_expression(layer, expression)
             

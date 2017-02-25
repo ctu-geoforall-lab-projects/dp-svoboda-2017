@@ -64,7 +64,7 @@ class EditFrame(QFrame):
         
         self.categoryValue = 0
         self.categoryValues = (0, 1, 2)
-        self.categoryName = 'PU_KATEGORIE'
+        self.categoryName = self.dW.requiredColumnsPAR[5]
         self.shortCategoryName = self.categoryName[:10]
         self.lastPerimeterLayer = None
         
