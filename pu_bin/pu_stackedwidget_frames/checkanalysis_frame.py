@@ -94,8 +94,6 @@ class CheckAnalysisFrame(QFrame):
         self.checkAnalysisGridLayout.addWidget(
             self.checkAnalysisComboBox, 0, 1, 1, 1)
         
-        QgsMessageLog.logMessage(str(self.checkAnalysisComboBox.height()), 'test')
-        
         perimeterString = u'kontrola - obvodem'
         self.checkAnalysisComboBox.addItem(perimeterString)
         self.checkAnalysisComboBox.setItemData(
@@ -215,8 +213,6 @@ class CheckAnalysisFrame(QFrame):
             u'Provést kontrolu a vybrat problémové parcely')
         self.checkAnalysisGridLayout.addWidget(
             self.checkAnalysisPushButton, 3, 0, 1, 2)
-        
-        QgsMessageLog.logMessage('spacing' + str(self.checkAnalysisGridLayout.spacing()/2), 'test')
     
     def _run_check(self):
         """Starts current check or analysis.
