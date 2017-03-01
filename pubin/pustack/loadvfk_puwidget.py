@@ -194,6 +194,7 @@ class LoadVfkPuWidget(PuWidget):
             QgsApplication.processEvents()
             
             self.dW.display_error_messages(
+                self,
                 u'Error loading VFK file "{}".'.format(filePath),
                 u'Chyba při načítání VFK souboru.',
                 u'Chyba při načítání VFK souboru "{}".'.format(filePath))
@@ -236,7 +237,7 @@ class LoadVfkPuWidget(PuWidget):
             
             if not vfkDataSource:
                 raise self.dW.puError(
-                    self.dW,
+                    self.dW, self,
                     u'Failed to load data, "{}" is not a valid VFK datasource.'
                     .format(dbPath),
                     u'Data nelze načíst.',
@@ -267,7 +268,7 @@ class LoadVfkPuWidget(PuWidget):
         
         if not sqliteDataSource:
             raise self.dW.puError(
-                self.dW,
+                self.dW, self,
                 u'Failed to load data, "{}" is not a valid SQLite datasource.'
                 .format(dbPath),
                 u'Data nelze načíst.',
@@ -309,7 +310,7 @@ class LoadVfkPuWidget(PuWidget):
             dataSource.Destroy()
             
             raise self.dW.puError(
-                self.dW,
+                self.dW, self,
                 u'VFK file does not contain "{}" layer, therefore it can not be '
                 u'loaded by PU Plugin. The file can be '
                 u'loaded by "Add Vector Layer"'.format(vfkLayerCode),
@@ -358,7 +359,7 @@ class LoadVfkPuWidget(PuWidget):
         
         if not QSqlDatabase.isDriverAvailable('QSQLITE'):
             raise self.dW.puError(
-                self.dW,
+                self.dW, self,
                 u'SQLITE database driver is not available.',
                 u'Databázový ovladač QSQLITE není dostupný.',
                 u'Databázový ovladač QSQLITE není dostupný.')
@@ -371,7 +372,7 @@ class LoadVfkPuWidget(PuWidget):
         
         if not db.open():
             raise self.dW.puError(
-                self.dW,
+                self.dW, self,
                 u'Database connection failed.',
                 u'Nepodařilo se připojit k databázi.',
                 u'Nepodařilo se připojit k databázi.')
@@ -514,7 +515,7 @@ class LoadVfkPuWidget(PuWidget):
             QgsApplication.processEvents()
         else:
             raise self.dW.puError(
-                self.dW,
+                self.dW, self,
                 u'Layer {} is not valid.'.format(vfkLayerCode),
                 u'Vrstva {} není platná.'.format(vfkLayerCode),
                 u'Vrstva {} není platná.'.format(vfkLayerCode))

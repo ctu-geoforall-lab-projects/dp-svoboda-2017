@@ -76,6 +76,7 @@ class NotInMapPuCaWidget(PuCaWidget):
                 self.pW.checkAnalysisComboBox.currentText()
             
             self.dW.display_error_messages(
+                self.pW,
                 u'Error executing "{}".'.format(currentCheckAnalysisName),
                 u'Chyba při provádění "{}".'.format(currentCheckAnalysisName))
 

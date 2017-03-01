@@ -337,6 +337,7 @@ class EditPuWidget(PuWidget):
                     u'Obvod byl úspešně vytvořen.', 15)
         except:
             self.dW.display_error_messages(
+                self,
                 u'Error creating perimeter.',
                 u'Chyba při vytváření obvodu.')
     
@@ -471,6 +472,7 @@ class EditPuWidget(PuWidget):
             QgsApplication.processEvents()
             
             self.dW.display_error_messages(
+                self,
                 u'Error setting parcel category.',
                 u'Chyba při zařazování do kategorie parcel.')
     
@@ -708,6 +710,7 @@ class EditPuWidget(PuWidget):
                     .format(currentCategory, featuresCount), duration)
         except:
             self.dW.display_error_messages(
+                self,
                 u'Error selecting parcels in category.',
                 u'Chyba při vybírání parcel v kategorii.')
 

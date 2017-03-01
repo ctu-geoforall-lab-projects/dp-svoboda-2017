@@ -80,7 +80,7 @@ class StatusBar(QStatusBar):
         if duration == 0:
             self.frameText.setValue(sender, text)
         else:
-            self.frameText.setValue(sender, '')
+            self.frameText.setValue(sender, u'')
         
         duration *= 1000
         

@@ -216,6 +216,7 @@ class BpejPuCaWidget(PuCaWidget):
                 self.pW.checkAnalysisComboBox.currentText()
             
             self.dW.display_error_messages(
+                self.pW,
                 u'Error executing "{}".'.format(currentCheckAnalysisName),
                 u'Chyba při provádění "{}".'.format(currentCheckAnalysisName))
     
@@ -348,7 +349,7 @@ class BpejPuCaWidget(PuCaWidget):
             testBpejConnection = urllib.urlopen(bpejZipUrl)
         except:
             raise self.dW.puError(
-                self.dW,
+                self.dW, self.pW,
                 u'A Connection to "{}" failed.'.format(bpejZipUrl),
                 u'Nepodařilo se připojit k "{}"'.format(bpejZipUrl))
         else:
@@ -381,7 +382,7 @@ class BpejPuCaWidget(PuCaWidget):
             bpejZip.close()
             
             raise self.dW.puError(
-                self.dW,
+                self.dW, self.pW,
                 u'The structure of the BPEJ ZIP file has changed. '
                 u'The BPEJ ZIP file contains more than one file.',
                 u'Struktura stahovaného BPEJ ZIP souboru se změnila.')

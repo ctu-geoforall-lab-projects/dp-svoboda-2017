@@ -39,8 +39,6 @@ from stackedwidget import StackedWidget
 class DockWidget(QDockWidget):
     """A main widget of the plugin."""
     
-    set_text_statusbar = pyqtSignal(str, int)
-    
     def __init__(self, iface, pluginDir, name):
         """Constructor.
         
@@ -122,8 +120,6 @@ class DockWidget(QDockWidget):
             self, self.dWName, self.iface, self.pluginDir)
         self.gridLayout.addWidget(self.statusBar, 2, 0, 1, 1)
         
-        self.set_text_statusbar.connect(self.statusBar.set_text)
-        
         self.frame = QFrame(self)
         self.frame.setObjectName(u'frame')
         self.frame.setFrameShape(QFrame.StyledPanel)
@@ -136,6 +132,7 @@ class DockWidget(QDockWidget):
     
     def display_error_messages(
             self,
+            sender,
             engLogMessage, czeStatusBarMessage=None, czeMessageBarMessage=None,
             duration=20):
         """Displays error messages.
@@ -144,6 +141,7 @@ class DockWidget(QDockWidget):
         and the Message Bar.
         
         Args:
+            sender (QWidget): A reference to the sender widget.
             engLogMessage (str): A message in the 'PU Plugin' Log Messages Tab.
             czeStatusBarMessage (str): A message in the statusBar.
             czeMessageBarMessage (str): A message in the Message Bar.
@@ -151,6 +149,8 @@ class DockWidget(QDockWidget):
                 in seconds.
         
         """
+        
+        sender.set_text_statusbar.emit(u'', 1)
         
         pluginName = u'PU Plugin'
         
@@ -163,7 +163,7 @@ class DockWidget(QDockWidget):
         QgsMessageLog.logMessage(engLogMessage, pluginName)
         
         if czeStatusBarMessage:
-            self.set_text_statusbar.emit(czeStatusBarMessage, duration)
+            sender.set_text_statusbar.emit(czeStatusBarMessage, duration)
         
         if czeMessageBarMessage:
             self.iface.messageBar().pushMessage(
@@ -174,7 +174,8 @@ class DockWidget(QDockWidget):
         """A custom exception."""
         
         def __init__(
-                self, dW,
+                self,
+                dW, sender,
                 engLogMessage,
                 czeStatusBarMessage=None,
                 czeMessageBarMessage=None,
@@ -183,6 +184,7 @@ class DockWidget(QDockWidget):
             
             Args:
                 dW (QWidget): A reference to the dock widget.
+                sender (QWidget): A reference to the sender widget.
                 engLogMessage (str): A message in the 'PU Plugin' Log Messages
                     Tab.
                 czeStatusBarMessage (str): A message in the statusBar.
@@ -195,6 +197,7 @@ class DockWidget(QDockWidget):
             super(Exception, self).__init__(dW)
             
             dW.display_error_messages(
+                sender,
                 engLogMessage, czeStatusBarMessage, czeMessageBarMessage,
                 duration)
     
@@ -543,6 +546,7 @@ class DockWidget(QDockWidget):
                     self._ensure_unique_field_values)
         except:
             self.display_error_messages(
+                self,
                 u'Error connecting/disconnecting '
                 u'_ensure_unique_field_values function.')
     
@@ -615,5 +619,6 @@ class DockWidget(QDockWidget):
             layer.selectByIds(selectedFeaturesIDs)
         except:
             self.display_error_messages(
+                self,
                 u'Error in function that ensures unique field values.')
 
