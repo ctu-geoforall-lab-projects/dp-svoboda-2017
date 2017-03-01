@@ -261,6 +261,12 @@ class LoadVfkPuWidget(PuWidget):
             
             QgsApplication.processEvents()
             
+            for vertexVfkLayerCode in self.dW.vertexVfkLayerCodes:
+                if vertexVfkLayerCode in layerNames:
+                    self._build_geometry(vertexVfkLayerCode, vfkDataSource)
+                    
+                    QgsApplication.processEvents()
+            
             vfkDataSource.Destroy()
         
         sqliteDriver = ogr.GetDriverByName('SQLite')

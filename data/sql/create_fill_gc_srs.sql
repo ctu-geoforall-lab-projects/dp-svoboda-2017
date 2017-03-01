@@ -5,11 +5,30 @@ create table if not exists geometry_columns (
     coord_dimension integer,
     srid integer,
     geometry_format varchar);
+
 insert into `geometry_columns`
 values (
     'PAR',
     'geometry',
     3,
+    2,
+    5514,
+    'WKB');
+
+insert into `geometry_columns`
+values (
+    'SOBR',
+    'geometry',
+    1,
+    2,
+    5514,
+    'WKB');
+
+insert into `geometry_columns`
+values (
+    'SPOL',
+    'geometry',
+    1,
     2,
     5514,
     'WKB');

@@ -87,6 +87,8 @@ class DockWidget(QDockWidget):
         self.requiredColumnsPAR = \
             self.allPuColumnsPAR + self.allDefaultColumnsPAR
         
+        self.vertexVfkLayerCodes = ('SOBR', 'SPOL', 'HEY')
+        
         self.dWName = u'dockWidget'
         
         self.settings = QSettings(self)
