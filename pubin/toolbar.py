@@ -28,21 +28,23 @@ from qgis.core import *
 
 
 class ToolBar(QToolBar):
-    """A widget which contains tools."""
+    """A tool bar."""
     
-    def __init__(self, parentWidget, dockWidgetName, iface):
+    def __init__(self, parentWidget, dockWidgetName, iface, pluginDir):
         """Constructor.
         
         Args:
             parentWidget (QToolBar): A reference to the parent widget.
             dockWidgetName (str): A name of the dock widget.
             iface (QgisInterface): A reference to the QgisInterface.
+            pluginDir (str): A plugin directory.
         
         """
         
         self.dW = parentWidget
         self.dWName = dockWidgetName
         self.iface = iface
+        self.pluginDir = pluginDir
         
         super(ToolBar, self).__init__(self.dW)
         
@@ -52,13 +54,13 @@ class ToolBar(QToolBar):
         """Sets up self."""
         
         self.setObjectName(u'toolbar')
-        self._set_icon_size()
-        self.iface.initializationCompleted.connect(self._set_icon_size)
         
         self._build_widgets()
     
     def _build_widgets(self):
-        """Build own widgets."""
+        """Builds own widgets."""
+        
+        self.iface.initializationCompleted.connect(self._set_icon_size)
         
         self.openTabActionGroup = QActionGroup(self)
         
@@ -157,7 +159,7 @@ class ToolBar(QToolBar):
         self.addAction(self.openTableAction)
     
     def _set_icon_size(self):
-        """Sets icon size according to current QGIS settings."""
+        """Sets icon size according to the current QGIS settings."""
         
         self.setIconSize(self.iface.mainWindow().iconSize())
     
@@ -166,10 +168,4 @@ class ToolBar(QToolBar):
         
         self.selectToolButton.setDefaultAction(
             self.qgisSelectToolButton.defaultAction())
-    
-    def _set_default_action_measureToolButton(self):
-        """Sets measureToolButton's default action."""
-        
-        self.measureToolButton.setDefaultAction(
-            self.qgisMeasureToolButton.defaultAction())
 

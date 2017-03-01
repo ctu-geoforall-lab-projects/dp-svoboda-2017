@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- puPlugin
+ PuWidget
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
         begin                : 2016-09-01
+        git sha              : $Format:%H$
         copyright            : (C) 2016 by Ondřej Svoboda
         email                : svoboond@gmail.com
-        git sha              : $Format:%H$
  ***************************************************************************/
 
 /***************************************************************************
@@ -21,17 +21,42 @@
  ***************************************************************************/
 """
 
+from PyQt4.QtGui import QWidget
 
-def classFactory(iface):
-    """Loads puPlugin class.
-    
-    Args:
-        iface (QgisInterface): A reference to the QgisInterface.
 
-    Returns:
-        class: The main class of the PU Plugin.
+class PuWidget(QWidget):
+    """A subclass of QWidget."""
     
-    """
+    def __init__(
+            self, parentWidget, dockWidgetName, iface, dockWidget, pluginDir):
+        """Constructor.
+        
+        Args:
+            parentWidget (QWidget): A reference to the parent widget.
+            dockWidgetName (str): A name of the dock widget.
+            iface (QgisInterface): A reference to the QgisInterface.
+            dockWidget (QWidget): A reference to the dock widget.
+            pluginDir (str): A plugin directory.
+        
+        """
+        
+        self.pW = parentWidget
+        self.dWName = dockWidgetName
+        self.iface = iface
+        self.dW = dockWidget
+        self.pluginDir = pluginDir
+        
+        super(PuWidget, self).__init__(self.pW)
+        
+        self._setup_self()
     
-    from puplugin import puPlugin
-    return puPlugin(iface)
+    def _setup_self(self):
+        """Sets up self."""
+        
+        raise NotImplementedError
+    
+    def _build_widgets(self):
+        """Builds own widgets."""
+        
+        raise NotImplementedError
+

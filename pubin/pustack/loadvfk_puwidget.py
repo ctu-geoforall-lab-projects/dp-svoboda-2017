@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- LoadVfkFrame
+ LoadVfkPuWidget
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import (QFrame, QGridLayout, QLabel, QLineEdit, QPushButton,
+from PyQt4.QtGui import (QGridLayout, QLabel, QLineEdit, QPushButton,
                          QProgressBar, QFileDialog)
 from PyQt4.QtCore import pyqtSignal, QFileInfo, QDir, QUuid, QFile, Qt
 from PyQt4.QtSql import QSqlDatabase, QSqlQuery
@@ -30,99 +30,72 @@ from qgis.core import *
 
 from osgeo import ogr
 
+from puwidget import PuWidget
 from load_thread import LoadThread
 
 
-class LoadVfkFrame(QFrame):
-    """A frame which contains widgets for loading a VFK file."""
+class LoadVfkPuWidget(PuWidget):
+    """A widget for loading a VFK file."""
     
     set_text_statusbar = pyqtSignal(str, int)
-    text_browseVfkLineEdit = pyqtSignal(str)
-    value_loadVfkProgressBar = pyqtSignal(int)
-    
-    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
-        """Constructor.
-        
-        Args:
-            parentWidget (QWidget): A reference to the parent widget.
-            dockWidgetName (str): A name of the dock widget.
-            iface (QgisInterface): A reference to the QgisInterface.
-            dockWidget (QWidget): A reference to the dock widget.
-        
-        """
-        
-        self.pW = parentWidget
-        self.dWName = dockWidgetName
-        self.iface = iface
-        self.dW = dockWidget
-        
-        super(LoadVfkFrame, self).__init__(self.pW)
-        
-        self._setup_self()
+    set_text_browseVfkLineEdit = pyqtSignal(str)
+    set_value_loadVfkProgressBar = pyqtSignal(int)
     
     def _setup_self(self):
         """Sets up self."""
         
-        self.setObjectName(u'loadVfkFrame')
-        self.setFrameShape(QFrame.StyledPanel)
-        self.setFrameShadow(QFrame.Raised)
+        self.setObjectName(u'loadVfkPuWidget')
         
-        self.set_text_statusbar.connect(self.dW.statusBar.set_text_statusbar)
-        self.set_text_statusbar.emit(u'Vyberte VFK soubor.', 0)
-        
-        self.loadVfkGridLayout = QGridLayout(self)
-        self.loadVfkGridLayout.setObjectName(u'loadVfkGridLayout')
+        self.gridLayout = QGridLayout(self)
+        self.gridLayout.setObjectName(u'gridLayout')
         
         self._build_widgets()
     
     def _build_widgets(self):
         """Builds own widgets."""
         
+        self.set_text_statusbar.connect(self.dW.statusBar.set_text)
+        self.set_text_statusbar.emit(u'Vyberte VFK soubor.', 0)
+        
         self.browseVfkLabel = QLabel(self)
         self.browseVfkLabel.setObjectName(u'browseVfkLabel')
-        self.browseVfkLabel.setFixedHeight(self.browseVfkLabel.height())
         self.browseVfkLabel.setText(u'VFK soubor:')
-        self.loadVfkGridLayout.addWidget(self.browseVfkLabel, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.browseVfkLabel, 0, 0, 1, 1)
         
         self.browseVfkLineEdit = QLineEdit(self)
         self.browseVfkLineEdit.setObjectName(u'browseVfkLineEdit')
-        self.browseVfkLineEdit.setFixedHeight(self.browseVfkLineEdit.height())
-        self.text_browseVfkLineEdit.connect(self._set_text_browseVfkLineEdit)
+        self.set_text_browseVfkLineEdit.connect(
+            self._set_text_browseVfkLineEdit)
         self.browseVfkLineEdit.textChanged.connect(
             self._check_vfk_file_path)
-        self.loadVfkGridLayout.addWidget(self.browseVfkLineEdit, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.browseVfkLineEdit, 0, 1, 1, 1)
         
         self.browseVfkPushButton = QPushButton(self)
         self.browseVfkPushButton.setObjectName(u'browseVfkPushButton')
-        self.browseVfkPushButton.setFixedHeight(
-            self.browseVfkPushButton.height())
         self.browseVfkPushButton.clicked.connect(
             self._browse_vfk_files)
         self.browseVfkPushButton.setText(u'Procházet')
-        self.loadVfkGridLayout.addWidget(self.browseVfkPushButton, 0, 2, 1, 1)
+        self.gridLayout.addWidget(self.browseVfkPushButton, 0, 2, 1, 1)
         
-        self.loadVfkGridLayout.setRowStretch(1, 1)
+        self.gridLayout.setRowStretch(1, 1)
         
         self.loadVfkProgressBar = QProgressBar(self)
         self.loadVfkProgressBar.setObjectName(u'loadVfkProgressBar')
-        self.loadVfkProgressBar.setFixedHeight(
-            self.loadVfkProgressBar.height())
         self.loadVfkProgressBar.setMinimum(0)
-        self.value_loadVfkProgressBar.connect(
+        self.set_value_loadVfkProgressBar.connect(
             self._set_value_loadVfkProgressBar)
-        self.value_loadVfkProgressBar.emit(0)
-        self.loadVfkGridLayout.addWidget(self.loadVfkProgressBar, 2, 0, 1, 2)
+        self.set_value_loadVfkProgressBar.emit(0)
+        self.gridLayout.addWidget(self.loadVfkProgressBar, 2, 0, 1, 2)
         
         self.loadVfkPushButton = QPushButton(self)
         self.loadVfkPushButton.setObjectName(u'loadVfkPushButton')
-        self.loadVfkPushButton.setFixedHeight(self.loadVfkPushButton.height())
         self.loadVfkPushButton.clicked.connect(self._start_loading_vfk_layer)
         self.loadVfkPushButton.setText(u'Načíst')
-        self.loadVfkGridLayout.addWidget(self.loadVfkPushButton, 2, 2, 1, 1)
         self.loadVfkPushButton.setDisabled(True)
+        self.gridLayout.addWidget(self.loadVfkPushButton, 2, 2, 1, 1)
     
     def _set_text_browseVfkLineEdit(self, text):
-        """Sets text to the browseVfkLineEdit.
+        """Sets the text to the browseVfkLineEdit.
         
         Args:
             text (str): A text to be set.
@@ -132,7 +105,7 @@ class LoadVfkFrame(QFrame):
         self.browseVfkLineEdit.setText(text)
     
     def _set_value_loadVfkProgressBar(self, value):
-        """Sets value to the loadVfkProgressBar.
+        """Sets the value to the loadVfkProgressBar.
         
         Args:
             text (str): A value to be set.
@@ -150,10 +123,10 @@ class LoadVfkFrame(QFrame):
         filePath = self.dW.open_file_dialog(title, filters, True)
         
         if filePath:
-            self.text_browseVfkLineEdit.emit(filePath)
+            self.set_text_browseVfkLineEdit.emit(filePath)
     
     def _check_vfk_file_path(self):
-        """Checks if text in the browseVfkLineEdit is a path to a VFK file.
+        """Checks if the text in the browseVfkLineEdit is a path to a VFK file.
         
         If so, the loadVfkPushButton is enabled,
         otherwise the loadVfkPushButton is disabled.
@@ -182,7 +155,7 @@ class LoadVfkFrame(QFrame):
         QgsApplication.processEvents()
         
         self.loadThread = LoadThread(filePath)
-        self.loadThread.work.connect(self._run_loading_vfk_layer)
+        self.loadThread.started.connect(self._run_loading_vfk_layer)
         self.loadThread.start()
     
     def _run_loading_vfk_layer(self, filePath):
@@ -196,7 +169,7 @@ class LoadVfkFrame(QFrame):
         """
 
         try:
-            self.value_loadVfkProgressBar.emit(0)
+            self.set_value_loadVfkProgressBar.emit(0)
             
             fileInfo = QFileInfo(filePath)
             dbPath = QDir(fileInfo.absolutePath())\
@@ -212,7 +185,7 @@ class LoadVfkFrame(QFrame):
             self._load_vfk_layer(dbPath, layerName, vfkLayerCode, vfkDriverName)
             
             self.loadVfkProgressBar.setMaximum(1)
-            self.value_loadVfkProgressBar.emit(1)
+            self.set_value_loadVfkProgressBar.emit(1)
             
             self.set_text_statusbar.emit(u'Data byla úspešně načtena.', 0)
         except self.dW.puError:
@@ -276,7 +249,7 @@ class LoadVfkFrame(QFrame):
             self.loadVfkProgressBar.setMaximum(layerCount)
             
             for i in xrange(layerCount):
-                self.value_loadVfkProgressBar.emit(i+1)
+                self.set_value_loadVfkProgressBar.emit(i+1)
                 self.set_text_statusbar.emit(
                     u'Načítám vrstvu {} ({}/{})...'
                     .format(layerNames[i], i+1, layerCount), 0)
@@ -371,7 +344,7 @@ class LoadVfkFrame(QFrame):
         Checks if there are geometry_columns and spatial_ref_sys
         tables in the database, if not it creates and fills those tables.
         
-        Checks f there are all PU columns in PAR table,
+        Checks if there are all PU columns in PAR table,
         if it it creates and fills those columns.
         
         Args:
@@ -402,6 +375,9 @@ class LoadVfkFrame(QFrame):
                 u'Database connection failed.',
                 u'Nepodařilo se připojit k databázi.',
                 u'Nepodařilo se připojit k databázi.')
+        
+        self.set_text_statusbar.emit(
+            u'Kontroluji tabulky a sloupce...', 0)
         
         sqlQuery = QSqlQuery(db)
         
@@ -451,7 +427,7 @@ class LoadVfkFrame(QFrame):
                 QgsApplication.processEvents()
     
     def _read_text_from_file(self, filePath, maxSize=2000):
-        """Reads text from the given file.
+        """Reads a text from the given file.
         
         Args:
             filePath (str): A full path to the file.

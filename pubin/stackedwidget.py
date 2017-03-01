@@ -24,26 +24,29 @@
 from PyQt4.QtGui import QStackedWidget
 from PyQt4.QtCore import QSignalMapper
 
-from pu_stackedwidget_frames import (loadvfk_frame, edit_frame,
-                                     checkanalysis_frame)
+from qgis.core import *
+
+from pustack import loadvfk_puwidget, edit_puwidget, checkanalysis_puwidget
 
 
 class StackedWidget(QStackedWidget):
-    """A stacked widget that stores several other widgets."""
+    """A stacked widget."""
     
-    def __init__(self, parentWidget, dockWidgetName, iface):
+    def __init__(self, parentWidget, dockWidgetName, iface, pluginDir):
         """Constructor.
         
         Args:
             parentWidget (QToolBar): A reference to the parent widget.
             dockWidgetName (str): A name of the dock widget.
             iface (QgisInterface): A reference to the QgisInterface.
+            pluginDir (str): A plugin directory.
         
         """
         
         self.dW = parentWidget
         self.dWName = dockWidgetName
         self.iface = iface
+        self.pluginDir = pluginDir
         
         super(StackedWidget, self).__init__(self.dW)
         
@@ -61,30 +64,31 @@ class StackedWidget(QStackedWidget):
     def _build_widgets(self):
         """Builds own widgets."""
         
-        self.loadVfkFrame = loadvfk_frame.LoadVfkFrame(
-            self, self.dWName, self.iface, self.dW)
-        self.addWidget(self.loadVfkFrame)
+        self.loadVfkPuWidget = loadvfk_puwidget.LoadVfkPuWidget(
+            self, self.dWName, self.iface, self.dW, self.pluginDir)
         self.dW.toolBar.loadVfkAction.triggered.connect(
             self.openTabSignalMapper.map)
         self.openTabSignalMapper.setMapping(self.dW.toolBar.loadVfkAction, 0)
+        self.addWidget(self.loadVfkPuWidget)
         
-        self.editFrame = edit_frame.EditFrame(
-            self, self.dWName, self.iface, self.dW)
-        self.addWidget(self.editFrame)
+        self.editPuWidget = edit_puwidget.EditPuWidget(
+            self, self.dWName, self.iface, self.dW, self.pluginDir)
         self.dW.toolBar.editAction.triggered.connect(
             self.openTabSignalMapper.map)
         self.openTabSignalMapper.setMapping(self.dW.toolBar.editAction, 1)
+        self.addWidget(self.editPuWidget)
         
-        self.checkAnalysisFrame = checkanalysis_frame.CheckAnalysisFrame(
-            self, self.dWName, self.iface, self.dW)
-        self.addWidget(self.checkAnalysisFrame)
+        self.checkAnalysisPuWidget = \
+            checkanalysis_puwidget.CheckAnalysisPuWidget(
+            self, self.dWName, self.iface, self.dW, self.pluginDir)
         self.dW.toolBar.checkAnalysisAction.triggered.connect(
             self.openTabSignalMapper.map)
         self.openTabSignalMapper.setMapping(
             self.dW.toolBar.checkAnalysisAction, 2)
+        self.addWidget(self.checkAnalysisPuWidget)
         
         self.openTabSignalMapper.mapped.connect(self.setCurrentIndex)
         
         self.currentChanged.connect(
-            self.dW.statusBar.change_text_statusbar)
+            self.dW.statusBar.change_text)
 

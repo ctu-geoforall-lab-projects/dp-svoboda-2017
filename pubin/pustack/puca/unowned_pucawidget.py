@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- ZeWidget
+ UnownedPuCaWidget and UnownedLabelPuCaWidget
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -21,38 +21,18 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QWidget
-
 from qgis.core import *
 
+from pucawidget import PuCaWidget
 
-class ZeWidget(QWidget):
-    """A widget for 'ZE' check."""
+
+class UnownedPuCaWidget(PuCaWidget):
+    """A widget for 'unowned' check."""
     
-    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
-        """Constructor.
+    def _build_widgets(self):
+        """Builds own widgets."""
         
-        Args:
-            parentWidget (QWidget): A reference to the parent widget.
-            dockWidgetName (str): A name of the dock widget.
-            iface (QgisInterface): A reference to the QgisInterface.
-            dockWidget (QWidget): A reference to the dock widget.
-        
-        """
-        
-        self.pW = parentWidget
-        self.dWName = dockWidgetName
-        self.iface = iface
-        self.dW = dockWidget
-        
-        super(ZeWidget, self).__init__(self.pW)
-        
-        self._setup_self()
-    
-    def _setup_self(self):
-        """Sets up self."""
-        
-        self.setObjectName(u'zeWidget')
+        pass
     
     def execute(self, layer):
         """Executes the check.
@@ -121,30 +101,11 @@ class ZeWidget(QWidget):
                 u'Error executing "{}".'.format(currentCheckAnalysisName),
                 u'Chyba při provádění "{}".'.format(currentCheckAnalysisName))
 
-class ZeLabelWidget(QWidget):
-    """A label widget for 'ZE' check."""
+
+class UnownedLabelPuCaWidget(PuCaWidget):
+    """A label widget for 'unowned' check."""
     
-    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
-        """Constructor.
+    def _build_widgets(self):
+        """Builds own widgets."""
         
-        Args:
-            parentWidget (QWidget): A reference to the parent widget.
-            dockWidgetName (str): A name of the dock widget.
-            iface (QgisInterface): A reference to the QgisInterface.
-            dockWidget (QWidget): A reference to the dock widget.
-        
-        """
-        
-        self.pW = parentWidget
-        self.dWName = dockWidgetName
-        self.iface = iface
-        self.dW = dockWidget
-        
-        super(ZeLabelWidget, self).__init__(self.pW)
-        
-        self._setup_self()
-    
-    def _setup_self(self):
-        """Sets up self."""
-        
-        self.setObjectName(u'zeWidget')
+        pass

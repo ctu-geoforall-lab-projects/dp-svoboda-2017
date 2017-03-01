@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- NotInSpiWidget
+ NotInMapPuCaWidget and NotInMapLabelPuCaWidget
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -21,38 +21,18 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QWidget
-
 from qgis.core import *
 
+from pucawidget import PuCaWidget
 
-class NotInSpiWidget(QWidget):
-    """A widget for 'not in SPI' check."""
+
+class NotInMapPuCaWidget(PuCaWidget):
+    """A widget for 'not in map' check."""
     
-    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
-        """Constructor.
+    def _build_widgets(self):
+        """Builds own widgets."""
         
-        Args:
-            parentWidget (QWidget): A reference to the parent widget.
-            dockWidgetName (str): A name of the dock widget.
-            iface (QgisInterface): A reference to the QgisInterface.
-            dockWidget (QWidget): A reference to the dock widget.
-        
-        """
-        
-        self.pW = parentWidget
-        self.dWName = dockWidgetName
-        self.iface = iface
-        self.dW = dockWidget
-        
-        super(NotInSpiWidget, self).__init__(self.pW)
-        
-        self._setup_self()
-    
-    def _setup_self(self):
-        """Sets up self."""
-        
-        self.setObjectName(u'notInSpiWidget')
+        pass
     
     def execute(self, layer):
         """Executes the check.
@@ -64,10 +44,9 @@ class NotInSpiWidget(QWidget):
         
         try:
             self.pW.set_text_statusbar.emit(
-                u'Provádím kontrolu - není v SPI...', 0)
+                u'Provádím kontrolu - není v mapě...', 0)
             
-            expression = QgsExpression(
-                "\"{}\" is null".format(self.dW.requiredColumnsPAR[7]))
+            expression = QgsExpression("$geometry is null")
             
             self.dW.select_features_by_expression(layer, expression)
             
@@ -77,16 +56,17 @@ class NotInSpiWidget(QWidget):
             
             if featuresCount == 0:
                 self.pW.set_text_statusbar.emit(
-                    u'V SPI jsou všechny parcely.', duration)
+                    u'V mapě jsou všechny parcely.', duration)
             elif featuresCount == 1:
                 self.pW.set_text_statusbar.emit(
-                    u'V SPI není {} parcela.'.format(featuresCount), duration)
+                    u'V mapě není {} parcela.'.format(featuresCount), duration)
             elif 1 < featuresCount < 5:
                 self.pW.set_text_statusbar.emit(
-                    u'V SPI nejsou {} parcely.'.format(featuresCount), duration)
+                    u'V mapě nejsou {} parcely.'.format(featuresCount),
+                    duration)
             elif 5 <= featuresCount:
                 self.pW.set_text_statusbar.emit(
-                    u'V SPI není {} parcel.'.format(featuresCount), duration)
+                    u'V mapě není {} parcel.'.format(featuresCount), duration)
         except self.dW.puError:
             QgsApplication.processEvents()
         except:
@@ -99,31 +79,12 @@ class NotInSpiWidget(QWidget):
                 u'Error executing "{}".'.format(currentCheckAnalysisName),
                 u'Chyba při provádění "{}".'.format(currentCheckAnalysisName))
 
-class NotInSpiLabelWidget(QWidget):
-    """A label widget for 'not in SPI' check."""
+
+class NotInMapLabelPuCaWidget(PuCaWidget):
+    """A label widget for 'not in map' check."""
     
-    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
-        """Constructor.
+    def _build_widgets(self):
+        """Builds own widgets."""
         
-        Args:
-            parentWidget (QWidget): A reference to the parent widget.
-            dockWidgetName (str): A name of the dock widget.
-            iface (QgisInterface): A reference to the QgisInterface.
-            dockWidget (QWidget): A reference to the dock widget.
-        
-        """
-        
-        self.pW = parentWidget
-        self.dWName = dockWidgetName
-        self.iface = iface
-        self.dW = dockWidget
-        
-        super(NotInSpiLabelWidget, self).__init__(self.pW)
-        
-        self._setup_self()
-    
-    def _setup_self(self):
-        """Sets up self."""
-        
-        self.setObjectName(u'notInSpiLabelWidget')
+        pass
 

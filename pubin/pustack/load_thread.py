@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- ExecuteThread
+ LoadThread
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -24,25 +24,25 @@
 from PyQt4.QtCore import QThread, pyqtSignal
 
 
-class ExecuteThread(QThread):
-    """A subclass of QThread for executing processes."""
+class LoadThread(QThread):
+    """A subclass of QThread for loading a VFK file."""
     
-    work = pyqtSignal(object)
+    started = pyqtSignal(str)
 
-    def __init__(self, layer):
+    def __init__(self, filePath):
         """Constructor.
         
         Args:
-            layer (QgsVectorLayer): A reference to the layer.
+            filePath (str): A full path to the file.
         
         """
         
-        super(ExecuteThread, self).__init__()
+        super(LoadThread, self).__init__()
 
-        self.layer = layer
+        self.filePath = filePath
 
     def run(self):
-        """Starts the QThread and emits self.layer."""
+        """Starts the QThread and emits self.filePath."""
         
-        self.work.emit(self.layer)
+        self.started.emit(self.filePath)
 

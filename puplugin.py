@@ -28,7 +28,7 @@ import os
 
 import resources
 
-from pu_bin import dockwidget
+from pubin import dockwidget
 
 
 class puPlugin(object):
@@ -61,7 +61,8 @@ class puPlugin(object):
         self.iface.addToolBarIcon(self.puAction)
         self.iface.addPluginToMenu(self.name, self.puAction)
         
-        self.dockWidget = dockwidget.DockWidget(self.iface, self.pluginDir)
+        self.dockWidget = dockwidget.DockWidget(
+            self.iface, self.pluginDir, self.name)
         
         self.iface.addDockWidget(Qt.TopDockWidgetArea, self.dockWidget)
     

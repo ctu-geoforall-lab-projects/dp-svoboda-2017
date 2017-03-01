@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- PerimeterWidget
+ PerimeterPuCaWidget and PerimeterLabelPuCaWidget
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QWidget, QLabel, QVBoxLayout
+from PyQt4.QtGui import  QLabel, QVBoxLayout
 from PyQt4.QtCore import Qt
 
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
@@ -29,52 +29,20 @@ from qgis.core import *
 
 import processing
 
+from pucawidget import PuCaWidget
 
-class PerimeterWidget(QWidget):
+
+class PerimeterPuCaWidget(PuCaWidget):
     """A widget for 'perimeter' check."""
-    
-    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
-        """Constructor.
-        
-        Args:
-            parentWidget (QWidget): A reference to the parent widget.
-            dockWidgetName (str): A name of the dock widget.
-            iface (QgisInterface): A reference to the QgisInterface.
-            dockWidget (QWidget): A reference to the dock widget.
-        
-        """
-        
-        self.pW = parentWidget
-        self.dWName = dockWidgetName
-        self.iface = iface
-        self.dW = dockWidget
-        self.lastPerimeterLayer = None
-        
-        super(PerimeterWidget, self).__init__(self.pW)
-        
-        self._setup_self()
-    
-    def _setup_self(self):
-        """Sets up self."""
-        
-        self.setObjectName(u'perimeterWidget')
-        
-        self.perimeterVBoxLayout = QVBoxLayout(self)
-        self.perimeterVBoxLayout.setObjectName(u'perimeterVBoxLayout')
-        self.perimeterVBoxLayout.setAlignment(Qt.AlignTop)
-        self.perimeterVBoxLayout.setContentsMargins(0, 0, 0, 0)
-        
-        self._build_widgets()
     
     def _build_widgets(self):
         """Builds own widgets."""
         
-        height = self.pW.checkAnalysisComboBox.height()
+        self.lastPerimeterLayer = None
         
         self.perimeterMapLayerComboBox = QgsMapLayerComboBox(self)
         self.perimeterMapLayerComboBox.setObjectName(
             u'perimeterMapLayerComboBox')
-        self.perimeterMapLayerComboBox.setFixedHeight(height)
         self.perimeterMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PolygonLayer)
         self.perimeterMapLayerComboBox.activated.connect(
@@ -84,7 +52,7 @@ class PerimeterWidget(QWidget):
         QgsMapLayerRegistry.instance().layersRemoved.connect(
             self._reset_perimeter_layer)
         self.set_perimeter_layer(self.lastPerimeterLayer)
-        self.perimeterVBoxLayout.addWidget(self.perimeterMapLayerComboBox)
+        self.vBoxLayout.addWidget(self.perimeterMapLayerComboBox)
     
     def set_perimeter_layer(self, perimeterLayer, lastPerimeterLayer=True):
         """Sets the perimeter layer in the perimeterMapLayerComboBox.
@@ -104,7 +72,7 @@ class PerimeterWidget(QWidget):
     def _sync_perimeter_map_layer_combo_box(self):
         """Synchronizes perimeter map layer combo boxes.
         
-        Synchronizes with the perimeterMapLayerComboBox in the editFrame.
+        Synchronizes with the perimeterMapLayerComboBox in the editPuWidget.
         
         """
         
@@ -113,7 +81,8 @@ class PerimeterWidget(QWidget):
         if perimeterLayer != self.lastPerimeterLayer:
             self.lastPerimeterLayer = perimeterLayer
             
-            self.dW.stackedWidget.editFrame.set_perimeter_layer(perimeterLayer)
+            self.dW.stackedWidget.editPuWidget.set_perimeter_layer(
+                perimeterLayer)
     
     def _reset_perimeter_layer(self):
         """Resets the perimeter layer."""
@@ -191,50 +160,15 @@ class PerimeterWidget(QWidget):
                 u'Error executing "{}".'.format(currentCheckAnalysisName),
                 u'Chyba při provádění "{}".'.format(currentCheckAnalysisName))
 
-class PerimeterLabelWidget(QWidget):
+
+class PerimeterLabelPuCaWidget(PuCaWidget):
     """A label widget for 'perimeter' check."""
-    
-    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
-        """Constructor.
-        
-        Args:
-            parentWidget (QWidget): A reference to the parent widget.
-            dockWidgetName (str): A name of the dock widget.
-            iface (QgisInterface): A reference to the QgisInterface.
-            dockWidget (QWidget): A reference to the dock widget.
-        
-        """
-        
-        self.pW = parentWidget
-        self.dWName = dockWidgetName
-        self.iface = iface
-        self.dW = dockWidget
-        self.lastPerimeterLayer = None
-        
-        super(PerimeterLabelWidget, self).__init__(self.pW)
-        
-        self._setup_self()
-    
-    def _setup_self(self):
-        """Sets up self."""
-        
-        self.setObjectName(u'perimeterLabelWidget')
-        
-        self.perimeterVBoxLayout = QVBoxLayout(self)
-        self.perimeterVBoxLayout.setObjectName(u'perimeterVBoxLayout')
-        self.perimeterVBoxLayout.setAlignment(Qt.AlignTop)
-        self.perimeterVBoxLayout.setContentsMargins(0, 0, 0, 0)
-        
-        self._build_widgets()
     
     def _build_widgets(self):
         """Builds own widgets."""
         
-        minHeight = self.pW.checkAnalysisComboBox.height()
-        
         self.perimeterLabel = QLabel(self)
         self.perimeterLabel.setObjectName(u'perimeterLabel')
-        self.perimeterLabel.setFixedHeight(minHeight)
         self.perimeterLabel.setText(u'Obvod:')
-        self.perimeterVBoxLayout.addWidget(self.perimeterLabel)
+        self.vBoxLayout.addWidget(self.perimeterLabel)
 

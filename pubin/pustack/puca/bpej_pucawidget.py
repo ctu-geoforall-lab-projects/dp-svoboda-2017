@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- BpejWidget
+ BpejPuCaWidget and BpejLabelPuCaWidget
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -25,7 +25,7 @@ from PyQt4.QtGui import QWidget, QVBoxLayout, QLabel, QComboBox
 from PyQt4.QtCore import Qt, QDir, QFileInfo
 
 from qgis.gui import (QgsMapLayerComboBox, QgsMapLayerProxyModel,
-                      QgsFieldComboBox, QgsFieldProxyModel, QgsMessageBar)
+                      QgsFieldComboBox, QgsMessageBar)
 from qgis.core import *
 
 import processing
@@ -38,52 +38,19 @@ import urllib
 import zipfile
 import csv
 
+from pucawidget import PuCaWidget
 
-class BpejWidget(QWidget):
+
+class BpejPuCaWidget(PuCaWidget):
     """A widget for 'BPEJ' analysis."""
-    
-    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
-        """Constructor.
-        
-        Args:
-            parentWidget (QWidget): A reference to the parent widget.
-            dockWidgetName (str): A name of the dock widget.
-            iface (QgisInterface): A reference to the QgisInterface.
-            dockWidget (QWidget): A reference to the dock widget.
-        
-        """
-        
-        self.pW = parentWidget
-        self.dWName = dockWidgetName
-        self.iface = iface
-        self.dW = dockWidget
-        
-        super(BpejWidget, self).__init__(self.pW)
-        
-        self._setup_self()
-    
-    def _setup_self(self):
-        """Sets up self."""
-        
-        self.lastBpejLayer = None
-        
-        self.setObjectName(u'bpejWidget')
-        
-        self.bpejVBoxLayout = QVBoxLayout(self)
-        self.bpejVBoxLayout.setObjectName(u'bpejVBoxLayout')
-        self.bpejVBoxLayout.setAlignment(Qt.AlignTop)
-        self.bpejVBoxLayout.setContentsMargins(0, 0, 0, 0)
-        
-        self._build_widgets()
     
     def _build_widgets(self):
         """Builds own widgets."""
         
-        height = self.pW.checkAnalysisComboBox.height()
+        self.lastBpejLayer = None
         
         self.bpejMapLayerComboBox = QgsMapLayerComboBox(self)
         self.bpejMapLayerComboBox.setObjectName(u'bpejMapLayerComboBox')
-        self.bpejMapLayerComboBox.setFixedHeight(height)
         self.bpejMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PolygonLayer)
         QgsMapLayerRegistry.instance().layersAdded.connect(
@@ -91,14 +58,13 @@ class BpejWidget(QWidget):
         QgsMapLayerRegistry.instance().layersRemoved.connect(
             self._reset_bpej_layer)
         self.set_bpej_layer(self.lastBpejLayer)
-        self.bpejVBoxLayout.addWidget(self.bpejMapLayerComboBox)
+        self.vBoxLayout.addWidget(self.bpejMapLayerComboBox)
         
         self.bpejFieldComboBox = QgsFieldComboBox(self)
         self.bpejFieldComboBox.setObjectName(u'bpejFieldComboBox')
-        self.bpejFieldComboBox.setFixedHeight(height)
         self.bpejFieldComboBox.setLayer(
             self.bpejMapLayerComboBox.currentLayer())
-        self.bpejVBoxLayout.addWidget(self.bpejFieldComboBox)
+        self.vBoxLayout.addWidget(self.bpejFieldComboBox)
         
         self.bpejMapLayerComboBox.layerChanged.connect(
             self.bpejFieldComboBox.setLayer)
@@ -223,7 +189,7 @@ class BpejWidget(QWidget):
             layer.commitChanges()
             
             if editing:
-                self.dW.stackedWidget.editFrame.toggleEditingAction.trigger()
+                self.iface.actionToggleEditing()
             
             if len(missingBpejCodes) != 0:
                 missingBpejCodesStr = ', '.join(missingBpejCodes)
@@ -516,57 +482,22 @@ class BpejWidget(QWidget):
         
         return featurePrices, missingBpejCodes
 
-class BpejLabelWidget(QWidget):
+
+class BpejLabelPuCaWidget(PuCaWidget):
     """A label widget for 'BPEJ' analysis."""
-    
-    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
-        """Constructor.
-        
-        Args:
-            parentWidget (QWidget): A reference to the parent widget.
-            dockWidgetName (str): A name of the dock widget.
-            iface (QgisInterface): A reference to the QgisInterface.
-            dockWidget (QWidget): A reference to the dock widget.
-        
-        """
-        
-        self.pW = parentWidget
-        self.dWName = dockWidgetName
-        self.iface = iface
-        self.dW = dockWidget
-        
-        super(BpejLabelWidget, self).__init__(self.pW)
-        
-        self._setup_self()
-    
-    def _setup_self(self):
-        """Sets up self."""
-        
-        self.lastBpejLayer = None
-        
-        self.setObjectName(u'bpejLabelWidget')
-        
-        self.bpejVBoxLayout = QVBoxLayout(self)
-        self.bpejVBoxLayout.setObjectName(u'bpejVBoxLayout')
-        self.bpejVBoxLayout.setAlignment(Qt.AlignTop)
-        self.bpejVBoxLayout.setContentsMargins(0, 0, 0, 0)
-        
-        self._build_widgets()
     
     def _build_widgets(self):
         """Builds own widgets."""
         
-        height = self.pW.checkAnalysisComboBox.height()
-        
         self.bpejLayerLabel = QLabel(self)
         self.bpejLayerLabel.setObjectName(u'bpejLayerLabel')
-        self.bpejLayerLabel.setFixedHeight(height)
         self.bpejLayerLabel.setText(u'BPEJ:')
-        self.bpejVBoxLayout.addWidget(self.bpejLayerLabel)
+        self.bpejLayerLabel.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
+        self.vBoxLayout.addWidget(self.bpejLayerLabel)
         
         self.bpejPriceLabel = QLabel(self)
         self.bpejPriceLabel.setObjectName(u'bpejPriceLabel')
-        self.bpejPriceLabel.setFixedHeight(height)
         self.bpejPriceLabel.setText(u'Sloupec kódu BPEJ:')
-        self.bpejVBoxLayout.addWidget(self.bpejPriceLabel)
+        self.bpejPriceLabel.setAlignment(Qt.AlignLeft|Qt.AlignVCenter)
+        self.vBoxLayout.addWidget(self.bpejPriceLabel)
 

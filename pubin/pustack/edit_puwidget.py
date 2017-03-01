@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- EditFrame
+ EditPuWidget
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import (QFrame, QGridLayout, QToolBar, QToolButton, QIcon,
+from PyQt4.QtGui import (QGridLayout, QToolBar, QToolButton, QIcon,
                          QPixmap, QMenu, QLabel, QComboBox, QPushButton)
 from PyQt4.QtCore import pyqtSignal, QFileInfo, QDir, Qt
 
@@ -30,33 +30,15 @@ from qgis.core import *
 
 import processing
 
+from puwidget import PuWidget
 from execute_thread import ExecuteThread
+from puplugin.pubin.pustack.puca.perimeter_pucawidget import PerimeterPuCaWidget
 
 
-class EditFrame(QFrame):
-    """A frame which contains widgets for editing."""
+class EditPuWidget(PuWidget):
+    """A widget for editing."""
     
     set_text_statusbar = pyqtSignal(str, int)
-    
-    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
-        """Constructor.
-        
-        Args:
-            parentWidget (QWidget): A reference to the parent widget.
-            dockWidgetName (str): A name of the dock widget.
-            iface (QgisInterface): A reference to the QgisInterface.
-            dockWidget (QWidget): A reference to the dock widget.
-        
-        """
-        
-        self.pW = parentWidget
-        self.dWName = dockWidgetName
-        self.iface = iface
-        self.dW = dockWidget
-        
-        super(EditFrame, self).__init__(self.pW)
-        
-        self._setup_self()
     
     def _setup_self(self):
         """Sets up self."""
@@ -66,28 +48,27 @@ class EditFrame(QFrame):
         self.categoryName = self.dW.requiredColumnsPAR[5]
         self.shortCategoryName = self.categoryName[:10]
         self.setCategoryValue = 0
-        self.lastPerimeterLayer = None
         
         self.setObjectName(u'editFrame')
-        self.setFrameShape(QFrame.StyledPanel)
-        self.setFrameShadow(QFrame.Raised)
         
-        self.set_text_statusbar.connect(self.dW.statusBar.set_text_statusbar)
-        
-        self.editGridLayout = QGridLayout(self)
-        self.editGridLayout.setObjectName(u'editGridLayout')
-        self.editGridLayout.setColumnStretch(1, 1)
+        self.gridLayout = QGridLayout(self)
+        self.gridLayout.setObjectName(u'gridLayout')
+        self.gridLayout.setColumnStretch(1, 1)
         
         self._build_widgets()
     
     def _build_widgets(self):
         """Builds own widgets."""
         
+        self.set_text_statusbar.connect(self.dW.statusBar.set_text)
+        
+        self.lastPerimeterLayer = None
+        
         self.editToolBar = QToolBar(self)
         self.editToolBar.setObjectName(u'editToolBar')
         self._set_icon_size()
         self.iface.initializationCompleted.connect(self._set_icon_size)
-        self.editGridLayout.addWidget(self.editToolBar, 0, 0, 1, 3)
+        self.gridLayout.addWidget(self.editToolBar, 0, 0, 1, 3)
         
         for action in self.iface.advancedDigitizeToolBar().actions(): 
             if action.objectName() == 'mActionUndo':
@@ -137,15 +118,12 @@ class EditFrame(QFrame):
         
         self.perimeterLabel = QLabel(self)
         self.perimeterLabel.setObjectName(u'perimeterLabel')
-        self.perimeterLabel.setFixedHeight(self.perimeterLabel.height())
         self.perimeterLabel.setText(u'Obvod:')
-        self.editGridLayout.addWidget(self.perimeterLabel, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.perimeterLabel, 1, 0, 1, 1)
         
         self.perimeterMapLayerComboBox = QgsMapLayerComboBox(self)
         self.perimeterMapLayerComboBox.setObjectName(
             u'perimeterMapLayerComboBox')
-        self.perimeterMapLayerComboBox.setFixedHeight(
-            self.perimeterMapLayerComboBox.height())
         self.perimeterMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PolygonLayer)
         self.perimeterMapLayerComboBox.activated.connect(
@@ -155,59 +133,50 @@ class EditFrame(QFrame):
         QgsMapLayerRegistry.instance().layersRemoved.connect(
             self._reset_perimeter_layer)
         self.set_perimeter_layer(self.lastPerimeterLayer)
-        self.editGridLayout.addWidget(
+        self.gridLayout.addWidget(
             self.perimeterMapLayerComboBox, 1, 1, 1, 1)
         
         self.createPerimeterPushButton = QPushButton(self)
         self.createPerimeterPushButton.setObjectName(
             u'createPerimeterPushButton')
-        self.createPerimeterPushButton.setFixedHeight(
-            self.createPerimeterPushButton.height())
         self.createPerimeterPushButton.setText(u'Vytvořit')
         self.createPerimeterPushButton.setToolTip(
             u'Vytvořit vrstvu obvodu (.shp) z aktivní vrstvy a načíst')
         self.createPerimeterPushButton.clicked.connect(self._create_perimeter)
-        self.editGridLayout.addWidget(
+        self.gridLayout.addWidget(
             self.createPerimeterPushButton, 1, 2, 1, 1)
         
         self.categoryLabel = QLabel(self)
         self.categoryLabel.setObjectName(u'categoryLabel')
-        self.categoryLabel.setFixedHeight(self.categoryLabel.height())
         self.categoryLabel.setText(u'Kategorie parcel:')
-        self.editGridLayout.addWidget(self.categoryLabel, 2, 0, 1, 1)
+        self.gridLayout.addWidget(self.categoryLabel, 2, 0, 1, 1)
         
         self.categoryComboBox = QComboBox(self)
         self.categoryComboBox.setObjectName(u'categoryComboBox')
-        self.categoryComboBox.setFixedHeight(self.categoryComboBox.height())
         self.categoryComboBox.addItem(u'mimo obvod (0)')
         self.categoryComboBox.addItem(u'v obvodu - neřešené (1)')
         self.categoryComboBox.addItem(u'v obvodu - řešené (2)')
         self.categoryComboBox.currentIndexChanged.connect(
             self._set_categoryValue)
-        self.editGridLayout.addWidget(self.categoryComboBox, 2, 1, 1, 1)
+        self.gridLayout.addWidget(self.categoryComboBox, 2, 1, 1, 1)
         
         self.selectCategoryPushButton = QPushButton(self)
         self.selectCategoryPushButton.setObjectName(u'selectCategoryPushButton')
-        self.selectCategoryPushButton.setFixedHeight(
-            self.selectCategoryPushButton.height())
         self.selectCategoryPushButton.setText(u'Zobrazit')
         self.selectCategoryPushButton.setToolTip(
             u'Zobrazit (vybrat) parcely v kategorii')
         self.selectCategoryPushButton.clicked.connect(self._select_category)
-        self.editGridLayout.addWidget(self.selectCategoryPushButton, 2, 2, 1, 1)
+        self.gridLayout.addWidget(self.selectCategoryPushButton, 2, 2, 1, 1)
         
-        self.editGridLayout.setRowStretch(3, 1)
+        self.gridLayout.setRowStretch(3, 1)
         
         self.setCategoryLabel = QLabel(self)
         self.setCategoryLabel.setObjectName(u'setCategoryLabel')
-        self.setCategoryLabel.setFixedHeight(self.setCategoryLabel.height())
         self.setCategoryLabel.setText(u'Zařadit:')
-        self.editGridLayout.addWidget(self.setCategoryLabel, 4, 0, 1, 1)
+        self.gridLayout.addWidget(self.setCategoryLabel, 4, 0, 1, 1)
         
         self.setCategoryComboBox = QComboBox(self)
         self.setCategoryComboBox.setObjectName(u'setCategoryComboBox')
-        self.setCategoryComboBox.setFixedHeight(
-            self.setCategoryComboBox.height())
         self.setCategoryComboBox.addItem(u'vybrané parcely')
         self.setCategoryComboBox.setItemData(
             0, u'Zařadit vybrané parcely do kategorie', Qt.ToolTipRole)
@@ -217,16 +186,14 @@ class EditFrame(QFrame):
             Qt.ToolTipRole)
         self.setCategoryComboBox.currentIndexChanged.connect(
             self._set_setCategoryValue)
-        self.editGridLayout.addWidget(self.setCategoryComboBox, 4, 1, 1, 1)
+        self.gridLayout.addWidget(self.setCategoryComboBox, 4, 1, 1, 1)
         
         self.setCategoryPushButton = QPushButton(self)
         self.setCategoryPushButton.setObjectName(u'setCategoryPushButton')
-        self.setCategoryPushButton.setFixedHeight(
-            self.setCategoryPushButton.height())
         self.setCategoryPushButton.setText(u'Zařadit')
         self.setCategoryPushButton.clicked.connect(
             self._start_setting_pu_category)
-        self.editGridLayout.addWidget(self.setCategoryPushButton, 4, 2, 1, 1)
+        self.gridLayout.addWidget(self.setCategoryPushButton, 4, 2, 1, 1)
     
     def _set_icon_size(self):
         """Sets editToolBar icon size according to current QGIS settings."""
@@ -284,8 +251,8 @@ class EditFrame(QFrame):
         if perimeterLayer != self.lastPerimeterLayer:
             self.lastPerimeterLayer = perimeterLayer
         
-            self.dW.stackedWidget.checkAnalysisFrame\
-                .perimeterWidget.set_perimeter_layer(perimeterLayer)
+            self.dW.stackedWidget.checkAnalysisPuWidget\
+                .perimeterPuCaWidget.set_perimeter_layer(perimeterLayer)
     
     def _reset_perimeter_layer(self):
         """Resets the perimeter layer."""
@@ -468,7 +435,7 @@ class EditFrame(QFrame):
             return
         
         self.executeThread = ExecuteThread(layer)
-        self.executeThread.work.connect(self._run_setting_pu_category)
+        self.executeThread.started.connect(self._run_setting_pu_category)
         self.executeThread.start()
     
     def _run_setting_pu_category(self, layer):
@@ -704,7 +671,7 @@ class EditFrame(QFrame):
             u'Zařazení parcel na základě obvodu úspěšně dokončeno.', 30)
         
     def _select_category(self):
-        """Selects features in current category."""
+        """Selects features in the current category."""
         
         try:
             succes, layer = self.dW.check_layer(self)

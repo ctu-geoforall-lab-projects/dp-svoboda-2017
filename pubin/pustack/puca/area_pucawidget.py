@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- AreaWidget
+ AreaPuCaWidget and AreaLabelPuCaWidget
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -21,58 +21,26 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import (QWidget, QVBoxLayout, QLabel, QLineEdit,
-                         QDoubleValidator)
+from PyQt4.QtGui import QVBoxLayout, QLabel, QLineEdit, QDoubleValidator
 from PyQt4.QtCore import QPyNullVariant, Qt
 
+from qgis.core import *
 
-class AreaWidget(QWidget):
+from pucawidget import PuCaWidget
+
+
+class AreaPuCaWidget(PuCaWidget):
     """A widget for 'area' check."""
-    
-    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
-        """Constructor.
-        
-        Args:
-            parentWidget (QWidget): A reference to the parent widget.
-            dockWidgetName (str): A name of the dock widget.
-            iface (QgisInterface): A reference to the QgisInterface.
-            dockWidget (QWidget): A reference to the dock widget.
-        
-        """
-        
-        self.pW = parentWidget
-        self.dWName = dockWidgetName
-        self.iface = iface
-        self.dW = dockWidget
-        
-        super(AreaWidget, self).__init__(self.pW)
-        
-        self._setup_self()
-    
-    def _setup_self(self):
-        """Sets up self."""
-        
-        self.setObjectName(u'areaWidget')
-        
-        self.areaVBoxLayout = QVBoxLayout(self)
-        self.areaVBoxLayout.setObjectName(u'areaVBoxLayout')
-        self.areaVBoxLayout.setAlignment(Qt.AlignTop)
-        self.areaVBoxLayout.setContentsMargins(0, 0, 0, 0)
-        
-        self._build_widgets()
     
     def _build_widgets(self):
         """Builds own widgets."""
         
-        height = self.pW.checkAnalysisComboBox.height()
-        
         self.areaLineEdit = QLineEdit(self)
         self.areaLineEdit.setObjectName(u'areaLineEdit')
-        self.areaLineEdit.setFixedHeight(height)
         doubleValidator = QDoubleValidator(self.areaLineEdit)
         doubleValidator.setBottom(0)
         self.areaLineEdit.setValidator(doubleValidator)
-        self.areaVBoxLayout.addWidget(self.areaLineEdit)
+        self.vBoxLayout.addWidget(self.areaLineEdit)
     
     def execute(self, layer):
         """Executes the check.
@@ -127,7 +95,7 @@ class AreaWidget(QWidget):
             layer.commitChanges()
             
             if editing:
-                self.dW.stackedWidget.editFrame.toggleEditingAction.trigger()
+                self.iface.actionToggleEditing()
                 
             layer.selectByIds(problematicParcelsID)
             
@@ -159,49 +127,15 @@ class AreaWidget(QWidget):
                 u'Error executing "{}".'.format(currentCheckAnalysisName),
                 u'Chyba při provádění "{}".'.format(currentCheckAnalysisName))
 
-class AreaLabelWidget(QWidget):
+
+class AreaLabelPuCaWidget(PuCaWidget):
     """A label widget for 'area' check."""
-    
-    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
-        """Constructor.
-        
-        Args:
-            parentWidget (QWidget): A reference to the parent widget.
-            dockWidgetName (str): A name of the dock widget.
-            iface (QgisInterface): A reference to the QgisInterface.
-            dockWidget (QWidget): A reference to the dock widget.
-        
-        """
-        
-        self.pW = parentWidget
-        self.dWName = dockWidgetName
-        self.iface = iface
-        self.dW = dockWidget
-        
-        super(AreaLabelWidget, self).__init__(self.pW)
-        
-        self._setup_self()
-    
-    def _setup_self(self):
-        """Sets up self."""
-        
-        self.setObjectName(u'areaLabelWidget')
-        
-        self.areaVBoxLayout = QVBoxLayout(self)
-        self.areaVBoxLayout.setObjectName(u'areaVBoxLayout')
-        self.areaVBoxLayout.setAlignment(Qt.AlignTop)
-        self.areaVBoxLayout.setContentsMargins(0, 0, 0, 0)
-        
-        self._build_widgets()
     
     def _build_widgets(self):
         """Builds own widgets."""
         
-        height = self.pW.checkAnalysisComboBox.height()
-        
         self.areaLabel = QLabel(self)
         self.areaLabel.setObjectName(u'areaLabel')
-        self.areaLabel.setFixedHeight(height)
         self.areaLabel.setText(u'Mezní odchylka [%]:')
-        self.areaVBoxLayout.addWidget(self.areaLabel)
+        self.vBoxLayout.addWidget(self.areaLabel)
 

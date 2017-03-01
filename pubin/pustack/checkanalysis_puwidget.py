@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- CheckAnalysisFrame
+ CheckAnalysisPuWidget
                                  A QGIS plugin
  Plugin pro pozemkové úpravy
                              -------------------
@@ -21,77 +21,49 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import (QFrame, QGridLayout, QLabel, QComboBox, QStackedWidget,
-                         QPushButton)
+from PyQt4.QtGui import (QGridLayout, QLabel, QComboBox, QStackedWidget,
+                         QSizePolicy, QPushButton)
 from PyQt4.QtCore import pyqtSignal, Qt
 
 from qgis.core import *
 
-from pu_checkanalysis_widgets import (perimeter_widget, notinspi_widget,
-                                       notinmap_widget, ze_widget, area_widget,
-                                       distance_widget, bpej_widget)
-
+from puwidget import PuWidget
 from execute_thread import ExecuteThread
+from puca import (perimeter_pucawidget, notinspi_pucawidget,
+                  notinmap_pucawidget, area_pucawidget, unowned_pucawidget,
+                  distance_pucawidget, bpej_pucawidget)
 
 
-class CheckAnalysisFrame(QFrame):
-    """A frame which contains widgets for checks and analyzes."""
+class CheckAnalysisPuWidget(PuWidget):
+    """A widget with checks and analyzes."""
     
     set_text_statusbar = pyqtSignal(str, int)
-    
-    def __init__(self, parentWidget, dockWidgetName, iface, dockWidget):
-        """Constructor.
-        
-        Args:
-            parentWidget (QWidget): A reference to the parent widget.
-            dockWidgetName (str): A name of the dock widget.
-            iface (QgisInterface): A reference to the QgisInterface.
-            dockWidget (QWidget): A reference to the dock widget.
-        
-        """
-        
-        self.pW = parentWidget
-        self.dWName = dockWidgetName
-        self.iface = iface
-        self.dW = dockWidget
-        
-        super(CheckAnalysisFrame, self).__init__(self.pW)
-        
-        self._setup_self()
     
     def _setup_self(self):
         """Sets up self."""
         
-        self.setObjectName(u'checkFrame')
-        self.setFrameShape(QFrame.StyledPanel)
-        self.setFrameShadow(QFrame.Raised)
+        self.setObjectName(u'checkAnalysisPuWidget')
         
-        self.set_text_statusbar.connect(self.dW.statusBar.set_text_statusbar)
-        
-        self.checkAnalysisGridLayout = QGridLayout(self)
-        self.checkAnalysisGridLayout.setObjectName(u'checkAnalysisGridLayout')
-        self.checkAnalysisGridLayout.setColumnStretch(1, 1)
+        self.gridLayout = QGridLayout(self)
+        self.gridLayout.setObjectName(u'gridLayout')
+        self.gridLayout.setColumnStretch(1, 1)
         
         self._build_widgets()
     
     def _build_widgets(self):
         """Builds own widgets."""
         
+        self.set_text_statusbar.connect(self.dW.statusBar.set_text)
+        
         self.checkAnalysisLabel = QLabel(self)
         self.checkAnalysisLabel.setObjectName(u'checkAnalysisLabel')
-        self.checkAnalysisLabel.setFixedHeight(
-            self.checkAnalysisLabel.height())
         self.checkAnalysisLabel.setText(u'Kontrola/analýza:')
-        self.checkAnalysisGridLayout.addWidget(
+        self.gridLayout.addWidget(
             self.checkAnalysisLabel, 0, 0, 1, 1)
         
         self.checkAnalysisComboBox = QComboBox(self)
         self.checkAnalysisComboBox.setObjectName(u'checkAnalysisComboBox')
-        self.checkAnalysisComboBox.setFixedHeight(
-            self.checkAnalysisComboBox.height())
-        self.checkAnalysisComboBox.setFixedHeight(
-            self.checkAnalysisComboBox.height())
-        self.checkAnalysisGridLayout.addWidget(
+        self.gridLayout.addWidget(
             self.checkAnalysisComboBox, 0, 1, 1, 1)
         
         perimeterString = u'kontrola - obvodem'
@@ -114,10 +86,10 @@ class CheckAnalysisFrame(QFrame):
         self.checkAnalysisComboBox.setItemData(
             3, areaString, Qt.ToolTipRole)
         
-        zeString = u'kontrola - bez vlastníka'
-        self.checkAnalysisComboBox.addItem(zeString)
+        unownedString = u'kontrola - bez vlastníka'
+        self.checkAnalysisComboBox.addItem(unownedString)
         self.checkAnalysisComboBox.setItemData(
-            4, zeString + u' (pouze zjednodušená evidence)',
+            4, unownedString + u' (pouze zjednodušená evidence)',
             Qt.ToolTipRole)
         
         distanceString = u'analýza - měření vzdálenosti'
@@ -131,69 +103,91 @@ class CheckAnalysisFrame(QFrame):
         self.checkAnalysisComboBox.setItemData(
             6, bpejString, Qt.ToolTipRole)
         
+        self.gridLayout.setRowStretch(1, 1)
+        
         self.checkAnalysisLabelStackedWidget = QStackedWidget(self)
         self.checkAnalysisLabelStackedWidget.setObjectName(
             u'checkAnalysisLabelStackedWidget')
-        self.checkAnalysisGridLayout.addWidget(
-            self.checkAnalysisLabelStackedWidget, 1, 0, 1, 1)
+        self.gridLayout.addWidget(
+            self.checkAnalysisLabelStackedWidget, 2, 0, 1, 1)
         
         self.checkAnalysisStackedWidget = QStackedWidget(self)
         self.checkAnalysisStackedWidget.setObjectName(
             u'checkAnalysisStackedWidget')
-        self.checkAnalysisGridLayout.addWidget(
-            self.checkAnalysisStackedWidget, 1, 1, 1, 1)
+        self.gridLayout.addWidget(
+            self.checkAnalysisStackedWidget, 2, 1, 1, 1)
         
-        self.perimeterWidget = perimeter_widget.PerimeterWidget(
-            self, self.dWName, self.iface, self.dW)
-        self.checkAnalysisStackedWidget.addWidget(self.perimeterWidget)
-        self.perimeterLabelWidget = perimeter_widget.PerimeterLabelWidget(
-            self, self.dWName, self.iface, self.dW)
+        self.perimeterLabelPuCaWidget = \
+            perimeter_pucawidget.PerimeterLabelPuCaWidget(
+            self, self.dWName, self.iface, self.dW, self.pluginDir,
+            u'perimeterLabelPuCaWidget')
         self.checkAnalysisLabelStackedWidget.addWidget(
-            self.perimeterLabelWidget)
+            self.perimeterLabelPuCaWidget)
+        self.perimeterPuCaWidget = perimeter_pucawidget.PerimeterPuCaWidget(
+            self, self.dWName, self.iface, self.dW, self.pluginDir,
+            u'perimeterPuCaWidget')
+        self.checkAnalysisStackedWidget.addWidget(self.perimeterPuCaWidget)
         
-        self.notInSpiWidget = notinspi_widget.NotInSpiWidget(
-            self, self.dWName, self.iface, self.dW)
-        self.checkAnalysisStackedWidget.addWidget(self.notInSpiWidget)
-        self.notInSpiLabelWidget = notinspi_widget.NotInSpiLabelWidget(
-            self, self.dWName, self.iface, self.dW)
+        self.notInSpiLabelPuCaWidget = \
+            notinspi_pucawidget.NotInSpiLabelPuCaWidget(
+            self, self.dWName, self.iface, self.dW, self.pluginDir,
+            u'notInSpiLabelPuCaWidget')
         self.checkAnalysisLabelStackedWidget.addWidget(
-            self.notInSpiLabelWidget)
+            self.notInSpiLabelPuCaWidget)
+        self.notInSpiPuCaWidget = notinspi_pucawidget.NotInSpiPuCaWidget(
+            self, self.dWName, self.iface, self.dW, self.pluginDir,
+            u'notInSpiPuCaWidget')
+        self.checkAnalysisStackedWidget.addWidget(self.notInSpiPuCaWidget)
         
-        self.notInMapWidget = notinmap_widget.NotInMapWidget(
-            self, self.dWName, self.iface, self.dW)
-        self.checkAnalysisStackedWidget.addWidget(self.notInMapWidget)
-        self.notInMapLabelWidget = notinmap_widget.NotInMapLabelWidget(
-            self, self.dWName, self.iface, self.dW)
+        self.notInMapLabelPuCaWidget = \
+            notinmap_pucawidget.NotInMapLabelPuCaWidget(
+            self, self.dWName, self.iface, self.dW, self.pluginDir,
+            u'notInMapLabelPuCaWidget')
         self.checkAnalysisLabelStackedWidget.addWidget(
-            self.notInMapLabelWidget)
+            self.notInMapLabelPuCaWidget)
+        self.notInMapPuCaWidget = notinmap_pucawidget.NotInMapPuCaWidget(
+            self, self.dWName, self.iface, self.dW, self.pluginDir,
+            u'notInMapPuCaWidget')
+        self.checkAnalysisStackedWidget.addWidget(self.notInMapPuCaWidget)
         
-        self.areaWidget = area_widget.AreaWidget(
-            self, self.dWName, self.iface, self.dW)
-        self.checkAnalysisStackedWidget.addWidget(self.areaWidget)
-        self.areaLabelWidget = area_widget.AreaLabelWidget(
-            self, self.dWName, self.iface, self.dW)
-        self.checkAnalysisLabelStackedWidget.addWidget(self.areaLabelWidget)
+        self.areaLabelPuCaWidget = area_pucawidget.AreaLabelPuCaWidget(
+            self, self.dWName, self.iface, self.dW, self.pluginDir,
+            u'areaLabelPuCaWidget')
+        self.checkAnalysisLabelStackedWidget.addWidget(self.areaLabelPuCaWidget)
+        self.areaPuCaWidget = area_pucawidget.AreaPuCaWidget(
+            self, self.dWName, self.iface, self.dW, self.pluginDir,
+            u'areaPuCaWidget')
+        self.checkAnalysisStackedWidget.addWidget(self.areaPuCaWidget)
         
-        self.zeWidget = ze_widget.ZeWidget(
-            self, self.dWName, self.iface, self.dW)
-        self.checkAnalysisStackedWidget.addWidget(self.zeWidget)
-        self.zeLabelWidget = ze_widget.ZeLabelWidget(
-            self, self.dWName, self.iface, self.dW)
-        self.checkAnalysisLabelStackedWidget.addWidget(self.zeLabelWidget)
+        self.unownedLabelPuCaWidget = unowned_pucawidget.UnownedLabelPuCaWidget(
+            self, self.dWName, self.iface, self.dW, self.pluginDir,
+            u'unownedLabelPuCaWidget')
+        self.checkAnalysisLabelStackedWidget.addWidget(
+            self.unownedLabelPuCaWidget)
+        self.unownedPuCaWidget = unowned_pucawidget.UnownedPuCaWidget(
+            self, self.dWName, self.iface, self.dW, self.pluginDir,
+            u'unownedPuCaWidget')
+        self.checkAnalysisStackedWidget.addWidget(self.unownedPuCaWidget)
         
-        self.distanceWidget = distance_widget.DistanceWidget(
-            self, self.dWName, self.iface, self.dW)
-        self.checkAnalysisStackedWidget.addWidget(self.distanceWidget)
-        self.distanceLabelWidget = distance_widget.DistanceLabelWidget(
-            self, self.dWName, self.iface, self.dW)
-        self.checkAnalysisLabelStackedWidget.addWidget(self.distanceLabelWidget)
+        self.distanceLabelPuCaWidget = \
+            distance_pucawidget.DistanceLabelPuCaWidget(
+            self, self.dWName, self.iface, self.dW, self.pluginDir,
+            u'distanceLabelPuCaWidget')
+        self.checkAnalysisLabelStackedWidget.addWidget(
+            self.distanceLabelPuCaWidget)
+        self.distancePuCaWidget = distance_pucawidget.DistancePuCaWidget(
+            self, self.dWName, self.iface, self.dW, self.pluginDir,
+            u'distancePuCaWidget')
+        self.checkAnalysisStackedWidget.addWidget(self.distancePuCaWidget)
         
-        self.bpejWidget = bpej_widget.BpejWidget(
-            self, self.dWName, self.iface, self.dW)
-        self.checkAnalysisStackedWidget.addWidget(self.bpejWidget)
-        self.bpejLabelWidget = bpej_widget.BpejLabelWidget(
-            self, self.dWName, self.iface, self.dW)
-        self.checkAnalysisLabelStackedWidget.addWidget(self.bpejLabelWidget)
+        self.bpejLabelPuCaWidget = bpej_pucawidget.BpejLabelPuCaWidget(
+            self, self.dWName, self.iface, self.dW, self.pluginDir,
+            u'bpejLabelPuCaWidget')
+        self.checkAnalysisLabelStackedWidget.addWidget(self.bpejLabelPuCaWidget)
+        self.bpejPuCaWidget = bpej_pucawidget.BpejPuCaWidget(
+            self, self.dWName, self.iface, self.dW, self.pluginDir,
+            u'bpejPuCaWidget')
+        self.checkAnalysisStackedWidget.addWidget(self.bpejPuCaWidget)
         
         self.checkAnalysisComboBox.currentIndexChanged.connect(
             self.checkAnalysisLabelStackedWidget.setCurrentIndex)
@@ -202,20 +196,18 @@ class CheckAnalysisFrame(QFrame):
         self.checkAnalysisComboBox.currentIndexChanged.connect(
             self._set_text_checkAnalysisPushButton)
         
-        self.checkAnalysisGridLayout.setRowStretch(2, 1)
+        self.gridLayout.setRowStretch(3, 1)
         
         self.checkAnalysisPushButton = QPushButton(self)
         self.checkAnalysisPushButton.setObjectName(u'checkAnalysisPushButton')
-        self.checkAnalysisPushButton.setFixedHeight(
-            self.checkAnalysisPushButton.height())
         self.checkAnalysisPushButton.clicked.connect(self._run_check)
         self.checkAnalysisPushButton.setText(
             u'Provést kontrolu a vybrat problémové parcely')
-        self.checkAnalysisGridLayout.addWidget(
-            self.checkAnalysisPushButton, 3, 0, 1, 2)
+        self.gridLayout.addWidget(
+            self.checkAnalysisPushButton, 4, 0, 1, 2)
     
     def _run_check(self):
-        """Starts current check or analysis.
+        """Starts the current check or analysis.
         
         First it calls a function that checks if there is an active layer
         and if the active layer contains all required columns. If that function
@@ -227,7 +219,7 @@ class CheckAnalysisFrame(QFrame):
         
         if succes:
             self.executeThread = ExecuteThread(layer)
-            self.executeThread.work.connect(
+            self.executeThread.started.connect(
                 self.checkAnalysisStackedWidget.currentWidget().execute)
             self.executeThread.start()
     

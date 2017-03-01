@@ -22,7 +22,7 @@
 """
 
 from PyQt4.QtGui import (QDockWidget, QWidget, QSizePolicy, QGridLayout,
-                         QStatusBar, QFileDialog)
+                         QFrame, QFileDialog)
 from PyQt4.QtCore import pyqtSignal, QSettings, QFileInfo
 
 from qgis.gui import QgsMessageBar
@@ -37,35 +37,30 @@ from stackedwidget import StackedWidget
 
 
 class DockWidget(QDockWidget):
-    """The main widget of the PU Plugin."""
+    """A main widget of the plugin."""
     
     set_text_statusbar = pyqtSignal(str, int)
     
-    def __init__(self, iface, pluginDir):
+    def __init__(self, iface, pluginDir, name):
         """Constructor.
         
         Args:
             iface (QgisInterface): A reference to the QgisInterface.
-            pluginDir (str): A PU Plugin directory.
+            pluginDir (str): A plugin directory.
+            name (str): A name of the plugin.
         
         """
         
         self.iface = iface
         self.pluginDir = pluginDir
+        self.name = name
         
         super(DockWidget, self).__init__()
         
-        dockWidgetName = u'dockWidget'
-        
-        self._setup_self(dockWidgetName)
+        self._setup_self()
        
-    def _setup_self(self, dockWidgetName):
-        """Sets up self.
-        
-        Args:
-            dockWidgetName (str): A name of the dock widget.
-        
-        """
+    def _setup_self(self):
+        """Sets up self."""
         
         self.editablePuColumnsPAR = (
             'PU_KMENOVE_CISLO_PAR',
@@ -94,46 +89,50 @@ class DockWidget(QDockWidget):
         self.requiredColumnsPAR = \
             self.allPuColumnsPAR + self.allDefaultColumnsPAR
         
-        self.settings = QSettings()
+        self.dWName = u'dockWidget'
+        
+        self.settings = QSettings(self)
+        
+        self.setObjectName(self.dWName)
+        self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        
+        self.widget = QWidget(self)
+        self.widget.setObjectName(u'widget')
+        self.setWidget(self.widget)
+        
+        self.gridLayout = QGridLayout(self.widget)
+        self.gridLayout.setObjectName(u'gridLayout')
+        
+        self.setWindowTitle(self.name)
+        
+        self._build_widgets()
+    
+    def _build_widgets(self):
+        """Builds own widgets."""
         
         self.lastActiveLayer = None
         self._disconnect_connect_ensure_unique_field_values()
         self.iface.currentLayerChanged.connect(
             self._disconnect_connect_ensure_unique_field_values)
         
-        self.setObjectName(u'dockWidget')
-        self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        self.toolBar = ToolBar(self, self.dWName, self.iface, self.pluginDir)
+        self.gridLayout.addWidget(self.toolBar, 0, 0, 1, 1)
         
-        self.mainWidget = QWidget(self)
-        self.mainWidget.setObjectName(u'mainWidget')
+        self.statusBar = StatusBar(
+            self, self.dWName, self.iface, self.pluginDir)
+        self.gridLayout.addWidget(self.statusBar, 2, 0, 1, 1)
         
-        self.setWidget(self.mainWidget)
+        self.set_text_statusbar.connect(self.statusBar.set_text)
         
-        self.mainGridLayout = QGridLayout(self.mainWidget)
-        self.mainGridLayout.setObjectName(u'mainGridLayout')
+        self.frame = QFrame(self)
+        self.frame.setObjectName(u'frame')
+        self.frame.setFrameShape(QFrame.StyledPanel)
+        self.frame.setFrameShadow(QFrame.Raised)
+        self.gridLayout.addWidget(self.frame, 1, 0, 1, 1)
         
-        self.setWindowTitle(u'PU Plugin')
-        
-        self._build_widgets(dockWidgetName)
-    
-    def _build_widgets(self, dockWidgetName):
-        """Builds own widgets.
-        
-        Args:
-            dockWidgetName (str): A name of the dock widget.
-        
-        """
-        
-        self.toolBar = ToolBar(self, dockWidgetName, self.iface)
-        self.mainGridLayout.addWidget(self.toolBar, 0, 0, 1, 1)
-        
-        self.statusBar = StatusBar(self, dockWidgetName, self.iface)
-        self.mainGridLayout.addWidget(self.statusBar, 2, 0, 1, 1)
-        
-        self.set_text_statusbar.connect(self.statusBar.set_text_statusbar)
-        
-        self.stackedWidget = StackedWidget(self, dockWidgetName, self.iface)
-        self.mainGridLayout.addWidget(self.stackedWidget, 1, 0, 1, 1)
+        self.stackedWidget = StackedWidget(
+            self, self.dWName, self.iface, self.pluginDir)
+        self.gridLayout.addWidget(self.stackedWidget, 1, 0, 1, 1)
     
     def display_error_messages(
             self,
@@ -200,13 +199,13 @@ class DockWidget(QDockWidget):
                 duration)
     
     def _get_settings(self, key):
-        """Returns value for settings key.
+        """Returns a value for the settings key.
         
         Args:
             key (str): A settings key.
                 
         Returns:
-            str: A value for settings key.
+            str: A value for the settings key.
         
         """
         
@@ -215,7 +214,7 @@ class DockWidget(QDockWidget):
         return value
     
     def _set_settings(self, key, value):
-        """Sets value for settings key.
+        """Sets the value for the settings key.
         
         Args:
             key (str): A settings key.
@@ -263,7 +262,7 @@ class DockWidget(QDockWidget):
     
     def set_field_value_for_features(
             self, layer, features, field, value, startCommit=True):
-        """Sets field value for features.
+        """Sets the field value for the given features.
         
         Args:
             layer (QgsVectorLayer): A reference to the layer.
@@ -293,7 +292,7 @@ class DockWidget(QDockWidget):
         QgsApplication.processEvents()
     
     def check_layer(self, sender=None, layer=False):
-        """Checks active or given layer.
+        """Checks the active or the given layer.
         
         If layer is False, the active layer is taken.
         
@@ -301,7 +300,7 @@ class DockWidget(QDockWidget):
         then if the layer is vector and finally if the active layer contains
         all required columns.
         
-        Emitted messages are for checking active layer.
+        Emitted messages are for checking the active layer.
         In other words, when sender is not None, layer should be False,
         otherwise emitted messages will not make sense.
         
@@ -441,7 +440,7 @@ class DockWidget(QDockWidget):
         
         """
         
-        if self.stackedWidget.editFrame.toggleEditingAction.isChecked():
+        if self.stackedWidget.editPuWidget.toggleEditingAction.isChecked():
             return True
         else:
             return False
@@ -504,7 +503,7 @@ class DockWidget(QDockWidget):
             layer.commitChanges()
     
     def disconnect_from_iface(self):
-        """Disconnects functions from QgsInterface."""
+        """Disconnects functions from the QgsInterface."""
         
         self._disconnect_connect_ensure_unique_field_values(False)
         
