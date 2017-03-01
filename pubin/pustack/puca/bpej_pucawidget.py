@@ -38,6 +38,8 @@ import urllib
 import zipfile
 import csv
 
+from configparser import RawConfigParser
+
 from pucawidget import PuCaWidget
 
 
@@ -267,13 +269,10 @@ class BpejPuCaWidget(PuCaWidget):
         upToDate = self._check_bpej_csv(bpejCsvFilePath, formatTimeStr)
         
         if not upToDate:
-            googleUrl = 'https://www.google.com'
-            
-            bpejZipUrl = 'http://www.cuzk.cz/CUZK/media/CiselnikyISKN/' + \
-                'SC_BPEJ/SC_BPEJ.zip?ext=.zip'
+            testInternetUrl, bpejZipUrl = self._get_url()
             
             self._download_bpej_csv(
-                googleUrl, bpejZipUrl, bpejZipFilePath, bpejCsvFileName)
+                testInternetUrl, bpejZipUrl, bpejZipFilePath, bpejCsvFileName)
         
         bpejCodePrices = self._read_bpej_csv(bpejCsvFilePath, formatTimeStr)
         
@@ -305,13 +304,31 @@ class BpejPuCaWidget(PuCaWidget):
         else:
             return False
     
+    def _get_url(self):
+        """Gets URL.
+        
+        Gets an URL for testing the internet connection
+        and an URL of the BPEJ ZIP file.
+        
+        """
+        
+        config = RawConfigParser()
+        
+        config.read(self.pluginDir + u'/puplugin.cfg')
+        
+        testInternetUrl = config.get('BPEJ', 'testinterneturl')
+        bpejZipUrl = config.get('BPEJ', 'bpejzipurl')
+        
+        return testInternetUrl, bpejZipUrl
+        
+    
     def _download_bpej_csv(
-            self, googleUrl, bpejZipUrl, bpejZipFilePath, bpejCsvFileName):
+            self, testInternetUrl, bpejZipUrl, bpejZipFilePath, bpejCsvFileName):
         """Downloads BPEJ CSV file and unzips it.
         
         Args:
-            googleUrl (str): A Google URL.
-            bpejZipUrl (str): An URL of BPEJ ZIP file.
+            testInternetUrl (str): An URL for testing the internet connection.
+            bpejZipUrl (str): An URL of the BPEJ ZIP file.
             bpejZipFilePath (str): A full path to the BPEJ ZIP file.
             bpejCsvFileName (str): A name of the BPEJ CSV file.
         
@@ -321,11 +338,11 @@ class BpejPuCaWidget(PuCaWidget):
         """
         
         try:
-            testGoogleConnection = urllib.urlopen(googleUrl)
+            testInternetConnection = urllib.urlopen(testInternetUrl)
         except:
             return
         else:
-            testGoogleConnection.close()
+            testInternetConnection.close()
         
         try:
             testBpejConnection = urllib.urlopen(bpejZipUrl)
