@@ -365,7 +365,7 @@ class LoadVfkPuWidget(PuWidget):
                 u'Databázový ovladač QSQLITE není dostupný.')
         
         connectionName = QUuid.createUuid().toString()
-        QSqlDatabase.addDatabase("QSQLITE", connectionName)
+        QSqlDatabase.addDatabase('QSQLITE', connectionName)
         db = QSqlDatabase.database(connectionName)
         db.setDatabaseName(dbPath)
         db.open()
@@ -382,7 +382,7 @@ class LoadVfkPuWidget(PuWidget):
         
         sqlQuery = QSqlQuery(db)
         
-        sqlDir = QDir(self.dW.pluginDir + u'/data/sql')
+        sqlDir = QDir(self.pluginDir.path() + u'/data/sql')
         
         query = self._read_text_from_file(sqlDir.filePath(u'check_gc_srs.sql'))
         

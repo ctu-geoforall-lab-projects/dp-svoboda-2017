@@ -23,7 +23,7 @@
 
 from PyQt4.QtGui import (QDockWidget, QWidget, QSizePolicy, QGridLayout,
                          QFrame, QFileDialog)
-from PyQt4.QtCore import pyqtSignal, QSettings, QFileInfo
+from PyQt4.QtCore import pyqtSignal, QDir, QSettings, QFileInfo
 
 from qgis.gui import QgsMessageBar
 from qgis.core import *
@@ -50,7 +50,7 @@ class DockWidget(QDockWidget):
         """
         
         self.iface = iface
-        self.pluginDir = pluginDir
+        self.pluginDir = QDir(pluginDir)
         self.name = name
         
         super(DockWidget, self).__init__()

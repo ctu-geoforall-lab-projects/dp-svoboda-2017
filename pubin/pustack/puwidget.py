@@ -36,7 +36,7 @@ class PuWidget(QWidget):
             dockWidgetName (str): A name of the dock widget.
             iface (QgisInterface): A reference to the QgisInterface.
             dockWidget (QWidget): A reference to the dock widget.
-            pluginDir (str): A plugin directory.
+            pluginDir (QDir): A plugin directory.
         
         """
         

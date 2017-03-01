@@ -255,7 +255,7 @@ class BpejPuCaWidget(PuCaWidget):
         
         formatTimeStr = '%d.%m.%Y'
         
-        bpejDir = QDir(self.dW.pluginDir + u'/data/bpej')
+        bpejDir = QDir(self.pluginDir.path() + u'/data/bpej')
         
         bpejBaseName = u'SC_BPEJ'
         
@@ -315,7 +315,7 @@ class BpejPuCaWidget(PuCaWidget):
         
         config = RawConfigParser()
         
-        config.read(self.pluginDir + u'/puplugin.cfg')
+        config.read(self.pluginDir.filePath(u'puplugin.cfg'))
         
         testInternetUrl = config.get('BPEJ', 'testinterneturl')
         bpejZipUrl = config.get('BPEJ', 'bpejzipurl')
