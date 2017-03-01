@@ -46,29 +46,11 @@ class UnownedPuCaWidget(PuCaWidget):
             self.pW.set_text_statusbar.emit(
                 u'Provádím kontrolu - bez vlastníka...', 0)
             
-            fieldName = 'ID'
-            
             layer.removeSelection()
             
-            expression = QgsExpression("\"PAR_TYPE\" = 'PKN'")
+            expression = QgsExpression("\"TEL_ID\" is null")
             
-            features = layer.getFeatures(QgsFeatureRequest(expression))
-            
-            pknFeaturesID = [feature.attribute(fieldName) for feature in features]
-            
-            featuresID = []
-            
-            expression = QgsExpression("\"PAR_TYPE\" = 'PZE'")
-            
-            features = layer.getFeatures(QgsFeatureRequest(expression))
-            
-            for feature in features:
-                featureVfkID = feature.attribute(fieldName)
-                
-                if featureVfkID not in pknFeaturesID:
-                    featuresID.append(feature.id())
-            
-            layer.selectByIds(featuresID)
+            self.dW.select_features_by_expression(layer, expression)
             
             featuresCount = layer.selectedFeatureCount()
             
