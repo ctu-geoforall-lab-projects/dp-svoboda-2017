@@ -146,10 +146,12 @@ class EditPuWidget(PuWidget):
         self.gridLayout.addWidget(
             self.createPerimeterPushButton, 1, 2, 1, 1)
         
+        self.gridLayout.setRowStretch(2, 1)
+        
         self.categoryLabel = QLabel(self)
         self.categoryLabel.setObjectName(u'categoryLabel')
         self.categoryLabel.setText(u'Kategorie parcel:')
-        self.gridLayout.addWidget(self.categoryLabel, 2, 0, 1, 1)
+        self.gridLayout.addWidget(self.categoryLabel, 3, 0, 1, 1)
         
         self.categoryComboBox = QComboBox(self)
         self.categoryComboBox.setObjectName(u'categoryComboBox')
@@ -158,7 +160,7 @@ class EditPuWidget(PuWidget):
         self.categoryComboBox.addItem(u'v obvodu - řešené (2)')
         self.categoryComboBox.currentIndexChanged.connect(
             self._set_categoryValue)
-        self.gridLayout.addWidget(self.categoryComboBox, 2, 1, 1, 1)
+        self.gridLayout.addWidget(self.categoryComboBox, 3, 1, 1, 1)
         
         self.selectCategoryPushButton = QPushButton(self)
         self.selectCategoryPushButton.setObjectName(u'selectCategoryPushButton')
@@ -166,14 +168,14 @@ class EditPuWidget(PuWidget):
         self.selectCategoryPushButton.setToolTip(
             u'Zobrazit (vybrat) parcely v kategorii')
         self.selectCategoryPushButton.clicked.connect(self._select_category)
-        self.gridLayout.addWidget(self.selectCategoryPushButton, 2, 2, 1, 1)
+        self.gridLayout.addWidget(self.selectCategoryPushButton, 3, 2, 1, 1)
         
-        self.gridLayout.setRowStretch(3, 1)
+        self.gridLayout.setRowStretch(4, 1)
         
         self.setCategoryLabel = QLabel(self)
         self.setCategoryLabel.setObjectName(u'setCategoryLabel')
         self.setCategoryLabel.setText(u'Zařadit:')
-        self.gridLayout.addWidget(self.setCategoryLabel, 4, 0, 1, 1)
+        self.gridLayout.addWidget(self.setCategoryLabel, 5, 0, 1, 1)
         
         self.setCategoryComboBox = QComboBox(self)
         self.setCategoryComboBox.setObjectName(u'setCategoryComboBox')
@@ -186,14 +188,14 @@ class EditPuWidget(PuWidget):
             Qt.ToolTipRole)
         self.setCategoryComboBox.currentIndexChanged.connect(
             self._set_setCategoryValue)
-        self.gridLayout.addWidget(self.setCategoryComboBox, 4, 1, 1, 1)
+        self.gridLayout.addWidget(self.setCategoryComboBox, 5, 1, 1, 1)
         
         self.setCategoryPushButton = QPushButton(self)
         self.setCategoryPushButton.setObjectName(u'setCategoryPushButton')
         self.setCategoryPushButton.setText(u'Zařadit')
         self.setCategoryPushButton.clicked.connect(
             self._start_setting_pu_category)
-        self.gridLayout.addWidget(self.setCategoryPushButton, 4, 2, 1, 1)
+        self.gridLayout.addWidget(self.setCategoryPushButton, 5, 2, 1, 1)
     
     def _set_icon_size(self):
         """Sets editToolBar icon size according to current QGIS settings."""
