@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QWidget, QVBoxLayout, QLabel, QComboBox
+from PyQt4.QtGui import QWidget, QLabel, QComboBox
 from PyQt4.QtCore import Qt, QDir, QFileInfo
 
 from qgis.gui import (QgsMapLayerComboBox, QgsMapLayerProxyModel,

@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtGui import QVBoxLayout, QLabel, QLineEdit, QDoubleValidator
+from PyQt4.QtGui import QLabel, QLineEdit, QDoubleValidator
 from PyQt4.QtCore import QPyNullVariant, Qt
 
 from qgis.core import *
