@@ -190,7 +190,7 @@ class BpejPuCaWidget(PuCaWidget):
                 price = prices[rowid]
                 roundedPrice = round(price, -1)
                 
-                if roundedPrice != originalPrice:
+                if roundedPrice != 0 and roundedPrice != originalPrice:
                     layer.changeAttributeValue(id, priceFieldId, roundedPrice)
             
             layer.commitChanges()
@@ -206,9 +206,18 @@ class BpejPuCaWidget(PuCaWidget):
                 
                 self.dW.select_features_by_expression(bpejLayer, expression)
                 
-                self.iface.messageBar().pushMessage(
-                    u'BPEJ kód vybraných prvků ve vrstvě BPEJ nebyl nalezen.',
-                    QgsMessageBar.WARNING, 15)
+                featureCount = bpejLayer.selectedFeatureCount()
+                
+                duration = 15
+                
+                if featureCount == 1:
+                    self.iface.messageBar().pushMessage(
+                        u'BPEJ kód vybraného prvku ve vrstvě BPEJ '
+                        u'nebyl nalezen.', QgsMessageBar.WARNING, duration)
+                elif featureCount > 1:
+                    self.iface.messageBar().pushMessage(
+                        u'BPEJ kódy vybraných prvků ve vrstvě BPEJ '
+                        u'nebyly nalezeny.', QgsMessageBar.WARNING, duration)
             
             self.pW.set_text_statusbar.emit(
                 u'Analýza oceňování podle BPEJ úspěšně dokončena.', 20)

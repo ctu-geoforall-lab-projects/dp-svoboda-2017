@@ -70,7 +70,6 @@ class DockWidget(QDockWidget):
         self.puAreaColumnName = 'PU_VYMERA_PARCELY'
         self.puAreaAbsDifferenceColumnName = 'PU_VYMERA_PARCELY_ABS_ROZDIL'
         self.puAreaLimitDeviationColumnName = 'PU_VYMERA_PARCELY_MEZNI_ODCHYLKA'
-        self.puAreaMaxQualityCodeColumnName = 'PU_VYMERA_PARCELY_MAX_KODCHB_KOD'
         self.puDistanceColumnName = 'PU_VZDALENOST'
         self.puPriceColumnName = 'PU_CENA'
         
@@ -78,15 +77,16 @@ class DockWidget(QDockWidget):
             (self.puAreaColumnName,
              self.puAreaAbsDifferenceColumnName,
              self.puAreaLimitDeviationColumnName,
-             self.puAreaMaxQualityCodeColumnName,
              self.puDistanceColumnName,
              self.puPriceColumnName)
         
+        self.puAreaMaxQualityCodeColumnName = 'PU_VYMERA_PARCELY_MAX_KODCHB_KOD'
         self.puCategoryColumnName = 'PU_KATEGORIE'
         self.puIdColumnName = 'PU_ID'
         
         self.allPuColumns = self.visiblePuColumns + \
-            (self.puCategoryColumnName,
+            (self.puAreaMaxQualityCodeColumnName,
+             self.puCategoryColumnName,
              self.puIdColumnName)
         
         self.defaultMajorParNumberColumnName = 'KMENOVE_CISLO_PAR'

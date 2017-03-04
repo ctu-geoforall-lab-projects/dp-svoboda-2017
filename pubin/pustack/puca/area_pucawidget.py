@@ -203,9 +203,7 @@ class AreaPuCaWidget(PuCaWidget):
         
         for parVertexLayer in (parSobrLayer, parSpolLayer):
             puAreaMaxQualityCodes = self._extract_pu_area_max_quality_codes(
-                    parVertexLayer,
-                    puAreaMaxQualityCodes,
-                    rowidColumnName)
+                parVertexLayer, puAreaMaxQualityCodes, rowidColumnName)
         
         return puAreaMaxQualityCodes
         
