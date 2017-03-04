@@ -174,15 +174,15 @@ class LoadVfkPuWidget(PuWidget):
             fileInfo = QFileInfo(filePath)
             dbPath = QDir(fileInfo.absolutePath())\
                 .filePath(fileInfo.completeBaseName() + '.db')
-            vfkLayerCode = 'PAR'
+            layerCode = self.dW.parLayerCode
             vfkDriverName = 'VFK'
-            layerName = fileInfo.completeBaseName() + '|' + vfkLayerCode
+            layerName = fileInfo.completeBaseName() + '|' + layerCode
             
-            self._create_db_file(filePath, dbPath, vfkLayerCode, vfkDriverName)
+            self._create_db_file(filePath, dbPath, layerCode, vfkDriverName)
             
             self._open_database(dbPath)
             
-            self._load_vfk_layer(dbPath, layerName, vfkLayerCode, vfkDriverName)
+            self._load_vfk_layer(dbPath, layerName, layerCode, vfkDriverName)
             
             self.loadVfkProgressBar.setMaximum(1)
             self.set_value_loadVfkProgressBar.emit(1)
@@ -202,7 +202,7 @@ class LoadVfkPuWidget(PuWidget):
             QgsApplication.processEvents()
             self._enable_load_widgets(True)
     
-    def _create_db_file(self, filePath, dbPath, vfkLayerCode, vfkDriverName):
+    def _create_db_file(self, filePath, dbPath, layerCode, vfkDriverName):
         """Creates a database file.
         
         It checks if a database of the same name as the file exists.
@@ -211,7 +211,7 @@ class LoadVfkPuWidget(PuWidget):
         Args:
             filePath (str): A full path to the file.
             dbPath (str): A full path to the database.
-            vfkLayerCode (str): A code of the layer.
+            layerCode (str): A code of the layer.
             vfkDriverName (str): A name of the VFK driver.
         
         Raises:
@@ -244,8 +244,8 @@ class LoadVfkPuWidget(PuWidget):
                     u'Data nelze načíst, "{}" není platný datový zdroj VFK.'
                     .format(dbPath))
             
-            layerCount, layerNames = self._check_vfkLayerCode(
-                vfkDataSource, vfkLayerCode)
+            layerCount, layerNames = self._check_layer_code(
+                vfkDataSource, layerCode)
             
             self.loadVfkProgressBar.setMaximum(layerCount)
             
@@ -257,13 +257,13 @@ class LoadVfkPuWidget(PuWidget):
             
             QgsApplication.processEvents()
             
-            self._build_geometry(vfkLayerCode, vfkDataSource)
+            self._build_geometry(layerCode, vfkDataSource)
             
             QgsApplication.processEvents()
             
-            for vertexVfkLayerCode in self.dW.vertexVfkLayerCodes:
-                if vertexVfkLayerCode in layerNames:
-                    self._build_geometry(vertexVfkLayerCode, vfkDataSource)
+            for vertexLayerCode in self.dW.vertexLayerCodes:
+                if vertexLayerCode in layerNames:
+                    self._build_geometry(vertexLayerCode, vfkDataSource)
                     
                     QgsApplication.processEvents()
             
@@ -281,25 +281,25 @@ class LoadVfkPuWidget(PuWidget):
                 u'Data nelze načíst, "{}" není platný datový zdroj SQLite.'
                 .format(dbPath))
 
-        layerCount, layerNames = self._check_vfkLayerCode(
-            sqliteDataSource, vfkLayerCode)
+        layerCount, layerNames = self._check_layer_code(
+            sqliteDataSource, layerCode)
         
         sqliteDataSource.Destroy()
     
-    def _check_vfkLayerCode(self, dataSource, vfkLayerCode):
-        """Checks if there is a vfkLayerCode layer in the dataSource.
+    def _check_layer_code(self, dataSource, layerCode):
+        """Checks if there is a layer code layer in the data source.
         
         Args:
             dataSource (osgeo.ogr.DataSource): A data source.
-            vfkLayerCode (str): A code of the layer.
+            layerCode (str): A code of the layer.
         
         Returns:
             tuple:
-                [0] (int): A number of layers in the dataSource.
-                [1] (list): A list of layer names in the dataSource.
+                [0] (int): A number of layers in the data source.
+                [1] (list): A list of layer names in the data source.
         
         Raises:
-            dw.puError: When there is no vfkLayerCode layer in the dataSource.
+            dw.puError: When there is no layer code layer in the data source.
         
         """
         
@@ -310,7 +310,7 @@ class LoadVfkPuWidget(PuWidget):
         for i in xrange(layerCount):
             layerNames.append(dataSource.GetLayer(i).GetLayerDefn().GetName())
         
-        if vfkLayerCode not in layerNames:
+        if layerCode not in layerNames:
             QgsApplication.processEvents()
             
             dataSource.Destroy()
@@ -319,11 +319,11 @@ class LoadVfkPuWidget(PuWidget):
                 self.dW, self,
                 u'VFK file does not contain "{}" layer, therefore it can not be '
                 u'loaded by PU Plugin. The file can be '
-                u'loaded by "Add Vector Layer"'.format(vfkLayerCode),
-                u'VFK soubor neobsahuje vrstvu {}.'.format(vfkLayerCode),
+                u'loaded by "Add Vector Layer"'.format(layerCode),
+                u'VFK soubor neobsahuje vrstvu {}.'.format(layerCode),
                 u'VFK soubor neobsahuje vrstvu {}, proto nemůže být '
                 u'pomocí PU Pluginu načten. Data je možné načíst '
-                u'pomocí "Přidat vektorovou vrstvu."'.format(vfkLayerCode))
+                u'pomocí "Přidat vektorovou vrstvu."'.format(layerCode))
         
         dataSourceInfo = (layerCount, layerNames)
         
@@ -417,14 +417,14 @@ class LoadVfkPuWidget(PuWidget):
         
         QgsApplication.processEvents()
         
-        columnsPAR = []
+        columns = []
 
         while sqlQuery.next():
             record = sqlQuery.record()
             name = str(record.value('name'))
-            columnsPAR.append(name)
+            columns.append(name)
         
-        if not all(column in columnsPAR for column in self.dW.allPuColumnsPAR):
+        if not all(column in columns for column in self.dW.allPuColumns):
             queries = self._read_text_from_file(
                 sqlDir.filePath(u'add_pu_columns_PAR.sql')).split(';')
             
@@ -457,12 +457,6 @@ class LoadVfkPuWidget(PuWidget):
     def _load_vfk_layer(self, dbPath, layerName, vfkLayerCode, vfkDriverName):
         """Loads a layer of the given code from database into the map canvas.
         
-        Also sets symbology according
-        to "../puplugin/data/qml/vfkLayerCode.qml" file, enables
-        snapping, sets all fields except for those listed
-        in dW.editablePuColumnsPAR non-editable and hides all fields
-        except for those listed in dW.allVisibleColumnsPAR.
-        
         Args:
             dbPath (str): A full path to the database.
             layerName (str): A name of the layer.
@@ -490,7 +484,7 @@ class LoadVfkPuWidget(PuWidget):
         formConfig = layer.editFormConfig()
         
         for i in layer.pendingAllAttributesList():
-            if fields[i].name() not in self.dW.editablePuColumnsPAR:
+            if fields[i].name() not in self.dW.editablePuColumns:
                 formConfig.setReadOnly(i)
                 formConfig.setWidgetType(i, 'Hidden')
         
@@ -512,7 +506,7 @@ class LoadVfkPuWidget(PuWidget):
             columns = tableConfig.columns()
             
             for column in columns:
-                if column.name not in self.dW.allVisibleColumnsPAR:
+                if column.name not in self.dW.allVisibleColumns:
                     column.hidden = True
             
             tableConfig.setColumns(columns)
@@ -538,7 +532,7 @@ class LoadVfkPuWidget(PuWidget):
         project.setTopologicalEditing(True)
         project.writeEntry('Digitizing', 'SnappingMode', 'advanced') 
         project.writeEntry('Digitizing', 'IntersectionSnapping', Qt.Checked)
-        project.setSnapSettingsForLayer(layer.id(), True, 2, 1, 10, False)
+        project.setSnapSettingsForLayer(layer.id(), True, 2, 1, 10, True)
     
     def _enable_load_widgets(self, enableBool):
         """Sets loading widgets enabled or disabled.

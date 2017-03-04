@@ -45,7 +45,7 @@ class EditPuWidget(PuWidget):
         
         self.categoryValue = 0
         self.categoryValues = (0, 1, 2)
-        self.categoryName = self.dW.requiredColumnsPAR[5]
+        self.categoryName = self.dW.puCategoryColumnName
         self.shortCategoryName = self.categoryName[:10]
         self.setCategoryValue = 0
         
@@ -198,7 +198,7 @@ class EditPuWidget(PuWidget):
         self.gridLayout.addWidget(self.setCategoryPushButton, 5, 2, 1, 1)
     
     def _set_icon_size(self):
-        """Sets editToolBar icon size according to current QGIS settings."""
+        """Sets editToolBar icon size according to the current QGIS settings."""
         
         self.editToolBar.setIconSize(self.iface.mainWindow().iconSize())
     
@@ -365,7 +365,7 @@ class EditPuWidget(PuWidget):
         if not perimeterLayerName:
             perimeterLayerName = fileInfo.baseName()
         
-        selectedFeaturesIDs = layer.selectedFeaturesIds()
+        selectedFeaturesIds = layer.selectedFeaturesIds()
         
         layer.removeSelection()
         
@@ -390,7 +390,7 @@ class EditPuWidget(PuWidget):
         
         self.dW.delete_features_by_expression(perimeterLayer, expression)
         
-        layer.selectByIds(selectedFeaturesIDs)
+        layer.selectByIds(selectedFeaturesIds)
         
         return perimeterLayer
         
@@ -411,9 +411,10 @@ class EditPuWidget(PuWidget):
             self.set_perimeter_layer(perimeterLayer, False)
             self._sync_perimeter_map_layer_combo_box()
             
-            categoryID = perimeterLayer.fieldNameIndex(self.shortCategoryName)
+            categoryFieldId = perimeterLayer.fieldNameIndex(
+                self.shortCategoryName)
             
-            perimeterLayer.addAttributeAlias(categoryID, self.categoryName)
+            perimeterLayer.addAttributeAlias(categoryFieldId, self.categoryName)
             
             fields = perimeterLayer.pendingFields()
             
@@ -443,13 +444,6 @@ class EditPuWidget(PuWidget):
     
     def _run_setting_pu_category(self, layer):
         """Calls methods for setting PU category.
-        
-        When setCategoryValue equals 0 it sets a categoryValue
-        to categoryName column for selected features.
-        
-        When setCategoryValue equals 1 it sets a categoryValue
-        to categoryName column for all features according to current layer
-        in perimeterMapLayerComboBox.
         
         Args:
             layer (QgsVectorLayer): A reference to the layer.
@@ -488,16 +482,16 @@ class EditPuWidget(PuWidget):
         
         """
         
-        featuresCount = layer.selectedFeatureCount()
+        featureCount = layer.selectedFeatureCount()
         
-        if featuresCount == 0:
+        if featureCount == 0:
             self.set_text_statusbar.emit(
                 u'V aktivní vrstvě nejsou vybrány žádné prvky.', 10)
             return
         
         currentCategory = self.categoryComboBox.currentText()
         
-        if featuresCount == 1:
+        if featureCount == 1:
             self.set_text_statusbar.emit(
                 u'Zařazuji vybranou parcelu do kategorie "{}"...'
                 .format(currentCategory), 0)
@@ -506,7 +500,7 @@ class EditPuWidget(PuWidget):
                 u'Zařazuji vybrané parcely do kategorie "{}"...'
                 .format(currentCategory), 0)
         
-        selectedFeaturesIDs = layer.selectedFeaturesIds()
+        selectedFeaturesIds = layer.selectedFeaturesIds()
         selectedFeatures = layer.selectedFeaturesIterator()
         
         self.dW.set_field_value_for_features(
@@ -541,7 +535,7 @@ class EditPuWidget(PuWidget):
                 perimeterLayer = self._cut_perimeter_layer_by_selected_features(
                     layer, perimeterLayer)
             
-            layer.selectByIds(selectedFeaturesIDs)
+            layer.selectByIds(selectedFeaturesIds)
             
             self._add_selected_features_to_perimeter_layer(
                 layer, perimeterLayer)
@@ -557,7 +551,7 @@ class EditPuWidget(PuWidget):
     
         self.iface.setActiveLayer(layer)
         
-        if featuresCount == 1:
+        if featureCount == 1:
             self.set_text_statusbar.emit(
                 u'Vybraná parcela byla zařazena do kategorie "{}".'
                 .format(currentCategory), 20)
@@ -582,7 +576,8 @@ class EditPuWidget(PuWidget):
         selectedFeaturesLayerName = layer.name() + u'-selectedFeatures.temp'
 
         selectedFeaturesLayerFilePath = processing.runalg(
-            'qgis:saveselectedfeatures', layer, None)['OUTPUT_LAYER']
+            'qgis:saveselectedfeatures',
+            layer, None)['OUTPUT_LAYER']
         
         selectedFeaturesLayer = QgsVectorLayer(
             selectedFeaturesLayerFilePath, selectedFeaturesLayerName, 'ogr')
@@ -619,7 +614,7 @@ class EditPuWidget(PuWidget):
         
         selectedFeatures = layer.selectedFeatures()
         
-        categoryFieldID = perimeterLayer.fieldNameIndex(self.shortCategoryName)
+        categoryFieldId = perimeterLayer.fieldNameIndex(self.shortCategoryName)
         
         copiedFeatures = []
         
@@ -628,8 +623,8 @@ class EditPuWidget(PuWidget):
             copiedFeature.setAttributes(feature.attributes())
             copiedFeature.setGeometry(feature.geometry())
             
-            featureCategoryValue = feature.attribute(self.categoryName)
-            copiedFeature.setAttribute(categoryFieldID, featureCategoryValue)
+            categoryValue = feature.attribute(self.categoryName)
+            copiedFeature.setAttribute(categoryFieldId, categoryValue)
             
             copiedFeatures.append(copiedFeature)
         
@@ -657,14 +652,13 @@ class EditPuWidget(PuWidget):
         layer.removeSelection()
         perimeterLayer.removeSelection()
         
-        selectedFeaturesIDs = layer.selectedFeaturesIds()
-        
         for categoryValue in self.categoryValues:
             self.dW.select_features_by_field_value(
                 perimeterLayer, self.shortCategoryName, categoryValue)
         
             processing.runalg(
-                'qgis:selectbylocation', layer, perimeterLayer, u'within', 0, 0)
+                'qgis:selectbylocation',
+                layer, perimeterLayer, u'within', 0, 0)
         
             features = layer.selectedFeaturesIterator()
         
@@ -688,26 +682,26 @@ class EditPuWidget(PuWidget):
             
             currentCategory = self.categoryComboBox.currentText()
             
-            featuresCount = layer.selectedFeatureCount()
+            featureCount = layer.selectedFeatureCount()
             
             duration = 10
             
-            if featuresCount == 0:
+            if featureCount == 0:
                 self.set_text_statusbar.emit(
                     u'V kategorii "{}" není žádná parcela.'
                     .format(currentCategory), duration)
-            elif featuresCount == 1:
+            elif featureCount == 1:
                 self.set_text_statusbar.emit(
                     u'V kategorii "{}" je {} parcela.'
-                    .format(currentCategory, featuresCount), duration)
-            elif 1 < featuresCount < 5:
+                    .format(currentCategory, featureCount), duration)
+            elif 1 < featureCount < 5:
                 self.set_text_statusbar.emit(
                     u'V kategorii "{}" jsou {} parcely.'
-                    .format(currentCategory, featuresCount), duration)
-            elif 5 <= featuresCount:
+                    .format(currentCategory, featureCount), duration)
+            elif 5 <= featureCount:
                 self.set_text_statusbar.emit(
                     u'V kategorii "{}" je {} parcel.'
-                    .format(currentCategory, featuresCount), duration)
+                    .format(currentCategory, featureCount), duration)
         except:
             self.dW.display_error_messages(
                 self,

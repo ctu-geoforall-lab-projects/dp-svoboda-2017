@@ -80,7 +80,7 @@ class StackedWidget(QStackedWidget):
         
         self.checkAnalysisPuWidget = \
             checkanalysis_puwidget.CheckAnalysisPuWidget(
-            self, self.dWName, self.iface, self.dW, self.pluginDir)
+                self, self.dWName, self.iface, self.dW, self.pluginDir)
         self.dW.toolBar.checkAnalysisAction.triggered.connect(
             self.openTabSignalMapper.map)
         self.openTabSignalMapper.setMapping(

@@ -52,24 +52,24 @@ class UnownedPuCaWidget(PuCaWidget):
             
             self.dW.select_features_by_expression(layer, expression)
             
-            featuresCount = layer.selectedFeatureCount()
+            featureCount = layer.selectedFeatureCount()
             
             duration = 10
             
-            if featuresCount == 0:
+            if featureCount == 0:
                 self.pW.set_text_statusbar.emit(
                     u'Bez vlastníka není žádná parcela.', duration)
-            elif featuresCount == 1:
+            elif featureCount == 1:
                 self.pW.set_text_statusbar.emit(
-                    u'Bez vlastníka je {} parcela.'.format(featuresCount),
+                    u'Bez vlastníka je {} parcela.'.format(featureCount),
                     duration)
-            elif 1 < featuresCount < 5:
+            elif 1 < featureCount < 5:
                 self.pW.set_text_statusbar.emit(
-                    u'Bez vlastníka jsou {} parcely.'.format(featuresCount),
+                    u'Bez vlastníka jsou {} parcely.'.format(featureCount),
                     duration)
-            elif 5 <= featuresCount:
+            elif 5 <= featureCount:
                 self.pW.set_text_statusbar.emit(
-                    u'Bez vlastníka je {} parcel.'.format(featuresCount),
+                    u'Bez vlastníka je {} parcel.'.format(featureCount),
                     duration)
         except self.dW.puError:
             QgsApplication.processEvents()

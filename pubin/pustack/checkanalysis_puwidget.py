@@ -119,8 +119,8 @@ class CheckAnalysisPuWidget(PuWidget):
         
         self.perimeterLabelPuCaWidget = \
             perimeter_pucawidget.PerimeterLabelPuCaWidget(
-            self, self.dWName, self.iface, self.dW, self.pluginDir,
-            u'perimeterLabelPuCaWidget')
+                self, self.dWName, self.iface, self.dW, self.pluginDir,
+                u'perimeterLabelPuCaWidget')
         self.checkAnalysisLabelStackedWidget.addWidget(
             self.perimeterLabelPuCaWidget)
         self.perimeterPuCaWidget = perimeter_pucawidget.PerimeterPuCaWidget(
@@ -130,8 +130,8 @@ class CheckAnalysisPuWidget(PuWidget):
         
         self.notInSpiLabelPuCaWidget = \
             notinspi_pucawidget.NotInSpiLabelPuCaWidget(
-            self, self.dWName, self.iface, self.dW, self.pluginDir,
-            u'notInSpiLabelPuCaWidget')
+                self, self.dWName, self.iface, self.dW, self.pluginDir,
+                u'notInSpiLabelPuCaWidget')
         self.checkAnalysisLabelStackedWidget.addWidget(
             self.notInSpiLabelPuCaWidget)
         self.notInSpiPuCaWidget = notinspi_pucawidget.NotInSpiPuCaWidget(
@@ -141,8 +141,8 @@ class CheckAnalysisPuWidget(PuWidget):
         
         self.notInMapLabelPuCaWidget = \
             notinmap_pucawidget.NotInMapLabelPuCaWidget(
-            self, self.dWName, self.iface, self.dW, self.pluginDir,
-            u'notInMapLabelPuCaWidget')
+                self, self.dWName, self.iface, self.dW, self.pluginDir,
+                u'notInMapLabelPuCaWidget')
         self.checkAnalysisLabelStackedWidget.addWidget(
             self.notInMapLabelPuCaWidget)
         self.notInMapPuCaWidget = notinmap_pucawidget.NotInMapPuCaWidget(
@@ -171,8 +171,8 @@ class CheckAnalysisPuWidget(PuWidget):
         
         self.distanceLabelPuCaWidget = \
             distance_pucawidget.DistanceLabelPuCaWidget(
-            self, self.dWName, self.iface, self.dW, self.pluginDir,
-            u'distanceLabelPuCaWidget')
+                self, self.dWName, self.iface, self.dW, self.pluginDir,
+                u'distanceLabelPuCaWidget')
         self.checkAnalysisLabelStackedWidget.addWidget(
             self.distanceLabelPuCaWidget)
         self.distancePuCaWidget = distance_pucawidget.DistancePuCaWidget(

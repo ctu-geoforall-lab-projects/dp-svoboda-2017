@@ -26,6 +26,11 @@ from PyQt4.QtCore import QPyNullVariant, Qt
 
 from qgis.core import *
 
+import processing
+
+from collections import defaultdict
+from math import sqrt
+
 from pucawidget import PuCaWidget
 
 
@@ -35,12 +40,7 @@ class AreaPuCaWidget(PuCaWidget):
     def _build_widgets(self):
         """Builds own widgets."""
         
-        self.areaLineEdit = QLineEdit(self)
-        self.areaLineEdit.setObjectName(u'areaLineEdit')
-        doubleValidator = QDoubleValidator(self.areaLineEdit)
-        doubleValidator.setBottom(0)
-        self.areaLineEdit.setValidator(doubleValidator)
-        self.vBoxLayout.addWidget(self.areaLineEdit)
+        pass
     
     def execute(self, layer):
         """Executes the check.
@@ -53,68 +53,117 @@ class AreaPuCaWidget(PuCaWidget):
         try:
             editing = self.dW.check_editing()
             
-            threshold = self.areaLineEdit.text()
-            
-            if not threshold:
-                self.pW.set_text_statusbar.emit(
-                    u'Není zadána mezní odchylka.', 10)
-                return
-            
             self.pW.set_text_statusbar.emit(
-                u'Provádím kontrolu - výměra nad mezní odchylkou.', 0)
+                u'Provádím kontrolu - výměra nad mezní odchylkou...', 0)
             
-            fieldID = layer.fieldNameIndex('PU_VYMERA_PARCELY')
+            expression = QgsExpression("$geometry is not null")
+            
+            self.dW.select_features_by_expression(layer, expression)
+            
+            rowidColumnName = self.dW.rowidColumnName
+            
+            puAreaMaxQualityCodes = self._get_pu_area_max_quality_codes(
+                layer, rowidColumnName)
+            
+            puAreaColumnName = self.dW.puAreaColumnName
+            puAreaAbsDifferenceColumnName = \
+                self.dW.puAreaAbsDifferenceColumnName
+            puAreaLimitDeviationColumnName = \
+                self.dW.puAreaLimitDeviationColumnName
+            puAreaMaxQualityCodeColumnName = \
+                self.dW.puAreaMaxQualityCodeColumnName
+            
+            puAreaFieldId = layer.fieldNameIndex(puAreaColumnName)
+            puAreaAbsDifferenceFieldId = layer.fieldNameIndex(
+                puAreaAbsDifferenceColumnName)
+            puAreaLimitDeviationFieldId = layer.fieldNameIndex(
+                puAreaLimitDeviationColumnName)
+            puAreaMaxQualityCodeFieldId = layer.fieldNameIndex(
+                puAreaMaxQualityCodeColumnName)
             
             layer.startEditing()
             layer.updateFields()
             
-            problematicParcelsID = []
+            exceededPuAreaLimitDeviationParIds = []
             
-            features = layer.getFeatures()
+            features = layer.selectedFeaturesIterator()
             
             for feature in features:
-                featureGeometry = feature.geometry()
-                if featureGeometry == None:
+                geometry = feature.geometry()
+                
+                originalPuArea = feature.attribute(puAreaColumnName)
+                
+                puArea = int(round(geometry.area()))
+                defaultArea = feature.attribute(self.dW.deafultAreaColumnName)
+                
+                id = feature.id()
+                
+                if puArea != originalPuArea:
+                    layer.changeAttributeValue(id, puAreaFieldId, puArea)
+                
+                if type(defaultArea) == QPyNullVariant:
                     continue
                 
-                sgiArea = int(round(featureGeometry.area()))
-                spiArea = feature.attribute('VYMERA_PARCELY')
+                originalPuAreaAbsDifference = feature.attribute(
+                    puAreaAbsDifferenceColumnName)
                 
-                if sgiArea != spiArea:
-                    featureID = feature.id()
-                    layer.changeAttributeValue(featureID, fieldID, sgiArea)
+                puAreaAbsDifference = abs(puArea-defaultArea)
+                
+                if puAreaAbsDifference != originalPuAreaAbsDifference:
+                    layer.changeAttributeValue(
+                        id, puAreaAbsDifferenceFieldId, puAreaAbsDifference)
+                
+                rowid = feature.attribute(rowidColumnName)
+                puAreaMaxQualityCode = puAreaMaxQualityCodes[rowid]
+                
+                puAreaLimitDeviation = self._get_pu_area_limit_deviation(
+                    puArea, defaultArea, puAreaMaxQualityCode)
+                
+                if puAreaLimitDeviation:
+                    originalPuAreaLimitDeviation = feature.attribute(
+                        puAreaLimitDeviationColumnName)
                     
-                    if type(spiArea) == QPyNullVariant:
-                        continue
+                    if puAreaLimitDeviation != originalPuAreaLimitDeviation:
+                        layer.changeAttributeValue(
+                            id,
+                            puAreaLimitDeviationFieldId,
+                            puAreaLimitDeviation)
                     
-                    limitDifference =  spiArea*(float(threshold)/100)
+                    originalPuAreaMaxQualityCode = feature.attribute(
+                        puAreaMaxQualityCodeColumnName)
                     
-                    if abs(sgiArea - spiArea) > limitDifference:
-                        problematicParcelsID.append(featureID)
+                    if puAreaMaxQualityCode != originalPuAreaMaxQualityCode:
+                        layer.changeAttributeValue(
+                            id,
+                            puAreaMaxQualityCodeFieldId,
+                            puAreaMaxQualityCode)
+                    
+                    if puAreaAbsDifference > puAreaLimitDeviation:
+                        exceededPuAreaLimitDeviationParIds.append(id)
             
             layer.commitChanges()
             
             if editing:
                 self.iface.actionToggleEditing()
                 
-            layer.selectByIds(problematicParcelsID)
+            layer.selectByIds(exceededPuAreaLimitDeviationParIds)
             
-            featuresCount = layer.selectedFeatureCount()
+            featureCount = layer.selectedFeatureCount()
             
             duration = 10
             
-            if featuresCount == 0:
+            if featureCount == 0:
                 self.pW.set_text_statusbar.emit(
                     u'Mezní odchylka nebyla překročena u žádné parcely.',
                     duration)
-            elif featuresCount == 1:
+            elif featureCount == 1:
                 self.pW.set_text_statusbar.emit(
                     u'Mezní odchylka byla překročena u {} parcely.'
-                    .format(featuresCount), duration)
-            elif 1 < featuresCount:
+                    .format(featureCount), duration)
+            elif 1 < featureCount:
                 self.pW.set_text_statusbar.emit(
                     u'Mezní odchylka byla překročena u {} parcel.'
-                    .format(featuresCount), duration)
+                    .format(featureCount), duration)
         except self.dW.puError:
             QgsApplication.processEvents()
         except:
@@ -128,6 +177,163 @@ class AreaPuCaWidget(PuCaWidget):
                 u'Error executing "{}".'.format(currentCheckAnalysisName),
                 u'Chyba při provádění "{}".'.format(currentCheckAnalysisName))
 
+    def _get_pu_area_max_quality_codes(self, layer, rowidColumnName):
+        """Gets PU area maximum quality codes.
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the active layer.
+            rowidColumnName (str): A name of rowid column.
+        
+        Returns:
+            defaultdict: A defaultdict with rowids as keys (long)
+                and PU area maximum quality codes as values (float).
+        
+        """
+
+        sobrString = self.dW.sobrLayerCode
+        spolString = self.dW.spolLayerCode
+        
+        sobrLayer = self._get_vertex_layer(layer, sobrString)
+        spolLayer = self._get_vertex_layer(layer, spolString)
+        
+        parSobrLayer = self._get_joined_layer(layer, sobrLayer)
+        parSpolLayer = self._get_joined_layer(layer, spolLayer)
+        
+        puAreaMaxQualityCodes = defaultdict(float)
+        
+        for parVertexLayer in (parSobrLayer, parSpolLayer):
+            puAreaMaxQualityCodes = self._extract_pu_area_max_quality_codes(
+                    parVertexLayer,
+                    puAreaMaxQualityCodes,
+                    rowidColumnName)
+        
+        return puAreaMaxQualityCodes
+        
+    def _get_vertex_layer(self, layer, vertexLayerCode):
+        """Gets vertex layer.
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the active layer.
+            vertexLayerCode (str): A code of the layer.
+        
+        Returns:
+            QgsVectorLayer: A reference to the vertex layer of the given code.
+        
+        """
+        
+        parString = self.dW.parLayerCode
+        
+        layerSource = layer.source()
+        layerName = layer.name()
+        
+        codeLayerSource = layerSource.replace(parString, vertexLayerCode)
+        codeLayerName = layerName.replace(parString, vertexLayerCode)
+        codeLayer = QgsVectorLayer(codeLayerSource, codeLayerName, 'ogr')
+        
+        return codeLayer
+    
+    def _get_joined_layer(self, layer, vertexLayer):
+        """Gets joined layer.
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the active layer.
+            vertexLayer (QgsVectorLayer): A reference to the vertex layer.
+        
+        Returns:
+            QgsVectorLayer: A reference to the joined layer, None when layer
+                or vertex layer has no feature.
+        
+        """
+        
+        selectedFeatureCount = layer.selectedFeatureCount()
+        vertexLayerFeatureCount = vertexLayer.featureCount()
+        
+        parVertexLayer = None
+        
+        if selectedFeatureCount != 0 and vertexLayerFeatureCount != 0:
+            parVertexLayerFilePath = processing.runalg(
+                'qgis:joinattributesbylocation',
+                layer, vertexLayer, u'touches', 0, 1, u'max', 0, None)['OUTPUT']
+            
+            vertexLayerCode = vertexLayer.name().split('|')[1]
+            
+            parVertexLayerName = layer.name() + u'-join-' + vertexLayerCode
+            
+            parVertexLayer = QgsVectorLayer(
+                parVertexLayerFilePath, parVertexLayerName, 'ogr')
+        
+        return parVertexLayer
+    
+    def _extract_pu_area_max_quality_codes(
+            self, vertexLayer, puAreaMaxQualityCodes, rowidColumnName):
+        """Extracts PU area maximum quality codes.
+        
+        Args:
+            vertexLayer (QgsVectorLayer): A reference to the vertex layer.
+            puAreaMaxQualityCodes (defaultdict): A defaultdict
+                with rowids as keys (long)
+                and PU area maximum quality codes as values (float).
+            rowidColumnName (str): A name of rowid column.
+        
+        Returns:
+            defaultdict: A defaultdict with rowids as keys (long)
+                and PU area maximum quality codes as values (float).
+        
+        """
+        
+        if vertexLayer:
+            maxQualityCodeColumnName = u'maxKODCHB_'
+            
+            features = vertexLayer.getFeatures()
+            
+            for feature in features:
+                rowid = feature.attribute(rowidColumnName)
+                
+                puAreaMaxQualityCode = feature.attribute(
+                    maxQualityCodeColumnName)
+                
+                if type(puAreaMaxQualityCode) == QPyNullVariant:
+                    continue
+                
+                if puAreaMaxQualityCode > puAreaMaxQualityCodes[rowid]:
+                    puAreaMaxQualityCodes[rowid] = puAreaMaxQualityCode
+        
+        return puAreaMaxQualityCodes
+    
+    def _get_pu_area_limit_deviation(
+            self, sgiArea, spiArea, puAreaMaxQualityCode):
+        """Gets PU area limit deviation.
+        
+        Args:
+            sgiArea (int): A SGI area.
+            spiArea (int): A SPI area.
+            puAreaMaxQualityCode (float): A PU area maximum quality code.
+        
+        Returns:
+            float: A PU area limit deviation,
+                None when limit deviation is not defined.
+        
+        """
+        
+        biggerArea = max(sgiArea, spiArea)
+        
+        if puAreaMaxQualityCode not in range(3, 9):
+            limitDeviation = None
+        elif puAreaMaxQualityCode == 3:
+            limitDeviation = 2
+        elif puAreaMaxQualityCode == 4:
+            limitDeviation = 0.4*sqrt(biggerArea) + 4
+        elif puAreaMaxQualityCode == 5:
+            limitDeviation = 1.2*sqrt(biggerArea) + 12
+        elif puAreaMaxQualityCode == 6:
+            limitDeviation = 0.3*sqrt(biggerArea) + 3
+        elif puAreaMaxQualityCode == 7:
+            limitDeviation = 0.8*sqrt(biggerArea) + 8
+        elif puAreaMaxQualityCode == 8:
+            limitDeviation = 2.0*sqrt(biggerArea) + 20
+        
+        return round(limitDeviation)
+
 
 class AreaLabelPuCaWidget(PuCaWidget):
     """A label widget for 'area' check."""
@@ -135,8 +341,5 @@ class AreaLabelPuCaWidget(PuCaWidget):
     def _build_widgets(self):
         """Builds own widgets."""
         
-        self.areaLabel = QLabel(self)
-        self.areaLabel.setObjectName(u'areaLabel')
-        self.areaLabel.setText(u'Mezní odchylka [%]:')
-        self.vBoxLayout.addWidget(self.areaLabel)
+        pass
 

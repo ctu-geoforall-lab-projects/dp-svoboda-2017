@@ -50,23 +50,23 @@ class NotInMapPuCaWidget(PuCaWidget):
             
             self.dW.select_features_by_expression(layer, expression)
             
-            featuresCount = layer.selectedFeatureCount()
+            featureCount = layer.selectedFeatureCount()
             
             duration = 10
             
-            if featuresCount == 0:
+            if featureCount == 0:
                 self.pW.set_text_statusbar.emit(
                     u'V mapě jsou všechny parcely.', duration)
-            elif featuresCount == 1:
+            elif featureCount == 1:
                 self.pW.set_text_statusbar.emit(
-                    u'V mapě není {} parcela.'.format(featuresCount), duration)
-            elif 1 < featuresCount < 5:
+                    u'V mapě není {} parcela.'.format(featureCount), duration)
+            elif 1 < featureCount < 5:
                 self.pW.set_text_statusbar.emit(
-                    u'V mapě nejsou {} parcely.'.format(featuresCount),
+                    u'V mapě nejsou {} parcely.'.format(featureCount),
                     duration)
-            elif 5 <= featuresCount:
+            elif 5 <= featureCount:
                 self.pW.set_text_statusbar.emit(
-                    u'V mapě není {} parcel.'.format(featuresCount), duration)
+                    u'V mapě není {} parcel.'.format(featureCount), duration)
         except self.dW.puError:
             QgsApplication.processEvents()
         except:

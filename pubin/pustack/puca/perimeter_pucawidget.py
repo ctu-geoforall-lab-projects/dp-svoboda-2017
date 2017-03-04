@@ -126,27 +126,25 @@ class PerimeterPuCaWidget(PuCaWidget):
                 layer, perimeterLayer, u'within', 0, 0)
             
             layer.invertSelection()
-                
-            features = layer.selectedFeaturesIterator()
             
-            featuresCount = layer.selectedFeatureCount()
+            featureCount = layer.selectedFeatureCount()
             
             duration = 10
             
-            if featuresCount == 0:
+            if featureCount == 0:
                 self.pW.set_text_statusbar.emit(
                     u'Uvnitř obvodu jsou všechny parcely.', duration)
-            elif featuresCount == 1:
+            elif featureCount == 1:
                 self.pW.set_text_statusbar.emit(
-                    u'Uvnitř obvodu není {} parcela'.format(featuresCount),
+                    u'Uvnitř obvodu není {} parcela'.format(featureCount),
                     duration)
-            elif 1 < featuresCount < 5:
+            elif 1 < featureCount < 5:
                 self.pW.set_text_statusbar.emit(
-                    u'Uvnitř obvodu nejsou {} parcely.'.format(featuresCount),
+                    u'Uvnitř obvodu nejsou {} parcely.'.format(featureCount),
                     duration)
-            elif 5 <= featuresCount:
+            elif 5 <= featureCount:
                 self.pW.set_text_statusbar.emit(
-                    u'Uvnitř obvodu není {} parcel.'.format(featuresCount),
+                    u'Uvnitř obvodu není {} parcel.'.format(featureCount),
                     duration)
         except self.dW.puError:
             QgsApplication.processEvents()

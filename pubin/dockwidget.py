@@ -60,34 +60,68 @@ class DockWidget(QDockWidget):
     def _setup_self(self):
         """Sets up self."""
         
-        self.editablePuColumnsPAR = (
-            'PU_KMENOVE_CISLO_PAR',
-            'PU_PODDELENI_CISLA_PAR')
+        self.puMajorParNumberColumnName = 'PU_KMENOVE_CISLO_PAR'
+        self.puMinorParNumberColumnName = 'PU_PODDELENI_CISLA_PAR'
         
-        self.visiblePuColumnsPAR = \
-            self.editablePuColumnsPAR + \
-            ('PU_VYMERA_PARCELY', 'PU_VZDALENOST', 'PU_CENA')
+        self.editablePuColumns = (
+            self.puMajorParNumberColumnName,
+            self.puMinorParNumberColumnName)
         
-        self.allPuColumnsPAR = \
-            self.visiblePuColumnsPAR + ('PU_KATEGORIE', 'PU_ID')
+        self.puAreaColumnName = 'PU_VYMERA_PARCELY'
+        self.puAreaAbsDifferenceColumnName = 'PU_VYMERA_PARCELY_ABS_ROZDIL'
+        self.puAreaLimitDeviationColumnName = 'PU_VYMERA_PARCELY_MEZNI_ODCHYLKA'
+        self.puAreaMaxQualityCodeColumnName = 'PU_VYMERA_PARCELY_MAX_KODCHB_KOD'
+        self.puDistanceColumnName = 'PU_VZDALENOST'
+        self.puPriceColumnName = 'PU_CENA'
         
-        self.visibleDefaultColumnsPAR = (
-            'KMENOVE_CISLO_PAR',
-            'PODDELENI_CISLA_PAR',
-            'VYMERA_PARCELY')
+        self.visiblePuColumns = self.editablePuColumns + \
+            (self.puAreaColumnName,
+             self.puAreaAbsDifferenceColumnName,
+             self.puAreaLimitDeviationColumnName,
+             self.puAreaMaxQualityCodeColumnName,
+             self.puDistanceColumnName,
+             self.puPriceColumnName)
         
-        self.allVisibleColumnsPAR = \
-            self.visiblePuColumnsPAR + self.visibleDefaultColumnsPAR
+        self.puCategoryColumnName = 'PU_KATEGORIE'
+        self.puIdColumnName = 'PU_ID'
         
-        self.uniqueDefaultColumnsPAR = ('rowid', 'ID', 'ogr_fid')
+        self.allPuColumns = self.visiblePuColumns + \
+            (self.puCategoryColumnName,
+             self.puIdColumnName)
         
-        self.allDefaultColumnsPAR = \
-            self.visibleDefaultColumnsPAR + self.uniqueDefaultColumnsPAR
+        self.defaultMajorParNumberColumnName = 'KMENOVE_CISLO_PAR'
+        self.defaultMinorParNumberColumnName = 'PODDELENI_CISLA_PAR'
+        self.deafultAreaColumnName = 'VYMERA_PARCELY'
         
-        self.requiredColumnsPAR = \
-            self.allPuColumnsPAR + self.allDefaultColumnsPAR
+        self.visibleDefaultColumns = (
+            self.defaultMajorParNumberColumnName,
+            self.defaultMinorParNumberColumnName,
+            self.deafultAreaColumnName)
         
-        self.vertexVfkLayerCodes = ('SOBR', 'SPOL', 'HEY')
+        self.allVisibleColumns = \
+            self.visiblePuColumns + self.visibleDefaultColumns
+        
+        self.rowidColumnName = 'rowid'
+        self.idColumnName = 'ID'
+        self.ogrfidColumnName = 'ogr_fid'
+        
+        self.uniqueDefaultColumns = (
+            self.rowidColumnName,
+            self.idColumnName,
+            self.ogrfidColumnName)
+        
+        self.allDefaultColumns = \
+            self.visibleDefaultColumns + self.uniqueDefaultColumns
+        
+        self.requiredColumns = \
+            self.allPuColumns + self.allDefaultColumns
+        
+        self.parLayerCode = 'PAR'
+        
+        self.sobrLayerCode = 'SOBR'
+        self.spolLayerCode = 'SPOL'
+        
+        self.vertexLayerCodes = (self.sobrLayerCode, self.spolLayerCode)
         
         self.dWName = u'dockWidget'
         
@@ -154,13 +188,13 @@ class DockWidget(QDockWidget):
         
         sender.set_text_statusbar.emit(u'', 1)
         
-        pluginName = u'PU Plugin'
+        pluginName = self.name
         
         type, value, mytraceback = sys.exc_info()
         
         if type:
-            tb = traceback.format_exc()
-            engLogMessage = engLogMessage + '\n' + tb
+            traceBack = traceback.format_exc()
+            engLogMessage = engLogMessage + '\n' + traceBack
         
         QgsMessageLog.logMessage(engLogMessage, pluginName)
         
@@ -169,8 +203,10 @@ class DockWidget(QDockWidget):
         
         if czeMessageBarMessage:
             self.iface.messageBar().pushMessage(
-                pluginName, czeMessageBarMessage ,
-                QgsMessageBar.WARNING, duration)
+                pluginName,
+                czeMessageBarMessage,
+                QgsMessageBar.WARNING,
+                duration)
     
     class puError(Exception):
         """A custom exception."""
@@ -279,7 +315,7 @@ class DockWidget(QDockWidget):
         
         """
         
-        fieldID = layer.fieldNameIndex(field)
+        fieldId = layer.fieldNameIndex(field)
         
         if startCommit:
             layer.startEditing()
@@ -288,8 +324,8 @@ class DockWidget(QDockWidget):
         
         for feature in features:
             if feature.attribute(field) != value:
-                featureID = feature.id()
-                layer.changeAttributeValue(featureID, fieldID, value)
+                id = feature.id()
+                layer.changeAttributeValue(id, fieldId, value)
         
         if startCommit:
             layer.commitChanges()
@@ -349,7 +385,8 @@ class DockWidget(QDockWidget):
         
         fieldNames = [field.name().upper() for field in layer.pendingFields()]
         
-        if not all(column.upper() in fieldNames for column in self.requiredColumnsPAR):
+        if not all(column.upper() in fieldNames \
+                   for column in self.requiredColumns):
             if sender:
                 sender.set_text_statusbar.emit(
                     u'Aktivní vrstva není VFK.', duration)
@@ -387,7 +424,7 @@ class DockWidget(QDockWidget):
             [field.name() for field in perimeterLayer.pendingFields()]
         
         if not all(column[:10] in perimeterFieldNames \
-                   for column in self.requiredColumnsPAR):
+                   for column in self.requiredColumns):
             if message:
                 self.set_text_statusbar.emit(
                     u'Vrstva obvodu nebyla vytvořena PU Pluginem.', duration)
@@ -464,9 +501,9 @@ class DockWidget(QDockWidget):
         
         features = layer.getFeatures(QgsFeatureRequest(expression))
         
-        featuresID = [feature.id() for feature in features]
+        ids = [feature.id() for feature in features]
         
-        layer.selectByIds(featuresID)
+        layer.selectByIds(ids)
     
     def select_features_by_expression(self, layer, expression):
         """Selects features in the given layer by the expression.
@@ -479,9 +516,9 @@ class DockWidget(QDockWidget):
         
         features = layer.getFeatures(QgsFeatureRequest(expression))
         
-        featuresID = [feature.id() for feature in features]
+        ids = [feature.id() for feature in features]
         
-        layer.selectByIds(featuresID)
+        layer.selectByIds(ids)
     
     def delete_features_by_expression(
             self, layer, expression, startCommit=True):
@@ -497,12 +534,12 @@ class DockWidget(QDockWidget):
         
         features = layer.getFeatures(QgsFeatureRequest(expression))
         
-        featuresID = [feature.id() for feature in features]
+        ids = [feature.id() for feature in features]
         
         if startCommit:
             layer.startEditing()
         
-        layer.deleteFeatures(featuresID)
+        layer.deleteFeatures(ids)
         
         if startCommit:
             layer.commitChanges()
@@ -565,31 +602,28 @@ class DockWidget(QDockWidget):
         try:
             layer = self.iface.activeLayer()
             
-            selectedFeaturesIDs = layer.selectedFeaturesIds()
+            selectedFeaturesIds = layer.selectedFeaturesIds()
                 
             features = layer.getFeatures()
             
-            rowidColumn = self.uniqueDefaultColumnsPAR[0]
-            idColumn = self.uniqueDefaultColumnsPAR[1]
-            ogrfidColumn = self.uniqueDefaultColumnsPAR[2]
-            
-            rowidGroupedFeatures = {}
+            groupedRowids = {}
             
             for feature in features:
-                featureRowid = feature.attribute(rowidColumn)
+                rowid = feature.attribute(self.rowidColumnName)
                 
-                if featureRowid not in rowidGroupedFeatures:
-                    rowidGroupedFeatures[featureRowid] = 1
+                if rowid not in groupedRowids:
+                    groupedRowids[rowid] = 1
                 else:
-                    rowidGroupedFeatures[featureRowid] += 1
+                    groupedRowids[rowid] += 1
             
-            rowidFieldID = layer.fieldNameIndex(rowidColumn)
-            idFieldID = layer.fieldNameIndex(idColumn)
-            ogrfidFieldID = layer.fieldNameIndex(ogrfidColumn)
+            rowidFieldId = layer.fieldNameIndex(self.rowidColumnName)
+            idFieldId = layer.fieldNameIndex(self.idColumnName)
+            ogrfidFieldId = layer.fieldNameIndex(self.ogrfidColumnName)
             
-            for key, value in rowidGroupedFeatures.iteritems():
+            for key, value in groupedRowids.iteritems():
                 if value > 1:
-                    self.select_features_by_field_value(layer, rowidColumn, key)
+                    self.select_features_by_field_value(
+                        layer, self.rowidColumnName, key)
                     
                     oldFeatures = []
                     newFeatures = []
@@ -607,9 +641,9 @@ class DockWidget(QDockWidget):
                         newFeature = QgsFeature()
                         newFeature.setGeometry(originalFeature.geometry())
                         newFeature.setAttributes(originalFeature.attributes())
-                        newFeature.setAttribute(rowidFieldID, None)
-                        newFeature.setAttribute(idFieldID, None)
-                        newFeature.setAttribute(ogrfidFieldID, None)
+                        newFeature.setAttribute(rowidFieldId, None)
+                        newFeature.setAttribute(idFieldId, None)
+                        newFeature.setAttribute(ogrfidFieldId, None)
                         
                         newFeatures.append(newFeature)
                     
@@ -618,7 +652,7 @@ class DockWidget(QDockWidget):
             
             QgsApplication.processEvents()
             
-            layer.selectByIds(selectedFeaturesIDs)
+            layer.selectByIds(selectedFeaturesIds)
         except:
             self.display_error_messages(
                 self,

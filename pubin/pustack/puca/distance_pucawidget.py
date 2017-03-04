@@ -135,22 +135,26 @@ class DistancePuCaWidget(PuCaWidget):
             for feature in refPointFeatures:
                 refPoint = feature.geometry().asPoint()
             
-            fieldID = layer.fieldNameIndex(self.dW.requiredColumnsPAR[3])
+            puDistanceColumnName = self.dW.puDistanceColumnName
+            
+            fieldId = layer.fieldNameIndex(puDistanceColumnName)
             
             layer.startEditing()
             layer.updateFields()
             
             for feature in features:
-                featureGeometry = feature.geometry()
+                geometry = feature.geometry()
                 
-                if featureGeometry != None:
-                    featureID = feature.id()
+                if geometry != None:
+                    id = feature.id()
+                    originalDistance = feature.attribute(puDistanceColumnName)
                     
-                    featureCentroid = featureGeometry.centroid().asPoint()
-                    distanceDouble = sqrt(refPoint.sqrDist(featureCentroid))
+                    centroid = geometry.centroid().asPoint()
+                    distanceDouble = sqrt(refPoint.sqrDist(centroid))
                     distance = int(round(distanceDouble))
                     
-                    layer.changeAttributeValue(featureID, fieldID, distance)
+                    if distance != originalDistance:
+                        layer.changeAttributeValue(id, fieldId, distance)
             
             layer.commitChanges()
             

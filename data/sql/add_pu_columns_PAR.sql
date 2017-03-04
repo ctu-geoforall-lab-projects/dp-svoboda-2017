@@ -9,7 +9,12 @@ alter table PAR add column PU_PODDELENI_CISLA_PAR integer;
 update PAR set PU_PODDELENI_CISLA_PAR = PODDELENI_CISLA_PAR;
 
 alter table PAR add column PU_VYMERA_PARCELY integer;
-update PAR set PU_VYMERA_PARCELY = VYMERA_PARCELY;
+
+alter table PAR add column PU_VYMERA_PARCELY_ABS_ROZDIL integer;
+
+alter table PAR add column PU_VYMERA_PARCELY_MEZNI_ODCHYLKA integer;
+
+alter table PAR add column PU_VYMERA_PARCELY_MAX_KODCHB_KOD integer;
 
 alter table PAR add column PU_KATEGORIE integer default 2;
 update PAR set PU_KATEGORIE = NULL;

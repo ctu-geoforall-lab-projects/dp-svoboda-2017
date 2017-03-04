@@ -113,14 +113,11 @@ class BpejPuCaWidget(PuCaWidget):
         try:
             editing = self.dW.check_editing()
             
-            bpejField = self.bpejFieldComboBox.currentField()
-            
-            if bpejField == u'':
-                self.pW.set_text_statusbar.emit(
-                    u'Není vybrán sloupec ceny.', 10)
-                return
-            
             bpejLayer = self.bpejMapLayerComboBox.currentLayer()
+            
+            if bpejLayer == None:
+                self.pW.set_text_statusbar.emit(u'Žádná vrstva BPEJ.', 10)
+                return
             
             bpejLayerCrs = bpejLayer.crs().authid()
             layerCrs = layer.crs().authid()
@@ -129,6 +126,13 @@ class BpejPuCaWidget(PuCaWidget):
                 self.pW.set_text_statusbar.emit(
                     u'Aktivní vrstva a vrstva BPEJ nemají stejný '
                     u'souřadnicový systém.', 10)
+                return
+            
+            bpejField = self.bpejFieldComboBox.currentField()
+            
+            if bpejField == u'':
+                self.pW.set_text_statusbar.emit(
+                    u'Není vybrán sloupec ceny.', 10)
                 return
             
             self.pW.set_text_statusbar.emit(
@@ -140,7 +144,8 @@ class BpejPuCaWidget(PuCaWidget):
             bpejField = self._edit_bpej_field(bpejField, layer)
             
             unionOutput = processing.runalg(
-                'qgis:union', layer, bpejLayer, None)['OUTPUT']
+                'qgis:union',
+                layer, bpejLayer, None)['OUTPUT']
             
             unionLayer = QgsVectorLayer(unionOutput, 'unionLayer', 'ogr')
             
@@ -150,26 +155,27 @@ class BpejPuCaWidget(PuCaWidget):
                 "\"{}\" is null"\
                 .format(
                     bpejField,
-                    self.dW.visibleDefaultColumnsPAR[0][:10]))
+                    self.dW.defaultMajorParNumberColumnName[:10]))
             
             self.dW.delete_features_by_expression(unionLayer, expression)
             
             multiToSingleOutput = processing.runalg(
-                'qgis:multiparttosingleparts', unionLayer, None)['OUTPUT']
+                'qgis:multiparttosingleparts',
+                unionLayer, None)['OUTPUT']
             
             multiToSingleLayer = QgsVectorLayer(
                 multiToSingleOutput, 'multiToSingleLayer', 'ogr')
             
             bpejCodePrices = self._get_bpej_code_prices()
             
-            puIDColumnName = 'rowid'
+            rowidColumnName = self.dW.rowidColumnName
             
-            featurePrices, missingBpejCodes = self._calculate_feature_prices(
-                puIDColumnName, multiToSingleLayer, bpejField, bpejCodePrices)
+            prices, missingBpejCodes = self._calculate_feature_prices(
+                rowidColumnName, multiToSingleLayer, bpejField, bpejCodePrices)
             
-            priceFieldName = self.dW.requiredColumnsPAR[4]
+            priceFieldName = self.dW.puPriceColumnName
             
-            priceFieldID = layer.fieldNameIndex(priceFieldName)
+            priceFieldId = layer.fieldNameIndex(priceFieldName)
             
             layer.startEditing()
             layer.updateFields()
@@ -177,16 +183,15 @@ class BpejPuCaWidget(PuCaWidget):
             features = layer.getFeatures()
             
             for feature in features:
-                featurePuID = feature.attribute(puIDColumnName)
-                featureID = feature.id()
-                featurePrice = feature.attribute(priceFieldName)
+                rowid = feature.attribute(rowidColumnName)
+                id = feature.id()
+                originalPrice = feature.attribute(priceFieldName)
                 
-                price = featurePrices[featurePuID]
+                price = prices[rowid]
                 roundedPrice = round(price, -1)
                 
-                if roundedPrice != featurePrice:
-                    layer.changeAttributeValue(
-                        featureID, priceFieldID, roundedPrice)
+                if roundedPrice != originalPrice:
+                    layer.changeAttributeValue(id, priceFieldId, roundedPrice)
             
             layer.commitChanges()
             
@@ -324,7 +329,8 @@ class BpejPuCaWidget(PuCaWidget):
         
     
     def _download_bpej_csv(
-            self, testInternetUrl, bpejZipUrl, bpejZipFilePath, bpejCsvFileName):
+            self,
+            testInternetUrl, bpejZipUrl, bpejZipFilePath, bpejCsvFileName):
         """Downloads BPEJ CSV file and unzips it.
         
         Args:
@@ -334,7 +340,7 @@ class BpejPuCaWidget(PuCaWidget):
             bpejCsvFileName (str): A name of the BPEJ CSV file.
         
         Raises:
-            dw.puError: When a connection to the CUZK failed.
+            dw.puError: When a connection to the CUZK website failed.
         
         """
         
@@ -454,11 +460,11 @@ class BpejPuCaWidget(PuCaWidget):
     
     def _calculate_feature_prices(
             self,
-            puIDColumnName, multiToSingleLayer, bpejField, bpejCodePrices):
+            rowidColumnName, multiToSingleLayer, bpejField, bpejCodePrices):
         """Calculates feature prices.
         
         Args:
-            puIDColumnName (str): A name of PU ID column.
+            rowidColumnName (str): A name of rowid column.
             multiToSingleLayer (QgsVectorLayer): A reference to the single
                 features layer.
             bpejField (str): A name of the BPEJ field.
@@ -466,39 +472,39 @@ class BpejPuCaWidget(PuCaWidget):
                 and prices as values (flt).
         
         Returns:
-            defaultdict: A defaultdict with feature PU IDs as keys (long)
+            defaultdict: A defaultdict with rowids as keys (long)
                 and prices as values (float).
             set: A set of BPEJ codes that are not in BPEJ SCV file.
         
         """
         
-        featurePrices = defaultdict(float)
+        prices = defaultdict(float)
         
         missingBpejCodes = set()
         
         features = multiToSingleLayer.getFeatures()
         
         for feature in features:
-            featurePuID = long(feature.attribute(puIDColumnName))
-            featureBpejCode = str(feature.attribute(bpejField))
-            featureGeometry = feature.geometry()
+            rowid = feature.attribute(rowidColumnName)
+            bpejCode = str(feature.attribute(bpejField))
+            geometry = feature.geometry()
             
-            if featureGeometry != None:
-                featureArea = featureGeometry.area()
+            if geometry != None:
+                area = geometry.area()
                 
-                editedFeatureBpejCode = featureBpejCode.replace('.', '')
+                editedBpejCode = bpejCode.replace('.', '')
                 
-                if editedFeatureBpejCode in bpejCodePrices:
-                    featureBpejPrice = bpejCodePrices[editedFeatureBpejCode]
+                if editedBpejCode in bpejCodePrices:
+                    bpejPrice = bpejCodePrices[editedBpejCode]
                 else:
-                    featureBpejPrice = 0.0
-                    missingBpejCodes.add(featureBpejCode)
+                    bpejPrice = 0.0
+                    missingBpejCodes.add(bpejCode)
                 
-                price = featureBpejPrice*featureArea
+                price = bpejPrice*area
                 
-                featurePrices[featurePuID] += price
+                prices[rowid] += price
         
-        return featurePrices, missingBpejCodes
+        return prices, missingBpejCodes
 
 
 class BpejLabelPuCaWidget(PuCaWidget):
