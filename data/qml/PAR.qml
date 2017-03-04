@@ -1,5 +1,5 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.18.2" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.18.4" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
     <edittype widgetv2type="Hidden" name="rowid">
       <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
@@ -110,6 +110,15 @@
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="Hidden" name="PU_VYMERA_PARCELY">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="Hidden" name="PU_VYMERA_PARCELY_ABS_ROZDIL">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="Hidden" name="PU_VYMERA_PARCELY_MEZNI_ODCHYLKA">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="Hidden" name="PU_VYMERA_PARCELY_MAX_KODCHB_KOD">
       <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="Hidden" name="PU_KATEGORIE">
@@ -539,16 +548,16 @@
     <alias field="KATUZE_KOD" index="10" name=""/>
     <alias field="KATUZE_KOD_PUV" index="11" name=""/>
     <alias field="DRUH_CISLOVANI_PAR" index="12" name=""/>
-    <alias field="KMENOVE_CISLO_PAR" index="13" name=""/>
+    <alias field="KMENOVE_CISLO_PAR" index="13" name="KMENOVE C. (PUV.)"/>
     <alias field="ZDPAZE_KOD" index="14" name=""/>
-    <alias field="PODDELENI_CISLA_PAR" index="15" name=""/>
+    <alias field="PODDELENI_CISLA_PAR" index="15" name="PODDELENI C. (PUV.)"/>
     <alias field="DIL_PARCELY" index="16" name=""/>
     <alias field="MAPLIS_KOD" index="17" name=""/>
     <alias field="ZPURVY_KOD" index="18" name=""/>
     <alias field="DRUPOZ_KOD" index="19" name=""/>
     <alias field="ZPVYPA_KOD" index="20" name=""/>
     <alias field="TYP_PARCELY" index="21" name=""/>
-    <alias field="VYMERA_PARCELY" index="22" name=""/>
+    <alias field="VYMERA_PARCELY" index="22" name="VYMERA (SPI)"/>
     <alias field="CENA_NEMOVITOSTI" index="23" name=""/>
     <alias field="DEFINICNI_BOD_PAR" index="24" name=""/>
     <alias field="TEL_ID" index="25" name=""/>
@@ -560,17 +569,20 @@
     <alias field="IDENT_PS" index="31" name=""/>
     <alias field="ogr_fid" index="32" name=""/>
     <alias field="PU_ID" index="33" name=""/>
-    <alias field="PU_KMENOVE_CISLO_PAR" index="34" name=""/>
-    <alias field="PU_PODDELENI_CISLA_PAR" index="35" name=""/>
-    <alias field="PU_VYMERA_PARCELY" index="36" name=""/>
-    <alias field="PU_KATEGORIE" index="37" name=""/>
-    <alias field="PU_VZDALENOST" index="38" name=""/>
-    <alias field="PU_CENA" index="39" name=""/>
+    <alias field="PU_KMENOVE_CISLO_PAR" index="34" name="KMENOVE C. (EDI.)"/>
+    <alias field="PU_PODDELENI_CISLA_PAR" index="35" name="PODDELENI C. (EDI.)"/>
+    <alias field="PU_VYMERA_PARCELY" index="36" name="VYMERA (SGI)"/>
+    <alias field="PU_VYMERA_PARCELY_ABS_ROZDIL" index="37" name="ROZ. VYMER"/>
+    <alias field="PU_VYMERA_PARCELY_MEZNI_ODCHYLKA" index="38" name="MEZ. ODCH. ROZ. VYMER"/>
+    <alias field="PU_VYMERA_PARCELY_MAX_KODCHB_KOD" index="39" name=""/>
+    <alias field="PU_KATEGORIE" index="40" name=""/>
+    <alias field="PU_VZDALENOST" index="41" name="VZDALENOST"/>
+    <alias field="PU_CENA" index="42" name="CENA"/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
   <attributeactions default="-1"/>
-  <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="0">
+  <attributetableconfig actionWidgetStyle="dropDown" sortExpression="&quot;PU_CENA&quot;" sortOrder="1">
     <columns>
       <column width="-1" hidden="1" type="field" name="rowid"/>
       <column width="-1" hidden="1" type="field" name="ID"/>
@@ -585,16 +597,13 @@
       <column width="-1" hidden="1" type="field" name="KATUZE_KOD"/>
       <column width="-1" hidden="1" type="field" name="KATUZE_KOD_PUV"/>
       <column width="-1" hidden="1" type="field" name="DRUH_CISLOVANI_PAR"/>
-      <column width="-1" hidden="0" type="field" name="KMENOVE_CISLO_PAR"/>
       <column width="-1" hidden="1" type="field" name="ZDPAZE_KOD"/>
-      <column width="-1" hidden="0" type="field" name="PODDELENI_CISLA_PAR"/>
       <column width="-1" hidden="1" type="field" name="DIL_PARCELY"/>
       <column width="-1" hidden="1" type="field" name="MAPLIS_KOD"/>
       <column width="-1" hidden="1" type="field" name="ZPURVY_KOD"/>
       <column width="-1" hidden="1" type="field" name="DRUPOZ_KOD"/>
       <column width="-1" hidden="1" type="field" name="ZPVYPA_KOD"/>
       <column width="-1" hidden="1" type="field" name="TYP_PARCELY"/>
-      <column width="-1" hidden="0" type="field" name="VYMERA_PARCELY"/>
       <column width="-1" hidden="1" type="field" name="CENA_NEMOVITOSTI"/>
       <column width="-1" hidden="1" type="field" name="DEFINICNI_BOD_PAR"/>
       <column width="-1" hidden="1" type="field" name="TEL_ID"/>
@@ -605,14 +614,20 @@
       <column width="-1" hidden="1" type="field" name="PS_ID"/>
       <column width="-1" hidden="1" type="field" name="IDENT_PS"/>
       <column width="-1" hidden="1" type="field" name="ogr_fid"/>
-      <column width="-1" hidden="0" type="field" name="PU_KMENOVE_CISLO_PAR"/>
-      <column width="-1" hidden="0" type="field" name="PU_PODDELENI_CISLA_PAR"/>
-      <column width="-1" hidden="0" type="field" name="PU_VYMERA_PARCELY"/>
       <column width="-1" hidden="1" type="field" name="PU_KATEGORIE"/>
-      <column width="-1" hidden="0" type="field" name="PU_VZDALENOST"/>
-      <column width="-1" hidden="0" type="field" name="PU_CENA"/>
-      <column width="-1" hidden="1" type="actions"/>
       <column width="-1" hidden="1" type="field" name="PU_ID"/>
+      <column width="123" hidden="0" type="field" name="KMENOVE_CISLO_PAR"/>
+      <column width="118" hidden="0" type="field" name="PU_KMENOVE_CISLO_PAR"/>
+      <column width="132" hidden="0" type="field" name="PODDELENI_CISLA_PAR"/>
+      <column width="128" hidden="0" type="field" name="PU_PODDELENI_CISLA_PAR"/>
+      <column width="89" hidden="0" type="field" name="VYMERA_PARCELY"/>
+      <column width="90" hidden="0" type="field" name="PU_VYMERA_PARCELY"/>
+      <column width="82" hidden="0" type="field" name="PU_VYMERA_PARCELY_ABS_ROZDIL"/>
+      <column width="155" hidden="0" type="field" name="PU_VYMERA_PARCELY_MEZNI_ODCHYLKA"/>
+      <column width="-1" hidden="1" type="field" name="PU_VYMERA_PARCELY_MAX_KODCHB_KOD"/>
+      <column width="88" hidden="0" type="field" name="PU_VZDALENOST"/>
+      <column width="72" hidden="0" type="field" name="PU_CENA"/>
+      <column width="-1" hidden="1" type="actions"/>
     </columns>
   </attributetableconfig>
   <editform>.</editform>
@@ -643,5 +658,50 @@ def my_form_open(dialog, layer, feature):
     <rowstyles/>
     <fieldstyles/>
   </conditionalstyles>
+  <defaults>
+    <default field="rowid" expression=""/>
+    <default field="ID" expression=""/>
+    <default field="STAV_DAT" expression=""/>
+    <default field="DATUM_VZNIKU" expression=""/>
+    <default field="DATUM_ZANIKU" expression=""/>
+    <default field="PRIZNAK_KONTEXTU" expression=""/>
+    <default field="RIZENI_ID_VZNIKU" expression=""/>
+    <default field="RIZENI_ID_ZANIKU" expression=""/>
+    <default field="PKN_ID" expression=""/>
+    <default field="PAR_TYPE" expression=""/>
+    <default field="KATUZE_KOD" expression=""/>
+    <default field="KATUZE_KOD_PUV" expression=""/>
+    <default field="DRUH_CISLOVANI_PAR" expression=""/>
+    <default field="KMENOVE_CISLO_PAR" expression=""/>
+    <default field="ZDPAZE_KOD" expression=""/>
+    <default field="PODDELENI_CISLA_PAR" expression=""/>
+    <default field="DIL_PARCELY" expression=""/>
+    <default field="MAPLIS_KOD" expression=""/>
+    <default field="ZPURVY_KOD" expression=""/>
+    <default field="DRUPOZ_KOD" expression=""/>
+    <default field="ZPVYPA_KOD" expression=""/>
+    <default field="TYP_PARCELY" expression=""/>
+    <default field="VYMERA_PARCELY" expression=""/>
+    <default field="CENA_NEMOVITOSTI" expression=""/>
+    <default field="DEFINICNI_BOD_PAR" expression=""/>
+    <default field="TEL_ID" expression=""/>
+    <default field="PAR_ID" expression=""/>
+    <default field="BUD_ID" expression=""/>
+    <default field="IDENT_BUD" expression=""/>
+    <default field="SOUCASTI" expression=""/>
+    <default field="PS_ID" expression=""/>
+    <default field="IDENT_PS" expression=""/>
+    <default field="ogr_fid" expression=""/>
+    <default field="PU_ID" expression=""/>
+    <default field="PU_KMENOVE_CISLO_PAR" expression=""/>
+    <default field="PU_PODDELENI_CISLA_PAR" expression=""/>
+    <default field="PU_VYMERA_PARCELY" expression=""/>
+    <default field="PU_VYMERA_PARCELY_ABS_ROZDIL" expression=""/>
+    <default field="PU_VYMERA_PARCELY_MEZNI_ODCHYLKA" expression=""/>
+    <default field="PU_VYMERA_PARCELY_MAX_KODCHB_KOD" expression=""/>
+    <default field="PU_KATEGORIE" expression=""/>
+    <default field="PU_VZDALENOST" expression=""/>
+    <default field="PU_CENA" expression=""/>
+  </defaults>
   <layerGeometryType>2</layerGeometryType>
 </qgis>
