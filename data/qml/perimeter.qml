@@ -1,5 +1,5 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.18.3" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.18.4" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
     <edittype widgetv2type="TextEdit" name="rowid">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
@@ -110,6 +110,15 @@
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="PU_VYMERA_">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PU_VYMER_1">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PU_VYMER_2">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PU_VYMER_3">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="PU_KATEGOR">
@@ -380,9 +389,12 @@
     <alias field="PU_KMENOVE" index="34" name=""/>
     <alias field="PU_PODDELE" index="35" name=""/>
     <alias field="PU_VYMERA_" index="36" name=""/>
-    <alias field="PU_KATEGOR" index="37" name="PU_KATEGORIE"/>
-    <alias field="PU_VZDALEN" index="38" name=""/>
-    <alias field="PU_CENA" index="39" name=""/>
+    <alias field="PU_VYMER_1" index="37" name=""/>
+    <alias field="PU_VYMER_2" index="38" name=""/>
+    <alias field="PU_VYMER_3" index="39" name=""/>
+    <alias field="PU_KATEGOR" index="40" name="KATEGORIE"/>
+    <alias field="PU_VZDALEN" index="41" name=""/>
+    <alias field="PU_CENA" index="42" name=""/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
@@ -430,6 +442,9 @@
       <column width="-1" hidden="0" type="field" name="PU_KATEGOR"/>
       <column width="-1" hidden="1" type="field" name="PU_VZDALEN"/>
       <column width="-1" hidden="1" type="field" name="PU_CENA"/>
+      <column width="-1" hidden="1" type="field" name="PU_VYMER_1"/>
+      <column width="-1" hidden="1" type="field" name="PU_VYMER_2"/>
+      <column width="-1" hidden="1" type="field" name="PU_VYMER_3"/>
     </columns>
   </attributetableconfig>
   <editform>.</editform>
@@ -460,5 +475,51 @@ def my_form_open(dialog, layer, feature):
     <rowstyles/>
     <fieldstyles/>
   </conditionalstyles>
+  <defaults>
+    <default field="rowid" expression=""/>
+    <default field="ID" expression=""/>
+    <default field="STAV_DAT" expression=""/>
+    <default field="DATUM_VZNI" expression=""/>
+    <default field="DATUM_ZANI" expression=""/>
+    <default field="PRIZNAK_KO" expression=""/>
+    <default field="RIZENI_ID_" expression=""/>
+    <default field="RIZENI_I_1" expression=""/>
+    <default field="PKN_ID" expression=""/>
+    <default field="PAR_TYPE" expression=""/>
+    <default field="KATUZE_KOD" expression=""/>
+    <default field="KATUZE_K_1" expression=""/>
+    <default field="DRUH_CISLO" expression=""/>
+    <default field="KMENOVE_CI" expression=""/>
+    <default field="ZDPAZE_KOD" expression=""/>
+    <default field="PODDELENI_" expression=""/>
+    <default field="DIL_PARCEL" expression=""/>
+    <default field="MAPLIS_KOD" expression=""/>
+    <default field="ZPURVY_KOD" expression=""/>
+    <default field="DRUPOZ_KOD" expression=""/>
+    <default field="ZPVYPA_KOD" expression=""/>
+    <default field="TYP_PARCEL" expression=""/>
+    <default field="VYMERA_PAR" expression=""/>
+    <default field="CENA_NEMOV" expression=""/>
+    <default field="DEFINICNI_" expression=""/>
+    <default field="TEL_ID" expression=""/>
+    <default field="PAR_ID" expression=""/>
+    <default field="BUD_ID" expression=""/>
+    <default field="IDENT_BUD" expression=""/>
+    <default field="SOUCASTI" expression=""/>
+    <default field="PS_ID" expression=""/>
+    <default field="IDENT_PS" expression=""/>
+    <default field="ogr_fid" expression=""/>
+    <default field="PU_ID" expression=""/>
+    <default field="PU_KMENOVE" expression=""/>
+    <default field="PU_PODDELE" expression=""/>
+    <default field="PU_VYMERA_" expression=""/>
+    <default field="PU_VYMER_1" expression=""/>
+    <default field="PU_VYMER_2" expression=""/>
+    <default field="PU_VYMER_3" expression=""/>
+    <default field="PU_KATEGOR" expression=""/>
+    <default field="PU_VZDALEN" expression=""/>
+    <default field="PU_CENA" expression=""/>
+  </defaults>
+  <previewExpression>COALESCE( "rowid", '&lt;NULL>' )</previewExpression>
   <layerGeometryType>2</layerGeometryType>
 </qgis>

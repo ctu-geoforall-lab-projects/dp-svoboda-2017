@@ -411,11 +411,6 @@ class EditPuWidget(PuWidget):
             self.set_perimeter_layer(perimeterLayer, False)
             self._sync_perimeter_map_layer_combo_box()
             
-            categoryFieldId = perimeterLayer.fieldNameIndex(
-                self.shortCategoryName)
-            
-            perimeterLayer.addAttributeAlias(categoryFieldId, self.categoryName)
-            
             fields = perimeterLayer.pendingFields()
             
             tableConfig = perimeterLayer.attributeTableConfig()
