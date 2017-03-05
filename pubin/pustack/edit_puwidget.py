@@ -404,8 +404,8 @@ class EditPuWidget(PuWidget):
         """
         
         if perimeterLayer.isValid():
-            style = ':/perimeter.qml'
-            perimeterLayer.loadNamedStyle(style)
+            self.dW.set_layer_style(perimeterLayer, 'perimeter')
+            
             QgsMapLayerRegistry.instance().addMapLayer(perimeterLayer)
             
             self.set_perimeter_layer(perimeterLayer, False)

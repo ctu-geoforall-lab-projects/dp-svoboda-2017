@@ -454,27 +454,27 @@ class LoadVfkPuWidget(PuWidget):
         
         return text
     
-    def _load_vfk_layer(self, dbPath, layerName, vfkLayerCode, vfkDriverName):
+    def _load_vfk_layer(self, dbPath, layerName, layerCode, vfkDriverName):
         """Loads a layer of the given code from database into the map canvas.
         
         Args:
             dbPath (str): A full path to the database.
             layerName (str): A name of the layer.
-            vfkLayerCode (str): A code of the layer.
+            layerCode (str): A code of the layer.
             vfkDriverName (str): A name of the VFK driver.
         
         Raises:
-            dw.puError: When vfkLayerCode layer is not valid.
+            dw.puError: When layerCode layer is not valid.
         
         """
         
         self.set_text_statusbar.emit(
-            u'Přidávám vrstvu {}...'.format(vfkLayerCode), 0)
+            u'Přidávám vrstvu {}...'.format(layerCode), 0)
         
         blacklistedDriver = ogr.GetDriverByName(vfkDriverName)
         blacklistedDriver.Deregister()
         
-        composedURI = dbPath + '|layername=' + vfkLayerCode
+        composedURI = dbPath + '|layername=' + layerCode
         layer = QgsVectorLayer(composedURI, layerName, 'ogr')
         
         blacklistedDriver.Register()
@@ -489,8 +489,7 @@ class LoadVfkPuWidget(PuWidget):
                 formConfig.setWidgetType(i, 'Hidden')
         
         if layer.isValid():
-            style = ':/' + vfkLayerCode + '.qml'
-            layer.loadNamedStyle(style)
+            self.dW.set_layer_style(layer, layerCode)
             
             QgsMapLayerRegistry.instance().addMapLayer(layer)
             
@@ -516,9 +515,9 @@ class LoadVfkPuWidget(PuWidget):
         else:
             raise self.dW.puError(
                 self.dW, self,
-                u'Layer {} is not valid.'.format(vfkLayerCode),
-                u'Vrstva {} není platná.'.format(vfkLayerCode),
-                u'Vrstva {} není platná.'.format(vfkLayerCode))
+                u'Layer {} is not valid.'.format(layerCode),
+                u'Vrstva {} není platná.'.format(layerCode),
+                u'Vrstva {} není platná.'.format(layerCode))
     
     def _set_layer_snapping(self, layer):
         """Sets layer snapping.

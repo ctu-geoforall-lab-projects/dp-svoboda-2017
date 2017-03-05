@@ -1,8 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file alias="puplugin.png">data/icons/puplugin.png</file>
-        <file alias="PAR.qml">data/qml/PAR.qml</file>
-        <file alias="perimeter.qml">data/qml/perimeter.qml</file>
         <file alias="loadvfk.png">data/icons/loadvfk.png</file>
         <file alias="edit.png">data/icons/edit.png</file>
         <file alias="checkanalysis.png">data/icons/checkanalysis.png</file>

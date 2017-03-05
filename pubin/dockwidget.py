@@ -544,6 +544,20 @@ class DockWidget(QDockWidget):
         if startCommit:
             layer.commitChanges()
     
+    def set_layer_style(self, layer, qmlFileBaseName):
+        """Sets layer style according to the given QML file base name.
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the layer.
+            qmlFileBaseName (str): A QML file base name.
+        
+        """
+        
+        qmlDir = QDir(self.pluginDir.path() + u'/data/qml')
+        style = qmlDir.filePath(qmlFileBaseName + u'.qml')
+        
+        layer.loadNamedStyle(style)
+    
     def disconnect_from_iface(self):
         """Disconnects functions from the QgsInterface."""
         
