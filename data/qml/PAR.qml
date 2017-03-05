@@ -575,14 +575,14 @@
     <alias field="PU_VYMERA_PARCELY_ABS_ROZDIL" index="37" name="ROZ. VYMER"/>
     <alias field="PU_VYMERA_PARCELY_MEZNI_ODCHYLKA" index="38" name="MEZ. ODCH. ROZ. VYMER"/>
     <alias field="PU_VYMERA_PARCELY_MAX_KODCHB_KOD" index="39" name=""/>
-    <alias field="PU_KATEGORIE" index="40" name=""/>
+    <alias field="PU_KATEGORIE" index="40" name="KATEGORIE"/>
     <alias field="PU_VZDALENOST" index="41" name="VZDALENOST"/>
     <alias field="PU_CENA" index="42" name="CENA"/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
   <attributeactions default="-1"/>
-  <attributetableconfig actionWidgetStyle="dropDown" sortExpression="&quot;PU_CENA&quot;" sortOrder="1">
+  <attributetableconfig actionWidgetStyle="dropDown" sortExpression="&quot;PU_VZDALENOST&quot;" sortOrder="0">
     <columns>
       <column width="-1" hidden="1" type="field" name="rowid"/>
       <column width="-1" hidden="1" type="field" name="ID"/>
@@ -614,19 +614,19 @@
       <column width="-1" hidden="1" type="field" name="PS_ID"/>
       <column width="-1" hidden="1" type="field" name="IDENT_PS"/>
       <column width="-1" hidden="1" type="field" name="ogr_fid"/>
-      <column width="-1" hidden="1" type="field" name="PU_KATEGORIE"/>
       <column width="-1" hidden="1" type="field" name="PU_ID"/>
-      <column width="123" hidden="0" type="field" name="KMENOVE_CISLO_PAR"/>
-      <column width="118" hidden="0" type="field" name="PU_KMENOVE_CISLO_PAR"/>
-      <column width="132" hidden="0" type="field" name="PODDELENI_CISLA_PAR"/>
-      <column width="128" hidden="0" type="field" name="PU_PODDELENI_CISLA_PAR"/>
-      <column width="89" hidden="0" type="field" name="VYMERA_PARCELY"/>
-      <column width="90" hidden="0" type="field" name="PU_VYMERA_PARCELY"/>
-      <column width="82" hidden="0" type="field" name="PU_VYMERA_PARCELY_ABS_ROZDIL"/>
-      <column width="155" hidden="0" type="field" name="PU_VYMERA_PARCELY_MEZNI_ODCHYLKA"/>
+      <column width="135" hidden="0" type="field" name="KMENOVE_CISLO_PAR"/>
+      <column width="135" hidden="0" type="field" name="PU_KMENOVE_CISLO_PAR"/>
+      <column width="140" hidden="0" type="field" name="PODDELENI_CISLA_PAR"/>
+      <column width="140" hidden="0" type="field" name="PU_PODDELENI_CISLA_PAR"/>
+      <column width="95" hidden="0" type="field" name="PU_KATEGORIE"/>
+      <column width="105" hidden="0" type="field" name="VYMERA_PARCELY"/>
+      <column width="105" hidden="0" type="field" name="PU_VYMERA_PARCELY"/>
+      <column width="95" hidden="0" type="field" name="PU_VYMERA_PARCELY_ABS_ROZDIL"/>
+      <column width="170" hidden="0" type="field" name="PU_VYMERA_PARCELY_MEZNI_ODCHYLKA"/>
       <column width="-1" hidden="1" type="field" name="PU_VYMERA_PARCELY_MAX_KODCHB_KOD"/>
-      <column width="88" hidden="0" type="field" name="PU_VZDALENOST"/>
-      <column width="72" hidden="0" type="field" name="PU_CENA"/>
+      <column width="105" hidden="0" type="field" name="PU_VZDALENOST"/>
+      <column width="85" hidden="0" type="field" name="PU_CENA"/>
       <column width="-1" hidden="1" type="actions"/>
     </columns>
   </attributetableconfig>
@@ -703,5 +703,6 @@ def my_form_open(dialog, layer, feature):
     <default field="PU_VZDALENOST" expression=""/>
     <default field="PU_CENA" expression=""/>
   </defaults>
+  <previewExpression>COALESCE("ID", '&lt;NULL>')</previewExpression>
   <layerGeometryType>2</layerGeometryType>
 </qgis>
