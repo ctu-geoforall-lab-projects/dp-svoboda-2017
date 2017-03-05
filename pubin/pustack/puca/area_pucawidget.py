@@ -66,6 +66,7 @@ class AreaPuCaWidget(PuCaWidget):
                 layer, rowidColumnName)
             
             puAreaColumnName = self.dW.puAreaColumnName
+            deafultAreaColumnName = self.dW.deafultAreaColumnName
             puAreaAbsDifferenceColumnName = \
                 self.dW.puAreaAbsDifferenceColumnName
             puAreaLimitDeviationColumnName = \
@@ -94,7 +95,7 @@ class AreaPuCaWidget(PuCaWidget):
                 originalPuArea = feature.attribute(puAreaColumnName)
                 
                 puArea = int(round(geometry.area()))
-                defaultArea = feature.attribute(self.dW.deafultAreaColumnName)
+                defaultArea = feature.attribute(deafultAreaColumnName)
                 
                 id = feature.id()
                 
