@@ -112,7 +112,8 @@ class PerimeterPuCaWidget(PuCaWidget):
         try:
             perimeterLayer = self.perimeterMapLayerComboBox.currentLayer()
             
-            if not self.dW.check_perimeter_layer(perimeterLayer, layer, True):
+            if not self.dW.check_perimeter_layer(
+                perimeterLayer, layer, self.pW):
                 return
             
             self.pW.set_text_statusbar.emit(

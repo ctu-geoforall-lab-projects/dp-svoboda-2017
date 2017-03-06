@@ -190,13 +190,13 @@ class DockWidget(QDockWidget):
         
         pluginName = self.name
         
-        type, value, mytraceback = sys.exc_info()
+        QgsMessageLog.logMessage(engLogMessage, pluginName)
+        
+        type, value, puTraceback = sys.exc_info()
         
         if type:
-            traceBack = traceback.format_exc()
-            engLogMessage = engLogMessage + '\n' + traceBack
-        
-        QgsMessageLog.logMessage(engLogMessage, pluginName)
+            puTraceback = traceback.format_exc()
+            QgsMessageLog.logMessage(puTraceback, pluginName)
         
         if czeStatusBarMessage:
             sender.set_text_statusbar.emit(czeStatusBarMessage, duration)
@@ -396,7 +396,7 @@ class DockWidget(QDockWidget):
         successLayer = (True, layer)
         return successLayer
     
-    def check_perimeter_layer(self, perimeterLayer, layer, message=None):
+    def check_perimeter_layer(self, perimeterLayer, layer, sender=None):
         """Checks the perimeter layer.
         
         Checks if the perimeter layer contains all required columns,
@@ -406,6 +406,7 @@ class DockWidget(QDockWidget):
         Args:
             perimeterLayer (QgsVectorLayer): A reference to the perimeter layer.
             layer (QgsVectorLayer): A reference to the layer.
+            sender (object): A reference to the sender object.
         
         Returns:
             bool: True when the perimeter layer contains all required columns
@@ -416,8 +417,8 @@ class DockWidget(QDockWidget):
         duration = 10
         
         if not perimeterLayer:
-            if message:
-                self.set_text_statusbar.emit(u'Žádná vrstva obvodu.', duration)
+            if sender:
+                sender.set_text_statusbar.emit(u'Žádná vrstva obvodu.', duration)
             return False
         
         perimeterFieldNames = \
@@ -425,16 +426,16 @@ class DockWidget(QDockWidget):
         
         if not all(column[:10] in perimeterFieldNames \
                    for column in self.requiredColumns):
-            if message:
-                self.set_text_statusbar.emit(
+            if sender:
+                sender.set_text_statusbar.emit(
                     u'Vrstva obvodu nebyla vytvořena PU Pluginem.', duration)
             return False
         
         perimeterFileInfo = QFileInfo(perimeterLayer.source())
         
         if u'pu.shp' not in perimeterFileInfo.completeSuffix():
-            if message:
-                self.set_text_statusbar.emit(
+            if sender:
+                sender.set_text_statusbar.emit(
                     u'Vrstva obvodu není obvod vytvořený PU Pluginem.',
                     duration)
             return False
@@ -443,7 +444,7 @@ class DockWidget(QDockWidget):
         layerCrs = layer.crs().authid()
         
         if perimeterLayerCrs != layerCrs:
-            if message:
+            if sender:
                 self.set_text_statusbar.emit(
                     u'Aktivní vrstva a vrstva obvodu nemají stejný '
                     u'souřadnicový systém.', duration)

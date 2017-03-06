@@ -638,7 +638,7 @@ class EditPuWidget(PuWidget):
         
         """
         
-        if not self.dW.check_perimeter_layer(perimeterLayer, layer, True):
+        if not self.dW.check_perimeter_layer(perimeterLayer, layer, self):
             return
         
         self.set_text_statusbar.emit(
