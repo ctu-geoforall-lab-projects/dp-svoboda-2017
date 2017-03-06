@@ -1,1 +1,1 @@
-PRAGMA table_info(PAR);
+PRAGMA table_info(PAR)

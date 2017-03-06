@@ -371,8 +371,7 @@ class LoadVfkPuWidget(PuWidget):
                 u'Databázový ovladač QSQLITE není dostupný.')
         
         connectionName = QUuid.createUuid().toString()
-        QSqlDatabase.addDatabase('QSQLITE', connectionName)
-        db = QSqlDatabase.database(connectionName)
+        db = QSqlDatabase.addDatabase('QSQLITE', connectionName)
         db.setDatabaseName(dbPath)
         db.open()
         

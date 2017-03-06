@@ -23,4 +23,4 @@ alter table PAR add column PU_VZDALENOST integer;
 
 alter table PAR add column PU_CENA integer;
 
-commit;
+commit
