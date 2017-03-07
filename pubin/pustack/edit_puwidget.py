@@ -32,7 +32,6 @@ import processing
 
 from puwidget import PuWidget
 from execute_thread import ExecuteThread
-from puplugin.pubin.pustack.puca.perimeter_pucawidget import PerimeterPuCaWidget
 
 
 class EditPuWidget(PuWidget):
