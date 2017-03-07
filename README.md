@@ -2,7 +2,7 @@
 
 ## Název
 
-TODO
+Zásuvný modul QGIS pro zpracování přípravné fáze komplexních pozemkových úprav
 
 ## Student
 
