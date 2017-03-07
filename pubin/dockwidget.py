@@ -600,9 +600,9 @@ class DockWidget(QDockWidget):
                     self._ensure_unique_field_values)
         except:
             self.display_error_messages(
-                self,
+                self.stackedWidget.currentWidget(),
                 u'Error connecting/disconnecting '
-                u'_ensure_unique_field_values function.')
+                u'function that ensures unique field values.')
     
     def _ensure_unique_field_values(self):
         """Ensures that field values are unique.
@@ -668,8 +668,10 @@ class DockWidget(QDockWidget):
             QgsApplication.processEvents()
             
             layer.selectByIds(selectedFeaturesIds)
+            
+            QgsMessageLog.logMessage('hey', 'test')
         except:
             self.display_error_messages(
-                self,
+                self.stackedWidget.currentWidget(),
                 u'Error in function that ensures unique field values.')
 
