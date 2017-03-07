@@ -21,12 +21,10 @@
  ***************************************************************************/
 """
 
-from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QAction, QIcon, QToolButton, QPixmap
+from PyQt4.QtCore import QDir, Qt
 
 import os
-
-import resources
 
 from pubin import dockwidget
 
@@ -46,15 +44,17 @@ class puPlugin(object):
         
         self.name = u'PU Plugin'
 
-        self.pluginDir = os.path.dirname(__file__)
+        self.pluginDir = QDir(os.path.dirname(__file__))
     
     def initGui(self):
         """Initializes GUI."""
         
+        iconsDir = QDir(self.pluginDir.path() + u'/data/icons')
+        
         self.puAction = QAction(self.iface.mainWindow())
         self.puAction.setText(self.name)
         puIcon = QIcon()
-        puIcon.addPixmap(QPixmap(':/puplugin.png'))
+        puIcon.addPixmap(QPixmap(iconsDir.filePath(u'puplugin.png')))
         self.puAction.setIcon(puIcon)
         self.puAction.triggered.connect(self.run)
 

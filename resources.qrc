@@ -1,8 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="puplugin.png">data/icons/puplugin.png</file>
-        <file alias="loadvfk.png">data/icons/loadvfk.png</file>
-        <file alias="edit.png">data/icons/edit.png</file>
-        <file alias="checkanalysis.png">data/icons/checkanalysis.png</file>
-    </qresource>
-</RCC>

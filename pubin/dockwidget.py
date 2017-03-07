@@ -44,13 +44,13 @@ class DockWidget(QDockWidget):
         
         Args:
             iface (QgisInterface): A reference to the QgisInterface.
-            pluginDir (str): A plugin directory.
+            pluginDir (QDir): A plugin directory.
             name (str): A name of the plugin.
         
         """
         
         self.iface = iface
-        self.pluginDir = QDir(pluginDir)
+        self.pluginDir = pluginDir
         self.name = name
         
         super(DockWidget, self).__init__()

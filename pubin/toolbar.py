@@ -23,6 +23,7 @@
 
 from PyQt4.QtGui import (QToolBar, QToolButton, QAction, QIcon, QPixmap,
                          QActionGroup)
+from PyQt4.QtCore import QDir
 
 from qgis.core import *
 
@@ -62,6 +63,8 @@ class ToolBar(QToolBar):
         
         self.iface.initializationCompleted.connect(self._set_icon_size)
         
+        iconsDir = QDir(self.pluginDir.path() + u'/data/icons')
+        
         self.openTabActionGroup = QActionGroup(self)
         
         self.loadVfkAction = QAction(self)
@@ -69,7 +72,7 @@ class ToolBar(QToolBar):
         self.loadVfkAction.setToolTip(u'Načtení VFK souboru')
         self.loadVfkAction.setCheckable(True)
         loadVfkIcon = QIcon()
-        loadVfkIcon.addPixmap(QPixmap(':/loadvfk.png'))
+        loadVfkIcon.addPixmap(QPixmap(iconsDir.filePath(u'loadvfk.png')))
         self.loadVfkAction.setIcon(loadVfkIcon)
         self.openTabActionGroup.addAction(self.loadVfkAction)
         self.addAction(self.loadVfkAction)
@@ -80,7 +83,7 @@ class ToolBar(QToolBar):
         self.editAction.setToolTip(u'Editace')
         self.editAction.setCheckable(True)
         editIcon = QIcon()
-        editIcon.addPixmap(QPixmap(':/edit.png'))
+        editIcon.addPixmap(QPixmap(iconsDir.filePath(u'edit.png')))
         self.editAction.setIcon(editIcon)
         self.openTabActionGroup.addAction(self.editAction)
         self.addAction(self.editAction)
@@ -90,7 +93,7 @@ class ToolBar(QToolBar):
         self.checkAnalysisAction.setToolTip(u'Kontroly a analýzy')
         self.checkAnalysisAction.setCheckable(True)
         checkIcon = QIcon()
-        checkIcon.addPixmap(QPixmap(':/checkanalysis.png'))
+        checkIcon.addPixmap(QPixmap(iconsDir.filePath(u'checkanalysis.png')))
         self.checkAnalysisAction.setIcon(checkIcon)
         self.openTabActionGroup.addAction(self.checkAnalysisAction)
         self.addAction(self.checkAnalysisAction)
