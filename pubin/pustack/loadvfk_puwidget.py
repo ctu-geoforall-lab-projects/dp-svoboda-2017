@@ -182,6 +182,11 @@ class LoadVfkPuWidget(PuWidget):
             
             self._open_database(dbPath)
             
+            # SpatiaLite fix - start
+            if not self.dW.fixedSqliteDriver:
+                dbPath = self._create_spatialite_db_file(dbPath)
+            # SpatiaLite fix - end
+            
             self._load_vfk_layer(dbPath, layerName, layerCode, vfkDriverName)
             
             self.loadVfkProgressBar.setMaximum(1)
@@ -227,6 +232,8 @@ class LoadVfkPuWidget(PuWidget):
         if not dbInfo.isFile():
             self.set_text_statusbar.emit(
                 u'Importuji data do SQLite databáze...', 0)
+            
+            QgsApplication.processEvents()
             
             QgsApplication.registerOgrDrivers()
             
@@ -359,7 +366,7 @@ class LoadVfkPuWidget(PuWidget):
         
         Raises:
             dw.puError: When SQLITE database driver is not available
-                or when database connection failes.
+                or when database connection fails.
         
         """
         
@@ -384,6 +391,8 @@ class LoadVfkPuWidget(PuWidget):
         
         self.set_text_statusbar.emit(
             u'Kontroluji tabulky a sloupce...', 0)
+        
+        QgsApplication.processEvents()
         
         sqlQuery = QSqlQuery(db)
         
@@ -431,6 +440,56 @@ class LoadVfkPuWidget(PuWidget):
                 sqlQuery.exec_(query)
                 
                 QgsApplication.processEvents()
+        
+        queries = self._read_text_from_file(
+            sqlDir.filePath(u'create_sobr_spol.sql')).split(';')
+        
+        for query in queries:
+            sqlQuery.exec_(query)
+        
+        db.close()
+    
+    def _create_spatialite_db_file(self, dbPath):
+        """Creates a SpatiaLite database file.
+        
+        Args:
+            dbPath (str): A full path to the database.
+        
+        Returns:
+            dbPath (str): A full path to the SpatiaLite database.
+        
+        """
+        
+        dbInfo = QFileInfo(dbPath)
+        
+        sdbPath = QDir(dbInfo.absolutePath())\
+            .filePath(dbInfo.completeBaseName() + '.sdb')
+        
+        sdbInfo = QFileInfo(sdbPath)
+        
+        if not sdbInfo.isFile():
+            self.set_text_statusbar.emit(
+                u'Importuji data do SpatiaLite databáze...', 0)
+            
+            QgsApplication.processEvents()
+            
+            sqliteDriver = ogr.GetDriverByName('SQLite')
+            spatialiteDataSource = sqliteDriver.CreateDataSource(
+                sdbPath, ['SPATIALITE=YES'])
+            
+            sqliteDataSource = ogr.Open(dbPath)
+            
+            for layerCode in (self.dW.parLayerCode,) + self.dW.vertexLayerCodes:
+                originalLayer = sqliteDataSource.GetLayerByName(layerCode)
+                copiedLayer = spatialiteDataSource.CopyLayer(
+                    originalLayer, layerCode, ['LAUNDER=NO'])
+            
+            sqliteDataSource.Destroy()
+            spatialiteDataSource.Destroy()
+        
+        QgsApplication.processEvents()
+        
+        return sdbPath
     
     def _read_text_from_file(self, filePath, maxSize=2000):
         """Reads a text from the given file.
@@ -470,13 +529,53 @@ class LoadVfkPuWidget(PuWidget):
         self.set_text_statusbar.emit(
             u'Přidávám vrstvu {}...'.format(layerCode), 0)
         
-        blacklistedDriver = ogr.GetDriverByName(vfkDriverName)
-        blacklistedDriver.Deregister()
+        QgsApplication.processEvents()
         
-        composedURI = dbPath + '|layername=' + layerCode
-        layer = QgsVectorLayer(composedURI, layerName, 'ogr')
+        # SpatiaLite fix - start
+        if not self.dW.fixedSqliteDriver:
+            composedURI = QgsDataSourceURI()
+            composedURI.setDatabase(dbPath)
+            
+            schema = ''
+            table = layerCode
+            geometryColumn = 'GEOMETRY'
+            
+            composedURI.setDataSource(schema, table, geometryColumn)
+            
+            layer = QgsVectorLayer(composedURI.uri(), layerName, 'spatialite')
+        else:
+            blacklistedDriver = ogr.GetDriverByName(vfkDriverName)
+            blacklistedDriver.Deregister()
+            
+            composedURI = dbPath + '|layername=' + layerCode
+            layer = QgsVectorLayer(composedURI, layerName, 'ogr')
+            
+            blacklistedDriver.Register()
+        # SpatiaLite fix - end
         
-        blacklistedDriver.Register()
+        if layer.isValid():
+            self.dW.set_layer_style(layer, layerCode)
+            self._set_layer_form_config(layer)
+            self._set_layer_table_config(layer)
+            self._set_layer_snapping(layer)
+             
+            QgsMapLayerRegistry.instance().addMapLayer(layer)
+            
+            QgsApplication.processEvents()
+        else:
+            raise self.dW.puError(
+                self.dW, self,
+                u'Layer {} is not valid.'.format(layerCode),
+                u'Vrstva {} není platná.'.format(layerCode),
+                u'Vrstva {} není platná.'.format(layerCode))
+    
+    def _set_layer_form_config(self, layer):
+        """Sets layer form config.
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the layer.
+        
+        """
         
         fields = layer.pendingFields()
         
@@ -486,37 +585,28 @@ class LoadVfkPuWidget(PuWidget):
             if fields[i].name() not in self.dW.editablePuColumns:
                 formConfig.setReadOnly(i)
                 formConfig.setWidgetType(i, 'Hidden')
+    
+    def _set_layer_table_config(self, layer):
+        """Sets layer table config.
         
-        if layer.isValid():
-            self.dW.set_layer_style(layer, layerCode)
-            
-            QgsMapLayerRegistry.instance().addMapLayer(layer)
-            
-            QgsApplication.processEvents()
-            
-            self._set_layer_snapping(layer)
-            
-            fields = layer.pendingFields()
-            
-            tableConfig = layer.attributeTableConfig()
-            tableConfig.update(fields)
-            
-            columns = tableConfig.columns()
-            
-            for column in columns:
-                if column.name not in self.dW.allVisibleColumns:
-                    column.hidden = True
-            
-            tableConfig.setColumns(columns)
-            layer.setAttributeTableConfig(tableConfig)
-            
-            QgsApplication.processEvents()
-        else:
-            raise self.dW.puError(
-                self.dW, self,
-                u'Layer {} is not valid.'.format(layerCode),
-                u'Vrstva {} není platná.'.format(layerCode),
-                u'Vrstva {} není platná.'.format(layerCode))
+        Args:
+            layer (QgsVectorLayer): A reference to the layer.
+        
+        """
+        
+        fields = layer.pendingFields()
+        
+        tableConfig = layer.attributeTableConfig()
+        tableConfig.update(fields)
+         
+        columns = tableConfig.columns()
+         
+        for column in columns:
+            if column.name not in self.dW.allVisibleColumns:
+                column.hidden = True
+         
+        tableConfig.setColumns(columns)
+        layer.setAttributeTableConfig(tableConfig)
     
     def _set_layer_snapping(self, layer):
         """Sets layer snapping.

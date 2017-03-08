@@ -16,8 +16,7 @@ alter table PAR add column PU_VYMERA_PARCELY_MEZNI_ODCHYLKA integer;
 
 alter table PAR add column PU_VYMERA_PARCELY_MAX_KODCHB_KOD integer;
 
-alter table PAR add column PU_KATEGORIE integer default 2;
-update PAR set PU_KATEGORIE = NULL;
+alter table PAR add column PU_KATEGORIE integer;
 
 alter table PAR add column PU_VZDALENOST integer;
 

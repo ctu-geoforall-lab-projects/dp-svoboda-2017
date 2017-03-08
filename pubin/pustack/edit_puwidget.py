@@ -503,8 +503,15 @@ class EditPuWidget(PuWidget):
         QgsApplication.processEvents()
         
         if not self.dW.check_perimeter_layer(perimeterLayer, layer):
-            perimeterLayerFilePath = \
-                layer.source().split('.db|')[0] + u'-obvod.pu.shp'
+            # SpatiaLite fix - start
+            if not self.dW.fixedSqliteDriver:
+                composedURI = QgsDataSourceURI(layer.source())
+                perimeterLayerFilePath = \
+                    composedURI.database().split('.sdb')[0] + u'-obvod.pu.shp'
+            else:
+                perimeterLayerFilePath = \
+                    layer.source().split('.db|')[0] + u'-obvod.pu.shp'
+            # SpatiaLite fix - end
             
             perimeterLayerName = layer.name() + u'-obvod'
             

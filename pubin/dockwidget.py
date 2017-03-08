@@ -27,6 +27,7 @@ from PyQt4.QtCore import pyqtSignal, QDir, QSettings, QFileInfo
 
 from qgis.gui import QgsMessageBar
 from qgis.core import *
+from qgis.utils import QGis
 
 import traceback
 import sys
@@ -60,12 +61,21 @@ class DockWidget(QDockWidget):
     def _setup_self(self):
         """Sets up self."""
         
+        # SpatiaLite fix - start
+        if QGis.QGIS_VERSION < '2.18.5':
+            self.fixedSqliteDriver = False
+        else:
+            self.fixedSqliteDriver = True
+        # SpatiaLite fix - end
+        
         self.puMajorParNumberColumnName = 'PU_KMENOVE_CISLO_PAR'
         self.puMinorParNumberColumnName = 'PU_PODDELENI_CISLA_PAR'
+        self.puCategoryColumnName = 'PU_KATEGORIE'
         
         self.editablePuColumns = (
             self.puMajorParNumberColumnName,
-            self.puMinorParNumberColumnName)
+            self.puMinorParNumberColumnName,
+            self.puCategoryColumnName)
         
         self.puAreaColumnName = 'PU_VYMERA_PARCELY'
         self.puAreaAbsDifferenceColumnName = 'PU_VYMERA_PARCELY_ABS_ROZDIL'
@@ -81,12 +91,10 @@ class DockWidget(QDockWidget):
              self.puPriceColumnName)
         
         self.puAreaMaxQualityCodeColumnName = 'PU_VYMERA_PARCELY_MAX_KODCHB_KOD'
-        self.puCategoryColumnName = 'PU_KATEGORIE'
         self.puIdColumnName = 'PU_ID'
         
         self.allPuColumns = self.visiblePuColumns + \
             (self.puAreaMaxQualityCodeColumnName,
-             self.puCategoryColumnName,
              self.puIdColumnName)
         
         self.defaultMajorParNumberColumnName = 'KMENOVE_CISLO_PAR'
@@ -101,7 +109,13 @@ class DockWidget(QDockWidget):
         self.allVisibleColumns = \
             self.visiblePuColumns + self.visibleDefaultColumns
         
-        self.rowidColumnName = 'rowid'
+        # SpatiaLite fix - start
+        if not self.fixedSqliteDriver:
+            self.rowidColumnName = 'ogc_fid'
+        else:
+            self.rowidColumnName = 'rowid'
+        # SpatiaLite fix - end
+        
         self.idColumnName = 'ID'
         self.ogrfidColumnName = 'ogr_fid'
         
@@ -422,9 +436,9 @@ class DockWidget(QDockWidget):
             return False
         
         perimeterFieldNames = \
-            [field.name() for field in perimeterLayer.pendingFields()]
+            [field.name().upper() for field in perimeterLayer.pendingFields()]
         
-        if not all(column[:10] in perimeterFieldNames \
+        if not all(column.upper()[:10] in perimeterFieldNames \
                    for column in self.requiredColumns):
             if sender:
                 sender.set_text_statusbar.emit(
@@ -668,8 +682,6 @@ class DockWidget(QDockWidget):
             QgsApplication.processEvents()
             
             layer.selectByIds(selectedFeaturesIds)
-            
-            QgsMessageLog.logMessage('hey', 'test')
         except:
             self.display_error_messages(
                 self.stackedWidget.currentWidget(),

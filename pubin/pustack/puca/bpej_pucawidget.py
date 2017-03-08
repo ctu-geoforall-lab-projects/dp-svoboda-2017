@@ -141,7 +141,7 @@ class BpejPuCaWidget(PuCaWidget):
             layer.removeSelection()
             bpejLayer.removeSelection()
             
-            bpejField = self._edit_bpej_field(bpejField, layer)
+            editedBpejField = self._edit_bpej_field(bpejField, layer)
             
             unionOutput = processing.runalg(
                 'qgis:union',
@@ -154,7 +154,7 @@ class BpejPuCaWidget(PuCaWidget):
                 "or "
                 "\"{}\" is null"\
                 .format(
-                    bpejField,
+                    editedBpejField,
                     self.dW.defaultMajorParNumberColumnName[:10]))
             
             self.dW.delete_features_by_expression(unionLayer, expression)
@@ -171,7 +171,8 @@ class BpejPuCaWidget(PuCaWidget):
             rowidColumnName = self.dW.rowidColumnName
             
             prices, missingBpejCodes = self._calculate_feature_prices(
-                rowidColumnName, multiToSingleLayer, bpejField, bpejCodePrices)
+                rowidColumnName, multiToSingleLayer,
+                editedBpejField, bpejCodePrices)
             
             priceFieldName = self.dW.puPriceColumnName
             
@@ -498,16 +499,16 @@ class BpejPuCaWidget(PuCaWidget):
             bpejCode = str(feature.attribute(bpejField))
             geometry = feature.geometry()
             
+            editedBpejCode = bpejCode.replace('.', '')
+            
+            if editedBpejCode in bpejCodePrices:
+                bpejPrice = bpejCodePrices[editedBpejCode]
+            else:
+                bpejPrice = 0.0
+                missingBpejCodes.add(bpejCode)
+            
             if geometry != None:
                 area = geometry.area()
-                
-                editedBpejCode = bpejCode.replace('.', '')
-                
-                if editedBpejCode in bpejCodePrices:
-                    bpejPrice = bpejCodePrices[editedBpejCode]
-                else:
-                    bpejPrice = 0.0
-                    missingBpejCodes.add(bpejCode)
                 
                 price = bpejPrice*area
                 

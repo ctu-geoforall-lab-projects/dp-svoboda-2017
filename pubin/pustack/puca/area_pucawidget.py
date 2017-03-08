@@ -197,6 +197,15 @@ class AreaPuCaWidget(PuCaWidget):
         sobrLayer = self._get_vertex_layer(layer, sobrString)
         spolLayer = self._get_vertex_layer(layer, spolString)
         
+        # SpatiaLite fix - start
+        QgsMessageLog.logMessage(str(sobrLayer.isValid()), 'test')
+        QgsMessageLog.logMessage(str(spolLayer.isValid()), 'test')
+        
+        if not self.dW.fixedSqliteDriver:
+            QgsMapLayerRegistry.instance().addMapLayer(sobrLayer)
+            QgsMapLayerRegistry.instance().addMapLayer(spolLayer)
+        # SpatiaLite fix - end
+        
         parSobrLayer = self._get_joined_layer(layer, sobrLayer)
         parSpolLayer = self._get_joined_layer(layer, spolLayer)
         
@@ -205,6 +214,14 @@ class AreaPuCaWidget(PuCaWidget):
         for parVertexLayer in (parSobrLayer, parSpolLayer):
             puAreaMaxQualityCodes = self._extract_pu_area_max_quality_codes(
                 parVertexLayer, puAreaMaxQualityCodes, rowidColumnName)
+        
+        # SpatiaLite fix - start
+        if not self.dW.fixedSqliteDriver:
+            QgsMapLayerRegistry.instance().removeMapLayer(sobrLayer)
+            QgsMapLayerRegistry.instance().removeMapLayer(spolLayer)
+            
+            self.iface.setActiveLayer(layer)
+        # SpatiaLite fix - end
         
         return puAreaMaxQualityCodes
         
@@ -224,10 +241,12 @@ class AreaPuCaWidget(PuCaWidget):
         
         layerSource = layer.source()
         layerName = layer.name()
+        layerDataProviderName = layer.dataProvider().name()
         
         codeLayerSource = layerSource.replace(parString, vertexLayerCode)
         codeLayerName = layerName.replace(parString, vertexLayerCode)
-        codeLayer = QgsVectorLayer(codeLayerSource, codeLayerName, 'ogr')
+        codeLayer = QgsVectorLayer(
+            codeLayerSource, codeLayerName, layerDataProviderName)
         
         return codeLayer
     
@@ -331,7 +350,10 @@ class AreaPuCaWidget(PuCaWidget):
         elif puAreaMaxQualityCode == 8:
             limitDeviation = 2.0*sqrt(biggerArea) + 20
         
-        return round(limitDeviation)
+        if limitDeviation:
+            limitDeviation = round(limitDeviation)
+        
+        return limitDeviation
 
 
 class AreaLabelPuCaWidget(PuCaWidget):
