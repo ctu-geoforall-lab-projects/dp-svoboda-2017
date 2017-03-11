@@ -126,7 +126,7 @@ class EditPuWidget(PuWidget):
         self.perimeterMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PolygonLayer)
         self.perimeterMapLayerComboBox.activated.connect(
-            self._sync_perimeter_map_layer_combo_box)
+            self.sync_perimeter_map_layer_combo_box)
         QgsMapLayerRegistry.instance().layersAdded.connect(
             self._rollback_perimeter_layer)
         QgsMapLayerRegistry.instance().layersRemoved.connect(
@@ -240,7 +240,7 @@ class EditPuWidget(PuWidget):
         
         self.perimeterMapLayerComboBox.setLayer(perimeterLayer)
     
-    def _sync_perimeter_map_layer_combo_box(self):
+    def sync_perimeter_map_layer_combo_box(self):
         """Synchronizes perimeter map layer combo boxes.
         
         Synchronizes with the perimeterMapLayerComboBox in the perimeterWidget.
@@ -327,11 +327,9 @@ class EditPuWidget(PuWidget):
                 if loadedLayer:
                     self.iface.actionDraw().trigger()
                     self.set_perimeter_layer(loadedLayer, False)
+                    self.sync_perimeter_map_layer_combo_box()
                 else:
-                    self._add_perimeter_layer(perimeterLayer)
-                    self.set_perimeter_layer(perimeterLayer, False)
-                
-                self._sync_perimeter_map_layer_combo_box()
+                    self.add_perimeter_layer(perimeterLayer)
                 
                 layer.selectByIds(selectedFeaturesIds)
                 
@@ -393,8 +391,7 @@ class EditPuWidget(PuWidget):
         perimeterLayer = QgsVectorLayer(
             perimeterLayerFilePath, perimeterLayerName, 'ogr')
         
-        if loadedLayer:
-            self._add_perimeter_layer(perimeterLayer)
+        self.add_perimeter_layer(perimeterLayer)
         
         expression = QgsExpression(
             "\"{}\" is null".format(self.shortCategoryName))
@@ -403,7 +400,7 @@ class EditPuWidget(PuWidget):
         
         return perimeterLayer
         
-    def _add_perimeter_layer(self, perimeterLayer):
+    def add_perimeter_layer(self, perimeterLayer):
         """Adds the perimeter layer to the map canvas.
         
         Args:
@@ -416,21 +413,31 @@ class EditPuWidget(PuWidget):
             QgsMapLayerRegistry.instance().addMapLayer(perimeterLayer)
             
             self.set_perimeter_layer(perimeterLayer, False)
-            self._sync_perimeter_map_layer_combo_box()
+            self.sync_perimeter_map_layer_combo_box()
             
-            fields = perimeterLayer.pendingFields()
-            
-            tableConfig = perimeterLayer.attributeTableConfig()
-            tableConfig.update(fields)
-            
-            columns = tableConfig.columns()
-            
-            for column in columns:
-                if not column.name == self.shortCategoryName:
-                    column.hidden = True
-            
-            tableConfig.setColumns(columns)
-            perimeterLayer.setAttributeTableConfig(tableConfig)
+            self._set_perimeter_layer_table_config(perimeterLayer)
+    
+    def _set_perimeter_layer_table_config(self, perimeterLayer):
+        """Sets perimeter layer table config.
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the perimeter layer.
+        
+        """
+        
+        fields = perimeterLayer.pendingFields()
+        
+        tableConfig = perimeterLayer.attributeTableConfig()
+        tableConfig.update(fields)
+        
+        columns = tableConfig.columns()
+        
+        for column in columns:
+            if not column.name == self.shortCategoryName:
+                column.hidden = True
+        
+        tableConfig.setColumns(columns)
+        perimeterLayer.setAttributeTableConfig(tableConfig)
     
     def _start_setting_pu_category(self):
         """Starts setting PU category in a separate thread.."""
@@ -568,11 +575,9 @@ class EditPuWidget(PuWidget):
             if loadedLayer:
                 self.iface.actionDraw().trigger()
                 self.set_perimeter_layer(loadedLayer, False)
+                self.sync_perimeter_map_layer_combo_box()
             else:
-                self._add_perimeter_layer(perimeterLayer)
-                self.set_perimeter_layer(perimeterLayer, False)
-            
-            self._sync_perimeter_map_layer_combo_box()
+                self.add_perimeter_layer(perimeterLayer)
         else:
             perimeterLayerFilePath = perimeterLayer.source()
             perimeterLayerName = perimeterLayer.name()
@@ -582,7 +587,7 @@ class EditPuWidget(PuWidget):
                 perimeterLayerName, perimeterLayer)
             
             self.set_perimeter_layer(perimeterLayer, False)
-            self._sync_perimeter_map_layer_combo_box()
+            self.sync_perimeter_map_layer_combo_box()
         
         QgsApplication.processEvents()
         
@@ -671,4 +676,18 @@ class EditPuWidget(PuWidget):
                 self,
                 u'Error selecting parcels in category.',
                 u'Chyba při vybírání parcel v kategorii.')
+    
+    def check_perimeter_map_layer_combo_box(self):
+        """Checks if there is a layer in perimeterMapLayerComboBox.
+        
+        Returns:
+            bool: True when there is a layer in perimeterMapLayerComboBox,
+                False otherwise.
+        
+        """
+        
+        if self.perimeterMapLayerComboBox.currentLayer():
+            return True
+        else:
+            return False
 

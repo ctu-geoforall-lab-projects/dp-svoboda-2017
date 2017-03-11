@@ -31,6 +31,7 @@ from qgis.utils import QGis
 
 import traceback
 import sys
+import os
 
 from statusbar import StatusBar
 from toolbar import ToolBar
@@ -489,7 +490,7 @@ class DockWidget(QDockWidget):
         loadedLayer = None
         
         for layer in layers:
-            if filePath == layer.source():
+            if os.path.normpath(filePath) == os.path.normpath(layer.source()):
                 loadedLayer = layer
                 break
         
@@ -706,12 +707,19 @@ class DockWidget(QDockWidget):
         
         """
         
-        try:            
+        try:      
             layers = self.iface.legendInterface().layers()
             
             for layer in layers:
                 if self.check_perimeter_layer(layer):
                     self.set_layer_style(layer, 'perimeter')
+                    
+                    if not self.stackedWidget\
+                        .editPuWidget.check_perimeter_map_layer_combo_box():
+                        self.stackedWidget\
+                            .editPuWidget.set_perimeter_layer(layer, False)
+                        self.stackedWidget\
+                            .editPuWidget.sync_perimeter_map_layer_combo_box()
         except:
             self.display_error_messages(
                 self.stackedWidget.currentWidget(),
