@@ -30,7 +30,8 @@ from qgis.core import *
 class StatusBar(QStatusBar):
     """A status bar."""
     
-    def __init__(self, parentWidget, dockWidgetName, iface, pluginDir):
+    def __init__(
+            self, parentWidget, dockWidgetName, iface, pluginDir, lockPlatform):
         """Constructor.
         
         Args:
@@ -38,6 +39,8 @@ class StatusBar(QStatusBar):
             dockWidgetName (str): A name of the dock widget.
             iface (QgisInterface): A reference to the QgisInterface.
             pluginDir (QDir): A plugin directory.
+            lockPlatform (bool): True when the platform creates locks on files,
+                False otherwise.
         
         """
         
@@ -45,6 +48,7 @@ class StatusBar(QStatusBar):
         self.dWName = dockWidgetName
         self.iface = iface
         self.pluginDir = pluginDir
+        self.lockPlatform = lockPlatform
         
         super(StatusBar, self).__init__(self.dW)
         

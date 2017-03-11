@@ -197,10 +197,7 @@ class AreaPuCaWidget(PuCaWidget):
         sobrLayer = self._get_vertex_layer(layer, sobrString)
         spolLayer = self._get_vertex_layer(layer, spolString)
         
-        # SpatiaLite fix - start
-        QgsMessageLog.logMessage(str(sobrLayer.isValid()), 'test')
-        QgsMessageLog.logMessage(str(spolLayer.isValid()), 'test')
-        
+        # SpatiaLite fix - start        
         if not self.dW.fixedSqliteDriver:
             QgsMapLayerRegistry.instance().addMapLayer(sobrLayer)
             QgsMapLayerRegistry.instance().addMapLayer(spolLayer)

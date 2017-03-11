@@ -31,6 +31,7 @@ from qgis.utils import QGis
 
 import traceback
 import sys
+import platform
 
 from statusbar import StatusBar
 from toolbar import ToolBar
@@ -68,15 +69,19 @@ class DockWidget(QDockWidget):
             self.fixedSqliteDriver = True
         # SpatiaLite fix - end
         
+        if platform.system() == 'Windows':
+            self.lockPlatform = True
+        else:
+            self.lockPlatform = False
+        
         self.puMajorParNumberColumnName = 'PU_KMENOVE_CISLO_PAR'
         self.puMinorParNumberColumnName = 'PU_PODDELENI_CISLA_PAR'
-        self.puCategoryColumnName = 'PU_KATEGORIE'
         
         self.editablePuColumns = (
             self.puMajorParNumberColumnName,
-            self.puMinorParNumberColumnName,
-            self.puCategoryColumnName)
+            self.puMinorParNumberColumnName)
         
+        self.puCategoryColumnName = 'PU_KATEGORIE'
         self.puAreaColumnName = 'PU_VYMERA_PARCELY'
         self.puAreaAbsDifferenceColumnName = 'PU_VYMERA_PARCELY_ABS_ROZDIL'
         self.puAreaLimitDeviationColumnName = 'PU_VYMERA_PARCELY_MEZNI_ODCHYLKA'
@@ -84,7 +89,8 @@ class DockWidget(QDockWidget):
         self.puPriceColumnName = 'PU_CENA'
         
         self.visiblePuColumns = self.editablePuColumns + \
-            (self.puAreaColumnName,
+            (self.puCategoryColumnName,
+             self.puAreaColumnName,
              self.puAreaAbsDifferenceColumnName,
              self.puAreaLimitDeviationColumnName,
              self.puDistanceColumnName,
@@ -163,11 +169,12 @@ class DockWidget(QDockWidget):
         self.iface.currentLayerChanged.connect(
             self._disconnect_connect_ensure_unique_field_values)
         
-        self.toolBar = ToolBar(self, self.dWName, self.iface, self.pluginDir)
+        self.toolBar = ToolBar(
+            self, self.dWName, self.iface, self.pluginDir, self.lockPlatform)
         self.gridLayout.addWidget(self.toolBar, 0, 0, 1, 1)
         
         self.statusBar = StatusBar(
-            self, self.dWName, self.iface, self.pluginDir)
+            self, self.dWName, self.iface, self.pluginDir, self.lockPlatform)
         self.gridLayout.addWidget(self.statusBar, 2, 0, 1, 1)
         
         self.frame = QFrame(self)
@@ -177,7 +184,7 @@ class DockWidget(QDockWidget):
         self.gridLayout.addWidget(self.frame, 1, 0, 1, 1)
         
         self.stackedWidget = StackedWidget(
-            self, self.dWName, self.iface, self.pluginDir)
+            self, self.dWName, self.iface, self.pluginDir, self.lockPlatform)
         self.gridLayout.addWidget(self.stackedWidget, 1, 0, 1, 1)
     
     def display_error_messages(

@@ -289,7 +289,7 @@ class EditPuWidget(PuWidget):
             editing = self.dW.check_editing()
             
             title = u'Uložit vrstvu obvodu jako...'
-            filters = u'.shp (*.shp)'
+            filters = u'.pu.shp (*.pu.shp)'
             
             perimeterLayerFilePath = self.dW.open_file_dialog(
                 title, filters, False)
@@ -308,23 +308,28 @@ class EditPuWidget(PuWidget):
                     perimeterLayerFilePath = QDir(fileInfo.absolutePath())\
                         .filePath(fileInfo.completeBaseName() + u'.pu.shp')
                 
-                perimeterLayer = self._create_perimeter_layer(
-                    layer, perimeterLayerFilePath, self.categoryName)
+                selectedFeaturesIds = layer.selectedFeaturesIds()
                 
-                QgsApplication.processEvents()
-                
-                self.set_text_statusbar.emit(u'Přidávám vrstvu obvodu...', 0)
+                perimeterLayerName = fileInfo.completeBaseName()
                 
                 loadedLayer = self.dW.check_loaded_layers(
                     perimeterLayerFilePath)
                 
+                perimeterLayer = self._create_perimeter_layer(
+                    layer, perimeterLayerFilePath, self.categoryName,
+                    perimeterLayerName, loadedLayer)
+                
+                layer.selectByIds(selectedFeaturesIds)
+                
+                QgsApplication.processEvents()
+                
                 if loadedLayer:
+                    self.dW.set_layer_style(perimeterLayer, 'perimeter')
                     self.iface.actionDraw().trigger()
-                    self.set_perimeter_layer(loadedLayer, False)
                 else:
                     self._add_perimeter_layer(perimeterLayer)
-                    self.set_perimeter_layer(perimeterLayer, False)
                 
+                self.set_perimeter_layer(perimeterLayer, False)
                 self._sync_perimeter_map_layer_combo_box()
                 
                 self.iface.setActiveLayer(layer)
@@ -341,8 +346,9 @@ class EditPuWidget(PuWidget):
                 u'Chyba při vytváření obvodu.')
     
     def _create_perimeter_layer(
-            self, layer, perimeterLayerFilePath, categoryName,
-            perimeterLayerName=None):
+            self,
+            layer, perimeterLayerFilePath, categoryName,
+            perimeterLayerName, loadedLayer):
         """Creates a perimeter layer from the given layer.
         
         Args:
@@ -351,6 +357,8 @@ class EditPuWidget(PuWidget):
             categoryName (str): A name of the category field the layer is about
                 to be dissolved by.
             perimeterLayerName (str): A name of the perimeter layer.
+            loadedLayer (bool): A reference to the loaded layer.
+                This is relevant only for Windows platform.
         
         Returns:
             QgsVectorLayer: A reference to the perimeter layer.
@@ -361,11 +369,6 @@ class EditPuWidget(PuWidget):
         
         tempPerimeterLayerName = fileInfo.completeBaseName() + u'.temp'
         
-        if not perimeterLayerName:
-            perimeterLayerName = fileInfo.baseName()
-        
-        selectedFeaturesIds = layer.selectedFeaturesIds()
-        
         layer.removeSelection()
         
         tempPerimeterLayerPath = processing.runalg(
@@ -374,6 +377,9 @@ class EditPuWidget(PuWidget):
             
         tempPerimeterLayer = QgsVectorLayer(
             tempPerimeterLayerPath, tempPerimeterLayerName, 'ogr')
+        
+        if loadedLayer and self.lockPlatform:
+            QgsMapLayerRegistry.instance().removeMapLayer(loadedLayer)
         
         QgsApplication.processEvents()
         
@@ -384,12 +390,13 @@ class EditPuWidget(PuWidget):
         perimeterLayer = QgsVectorLayer(
             perimeterLayerFilePath, perimeterLayerName, 'ogr')
         
+        if loadedLayer and self.lockPlatform:
+            self._add_perimeter_layer(perimeterLayer)
+        
         expression = QgsExpression(
             "\"{}\" is null".format(self.shortCategoryName))
         
         self.dW.delete_features_by_expression(perimeterLayer, expression)
-        
-        layer.selectByIds(selectedFeaturesIds)
         
         return perimeterLayer
         
@@ -504,49 +511,51 @@ class EditPuWidget(PuWidget):
         
         if not self.dW.check_perimeter_layer(perimeterLayer, layer):
             # SpatiaLite fix - start
+            perimeterString = u'-obvod.pu.shp'
+            
             if not self.dW.fixedSqliteDriver:
                 composedURI = QgsDataSourceURI(layer.source())
                 perimeterLayerFilePath = \
-                    composedURI.database().split('.sdb')[0] + u'-obvod.pu.shp'
+                    composedURI.database().split('.sdb')[0] + perimeterString
             else:
                 perimeterLayerFilePath = \
-                    layer.source().split('.db|')[0] + u'-obvod.pu.shp'
+                    layer.source().split('.db')[0] + perimeterString
             # SpatiaLite fix - end
             
-            perimeterLayerName = layer.name() + u'-obvod'
-            
-            perimeterLayer = self._create_perimeter_layer(
-                layer, perimeterLayerFilePath, self.categoryName,
-                perimeterLayerName)
+            fileInfo = QFileInfo(perimeterLayerFilePath)
+            perimeterLayerName = fileInfo.baseName()
             
             loadedLayer = self.dW.check_loaded_layers(perimeterLayerFilePath)
             
+            perimeterLayer = self._create_perimeter_layer(
+                layer, perimeterLayerFilePath, self.categoryName,
+                perimeterLayerName, loadedLayer)
+            
+            QgsApplication.processEvents()
+            
             if loadedLayer:
+                self.dW.set_layer_style(perimeterLayer, 'perimeter')
                 self.iface.actionDraw().trigger()
-                self.set_perimeter_layer(loadedLayer, False)
             else:
                 self._add_perimeter_layer(perimeterLayer)
-                self.set_perimeter_layer(perimeterLayer, False)
             
+            self.set_perimeter_layer(perimeterLayer, False)
             self._sync_perimeter_map_layer_combo_box()
         else:
             perimeterLayerFilePath = perimeterLayer.source()
-        
-            if perimeterLayer.featureCount() != 0:
-                perimeterLayer = self._cut_perimeter_layer_by_selected_features(
-                    layer, perimeterLayer)
-            
-            layer.selectByIds(selectedFeaturesIds)
-            
-            self._add_selected_features_to_perimeter_layer(
-                layer, perimeterLayer)
-            
-            perimeterLayer.removeSelection()
+            perimeterLayerName = perimeterLayer.name()
             
             perimeterLayer = self._create_perimeter_layer(
-                perimeterLayer, perimeterLayerFilePath, self.shortCategoryName)
+                layer, perimeterLayerFilePath, self.categoryName,
+                perimeterLayerName, perimeterLayer)
+            
+            if self.lockPlatform:
+                self.set_perimeter_layer(perimeterLayer, False)
+                self._sync_perimeter_map_layer_combo_box()
         
         QgsApplication.processEvents()
+        
+        layer.selectByIds(selectedFeaturesIds)
         
         self.iface.actionDraw().trigger()
     
@@ -560,78 +569,6 @@ class EditPuWidget(PuWidget):
             self.set_text_statusbar.emit(
                 u'Vybrané parcely byly zařazeny do kategorie "{}".'
                 .format(currentCategory), 20)
-    
-    def _cut_perimeter_layer_by_selected_features(self, layer, perimeterLayer):
-        """Cuts the perimeter layer by selected features in the layer.
-        
-        Args:
-            layer (QgsVectorLayer): A reference to the layer.
-            perimeterLayer (QgsVectorLayer): A reference to the perimeter
-                layer.
-        
-        Returns:
-            QgsVectorLayer: A clipped perimeter layer.
-        
-        """
-        
-        selectedFeaturesLayerName = layer.name() + u'-selectedFeatures.temp'
-
-        selectedFeaturesLayerFilePath = processing.runalg(
-            'qgis:saveselectedfeatures',
-            layer, None)['OUTPUT_LAYER']
-        
-        selectedFeaturesLayer = QgsVectorLayer(
-            selectedFeaturesLayerFilePath, selectedFeaturesLayerName, 'ogr')
-        
-        QgsApplication.processEvents()
-        
-        perimeterLayer.removeSelection()
-        
-        differencePerimeterLayerName = \
-            perimeterLayer.name() + u'-difference.temp'
-    
-        differencePerimeterLayerFilePath = processing.runalg(
-            'qgis:difference',
-            perimeterLayer, selectedFeaturesLayer, True, None)['OUTPUT']
-        
-        QgsApplication.processEvents()
-    
-        differencePerimeterLayer = QgsVectorLayer(
-            differencePerimeterLayerFilePath,
-            differencePerimeterLayerName,
-            'ogr')
-        
-        return differencePerimeterLayer
-    
-    def _add_selected_features_to_perimeter_layer(self, layer, perimeterLayer):
-        """Adds selected features in the layer to the perimeter layer.
-        
-        Args:
-            layer (QgsVectorLayer): A reference to the layer.
-            perimeterLayer (QgsVectorLayer): A reference to the perimeter
-                layer.
-        
-        """
-        
-        selectedFeatures = layer.selectedFeatures()
-        
-        categoryFieldId = perimeterLayer.fieldNameIndex(self.shortCategoryName)
-        
-        copiedFeatures = []
-        
-        for feature in selectedFeatures:
-            copiedFeature = QgsFeature()
-            copiedFeature.setAttributes(feature.attributes())
-            copiedFeature.setGeometry(feature.geometry())
-            
-            categoryValue = feature.attribute(self.categoryName)
-            copiedFeature.setAttribute(categoryFieldId, categoryValue)
-            
-            copiedFeatures.append(copiedFeature)
-        
-        perimeterLayer.startEditing()
-        perimeterLayer.addFeatures(copiedFeatures)
-        perimeterLayer.commitChanges()
     
     def _set_pu_category_by_perimeter(self, layer, perimeterLayer):
         """Sets a categoryValue to categoryName column for all features
@@ -650,6 +587,9 @@ class EditPuWidget(PuWidget):
         self.set_text_statusbar.emit(
             u'Zařazuji parcely do kategorií na základě obvodu...', 0)
         
+        selectedFeaturesIds = layer.selectedFeaturesIds()
+        perimeterSelectedFeaturesIds = perimeterLayer.selectedFeaturesIds()
+        
         layer.removeSelection()
         perimeterLayer.removeSelection()
         
@@ -665,6 +605,9 @@ class EditPuWidget(PuWidget):
         
             self.dW.set_field_value_for_features(
                 layer, features, self.categoryName, categoryValue)
+        
+        layer.selectByIds(selectedFeaturesIds)
+        perimeterLayer.selectByIds(perimeterSelectedFeaturesIds)
         
         self.set_text_statusbar.emit(
             u'Zařazení parcel na základě obvodu úspěšně dokončeno.', 30)

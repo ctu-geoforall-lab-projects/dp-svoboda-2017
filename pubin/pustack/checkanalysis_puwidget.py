@@ -120,73 +120,73 @@ class CheckAnalysisPuWidget(PuWidget):
         self.perimeterLabelPuCaWidget = \
             perimeter_pucawidget.PerimeterLabelPuCaWidget(
                 self, self.dWName, self.iface, self.dW, self.pluginDir,
-                u'perimeterLabelPuCaWidget')
+                self.lockPlatform, u'perimeterLabelPuCaWidget')
         self.checkAnalysisLabelStackedWidget.addWidget(
             self.perimeterLabelPuCaWidget)
         self.perimeterPuCaWidget = perimeter_pucawidget.PerimeterPuCaWidget(
             self, self.dWName, self.iface, self.dW, self.pluginDir,
-            u'perimeterPuCaWidget')
+            self.lockPlatform, u'perimeterPuCaWidget')
         self.checkAnalysisStackedWidget.addWidget(self.perimeterPuCaWidget)
         
         self.notInSpiLabelPuCaWidget = \
             notinspi_pucawidget.NotInSpiLabelPuCaWidget(
                 self, self.dWName, self.iface, self.dW, self.pluginDir,
-                u'notInSpiLabelPuCaWidget')
+                self.lockPlatform, u'notInSpiLabelPuCaWidget')
         self.checkAnalysisLabelStackedWidget.addWidget(
             self.notInSpiLabelPuCaWidget)
         self.notInSpiPuCaWidget = notinspi_pucawidget.NotInSpiPuCaWidget(
             self, self.dWName, self.iface, self.dW, self.pluginDir,
-            u'notInSpiPuCaWidget')
+            self.lockPlatform, u'notInSpiPuCaWidget')
         self.checkAnalysisStackedWidget.addWidget(self.notInSpiPuCaWidget)
         
         self.notInMapLabelPuCaWidget = \
             notinmap_pucawidget.NotInMapLabelPuCaWidget(
                 self, self.dWName, self.iface, self.dW, self.pluginDir,
-                u'notInMapLabelPuCaWidget')
+                self.lockPlatform, u'notInMapLabelPuCaWidget')
         self.checkAnalysisLabelStackedWidget.addWidget(
             self.notInMapLabelPuCaWidget)
         self.notInMapPuCaWidget = notinmap_pucawidget.NotInMapPuCaWidget(
             self, self.dWName, self.iface, self.dW, self.pluginDir,
-            u'notInMapPuCaWidget')
+            self.lockPlatform, u'notInMapPuCaWidget')
         self.checkAnalysisStackedWidget.addWidget(self.notInMapPuCaWidget)
         
         self.areaLabelPuCaWidget = area_pucawidget.AreaLabelPuCaWidget(
             self, self.dWName, self.iface, self.dW, self.pluginDir,
-            u'areaLabelPuCaWidget')
+            self.lockPlatform, u'areaLabelPuCaWidget')
         self.checkAnalysisLabelStackedWidget.addWidget(self.areaLabelPuCaWidget)
         self.areaPuCaWidget = area_pucawidget.AreaPuCaWidget(
             self, self.dWName, self.iface, self.dW, self.pluginDir,
-            u'areaPuCaWidget')
+            self.lockPlatform, u'areaPuCaWidget')
         self.checkAnalysisStackedWidget.addWidget(self.areaPuCaWidget)
         
         self.unownedLabelPuCaWidget = unowned_pucawidget.UnownedLabelPuCaWidget(
             self, self.dWName, self.iface, self.dW, self.pluginDir,
-            u'unownedLabelPuCaWidget')
+            self.lockPlatform, u'unownedLabelPuCaWidget')
         self.checkAnalysisLabelStackedWidget.addWidget(
             self.unownedLabelPuCaWidget)
         self.unownedPuCaWidget = unowned_pucawidget.UnownedPuCaWidget(
             self, self.dWName, self.iface, self.dW, self.pluginDir,
-            u'unownedPuCaWidget')
+            self.lockPlatform, u'unownedPuCaWidget')
         self.checkAnalysisStackedWidget.addWidget(self.unownedPuCaWidget)
         
         self.distanceLabelPuCaWidget = \
             distance_pucawidget.DistanceLabelPuCaWidget(
                 self, self.dWName, self.iface, self.dW, self.pluginDir,
-                u'distanceLabelPuCaWidget')
+                self.lockPlatform, u'distanceLabelPuCaWidget')
         self.checkAnalysisLabelStackedWidget.addWidget(
             self.distanceLabelPuCaWidget)
         self.distancePuCaWidget = distance_pucawidget.DistancePuCaWidget(
             self, self.dWName, self.iface, self.dW, self.pluginDir,
-            u'distancePuCaWidget')
+            self.lockPlatform, u'distancePuCaWidget')
         self.checkAnalysisStackedWidget.addWidget(self.distancePuCaWidget)
         
         self.bpejLabelPuCaWidget = bpej_pucawidget.BpejLabelPuCaWidget(
             self, self.dWName, self.iface, self.dW, self.pluginDir,
-            u'bpejLabelPuCaWidget')
+            self.lockPlatform, u'bpejLabelPuCaWidget')
         self.checkAnalysisLabelStackedWidget.addWidget(self.bpejLabelPuCaWidget)
         self.bpejPuCaWidget = bpej_pucawidget.BpejPuCaWidget(
             self, self.dWName, self.iface, self.dW, self.pluginDir,
-            u'bpejPuCaWidget')
+            self.lockPlatform, u'bpejPuCaWidget')
         self.checkAnalysisStackedWidget.addWidget(self.bpejPuCaWidget)
         
         self.checkAnalysisComboBox.currentIndexChanged.connect(
