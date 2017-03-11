@@ -157,6 +157,7 @@ class EditPuWidget(PuWidget):
         self.categoryComboBox.addItem(u'mimo obvod (0)')
         self.categoryComboBox.addItem(u'v obvodu - neřešené (1)')
         self.categoryComboBox.addItem(u'v obvodu - řešené (2)')
+        self.categoryComboBox.addItem(u'bez kategorie')
         self.categoryComboBox.currentIndexChanged.connect(
             self._set_categoryValue)
         self.gridLayout.addWidget(self.categoryComboBox, 3, 1, 1, 1)
@@ -212,7 +213,12 @@ class EditPuWidget(PuWidget):
         
         """
         
-        self.categoryValue = self.categoryComboBox.currentIndex()
+        currentIndex = self.categoryComboBox.currentIndex()
+        
+        if currentIndex == 3:
+            self.categoryValue = None
+        else:
+            self.categoryValue = currentIndex
     
     def _set_setCategoryValue(self):
         """Sets setCategoryValue according to the current index.
@@ -652,8 +658,13 @@ class EditPuWidget(PuWidget):
             if not succes:
                 return
             
-            self.dW.select_features_by_field_value(
-                layer, self.categoryName, self.categoryValue)
+            if self.categoryValue == None:
+                expression = QgsExpression(
+                    "\"{}\" is null".format(self.categoryName))
+                self.dW.select_features_by_expression(layer, expression)
+            else:
+                self.dW.select_features_by_field_value(
+                    layer, self.categoryName, categoryValue)
             
             currentCategory = self.categoryComboBox.currentText()
             
