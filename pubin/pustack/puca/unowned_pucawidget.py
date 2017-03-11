@@ -44,7 +44,7 @@ class UnownedPuCaWidget(PuCaWidget):
         
         try:
             self.pW.set_text_statusbar.emit(
-                u'Provádím kontrolu - bez vlastníka...', 0)
+                u'Provádím kontrolu - bez vlastníka...', 0, False)
             
             layer.removeSelection()
             
@@ -55,22 +55,23 @@ class UnownedPuCaWidget(PuCaWidget):
             featureCount = layer.selectedFeatureCount()
             
             duration = 10
+            warning = False
             
             if featureCount == 0:
                 self.pW.set_text_statusbar.emit(
-                    u'Bez vlastníka není žádná parcela.', duration)
+                    u'Bez vlastníka není žádná parcela.', duration, warning)
             elif featureCount == 1:
                 self.pW.set_text_statusbar.emit(
                     u'Bez vlastníka je {} parcela.'.format(featureCount),
-                    duration)
+                    duration, warning)
             elif 1 < featureCount < 5:
                 self.pW.set_text_statusbar.emit(
                     u'Bez vlastníka jsou {} parcely.'.format(featureCount),
-                    duration)
+                    duration, warning)
             elif 5 <= featureCount:
                 self.pW.set_text_statusbar.emit(
                     u'Bez vlastníka je {} parcel.'.format(featureCount),
-                    duration)
+                    duration, warning)
         except self.dW.puError:
             QgsApplication.processEvents()
         except:

@@ -37,7 +37,7 @@ from execute_thread import ExecuteThread
 class EditPuWidget(PuWidget):
     """A widget for editing."""
     
-    set_text_statusbar = pyqtSignal(str, int)
+    set_text_statusbar = pyqtSignal(str, int, bool)
     
     def _setup_self(self):
         """Sets up self."""
@@ -283,7 +283,7 @@ class EditPuWidget(PuWidget):
             
             if layer.featureCount() == 0:
                 self.set_text_statusbar.emit(
-                    u'Aktivní vrstva neobsahuje žádný prvek.', 10)
+                    u'Aktivní vrstva neobsahuje žádný prvek.', 10, True)
                 return
             
             editing = self.dW.check_editing()
@@ -295,7 +295,8 @@ class EditPuWidget(PuWidget):
                 title, filters, False)
             
             if perimeterLayerFilePath:
-                self.set_text_statusbar.emit(u'Vytvářím vrstvu obvodu...', 0)
+                self.set_text_statusbar.emit(
+                    u'Vytvářím vrstvu obvodu...', 0, False)
                 
                 fileInfo = QFileInfo(perimeterLayerFilePath)
                 
@@ -339,7 +340,7 @@ class EditPuWidget(PuWidget):
                     self.toggleEditingAction.trigger()
                 
                 self.set_text_statusbar.emit(
-                    u'Obvod byl úspešně vytvořen.', 15)
+                    u'Obvod byl úspešně vytvořen.', 15, False)
         except:
             self.dW.display_error_messages(
                 self,
@@ -495,19 +496,21 @@ class EditPuWidget(PuWidget):
         
         if featureCount == 0:
             self.set_text_statusbar.emit(
-                u'V aktivní vrstvě nejsou vybrány žádné prvky.', 10)
+                u'V aktivní vrstvě nejsou vybrány žádné prvky.', 10, True)
             return
         
         currentCategory = self.categoryComboBox.currentText()
         
+        warning = False
+        
         if featureCount == 1:
             self.set_text_statusbar.emit(
                 u'Zařazuji vybranou parcelu do kategorie "{}"...'
-                .format(currentCategory), 0)
+                .format(currentCategory), 0, warning)
         else:
             self.set_text_statusbar.emit(
                 u'Zařazuji vybrané parcely do kategorie "{}"...'
-                .format(currentCategory), 0)
+                .format(currentCategory), 0, warning)
         
         selectedFeaturesIds = layer.selectedFeaturesIds()
         selectedFeatures = layer.selectedFeaturesIterator()
@@ -524,11 +527,11 @@ class EditPuWidget(PuWidget):
         if featureCount == 1:
             self.set_text_statusbar.emit(
                 u'Vybraná parcela byla zařazena do kategorie "{}".'
-                .format(currentCategory), 20)
+                .format(currentCategory), 20, warning)
         else:
             self.set_text_statusbar.emit(
                 u'Vybrané parcely byly zařazeny do kategorie "{}".'
-                .format(currentCategory), 20)
+                .format(currentCategory), 20, warning)
     
     def update_perimeter_layer(self, layer=None, perimeterLayer=None):
         """Updates the perimeter layer.
@@ -609,8 +612,10 @@ class EditPuWidget(PuWidget):
         if not self.dW.check_perimeter_layer(perimeterLayer, layer, self):
             return
         
+        warning = False
+        
         self.set_text_statusbar.emit(
-            u'Zařazuji parcely do kategorií na základě obvodu...', 0)
+            u'Zařazuji parcely do kategorií na základě obvodu...', 0, warning)
         
         selectedFeaturesIds = layer.selectedFeaturesIds()
         perimeterSelectedFeaturesIds = perimeterLayer.selectedFeaturesIds()
@@ -635,7 +640,8 @@ class EditPuWidget(PuWidget):
         perimeterLayer.selectByIds(perimeterSelectedFeaturesIds)
         
         self.set_text_statusbar.emit(
-            u'Zařazení parcel na základě obvodu úspěšně dokončeno.', 30)
+            u'Zařazení parcel na základě obvodu úspěšně dokončeno.',
+            30, warning)
         
     def _select_category(self):
         """Selects features in the current category."""
@@ -654,23 +660,24 @@ class EditPuWidget(PuWidget):
             featureCount = layer.selectedFeatureCount()
             
             duration = 10
+            warning = False
             
             if featureCount == 0:
                 self.set_text_statusbar.emit(
                     u'V kategorii "{}" není žádná parcela.'
-                    .format(currentCategory), duration)
+                    .format(currentCategory), duration, warning)
             elif featureCount == 1:
                 self.set_text_statusbar.emit(
                     u'V kategorii "{}" je {} parcela.'
-                    .format(currentCategory, featureCount), duration)
+                    .format(currentCategory, featureCount), duration, warning)
             elif 1 < featureCount < 5:
                 self.set_text_statusbar.emit(
                     u'V kategorii "{}" jsou {} parcely.'
-                    .format(currentCategory, featureCount), duration)
+                    .format(currentCategory, featureCount), duration, warning)
             elif 5 <= featureCount:
                 self.set_text_statusbar.emit(
                     u'V kategorii "{}" je {} parcel.'
-                    .format(currentCategory, featureCount), duration)
+                    .format(currentCategory, featureCount), duration, warning)
         except:
             self.dW.display_error_messages(
                 self,

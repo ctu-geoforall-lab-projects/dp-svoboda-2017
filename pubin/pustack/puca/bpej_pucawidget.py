@@ -116,12 +116,12 @@ class BpejPuCaWidget(PuCaWidget):
             bpejLayer = self.bpejMapLayerComboBox.currentLayer()
             
             if bpejLayer == None:
-                self.pW.set_text_statusbar.emit(u'Žádná vrstva BPEJ.', 10)
+                self.pW.set_text_statusbar.emit(u'Žádná vrstva BPEJ.', 10, True)
                 return
             
             if bpejLayer.featureCount() == 0:
                 self.pW.set_text_statusbar.emit(
-                    u'Vrstva BPEJ neobsahuje žádný prvek.', 10)
+                    u'Vrstva BPEJ neobsahuje žádný prvek.', 10, True)
                 return
             
             bpejLayerCrs = bpejLayer.crs().authid()
@@ -130,29 +130,29 @@ class BpejPuCaWidget(PuCaWidget):
             if bpejLayerCrs != layerCrs:
                 self.pW.set_text_statusbar.emit(
                     u'Aktivní vrstva a vrstva BPEJ nemají stejný '
-                    u'souřadnicový systém.', 10)
+                    u'souřadnicový systém.', 10, True)
                 return
             
             bpejField = self.bpejFieldComboBox.currentField()
             
             if bpejField == u'':
                 self.pW.set_text_statusbar.emit(
-                    u'Není vybrán sloupec ceny.', 10)
+                    u'Není vybrán sloupec ceny.', 10, True)
                 return
             
             self.pW.set_text_statusbar.emit(
-                u'Provádím analýzu - oceňování podle BPEJ...', 0)
+                u'Provádím analýzu - oceňování podle BPEJ...', 0, False)
             
             layer.removeSelection()
             bpejLayer.removeSelection()
             
             editedBpejField = self._edit_bpej_field(bpejField, layer)
             
-            unionOutput = processing.runalg(
+            unionFilePath = processing.runalg(
                 'qgis:union',
                 layer, bpejLayer, None)['OUTPUT']
             
-            unionLayer = QgsVectorLayer(unionOutput, 'unionLayer', 'ogr')
+            unionLayer = QgsVectorLayer(unionFilePath, 'unionLayer', 'ogr')
             
             expression = QgsExpression(
                 "\"{}\" is null "
@@ -164,69 +164,72 @@ class BpejPuCaWidget(PuCaWidget):
             
             self.dW.delete_features_by_expression(unionLayer, expression)
             
-            multiToSingleOutput = processing.runalg(
-                'qgis:multiparttosingleparts',
-                unionLayer, None)['OUTPUT']
-            
-            multiToSingleLayer = QgsVectorLayer(
-                multiToSingleOutput, 'multiToSingleLayer', 'ogr')
-            
-            bpejCodePrices = self._get_bpej_code_prices()
-            
-            rowidColumnName = self.dW.rowidColumnName
-            
-            prices, missingBpejCodes = self._calculate_feature_prices(
-                rowidColumnName, multiToSingleLayer,
-                editedBpejField, bpejCodePrices)
-            
-            priceFieldName = self.dW.puPriceColumnName
-            
-            priceFieldId = layer.fieldNameIndex(priceFieldName)
-            
-            layer.startEditing()
-            layer.updateFields()
-            
-            features = layer.getFeatures()
-            
-            for feature in features:
-                rowid = feature.attribute(rowidColumnName)
-                id = feature.id()
-                originalPrice = feature.attribute(priceFieldName)
+            if unionLayer.featureCount() != 0:
+                multiToSingleFilePath = processing.runalg(
+                    'qgis:multiparttosingleparts',
+                    unionLayer, None)['OUTPUT']
                 
-                price = prices[rowid]
-                roundedPrice = round(price, -1)
+                multiToSingleLayer = QgsVectorLayer(
+                    multiToSingleFilePath, 'multiToSingleLayer', 'ogr')
                 
-                if roundedPrice != 0 and roundedPrice != originalPrice:
-                    layer.changeAttributeValue(id, priceFieldId, roundedPrice)
-            
-            layer.commitChanges()
-            
-            if editing:
-                self.iface.actionToggleEditing()
-            
-            if len(missingBpejCodes) != 0:
-                missingBpejCodesStr = ', '.join(missingBpejCodes)
+                bpejCodePrices = self._get_bpej_code_prices()
                 
-                expression = QgsExpression(
-                    "\"{}\" in ({})".format(bpejField, missingBpejCodesStr))
+                rowidColumnName = self.dW.rowidColumnName
                 
-                self.dW.select_features_by_expression(bpejLayer, expression)
+                prices, missingBpejCodes = self._calculate_feature_prices(
+                    rowidColumnName, multiToSingleLayer,
+                    editedBpejField, bpejCodePrices)
                 
-                featureCount = bpejLayer.selectedFeatureCount()
+                priceFieldName = self.dW.puPriceColumnName
                 
-                duration = 15
+                priceFieldId = layer.fieldNameIndex(priceFieldName)
                 
-                if featureCount == 1:
-                    self.iface.messageBar().pushMessage(
-                        u'BPEJ kód vybraného prvku ve vrstvě BPEJ '
-                        u'nebyl nalezen.', QgsMessageBar.WARNING, duration)
-                elif featureCount > 1:
-                    self.iface.messageBar().pushMessage(
-                        u'BPEJ kódy vybraných prvků ve vrstvě BPEJ '
-                        u'nebyly nalezeny.', QgsMessageBar.WARNING, duration)
+                layer.startEditing()
+                layer.updateFields()
+                
+                features = layer.getFeatures()
+                
+                for feature in features:
+                    rowid = feature.attribute(rowidColumnName)
+                    id = feature.id()
+                    originalPrice = feature.attribute(priceFieldName)
+                    
+                    price = prices[rowid]
+                    roundedPrice = round(price, -1)
+                    
+                    if roundedPrice != 0 and roundedPrice != originalPrice:
+                        layer.changeAttributeValue(
+                            id, priceFieldId, roundedPrice)
+                
+                layer.commitChanges()
+                
+                if editing:
+                    self.iface.actionToggleEditing()
+                
+                if len(missingBpejCodes) != 0:
+                    missingBpejCodesStr = ', '.join(missingBpejCodes)
+                    
+                    expression = QgsExpression(
+                        "\"{}\" in ({})".format(bpejField, missingBpejCodesStr))
+                    
+                    self.dW.select_features_by_expression(bpejLayer, expression)
+                    
+                    featureCount = bpejLayer.selectedFeatureCount()
+                    
+                    duration = 15
+                    
+                    if featureCount == 1:
+                        self.iface.messageBar().pushMessage(
+                            u'BPEJ kód vybraného prvku ve vrstvě BPEJ '
+                            u'nebyl nalezen.', QgsMessageBar.WARNING, duration)
+                    elif featureCount > 1:
+                        self.iface.messageBar().pushMessage(
+                            u'BPEJ kódy vybraných prvků ve vrstvě BPEJ '
+                            u'nebyly nalezeny.',
+                            QgsMessageBar.WARNING, duration)
             
             self.pW.set_text_statusbar.emit(
-                u'Analýza oceňování podle BPEJ úspěšně dokončena.', 20)
+                u'Analýza oceňování podle BPEJ úspěšně dokončena.', 20, False)
         except self.dW.puError:
             QgsApplication.processEvents()
         except:

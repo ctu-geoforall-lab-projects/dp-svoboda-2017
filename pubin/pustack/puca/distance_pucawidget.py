@@ -102,7 +102,7 @@ class DistancePuCaWidget(PuCaWidget):
             
             if refPointLayer == None:
                 self.pW.set_text_statusbar.emit(
-                    u'Žádná vrstva referenčního bodu.', 10)
+                    u'Žádná vrstva referenčního bodu.', 10, True)
                 return
             
             refPointCount = refPointLayer.featureCount()
@@ -113,13 +113,13 @@ class DistancePuCaWidget(PuCaWidget):
             if refPointLayerCrs != layerCrs:
                 self.pW.set_text_statusbar.emit(
                     u'Aktivní vrstva a vrstva referenčního bodu nemají stejný '
-                    u'souřadnicový systém.', 10)
+                    u'souřadnicový systém.', 10, True)
                 return
             
             if refPointCount != 1:
                 self.pW.set_text_statusbar.emit(
                     u'Vrstva referenčního bodu neobsahuje právě jeden prvek.',
-                    10)
+                    10, True)
                 return
             
             layer.removeSelection()
@@ -128,7 +128,7 @@ class DistancePuCaWidget(PuCaWidget):
             features = layer.getFeatures()
             
             self.pW.set_text_statusbar.emit(
-                u'Provádím analýzu - měření vzdálenosti...', 0)
+                u'Provádím analýzu - měření vzdálenosti...', 0, False)
             
             refPointFeatures = refPointLayer.getFeatures()
             
@@ -162,7 +162,7 @@ class DistancePuCaWidget(PuCaWidget):
                 self.iface.actionToggleEditing()
             
             self.pW.set_text_statusbar.emit(
-                u'Analýza měření vzdálenosti úspěšně dokončena.', 20)
+                u'Analýza měření vzdálenosti úspěšně dokončena.', 20, False)
         except self.dW.puError:
             QgsApplication.processEvents()
         except:

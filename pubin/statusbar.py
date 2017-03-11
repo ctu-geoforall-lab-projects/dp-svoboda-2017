@@ -56,6 +56,8 @@ class StatusBar(QStatusBar):
         
         self.setObjectName(u'statusBar')
         
+        self.defaultStyleSheet = self.styleSheet()
+        
         self.frameText = QSettings(self)
         
         self.setStyleSheet('border: none')
@@ -67,12 +69,13 @@ class StatusBar(QStatusBar):
         
         pass
     
-    def set_text(self, text, duration):
+    def set_text(self, text, duration, warning):
         """Sets text.
         
         Args:
             text (str): A text to be written.
             duration (int): A duration of the message in seconds.
+            warning (bool): True to display red text, False otherwise.
         
         """
         
@@ -84,6 +87,11 @@ class StatusBar(QStatusBar):
             self.frameText.setValue(sender, u'')
         
         duration *= 1000
+        
+        if warning:
+            self.setStyleSheet('QStatusBar{color:red;}')
+        else:
+            self.setStyleSheet(self.defaultStyleSheet)
         
         self.showMessage(text, duration)
     

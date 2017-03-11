@@ -118,11 +118,11 @@ class PerimeterPuCaWidget(PuCaWidget):
             
             if perimeterLayer.featureCount() == 0:
                 self.pW.set_text_statusbar.emit(
-                    u'Vrstva obvodu neobsahuje žádný prvek.', 10)
+                    u'Vrstva obvodu neobsahuje žádný prvek.', 10, True)
                 return
             
             self.pW.set_text_statusbar.emit(
-                u'Provádím kontrolu - obvodem...', 0)
+                u'Provádím kontrolu - obvodem...', 0, False)
             
             layer.removeSelection()
             perimeterLayer.removeSelection()
@@ -136,22 +136,23 @@ class PerimeterPuCaWidget(PuCaWidget):
             featureCount = layer.selectedFeatureCount()
             
             duration = 10
+            warning = False
             
             if featureCount == 0:
                 self.pW.set_text_statusbar.emit(
-                    u'Uvnitř obvodu jsou všechny parcely.', duration)
+                    u'Uvnitř obvodu jsou všechny parcely.', duration, warning)
             elif featureCount == 1:
                 self.pW.set_text_statusbar.emit(
                     u'Uvnitř obvodu není {} parcela'.format(featureCount),
-                    duration)
+                    duration, warning)
             elif 1 < featureCount < 5:
                 self.pW.set_text_statusbar.emit(
                     u'Uvnitř obvodu nejsou {} parcely.'.format(featureCount),
-                    duration)
+                    duration, warning)
             elif 5 <= featureCount:
                 self.pW.set_text_statusbar.emit(
                     u'Uvnitř obvodu není {} parcel.'.format(featureCount),
-                    duration)
+                    duration, warning)
         except self.dW.puError:
             QgsApplication.processEvents()
         except:

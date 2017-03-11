@@ -37,7 +37,7 @@ from load_thread import LoadThread
 class LoadVfkPuWidget(PuWidget):
     """A widget for loading a VFK file."""
     
-    set_text_statusbar = pyqtSignal(str, int)
+    set_text_statusbar = pyqtSignal(str, int, bool)
     set_text_browseVfkLineEdit = pyqtSignal(str)
     set_value_loadVfkProgressBar = pyqtSignal(int)
     
@@ -55,7 +55,7 @@ class LoadVfkPuWidget(PuWidget):
         """Builds own widgets."""
         
         self.set_text_statusbar.connect(self.dW.statusBar.set_text)
-        self.set_text_statusbar.emit(u'Vyberte VFK soubor.', 0)
+        self.set_text_statusbar.emit(u'Vyberte VFK soubor.', 0, False)
         
         self.browseVfkLabel = QLabel(self)
         self.browseVfkLabel.setObjectName(u'browseVfkLabel')
@@ -146,7 +146,7 @@ class LoadVfkPuWidget(PuWidget):
         """Starts loading the selected VFK file in a separate thread."""
         
         self.set_text_statusbar.emit(
-            u'Načítám VFK soubor. Tento proces může chvíli trvat...', 0)
+            u'Načítám VFK soubor. Tento proces může chvíli trvat...', 0, False)
         
         self._enable_load_widgets(False)
         
@@ -192,7 +192,8 @@ class LoadVfkPuWidget(PuWidget):
             self.loadVfkProgressBar.setMaximum(1)
             self.set_value_loadVfkProgressBar.emit(1)
             
-            self.set_text_statusbar.emit(u'Data byla úspešně načtena.', 0)
+            self.set_text_statusbar.emit(
+                u'Data byla úspešně načtena.', 0, False)
         except self.dW.puError:
             QgsApplication.processEvents()
         except:
@@ -231,7 +232,7 @@ class LoadVfkPuWidget(PuWidget):
 
         if not dbInfo.isFile():
             self.set_text_statusbar.emit(
-                u'Importuji data do SQLite databáze...', 0)
+                u'Importuji data do SQLite databáze...', 0, False)
             
             QgsApplication.processEvents()
             
@@ -260,7 +261,7 @@ class LoadVfkPuWidget(PuWidget):
                 self.set_value_loadVfkProgressBar.emit(i+1)
                 self.set_text_statusbar.emit(
                     u'Načítám vrstvu {} ({}/{})...'
-                    .format(layerNames[i], i+1, layerCount), 0)
+                    .format(layerNames[i], i+1, layerCount), 0, False)
             
             QgsApplication.processEvents()
             
@@ -390,7 +391,7 @@ class LoadVfkPuWidget(PuWidget):
                 u'Nepodařilo se připojit k databázi.')
         
         self.set_text_statusbar.emit(
-            u'Kontroluji tabulky a sloupce...', 0)
+            u'Kontroluji tabulky a sloupce...', 0, False)
         
         QgsApplication.processEvents()
         
@@ -469,7 +470,7 @@ class LoadVfkPuWidget(PuWidget):
         
         if not sdbInfo.isFile():
             self.set_text_statusbar.emit(
-                u'Importuji data do SpatiaLite databáze...', 0)
+                u'Importuji data do SpatiaLite databáze...', 0, False)
             
             QgsApplication.processEvents()
             
@@ -527,7 +528,7 @@ class LoadVfkPuWidget(PuWidget):
         """
         
         self.set_text_statusbar.emit(
-            u'Přidávám vrstvu {}...'.format(layerCode), 0)
+            u'Přidávám vrstvu {}...'.format(layerCode), 0, False)
         
         QgsApplication.processEvents()
         

@@ -205,7 +205,9 @@ class DockWidget(QDockWidget):
         
         """
         
-        sender.set_text_statusbar.emit(u'', 1)
+        warning = True
+        
+        sender.set_text_statusbar.emit(u'', 1, warning)
         
         pluginName = self.name
         
@@ -218,7 +220,8 @@ class DockWidget(QDockWidget):
             QgsMessageLog.logMessage(puTraceback, pluginName)
         
         if czeStatusBarMessage:
-            sender.set_text_statusbar.emit(czeStatusBarMessage, duration)
+            sender.set_text_statusbar.emit(
+                czeStatusBarMessage, duration, warning)
         
         if czeMessageBarMessage:
             self.iface.messageBar().pushMessage(
@@ -380,25 +383,26 @@ class DockWidget(QDockWidget):
             layer = self.iface.activeLayer()
         
         duration = 10
+        warning = True
         
         if not layer:
             if sender:
                 sender.set_text_statusbar.emit(
-                    u'Žádná aktivní vrstva.', duration)
+                    u'Žádná aktivní vrstva.', duration, warning)
             successLayer = (False, layer)
             return successLayer
         
         if not layer.isValid():
             if sender:
                 sender.set_text_statusbar.emit(
-                    u'Aktivní vrstva není platná.', duration)
+                    u'Aktivní vrstva není platná.', duration, warning)
             successLayer = (False, layer)
             return successLayer
         
         if not layer.type() == 0:
             if sender:
                 sender.set_text_statusbar.emit(
-                    u'Aktivní vrstva není vektorová.', duration)
+                    u'Aktivní vrstva není vektorová.', duration, warning)
             successLayer = (False, layer)
             return successLayer
         
@@ -408,7 +412,7 @@ class DockWidget(QDockWidget):
                    for column in self.requiredColumns):
             if sender:
                 sender.set_text_statusbar.emit(
-                    u'Aktivní vrstva není VFK.', duration)
+                    u'Aktivní vrstva není VFK.', duration, warning)
             successLayer = (False, layer)
             return successLayer
         
@@ -434,11 +438,12 @@ class DockWidget(QDockWidget):
         """
         
         duration = 10
+        warning = True
         
         if not perimeterLayer:
             if sender:
                 sender.set_text_statusbar.emit(
-                    u'Žádná vrstva obvodu.', duration)
+                    u'Žádná vrstva obvodu.', duration, warning)
             return False
         
         perimeterFieldNames = \
@@ -448,7 +453,8 @@ class DockWidget(QDockWidget):
                    for column in self.requiredColumns):
             if sender:
                 sender.set_text_statusbar.emit(
-                    u'Vrstva obvodu nebyla vytvořena PU Pluginem.', duration)
+                    u'Vrstva obvodu nebyla vytvořena PU Pluginem.',
+                    duration, warning)
             return False
         
         perimeterFileInfo = QFileInfo(perimeterLayer.source())
@@ -457,7 +463,7 @@ class DockWidget(QDockWidget):
             if sender:
                 sender.set_text_statusbar.emit(
                     u'Vrstva obvodu není obvod vytvořený PU Pluginem.',
-                    duration)
+                    duration, warning)
             return False
         
         if layer:
@@ -468,7 +474,7 @@ class DockWidget(QDockWidget):
                 if sender:
                     self.set_text_statusbar.emit(
                         u'Aktivní vrstva a vrstva obvodu nemají stejný '
-                        u'souřadnicový systém.', duration)
+                        u'souřadnicový systém.', duration, warning)
                 return False
         
         return True

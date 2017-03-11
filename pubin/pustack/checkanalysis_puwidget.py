@@ -37,7 +37,7 @@ from puca import (perimeter_pucawidget, notinspi_pucawidget,
 class CheckAnalysisPuWidget(PuWidget):
     """A widget with checks and analyzes."""
     
-    set_text_statusbar = pyqtSignal(str, int)
+    set_text_statusbar = pyqtSignal(str, int, bool)
     
     def _setup_self(self):
         """Sets up self."""

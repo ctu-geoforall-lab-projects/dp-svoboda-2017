@@ -44,7 +44,7 @@ class NotInSpiPuCaWidget(PuCaWidget):
         
         try:
             self.pW.set_text_statusbar.emit(
-                u'Provádím kontrolu - není v SPI...', 0)
+                u'Provádím kontrolu - není v SPI...', 0, False)
             
             expression = QgsExpression(
                 "\"{}\" is null"
@@ -55,19 +55,23 @@ class NotInSpiPuCaWidget(PuCaWidget):
             featureCount = layer.selectedFeatureCount()
             
             duration = 10
+            warning = False
             
             if featureCount == 0:
                 self.pW.set_text_statusbar.emit(
-                    u'V SPI jsou všechny parcely.', duration)
+                    u'V SPI jsou všechny parcely.', duration, warning)
             elif featureCount == 1:
                 self.pW.set_text_statusbar.emit(
-                    u'V SPI není {} parcela.'.format(featureCount), duration)
+                    u'V SPI není {} parcela.'.format(featureCount),
+                    duration, warning)
             elif 1 < featureCount < 5:
                 self.pW.set_text_statusbar.emit(
-                    u'V SPI nejsou {} parcely.'.format(featureCount), duration)
+                    u'V SPI nejsou {} parcely.'.format(featureCount),
+                    duration, warning)
             elif 5 <= featureCount:
                 self.pW.set_text_statusbar.emit(
-                    u'V SPI není {} parcel.'.format(featureCount), duration)
+                    u'V SPI není {} parcel.'.format(featureCount),
+                    duration, warning)
         except self.dW.puError:
             QgsApplication.processEvents()
         except:

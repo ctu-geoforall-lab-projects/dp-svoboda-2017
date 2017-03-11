@@ -54,7 +54,7 @@ class AreaPuCaWidget(PuCaWidget):
             editing = self.dW.check_editing()
             
             self.pW.set_text_statusbar.emit(
-                u'Provádím kontrolu - výměra nad mezní odchylkou...', 0)
+                u'Provádím kontrolu - výměra nad mezní odchylkou...', 0, False)
             
             expression = QgsExpression("$geometry is not null")
             
@@ -152,19 +152,20 @@ class AreaPuCaWidget(PuCaWidget):
             featureCount = layer.selectedFeatureCount()
             
             duration = 10
+            warning = False
             
             if featureCount == 0:
                 self.pW.set_text_statusbar.emit(
                     u'Mezní odchylka nebyla překročena u žádné parcely.',
-                    duration)
+                    duration, warning)
             elif featureCount == 1:
                 self.pW.set_text_statusbar.emit(
                     u'Mezní odchylka byla překročena u {} parcely.'
-                    .format(featureCount), duration)
+                    .format(featureCount), duration, warning)
             elif 1 < featureCount:
                 self.pW.set_text_statusbar.emit(
                     u'Mezní odchylka byla překročena u {} parcel.'
-                    .format(featureCount), duration)
+                    .format(featureCount), duration, warning)
         except self.dW.puError:
             QgsApplication.processEvents()
         except:

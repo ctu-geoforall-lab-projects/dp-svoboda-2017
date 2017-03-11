@@ -44,7 +44,7 @@ class NotInMapPuCaWidget(PuCaWidget):
         
         try:
             self.pW.set_text_statusbar.emit(
-                u'Provádím kontrolu - není v mapě...', 0)
+                u'Provádím kontrolu - není v mapě...', 0, False)
             
             expression = QgsExpression("$geometry is null")
             
@@ -53,20 +53,23 @@ class NotInMapPuCaWidget(PuCaWidget):
             featureCount = layer.selectedFeatureCount()
             
             duration = 10
+            warning = False
             
             if featureCount == 0:
                 self.pW.set_text_statusbar.emit(
-                    u'V mapě jsou všechny parcely.', duration)
+                    u'V mapě jsou všechny parcely.', duration, warning)
             elif featureCount == 1:
                 self.pW.set_text_statusbar.emit(
-                    u'V mapě není {} parcela.'.format(featureCount), duration)
+                    u'V mapě není {} parcela.'.format(featureCount),
+                    duration, warning)
             elif 1 < featureCount < 5:
                 self.pW.set_text_statusbar.emit(
                     u'V mapě nejsou {} parcely.'.format(featureCount),
-                    duration)
+                    duration, warning)
             elif 5 <= featureCount:
                 self.pW.set_text_statusbar.emit(
-                    u'V mapě není {} parcel.'.format(featureCount), duration)
+                    u'V mapě není {} parcel.'.format(featureCount),
+                    duration, warning)
         except self.dW.puError:
             QgsApplication.processEvents()
         except:
