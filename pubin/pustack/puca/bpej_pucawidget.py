@@ -119,6 +119,11 @@ class BpejPuCaWidget(PuCaWidget):
                 self.pW.set_text_statusbar.emit(u'Žádná vrstva BPEJ.', 10)
                 return
             
+            if bpejLayer.featureCount() == 0:
+                self.pW.set_text_statusbar.emit(
+                    u'Vrstva BPEJ neobsahuje žádný prvek.', 10)
+                return
+            
             bpejLayerCrs = bpejLayer.crs().authid()
             layerCrs = layer.crs().authid()
             

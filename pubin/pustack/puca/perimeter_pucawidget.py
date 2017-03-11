@@ -116,6 +116,11 @@ class PerimeterPuCaWidget(PuCaWidget):
                 perimeterLayer, layer, self.pW):
                 return
             
+            if perimeterLayer.featureCount() == 0:
+                self.pW.set_text_statusbar.emit(
+                    u'Vrstva obvodu neobsahuje žádný prvek.', 10)
+                return
+            
             self.pW.set_text_statusbar.emit(
                 u'Provádím kontrolu - obvodem...', 0)
             
