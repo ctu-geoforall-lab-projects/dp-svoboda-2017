@@ -664,7 +664,7 @@ class EditPuWidget(PuWidget):
                 self.dW.select_features_by_expression(layer, expression)
             else:
                 self.dW.select_features_by_field_value(
-                    layer, self.categoryName, categoryValue)
+                    layer, self.categoryName, self.categoryValue)
             
             currentCategory = self.categoryComboBox.currentText()
             
