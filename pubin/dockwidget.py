@@ -725,6 +725,9 @@ class DockWidget(QDockWidget):
                         self.stackedWidget\
                             .editPuWidget.set_perimeter_layer(layer, False)
                         self.stackedWidget\
+                            .editPuWidget.set_perimeter_layer_table_config(
+                                layer)
+                        self.stackedWidget\
                             .editPuWidget.sync_perimeter_map_layer_combo_box()
         except:
             self.display_error_messages(

@@ -422,9 +422,9 @@ class EditPuWidget(PuWidget):
             self.set_perimeter_layer(perimeterLayer, False)
             self.sync_perimeter_map_layer_combo_box()
             
-            self._set_perimeter_layer_table_config(perimeterLayer)
+            self.set_perimeter_layer_table_config(perimeterLayer)
     
-    def _set_perimeter_layer_table_config(self, perimeterLayer):
+    def set_perimeter_layer_table_config(self, perimeterLayer):
         """Sets perimeter layer table config.
         
         Args:
