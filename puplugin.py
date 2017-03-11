@@ -49,12 +49,10 @@ class puPlugin(object):
     def initGui(self):
         """Initializes GUI."""
         
-        iconsDir = QDir(self.pluginDir.path() + u'/data/icons')
-        
         self.puAction = QAction(self.iface.mainWindow())
         self.puAction.setText(self.name)
         puIcon = QIcon()
-        puIcon.addPixmap(QPixmap(iconsDir.filePath(u'puplugin.png')))
+        puIcon.addPixmap(QPixmap(self.pluginDir.filePath(u'puplugin.png')))
         self.puAction.setIcon(puIcon)
         self.puAction.triggered.connect(self.run)
 
