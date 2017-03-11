@@ -207,7 +207,18 @@ class BpejPuCaWidget(PuCaWidget):
                     self.iface.actionToggleEditing()
                 
                 if len(missingBpejCodes) != 0:
-                    missingBpejCodesStr = ', '.join(missingBpejCodes)
+                    fields = bpejLayer.pendingFields()
+                    
+                    for field in fields:
+                        if field.name() == bpejField:
+                            bpejFieldTypeName = field.typeName()
+                            break
+                    
+                    if bpejFieldTypeName.lower() == u'string':
+                        missingBpejCodesStr = \
+                            '\'' + '\', \''.join(missingBpejCodes) + '\''
+                    else:
+                        missingBpejCodesStr = ', '.join(missingBpejCodes)
                     
                     expression = QgsExpression(
                         "\"{}\" in ({})".format(bpejField, missingBpejCodesStr))
