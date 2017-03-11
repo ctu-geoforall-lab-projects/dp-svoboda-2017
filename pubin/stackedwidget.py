@@ -33,7 +33,7 @@ class StackedWidget(QStackedWidget):
     """A stacked widget."""
     
     def __init__(
-            self, parentWidget, dockWidgetName, iface, pluginDir, lockPlatform):
+            self, parentWidget, dockWidgetName, iface, pluginDir):
         """Constructor.
         
         Args:
@@ -41,8 +41,6 @@ class StackedWidget(QStackedWidget):
             dockWidgetName (str): A name of the dock widget.
             iface (QgisInterface): A reference to the QgisInterface.
             pluginDir (QDir): A plugin directory.
-            lockPlatform (bool): True when the platform creates locks on files,
-                False otherwise.
         
         """
         
@@ -50,7 +48,6 @@ class StackedWidget(QStackedWidget):
         self.dWName = dockWidgetName
         self.iface = iface
         self.pluginDir = pluginDir
-        self.lockPlatform = lockPlatform
         
         super(StackedWidget, self).__init__(self.dW)
         
@@ -69,16 +66,14 @@ class StackedWidget(QStackedWidget):
         """Builds own widgets."""
         
         self.loadVfkPuWidget = loadvfk_puwidget.LoadVfkPuWidget(
-            self, self.dWName, self.iface, self.dW, self.pluginDir,
-            self.lockPlatform)
+            self, self.dWName, self.iface, self.dW, self.pluginDir)
         self.dW.toolBar.loadVfkAction.triggered.connect(
             self.openTabSignalMapper.map)
         self.openTabSignalMapper.setMapping(self.dW.toolBar.loadVfkAction, 0)
         self.addWidget(self.loadVfkPuWidget)
         
         self.editPuWidget = edit_puwidget.EditPuWidget(
-            self, self.dWName, self.iface, self.dW, self.pluginDir,
-            self.lockPlatform)
+            self, self.dWName, self.iface, self.dW, self.pluginDir)
         self.dW.toolBar.editAction.triggered.connect(
             self.openTabSignalMapper.map)
         self.openTabSignalMapper.setMapping(self.dW.toolBar.editAction, 1)
@@ -86,8 +81,7 @@ class StackedWidget(QStackedWidget):
         
         self.checkAnalysisPuWidget = \
             checkanalysis_puwidget.CheckAnalysisPuWidget(
-                self, self.dWName, self.iface, self.dW, self.pluginDir,
-                self.lockPlatform)
+                self, self.dWName, self.iface, self.dW, self.pluginDir)
         self.dW.toolBar.checkAnalysisAction.triggered.connect(
             self.openTabSignalMapper.map)
         self.openTabSignalMapper.setMapping(

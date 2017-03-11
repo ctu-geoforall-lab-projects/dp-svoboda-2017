@@ -319,18 +319,22 @@ class EditPuWidget(PuWidget):
                     layer, perimeterLayerFilePath, self.categoryName,
                     perimeterLayerName, loadedLayer)
                 
-                layer.selectByIds(selectedFeaturesIds)
-                
                 QgsApplication.processEvents()
                 
+                loadedLayer = self.dW.check_loaded_layers(
+                    perimeterLayerFilePath)
+                
                 if loadedLayer:
-                    self.dW.set_layer_style(perimeterLayer, 'perimeter')
+                    self.dW.set_layer_style(loadedLayer, 'perimeter')
                     self.iface.actionDraw().trigger()
+                    self.set_perimeter_layer(loadedLayer, False)
                 else:
                     self._add_perimeter_layer(perimeterLayer)
+                    self.set_perimeter_layer(perimeterLayer, False)
                 
-                self.set_perimeter_layer(perimeterLayer, False)
                 self._sync_perimeter_map_layer_combo_box()
+                
+                layer.selectByIds(selectedFeaturesIds)
                 
                 self.iface.setActiveLayer(layer)
                 
@@ -378,7 +382,7 @@ class EditPuWidget(PuWidget):
         tempPerimeterLayer = QgsVectorLayer(
             tempPerimeterLayerPath, tempPerimeterLayerName, 'ogr')
         
-        if loadedLayer and self.lockPlatform:
+        if loadedLayer:
             QgsMapLayerRegistry.instance().removeMapLayer(loadedLayer)
         
         QgsApplication.processEvents()
@@ -390,7 +394,7 @@ class EditPuWidget(PuWidget):
         perimeterLayer = QgsVectorLayer(
             perimeterLayerFilePath, perimeterLayerName, 'ogr')
         
-        if loadedLayer and self.lockPlatform:
+        if loadedLayer:
             self._add_perimeter_layer(perimeterLayer)
         
         expression = QgsExpression(
@@ -509,6 +513,35 @@ class EditPuWidget(PuWidget):
         
         QgsApplication.processEvents()
         
+        self.update_perimeter_layer(layer, perimeterLayer)
+        
+        layer.selectByIds(selectedFeaturesIds)
+        
+        if featureCount == 1:
+            self.set_text_statusbar.emit(
+                u'Vybraná parcela byla zařazena do kategorie "{}".'
+                .format(currentCategory), 20)
+        else:
+            self.set_text_statusbar.emit(
+                u'Vybrané parcely byly zařazeny do kategorie "{}".'
+                .format(currentCategory), 20)
+    
+    def update_perimeter_layer(self, layer=None, perimeterLayer=None):
+        """Updates the perimeter layer.
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the layer.
+            perimeterLayer (QgsVectorLayer): A reference to the perimeter
+                layer.
+        
+        """
+        
+        if not layer:
+            layer = self.iface.activeLayer()
+        
+        if not perimeterLayer:
+            perimeterLayer = self.perimeterMapLayerComboBox.currentLayer()
+        
         if not self.dW.check_perimeter_layer(perimeterLayer, layer):
             # SpatiaLite fix - start
             perimeterString = u'-obvod.pu.shp'
@@ -533,13 +566,16 @@ class EditPuWidget(PuWidget):
             
             QgsApplication.processEvents()
             
+            loadedLayer = self.dW.check_loaded_layers(perimeterLayerFilePath)
+            
             if loadedLayer:
-                self.dW.set_layer_style(perimeterLayer, 'perimeter')
+                self.dW.set_layer_style(loadedLayer, 'perimeter')
                 self.iface.actionDraw().trigger()
+                self.set_perimeter_layer(loadedLayer, False)
             else:
                 self._add_perimeter_layer(perimeterLayer)
+                self.set_perimeter_layer(perimeterLayer, False)
             
-            self.set_perimeter_layer(perimeterLayer, False)
             self._sync_perimeter_map_layer_combo_box()
         else:
             perimeterLayerFilePath = perimeterLayer.source()
@@ -549,26 +585,14 @@ class EditPuWidget(PuWidget):
                 layer, perimeterLayerFilePath, self.categoryName,
                 perimeterLayerName, perimeterLayer)
             
-            if self.lockPlatform:
-                self.set_perimeter_layer(perimeterLayer, False)
-                self._sync_perimeter_map_layer_combo_box()
+            self.set_perimeter_layer(perimeterLayer, False)
+            self._sync_perimeter_map_layer_combo_box()
         
         QgsApplication.processEvents()
-        
-        layer.selectByIds(selectedFeaturesIds)
         
         self.iface.actionDraw().trigger()
     
         self.iface.setActiveLayer(layer)
-        
-        if featureCount == 1:
-            self.set_text_statusbar.emit(
-                u'Vybraná parcela byla zařazena do kategorie "{}".'
-                .format(currentCategory), 20)
-        else:
-            self.set_text_statusbar.emit(
-                u'Vybrané parcely byly zařazeny do kategorie "{}".'
-                .format(currentCategory), 20)
     
     def _set_pu_category_by_perimeter(self, layer, perimeterLayer):
         """Sets a categoryValue to categoryName column for all features

@@ -29,8 +29,9 @@ class PuCaWidget(QWidget):
     """A subclass of QWidget."""
     
     def __init__(
-            self, parentWidget, dockWidgetName, iface, dockWidget, pluginDir,
-            lockPlatform, objectName):
+            self,
+            parentWidget, dockWidgetName, iface, dockWidget, pluginDir,
+            objectName):
         """Constructor.
         
         Args:
@@ -39,8 +40,6 @@ class PuCaWidget(QWidget):
             iface (QgisInterface): A reference to the QgisInterface.
             dockWidget (QWidget): A reference to the dock widget.
             pluginDir (QDir): A plugin directory.
-            lockPlatform (bool): True when the platform creates locks on files,
-                False otherwise.
             objectName (str): A name of the object.
         
         """
@@ -50,7 +49,6 @@ class PuCaWidget(QWidget):
         self.iface = iface
         self.dW = dockWidget
         self.pluginDir = pluginDir
-        self.lockPlatform = lockPlatform
         
         super(PuCaWidget, self).__init__(self.pW)
         

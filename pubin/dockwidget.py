@@ -31,7 +31,6 @@ from qgis.utils import QGis
 
 import traceback
 import sys
-import platform
 
 from statusbar import StatusBar
 from toolbar import ToolBar
@@ -68,11 +67,6 @@ class DockWidget(QDockWidget):
         else:
             self.fixedSqliteDriver = True
         # SpatiaLite fix - end
-        
-        if platform.system() == 'Windows':
-            self.lockPlatform = True
-        else:
-            self.lockPlatform = False
         
         self.puMajorParNumberColumnName = 'PU_KMENOVE_CISLO_PAR'
         self.puMinorParNumberColumnName = 'PU_PODDELENI_CISLA_PAR'
@@ -165,16 +159,16 @@ class DockWidget(QDockWidget):
         """Builds own widgets."""
         
         self.lastActiveLayer = None
-        self._disconnect_connect_ensure_unique_field_values()
+        self._disconnect_connect_from_to_iface()
         self.iface.currentLayerChanged.connect(
-            self._disconnect_connect_ensure_unique_field_values)
+            self._disconnect_connect_from_to_iface)
         
         self.toolBar = ToolBar(
-            self, self.dWName, self.iface, self.pluginDir, self.lockPlatform)
+            self, self.dWName, self.iface, self.pluginDir)
         self.gridLayout.addWidget(self.toolBar, 0, 0, 1, 1)
         
         self.statusBar = StatusBar(
-            self, self.dWName, self.iface, self.pluginDir, self.lockPlatform)
+            self, self.dWName, self.iface, self.pluginDir)
         self.gridLayout.addWidget(self.statusBar, 2, 0, 1, 1)
         
         self.frame = QFrame(self)
@@ -184,7 +178,7 @@ class DockWidget(QDockWidget):
         self.gridLayout.addWidget(self.frame, 1, 0, 1, 1)
         
         self.stackedWidget = StackedWidget(
-            self, self.dWName, self.iface, self.pluginDir, self.lockPlatform)
+            self, self.dWName, self.iface, self.pluginDir)
         self.gridLayout.addWidget(self.stackedWidget, 1, 0, 1, 1)
     
     def display_error_messages(
@@ -583,27 +577,19 @@ class DockWidget(QDockWidget):
     def disconnect_from_iface(self):
         """Disconnects functions from the QgsInterface."""
         
-        self._disconnect_connect_ensure_unique_field_values(False)
+        self._disconnect_connect_from_to_iface(False)
         
         self.iface.currentLayerChanged.disconnect(
-            self._disconnect_connect_ensure_unique_field_values)
+            self._disconnect_connect_from_to_iface)
         
         QgsApplication.processEvents()
         
-    def _disconnect_connect_ensure_unique_field_values(self, connection=True):
-        """Disconnects (and connects) function for ensuring unique field values.
-        
-        First it checks if lastActiveLayer was created by PU Plugin.
-        If so, it disconnects function that ensures unique field values
-        from beforeCommitChanges signal.
-        Then it checks if the active layer was created by PU Plugin.
-        If connection is True it connects function that ensures unique field
-        values to beforeCommitChanges signal.
+    def _disconnect_connect_from_to_iface(self, connection=True):
+        """Disconnects (and connects) functions from (to) iface.
         
         Args:
             connection (bool):
-                True for connecting function that ensures unique field values
-                to beforeCommitChanges signal, False for not connecting.
+                True for connecting to iface, False for not connecting.
         
         """
         
@@ -613,12 +599,18 @@ class DockWidget(QDockWidget):
             if succes:
                 layer.beforeCommitChanges.disconnect(
                     self._ensure_unique_field_values)
+                
+                layer.committedGeometriesChanges.disconnect(
+                    self._update_perimeter_layer)
             
             succes, self.lastActiveLayer = self.check_layer(None)
             
             if succes and connection:
                 self.lastActiveLayer.beforeCommitChanges.connect(
                     self._ensure_unique_field_values)
+                
+                self.lastActiveLayer.committedGeometriesChanges.connect(
+                    self._update_perimeter_layer)
         except:
             self.display_error_messages(
                 self.stackedWidget.currentWidget(),
@@ -693,4 +685,9 @@ class DockWidget(QDockWidget):
             self.display_error_messages(
                 self.stackedWidget.currentWidget(),
                 u'Error in function that ensures unique field values.')
+    
+    def _update_perimeter_layer(self):
+        """Updates the perimeter layer."""
+        
+        self.stackedWidget.editPuWidget.update_perimeter_layer()
 

@@ -32,7 +32,7 @@ class ToolBar(QToolBar):
     """A tool bar."""
     
     def __init__(
-            self, parentWidget, dockWidgetName, iface, pluginDir, lockPlatform):
+            self, parentWidget, dockWidgetName, iface, pluginDir):
         """Constructor.
         
         Args:
@@ -40,8 +40,6 @@ class ToolBar(QToolBar):
             dockWidgetName (str): A name of the dock widget.
             iface (QgisInterface): A reference to the QgisInterface.
             pluginDir (QDir): A plugin directory.
-            lockPlatform (bool): True when the platform creates locks on files,
-                False otherwise.
         
         """
         
@@ -49,7 +47,6 @@ class ToolBar(QToolBar):
         self.dWName = dockWidgetName
         self.iface = iface
         self.pluginDir = pluginDir
-        self.lockPlatform = lockPlatform
         
         super(ToolBar, self).__init__(self.dW)
         
