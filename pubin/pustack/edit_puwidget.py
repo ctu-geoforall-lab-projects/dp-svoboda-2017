@@ -325,7 +325,6 @@ class EditPuWidget(PuWidget):
                     perimeterLayerFilePath)
                 
                 if loadedLayer:
-                    self.dW.set_layer_style(loadedLayer, 'perimeter')
                     self.iface.actionDraw().trigger()
                     self.set_perimeter_layer(loadedLayer, False)
                 else:
@@ -414,8 +413,6 @@ class EditPuWidget(PuWidget):
         """
         
         if perimeterLayer.isValid():
-            self.dW.set_layer_style(perimeterLayer, 'perimeter')
-            
             QgsMapLayerRegistry.instance().addMapLayer(perimeterLayer)
             
             self.set_perimeter_layer(perimeterLayer, False)
@@ -569,7 +566,6 @@ class EditPuWidget(PuWidget):
             loadedLayer = self.dW.check_loaded_layers(perimeterLayerFilePath)
             
             if loadedLayer:
-                self.dW.set_layer_style(loadedLayer, 'perimeter')
                 self.iface.actionDraw().trigger()
                 self.set_perimeter_layer(loadedLayer, False)
             else:

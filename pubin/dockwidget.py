@@ -163,6 +163,9 @@ class DockWidget(QDockWidget):
         self.iface.currentLayerChanged.connect(
             self._disconnect_connect_from_to_iface)
         
+        QgsMapLayerRegistry.instance().legendLayersAdded.connect(
+            self._check_added_perimeter_layer)
+        
         self.toolBar = ToolBar(
             self, self.dWName, self.iface, self.pluginDir)
         self.gridLayout.addWidget(self.toolBar, 0, 0, 1, 1)
@@ -411,7 +414,7 @@ class DockWidget(QDockWidget):
         successLayer = (True, layer)
         return successLayer
     
-    def check_perimeter_layer(self, perimeterLayer, layer, sender=None):
+    def check_perimeter_layer(self, perimeterLayer, layer=None, sender=None):
         """Checks the perimeter layer.
         
         Checks if the perimeter layer contains all required columns,
@@ -433,7 +436,8 @@ class DockWidget(QDockWidget):
         
         if not perimeterLayer:
             if sender:
-                sender.set_text_statusbar.emit(u'Žádná vrstva obvodu.', duration)
+                sender.set_text_statusbar.emit(
+                    u'Žádná vrstva obvodu.', duration)
             return False
         
         perimeterFieldNames = \
@@ -455,15 +459,16 @@ class DockWidget(QDockWidget):
                     duration)
             return False
         
-        perimeterLayerCrs = perimeterLayer.crs().authid()
-        layerCrs = layer.crs().authid()
-        
-        if perimeterLayerCrs != layerCrs:
-            if sender:
-                self.set_text_statusbar.emit(
-                    u'Aktivní vrstva a vrstva obvodu nemají stejný '
-                    u'souřadnicový systém.', duration)
-            return False
+        if layer:
+            perimeterLayerCrs = perimeterLayer.crs().authid()
+            layerCrs = layer.crs().authid()
+            
+            if perimeterLayerCrs != layerCrs:
+                if sender:
+                    self.set_text_statusbar.emit(
+                        u'Aktivní vrstva a vrstva obvodu nemají stejný '
+                        u'souřadnicový systém.', duration)
+                return False
         
         return True
     
@@ -582,6 +587,9 @@ class DockWidget(QDockWidget):
         self.iface.currentLayerChanged.disconnect(
             self._disconnect_connect_from_to_iface)
         
+        QgsMapLayerRegistry.instance().legendLayersAdded.disconnect(
+            self._check_added_perimeter_layer)
+        
         QgsApplication.processEvents()
         
     def _disconnect_connect_from_to_iface(self, connection=True):
@@ -690,4 +698,23 @@ class DockWidget(QDockWidget):
         """Updates the perimeter layer."""
         
         self.stackedWidget.editPuWidget.update_perimeter_layer()
+    
+    def _check_added_perimeter_layer(self):
+        """Checks if a perimeter layer was added.
+        
+        If so, sets the perimeter layer style.
+        
+        """
+        
+        try:            
+            layers = self.iface.legendInterface().layers()
+            
+            for layer in layers:
+                if self.check_perimeter_layer(layer):
+                    self.set_layer_style(layer, 'perimeter')
+        except:
+            self.display_error_messages(
+                self.stackedWidget.currentWidget(),
+                u'Error in function that checks '
+                u'if a perimeter layer was added.')
 
