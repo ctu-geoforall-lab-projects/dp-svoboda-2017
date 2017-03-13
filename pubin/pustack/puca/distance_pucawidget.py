@@ -79,7 +79,7 @@ class DistancePuCaWidget(PuCaWidget):
             self.set_ref_point_layer(None)
     
     def _rollback_ref_point_layer(self):
-        """Rollbacks the reference point layer."""
+        """Rolls the reference point layer back."""
         
         if self.lastRefPointLayer == None:
             self.set_ref_point_layer(self.lastRefPointLayer, False)

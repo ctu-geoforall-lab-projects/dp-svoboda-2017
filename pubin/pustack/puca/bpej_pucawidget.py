@@ -95,7 +95,7 @@ class BpejPuCaWidget(PuCaWidget):
             self.set_bpej_layer(None)
     
     def _rollback_bpej_layer(self):
-        """Rollbacks the BPEJ layer."""
+        """Rolls the BPEJ layer back."""
         
         if self.lastBpejLayer == None:
             self.set_bpej_layer(self.lastBpejLayer, False)
@@ -285,7 +285,13 @@ class BpejPuCaWidget(PuCaWidget):
         return bpejField
     
     def _get_bpej_code_prices(self):
-        """Gets BPEJ code prices."""
+        """Gets BPEJ code prices.
+        
+        Returns:
+            dict: A dictionary with BPEJ codes as keys (str)
+                and prices as values (flt).
+        
+        """
         
         formatTimeStr = '%d.%m.%Y'
         
@@ -345,6 +351,10 @@ class BpejPuCaWidget(PuCaWidget):
         Gets an URL for testing the internet connection
         and an URL of the BPEJ ZIP file.
         
+        Returns:
+            str: An URL for testing the internet connection.
+            str: An URL of the BPEJ ZIP file.
+        
         """
         
         config = RawConfigParser()
@@ -355,7 +365,6 @@ class BpejPuCaWidget(PuCaWidget):
         bpejZipUrl = config.get('BPEJ', 'bpejzipurl')
         
         return testInternetUrl, bpejZipUrl
-        
     
     def _download_bpej_csv(
             self,

@@ -93,7 +93,7 @@ class PerimeterPuCaWidget(PuCaWidget):
             self.set_perimeter_layer(None)
     
     def _rollback_perimeter_layer(self):
-        """Rollbacks the perimeter layer."""
+        """Rolls the perimeter layer back."""
         
         if self.lastPerimeterLayer == None:
             self.set_perimeter_layer(self.lastPerimeterLayer, False)

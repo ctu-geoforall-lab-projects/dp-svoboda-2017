@@ -270,7 +270,7 @@ class EditPuWidget(PuWidget):
             self.set_perimeter_layer(None)
     
     def _rollback_perimeter_layer(self):
-        """Rollbacks the perimeter layer."""
+        """Rolls the perimeter layer back."""
         
         if self.lastPerimeterLayer == None:
             self.set_perimeter_layer(self.lastPerimeterLayer, False)
@@ -489,7 +489,7 @@ class EditPuWidget(PuWidget):
     def _set_pu_category_for_selected(self, layer, perimeterLayer):
         """Sets a categoryValue to categoryName column for selected features.
         
-        Also adds selected features to the perimeter layer.
+        Also updates the perimeter layer.
         
         Args:
             layer (QgsVectorLayer): A reference to the layer.
