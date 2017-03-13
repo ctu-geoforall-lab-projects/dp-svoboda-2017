@@ -387,6 +387,7 @@ class EditPuWidget(PuWidget):
             tempPerimeterLayerPath, tempPerimeterLayerName, 'ogr')
         
         if loadedLayer:
+            perimeterLayerName = loadedLayer.name()
             QgsMapLayerRegistry.instance().removeMapLayer(loadedLayer)
         
         QgsApplication.processEvents()
