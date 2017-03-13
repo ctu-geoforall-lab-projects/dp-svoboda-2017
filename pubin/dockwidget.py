@@ -206,8 +206,8 @@ class DockWidget(QDockWidget):
         """
         
         warning = True
-        
-        sender.set_text_statusbar.emit(u'', 1, warning)
+        if sender:
+            sender.set_text_statusbar.emit(u'', 1, warning)
         
         pluginName = self.name
         
@@ -219,7 +219,7 @@ class DockWidget(QDockWidget):
             puTraceback = traceback.format_exc()
             QgsMessageLog.logMessage(puTraceback, pluginName)
         
-        if czeStatusBarMessage:
+        if czeStatusBarMessage and sender:
             sender.set_text_statusbar.emit(
                 czeStatusBarMessage, duration, warning)
         
@@ -617,6 +617,9 @@ class DockWidget(QDockWidget):
                 
                 layer.committedGeometriesChanges.disconnect(
                     self._update_perimeter_layer)
+                    
+                layer.committedFeaturesRemoved.disconnect(
+                    self._update_perimeter_layer)
             
             succes, self.lastActiveLayer = self.check_layer(None)
             
@@ -626,9 +629,12 @@ class DockWidget(QDockWidget):
                 
                 self.lastActiveLayer.committedGeometriesChanges.connect(
                     self._update_perimeter_layer)
+                    
+                self.lastActiveLayer.committedFeaturesRemoved.connect(
+                    self._update_perimeter_layer)
         except:
             self.display_error_messages(
-                self.stackedWidget.currentWidget(),
+                None,
                 u'Error connecting/disconnecting '
                 u'function that ensures unique field values.')
     
@@ -731,7 +737,7 @@ class DockWidget(QDockWidget):
                             .editPuWidget.sync_perimeter_map_layer_combo_box()
         except:
             self.display_error_messages(
-                self.stackedWidget.currentWidget(),
+                None,
                 u'Error in function that checks '
                 u'if a perimeter layer was added.')
 
