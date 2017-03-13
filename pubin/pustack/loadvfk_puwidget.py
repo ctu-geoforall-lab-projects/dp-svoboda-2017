@@ -302,9 +302,8 @@ class LoadVfkPuWidget(PuWidget):
             layerCode (str): A code of the layer.
         
         Returns:
-            tuple:
-                [0] (int): A number of layers in the data source.
-                [1] (list): A list of layer names in the data source.
+            int: A number of layers in the data source.
+            list: A list of layer names in the data source.
         
         Raises:
             dw.puError: When there is no layer code layer in the data source.

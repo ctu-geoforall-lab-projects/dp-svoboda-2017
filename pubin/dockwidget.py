@@ -39,7 +39,7 @@ from stackedwidget import StackedWidget
 
 
 class DockWidget(QDockWidget):
-    """A main widget of the plugin."""
+    """The main widget of the plugin."""
     
     def __init__(self, iface, pluginDir, name):
         """Constructor.
@@ -372,10 +372,9 @@ class DockWidget(QDockWidget):
             layer (QgsVectorLayer): A reference to the layer.
         
         Returns:
-            tuple:
-                [0] (bool): True when there is a vector layer that contains
-                    all required columns, False otherwise.
-                [1] (QgsVectorLayer): A reference to the layer.
+            bool: True when there is a vector layer that contains
+                all required columns, False otherwise.
+            QgsVectorLayer: A reference to the layer.
         
         """
         
@@ -603,8 +602,8 @@ class DockWidget(QDockWidget):
         """Disconnects (and connects) functions from (to) iface.
         
         Args:
-            connection (bool):
-                True for connecting to iface, False for not connecting.
+            connection (bool): True for connecting to iface,
+                False for not connecting.
         
         """
         
