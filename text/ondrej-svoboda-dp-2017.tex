@@ -1,0 +1,217 @@
+% ========================================================================
+% 
+% DIPLOMOVÁ PRÁCE - Zásuvný modul QGIS pro zpracování přípravné fáze komplexních pozemkových úprav
+% 
+% Ondřej Svoboda
+% 
+% ========================================================================
+
+\documentclass[
+  12pt,         			% velikost základního písma je 12 bodů
+  a4paper,      			% formát papíru je A4
+  oneside,       			% Oboustranný tisk
+  pdftex,				    % překlad bude proveden programem 'pdftex' do PDF
+]{report}       			% dokument třídy 'zpráva'
+
+
+\newcommand{\Fbox}[1]{\fbox{\strut#1}}
+
+\usepackage[czech, english]{babel}	% použití češtiny, angličtiny
+\usepackage[utf8]{inputenc}			% kódování zdrojových souborů je UTF8
+
+\usepackage[square,sort,comma,numbers]{natbib}
+
+\usepackage{caption}
+\usepackage{subcaption}
+\captionsetup{font=small}
+\usepackage{enumitem} 
+\setlist{leftmargin=*} % bez odsazení
+
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatletter
+
+\usepackage[dvips]{graphicx}   
+\usepackage{color}
+\usepackage{transparent}
+\usepackage{wrapfig}
+\usepackage{float} 
+
+\usepackage{cmap}           
+\usepackage[T1]{fontenc}    
+
+\usepackage{textcomp}
+\usepackage[compact]{titlesec}
+\usepackage{amsmath}
+\addtolength{\jot}{1em} 
+
+\usepackage{chngcntr}
+\counterwithout{footnote}{chapter}
+
+\usepackage{acronym}
+
+\usepackage[
+    unicode,                
+    breaklinks=true,        
+    hypertexnames=false,
+    colorlinks=true, % true for print version
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+]{hyperref}         
+
+\usepackage{url}
+\usepackage{fancyhdr}
+%\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{algcompatible}
+\renewcommand{\ALG@name}{Pseudokód}% update algorithm name
+\def\ALG@name{Pseudokód}
+
+\usepackage[
+  cvutstyle,          
+  bachelor           
+]{thesiscvut}
+
+
+\newif\ifweb
+\ifx\ifHtml\undefined % mimo HTML.
+    \webfalse
+\else % v HTML.
+    \webtrue
+\fi 
+
+\renewcommand{\figurename}{Obrázek}
+\def\figurename{Obrázek}
+
+% ========================================================================
+% Definice informací o dokumentu
+% ========================================================================
+
+% název práce
+\nazev{Zásuvný modul QGIS pro zpracování přípravné fáze komplexních pozemkových úprav}
+{Complex Land Consolidation Preliminary Stage QGIS Plugin}
+
+% jméno a příjmení autora
+\autor{Ondřej}{Svoboda}
+
+% jméno a příjmení vedoucího práce včetně titulů
+\garant{Ing.~Martin~Landa,~Ph.D.}
+
+% označení oboru studia
+\oborstudia{Geomatika}{}
+
+% označení ústavu
+\ustav{Katedra geomatiky}{}
+
+% rok obhajoby
+\rok{2017}
+
+% měsíc obhajoby
+\mesic{červen}
+
+% místo obhajoby
+\misto{Praha}
+
+% abstrakt
+\abstrakt 
+{}
+{}
+
+% klíčová slova
+\klicovaslova
+{GIS, QGIS, zásuvný~modul, python, pozemkové úpravy}
+{GIS, QGIS, plugin, python, land consolidation}
+
+% ========================================================================
+% Nastavení polí ve vlastnostech dokumentu PDF
+% ========================================================================
+\nastavenipdf
+
+% začátek dokumentu
+\begin{document}
+
+\catcode`\-=12  % pro vypnutí aktivního znaku '-' používaného např. v \cline 
+
+% aktivace záhlaví
+\zahlavi
+
+% předefinování vzhledu záhlaví
+\renewcommand{\chaptermark}[1]{%
+	\markboth{\MakeUppercase
+	{%
+	\thechapter.%
+	\ #1}}{}}
+
+% vysázení přebalu práce
+%\vytvorobalku
+
+% vysázení titulní stránky práce
+\vytvortitulku
+
+% Vysázení listu zadani
+\stranka{}%
+	{\includegraphics[scale=0.7]{./pictures/zadanidp.pdf}}%\sffamily\Huge\centering\ }%ZDE VLOŽIT LIST ZADÁNÍ}%
+	%{\sffamily\centering Z~důvodu správného číslování stránek}
+
+% vysázení stránky s abstraktem
+\vytvorabstrakt
+
+% vysázení prohlaseni o samostatnosti
+\vytvorprohlaseni
+
+% vysázení poděkování
+\stranka{%nahore
+       }{%uprostred
+       }{%dole
+       \sffamily
+	\begin{flushleft}
+		\large
+		\MakeUppercase{Poděkování}
+	\end{flushleft}
+	\vspace{1em}
+		%\noindent
+	\par\hspace{2ex}
+	{Chtěl bych poděkovat všem.}
+}
+
+% vysázení obsahu
+\obsah
+
+% vysázení seznamu obrázků
+\seznamobrazku
+
+% vysázení seznamu tabulek
+%\seznamtabulek
+
+% jednotlivé kapitoly
+\include{1-uvod}
+\include{2-teorie}
+\include{3-technologie}
+\include{4-plugin}
+\include{5-zaver}
+
+% vysázení seznamu zkratek
+\include{zkratky}
+
+% literatura
+\nocite{*}
+\def\refname{Literatura}
+\bibliographystyle{mystyle}
+\bibliography{literatura}
+
+
+% začátek příloh
+\def\figurename{Figure}%
+\prilohy
+
+% vysázení seznamu příloh
+% \seznampriloh
+
+% Vložení souboru s přílohami
+\include{prilohy}
+
+% konec dokumentu
+\end{document}
