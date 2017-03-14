@@ -1,4 +1,4 @@
-FILE=ondrej-pesek-bp-2016
+FILE=ondrej-svoboda-dp-2017
 
 all:
 	pdflatex $(FILE)
