@@ -51,8 +51,7 @@ class puPlugin(object):
         
         self.puAction = QAction(self.iface.mainWindow())
         self.puAction.setText(self.name)
-        puIcon = QIcon()
-        puIcon.addPixmap(QPixmap(self.pluginDir.filePath(u'puplugin.png')))
+        puIcon = QIcon(self.pluginDir.filePath(u'puplugin.svg'))
         self.puAction.setIcon(puIcon)
         self.puAction.triggered.connect(self.run)
 
