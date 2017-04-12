@@ -82,6 +82,7 @@ class DockWidget(QDockWidget):
         self.puAreaLimitDeviationColumnName = 'PU_VYMERA_PARCELY_MEZNI_ODCHYLKA'
         self.puDistanceColumnName = 'PU_VZDALENOST'
         self.puPriceColumnName = 'PU_CENA'
+        self.puBpejCodeAreaPricesColumnName = 'PU_BPEJ_BPEJCENA_VYMERA_CENA'
         
         self.visiblePuColumns = self.editablePuColumns + \
             (self.puCategoryColumnName,
@@ -89,7 +90,8 @@ class DockWidget(QDockWidget):
              self.puAreaAbsDifferenceColumnName,
              self.puAreaLimitDeviationColumnName,
              self.puDistanceColumnName,
-             self.puPriceColumnName)
+             self.puPriceColumnName,
+             self.puBpejCodeAreaPricesColumnName)
         
         self.puAreaMaxQualityCodeColumnName = 'PU_VYMERA_PARCELY_MAX_KODCHB_KOD'
         self.puIdColumnName = 'PU_ID'

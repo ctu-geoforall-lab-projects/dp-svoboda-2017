@@ -180,7 +180,7 @@ class AreaPuCaWidget(PuCaWidget):
                 u'Chyba při provádění "{}".'.format(currentCheckAnalysisName))
 
     def _get_pu_area_max_quality_codes(self, layer, rowidColumnName):
-        """Gets PU area maximum quality codes.
+        """Returns PU area maximum quality codes.
         
         Args:
             layer (QgsVectorLayer): A reference to the active layer.
@@ -224,7 +224,7 @@ class AreaPuCaWidget(PuCaWidget):
         return puAreaMaxQualityCodes
         
     def _get_vertex_layer(self, layer, vertexLayerCode):
-        """Gets vertex layer.
+        """Returns vertex layer.
         
         Args:
             layer (QgsVectorLayer): A reference to the active layer.
@@ -249,7 +249,7 @@ class AreaPuCaWidget(PuCaWidget):
         return codeLayer
     
     def _get_joined_layer(self, layer, vertexLayer):
-        """Gets joined layer.
+        """Returns joined layer.
         
         Args:
             layer (QgsVectorLayer): A reference to the active layer.
@@ -318,7 +318,7 @@ class AreaPuCaWidget(PuCaWidget):
     
     def _get_pu_area_limit_deviation(
             self, sgiArea, spiArea, puAreaMaxQualityCode):
-        """Gets PU area limit deviation.
+        """Returns PU area limit deviation.
         
         Args:
             sgiArea (int): A SGI area.

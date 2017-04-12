@@ -1,107 +1,107 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.18.4" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.18.6" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
-    <edittype widgetv2type="TextEdit" name="rowid">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="rowid">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="ID">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="ID">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="STAV_DAT">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="STAV_DAT">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="DATUM_VZNIKU">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="DATUM_VZNIKU">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="DATUM_ZANIKU">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="DATUM_ZANIKU">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="PRIZNAK_KONTEXTU">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="PRIZNAK_KONTEXTU">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="RIZENI_ID_VZNIKU">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="RIZENI_ID_VZNIKU">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="RIZENI_ID_ZANIKU">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="RIZENI_ID_ZANIKU">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="PKN_ID">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="PKN_ID">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="PAR_TYPE">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="PAR_TYPE">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="KATUZE_KOD">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="KATUZE_KOD">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="KATUZE_KOD_PUV">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="KATUZE_KOD_PUV">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="DRUH_CISLOVANI_PAR">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="DRUH_CISLOVANI_PAR">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="KMENOVE_CISLO_PAR">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="KMENOVE_CISLO_PAR">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="ZDPAZE_KOD">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="ZDPAZE_KOD">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="PODDELENI_CISLA_PAR">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="PODDELENI_CISLA_PAR">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="DIL_PARCELY">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="DIL_PARCELY">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="MAPLIS_KOD">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="MAPLIS_KOD">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="ZPURVY_KOD">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="ZPURVY_KOD">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="DRUPOZ_KOD">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="DRUPOZ_KOD">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="ZPVYPA_KOD">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="ZPVYPA_KOD">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="TYP_PARCELY">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="TYP_PARCELY">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="VYMERA_PARCELY">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="VYMERA_PARCELY">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="CENA_NEMOVITOSTI">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="CENA_NEMOVITOSTI">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="DEFINICNI_BOD_PAR">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="DEFINICNI_BOD_PAR">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="TEL_ID">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="TEL_ID">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="PAR_ID">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="PAR_ID">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="BUD_ID">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="BUD_ID">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="IDENT_BUD">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="IDENT_BUD">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="SOUCASTI">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="SOUCASTI">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="PS_ID">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="PS_ID">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="IDENT_PS">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="IDENT_PS">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="ogr_fid">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="ogr_fid">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="PU_ID">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="PU_ID">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="PU_KMENOVE_CISLO_PAR">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
@@ -109,26 +109,29 @@
     <edittype widgetv2type="TextEdit" name="PU_PODDELENI_CISLA_PAR">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="PU_VYMERA_PARCELY">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="PU_VYMERA_PARCELY">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="PU_VYMERA_PARCELY_ABS_ROZDIL">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="PU_VYMERA_PARCELY_ABS_ROZDIL">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="PU_VYMERA_PARCELY_MEZNI_ODCHYLKA">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="PU_VYMERA_PARCELY_MEZNI_ODCHYLKA">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="PU_VYMERA_PARCELY_MAX_KODCHB_KOD">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="PU_VYMERA_PARCELY_MAX_KODCHB_KOD">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="PU_KATEGORIE">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="PU_KATEGORIE">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="PU_VZDALENOST">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="PU_VZDALENOST">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="PU_CENA">
-      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    <edittype widgetv2type="Hidden" name="PU_CENA">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="Hidden" name="PU_BPEJ_BPEJCENA_VYMERA_CENA">
+      <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
   </edittypes>
   <renderer-v2 forceraster="0" symbollevels="0" type="RuleRenderer" enableorderby="0">
@@ -315,6 +318,7 @@
   </renderer-v2>
   <labeling type="simple"/>
   <customproperties>
+    <property key="embeddedWidgets/count" value="0"/>
     <property key="labeling" value="pal"/>
     <property key="labeling/addDirectionSymbol" value="false"/>
     <property key="labeling/angleOffset" value="0"/>
@@ -576,44 +580,45 @@
     <alias field="PU_VYMERA_PARCELY_MAX_KODCHB_KOD" index="39" name=""/>
     <alias field="PU_KATEGORIE" index="40" name="KATEGORIE"/>
     <alias field="PU_VZDALENOST" index="41" name="VZDALENOST"/>
-    <alias field="PU_CENA" index="42" name="CENA"/>
+    <alias field="PU_CENA" index="42" name="CELK. CENA"/>
+    <alias field="PU_BPEJ_BPEJCENA_VYMERA_CENA" index="43" name="BPEJ KOD-CENA ZA M2-VYMERA-CENA"/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
   <attributeactions default="-1"/>
   <attributetableconfig actionWidgetStyle="dropDown" sortExpression="&quot;KMENOVE_CISLO_PAR&quot;" sortOrder="0">
     <columns>
-      <column width="-1" hidden="0" type="field" name="rowid"/>
-      <column width="-1" hidden="0" type="field" name="ID"/>
-      <column width="-1" hidden="0" type="field" name="STAV_DAT"/>
-      <column width="-1" hidden="0" type="field" name="DATUM_VZNIKU"/>
-      <column width="-1" hidden="0" type="field" name="DATUM_ZANIKU"/>
-      <column width="-1" hidden="0" type="field" name="PRIZNAK_KONTEXTU"/>
-      <column width="-1" hidden="0" type="field" name="RIZENI_ID_VZNIKU"/>
-      <column width="-1" hidden="0" type="field" name="RIZENI_ID_ZANIKU"/>
-      <column width="-1" hidden="0" type="field" name="PKN_ID"/>
-      <column width="-1" hidden="0" type="field" name="PAR_TYPE"/>
-      <column width="-1" hidden="0" type="field" name="KATUZE_KOD"/>
-      <column width="-1" hidden="0" type="field" name="KATUZE_KOD_PUV"/>
-      <column width="-1" hidden="0" type="field" name="DRUH_CISLOVANI_PAR"/>
-      <column width="-1" hidden="0" type="field" name="ZDPAZE_KOD"/>
-      <column width="-1" hidden="0" type="field" name="DIL_PARCELY"/>
-      <column width="-1" hidden="0" type="field" name="MAPLIS_KOD"/>
-      <column width="-1" hidden="0" type="field" name="ZPURVY_KOD"/>
-      <column width="-1" hidden="0" type="field" name="DRUPOZ_KOD"/>
-      <column width="-1" hidden="0" type="field" name="ZPVYPA_KOD"/>
-      <column width="-1" hidden="0" type="field" name="TYP_PARCELY"/>
-      <column width="-1" hidden="0" type="field" name="CENA_NEMOVITOSTI"/>
-      <column width="-1" hidden="0" type="field" name="DEFINICNI_BOD_PAR"/>
-      <column width="-1" hidden="0" type="field" name="TEL_ID"/>
-      <column width="-1" hidden="0" type="field" name="PAR_ID"/>
-      <column width="-1" hidden="0" type="field" name="BUD_ID"/>
-      <column width="-1" hidden="0" type="field" name="IDENT_BUD"/>
-      <column width="-1" hidden="0" type="field" name="SOUCASTI"/>
-      <column width="-1" hidden="0" type="field" name="PS_ID"/>
-      <column width="-1" hidden="0" type="field" name="IDENT_PS"/>
-      <column width="-1" hidden="0" type="field" name="ogr_fid"/>
-      <column width="-1" hidden="0" type="field" name="PU_ID"/>
+      <column width="-1" hidden="1" type="field" name="rowid"/>
+      <column width="-1" hidden="1" type="field" name="ID"/>
+      <column width="-1" hidden="1" type="field" name="STAV_DAT"/>
+      <column width="-1" hidden="1" type="field" name="DATUM_VZNIKU"/>
+      <column width="-1" hidden="1" type="field" name="DATUM_ZANIKU"/>
+      <column width="-1" hidden="1" type="field" name="PRIZNAK_KONTEXTU"/>
+      <column width="-1" hidden="1" type="field" name="RIZENI_ID_VZNIKU"/>
+      <column width="-1" hidden="1" type="field" name="RIZENI_ID_ZANIKU"/>
+      <column width="-1" hidden="1" type="field" name="PKN_ID"/>
+      <column width="-1" hidden="1" type="field" name="PAR_TYPE"/>
+      <column width="-1" hidden="1" type="field" name="KATUZE_KOD"/>
+      <column width="-1" hidden="1" type="field" name="KATUZE_KOD_PUV"/>
+      <column width="-1" hidden="1" type="field" name="DRUH_CISLOVANI_PAR"/>
+      <column width="-1" hidden="1" type="field" name="ZDPAZE_KOD"/>
+      <column width="-1" hidden="1" type="field" name="DIL_PARCELY"/>
+      <column width="-1" hidden="1" type="field" name="MAPLIS_KOD"/>
+      <column width="-1" hidden="1" type="field" name="ZPURVY_KOD"/>
+      <column width="-1" hidden="1" type="field" name="DRUPOZ_KOD"/>
+      <column width="-1" hidden="1" type="field" name="ZPVYPA_KOD"/>
+      <column width="-1" hidden="1" type="field" name="TYP_PARCELY"/>
+      <column width="-1" hidden="1" type="field" name="CENA_NEMOVITOSTI"/>
+      <column width="-1" hidden="1" type="field" name="DEFINICNI_BOD_PAR"/>
+      <column width="-1" hidden="1" type="field" name="TEL_ID"/>
+      <column width="-1" hidden="1" type="field" name="PAR_ID"/>
+      <column width="-1" hidden="1" type="field" name="BUD_ID"/>
+      <column width="-1" hidden="1" type="field" name="IDENT_BUD"/>
+      <column width="-1" hidden="1" type="field" name="SOUCASTI"/>
+      <column width="-1" hidden="1" type="field" name="PS_ID"/>
+      <column width="-1" hidden="1" type="field" name="IDENT_PS"/>
+      <column width="-1" hidden="1" type="field" name="ogr_fid"/>
+      <column width="-1" hidden="1" type="field" name="PU_ID"/>
       <column width="135" hidden="0" type="field" name="KMENOVE_CISLO_PAR"/>
       <column width="135" hidden="0" type="field" name="PU_KMENOVE_CISLO_PAR"/>
       <column width="140" hidden="0" type="field" name="PODDELENI_CISLA_PAR"/>
@@ -623,10 +628,11 @@
       <column width="105" hidden="0" type="field" name="PU_VYMERA_PARCELY"/>
       <column width="95" hidden="0" type="field" name="PU_VYMERA_PARCELY_ABS_ROZDIL"/>
       <column width="170" hidden="0" type="field" name="PU_VYMERA_PARCELY_MEZNI_ODCHYLKA"/>
-      <column width="-1" hidden="0" type="field" name="PU_VYMERA_PARCELY_MAX_KODCHB_KOD"/>
+      <column width="-1" hidden="1" type="field" name="PU_VYMERA_PARCELY_MAX_KODCHB_KOD"/>
       <column width="105" hidden="0" type="field" name="PU_VZDALENOST"/>
-      <column width="85" hidden="0" type="field" name="PU_CENA"/>
-      <column width="-1" hidden="0" type="actions"/>
+      <column width="95" hidden="0" type="field" name="PU_CENA"/>
+      <column width="250" hidden="0" type="field" name="PU_BPEJ_BPEJCENA_VYMERA_CENA"/>
+      <column width="-1" hidden="1" type="actions"/>
     </columns>
   </attributetableconfig>
   <editform>.</editform>
@@ -701,6 +707,7 @@ def my_form_open(dialog, layer, feature):
     <default field="PU_KATEGORIE" expression=""/>
     <default field="PU_VZDALENOST" expression=""/>
     <default field="PU_CENA" expression=""/>
+    <default field="PU_BPEJ_BPEJCENA_VYMERA_CENA" expression=""/>
   </defaults>
   <previewExpression>COALESCE("ID", '&lt;NULL>')</previewExpression>
   <layerGeometryType>2</layerGeometryType>

@@ -557,9 +557,10 @@ class LoadVfkPuWidget(PuWidget):
             self.dW.set_layer_style(layer, layerCode)
             self._set_layer_form_config(layer)
             self._set_layer_table_config(layer)
-            self._set_layer_snapping(layer)
              
             QgsMapLayerRegistry.instance().addMapLayer(layer)
+            
+            self._set_layer_snapping(layer)
             
             QgsApplication.processEvents()
         else:

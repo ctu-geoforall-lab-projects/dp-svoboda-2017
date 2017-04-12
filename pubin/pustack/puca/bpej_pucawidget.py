@@ -55,6 +55,7 @@ class BpejPuCaWidget(PuCaWidget):
         self.bpejMapLayerComboBox.setObjectName(u'bpejMapLayerComboBox')
         self.bpejMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PolygonLayer)
+        self.bpejMapLayerComboBox.activated.connect(self.set_last_bpej_layer)
         QgsMapLayerRegistry.instance().layersAdded.connect(
             self._rollback_bpej_layer)
         QgsMapLayerRegistry.instance().layersRemoved.connect(
@@ -85,6 +86,19 @@ class BpejPuCaWidget(PuCaWidget):
             self.lastBpejLayer = bpejLayer
         
         self.bpejMapLayerComboBox.setLayer(bpejLayer)
+    
+    def set_last_bpej_layer(self):
+        """Sets the lastBpejLayer.
+        
+        Sets the lastBpejLayer according to the current layer
+        in the bpejMapLayerComboBox.
+        
+        """
+        
+        bpejLayer = self.bpejMapLayerComboBox.currentLayer()
+        
+        if bpejLayer != self.lastBpejLayer:
+            self.lastBpejLayer = bpejLayer
     
     def _reset_bpej_layer(self):
         """Resets the BPEJ layer."""
@@ -157,10 +171,16 @@ class BpejPuCaWidget(PuCaWidget):
             expression = QgsExpression(
                 "\"{}\" is null "
                 "or "
-                "\"{}\" is null"\
+                "\"{}\" is null "
+                "or "
+                "\"{}\" is null "
+                "or "
+                "\"{}\" != 2"
                 .format(
                     editedBpejField,
-                    self.dW.defaultMajorParNumberColumnName[:10]))
+                    self.dW.defaultMajorParNumberColumnName[:10],
+                    self.dW.puCategoryColumnName[:10],
+                    self.dW.puCategoryColumnName[:10]))
             
             self.dW.delete_features_by_expression(unionLayer, expression)
             
@@ -176,13 +196,18 @@ class BpejPuCaWidget(PuCaWidget):
                 
                 rowidColumnName = self.dW.rowidColumnName
                 
-                prices, missingBpejCodes = self._calculate_feature_prices(
-                    rowidColumnName, multiToSingleLayer,
-                    editedBpejField, bpejCodePrices)
+                prices, missingBpejCodes, bpejCodeAreasPrices = \
+                    self._calculate_feature_prices(
+                        rowidColumnName, multiToSingleLayer,
+                        editedBpejField, bpejCodePrices)
                 
                 priceFieldName = self.dW.puPriceColumnName
-                
                 priceFieldId = layer.fieldNameIndex(priceFieldName)
+                
+                bpejCodeAreaPricesFieldName = \
+                    self.dW.puBpejCodeAreaPricesColumnName
+                bpejCodeAreaPricesFielId = layer.fieldNameIndex(
+                    bpejCodeAreaPricesFieldName)
                 
                 layer.startEditing()
                 layer.updateFields()
@@ -192,14 +217,19 @@ class BpejPuCaWidget(PuCaWidget):
                 for feature in features:
                     rowid = feature.attribute(rowidColumnName)
                     id = feature.id()
-                    originalPrice = feature.attribute(priceFieldName)
                     
                     price = prices[rowid]
-                    roundedPrice = round(price, -1)
                     
-                    if roundedPrice != 0 and roundedPrice != originalPrice:
+                    if price != 0:
+                        layer.changeAttributeValue(id, priceFieldId, price)
+                        
+                        bpejCodeAreaPrices = bpejCodeAreasPrices[rowid]
+                        
+                        bpejCodeAreaPricesStr = self._get_bpej_string(
+                            bpejCodeAreaPrices)
+                        
                         layer.changeAttributeValue(
-                            id, priceFieldId, roundedPrice)
+                            id, bpejCodeAreaPricesFielId, bpejCodeAreaPricesStr)
                 
                 layer.commitChanges()
                 
@@ -285,11 +315,11 @@ class BpejPuCaWidget(PuCaWidget):
         return bpejField
     
     def _get_bpej_code_prices(self):
-        """Gets BPEJ code prices.
+        """Returns BPEJ code prices.
         
         Returns:
             dict: A dictionary with BPEJ codes as keys (str)
-                and prices as values (flt).
+                and prices as values (float).
         
         """
         
@@ -346,9 +376,9 @@ class BpejPuCaWidget(PuCaWidget):
             return False
     
     def _get_url(self):
-        """Gets URL.
+        """Returns URL.
         
-        Gets an URL for testing the internet connection
+        Returns an URL for testing the internet connection
         and an URL of the BPEJ ZIP file.
         
         Returns:
@@ -454,7 +484,7 @@ class BpejPuCaWidget(PuCaWidget):
         
         Returns:
             dict: A dictionary with BPEJ codes as keys (str)
-                and prices as values (flt).
+                and prices as values (float).
         
         """
                
@@ -507,16 +537,26 @@ class BpejPuCaWidget(PuCaWidget):
                 features layer.
             bpejField (str): A name of the BPEJ field.
             bpejCodePrices (dict): A dictionary with BPEJ codes as keys (str)
-                and prices as values (flt).
+                and prices as values (float).
         
         Returns:
             defaultdict: A defaultdict with rowids as keys (long)
                 and prices as values (float).
             set: A set of BPEJ codes that are not in BPEJ SCV file.
+            defaultdict: A defaultdict with rowids as keys (long)
+                and defaultdicts as values.
+                defaultdict: A defaultdict with BPEJ codes (without dots)
+                    as keys (str) and defaultdicts as values.
+                    defaultdict: A defaultdict with area and prices
+                        as keys (str) and their values as values (float).
+                    
         
         """
         
         prices = defaultdict(float)
+        
+        bpejCodeAreasPrices = defaultdict(
+            lambda : defaultdict(lambda : defaultdict(float)))
         
         missingBpejCodes = set()
         
@@ -540,9 +580,52 @@ class BpejPuCaWidget(PuCaWidget):
                 
                 price = bpejPrice*area
                 
-                prices[rowid] += price
+                bpejCodeAreasPrices[rowid][editedBpejCode]['bpejPrice'] += \
+                    bpejPrice
+                bpejCodeAreasPrices[rowid][editedBpejCode]['area'] += area
         
-        return prices, missingBpejCodes
+        for rowid, bpejCode in bpejCodeAreasPrices.items():
+            for editedBpejCode, values in bpejCode.items():
+                values['roundedArea'] = round(values['area'])
+                values['price'] = values['roundedArea']*values['bpejPrice']
+                
+                prices[rowid] += values['price']
+        
+        return (prices, missingBpejCodes, bpejCodeAreasPrices)
+    
+    def _get_bpej_string(self, bpejCodeAreaPrices):
+        """Returns BPEJ string.
+        
+        Args:
+            bpejCodeAreaPrices (defaultdict): A defaultdict with BPEJ codes
+                (without dots) as keys (str) and defaultdicts as values.
+                defaultdict: A defaultdict with area and prices
+                    as keys (str) and their values as values (float).
+        
+        Returns:
+            str: A string that contains information about BPEJ.
+                The string consists of strings
+                '<BPEJ code>-<BPEJ price>-<rounded Area>-<price>'
+                for each BPEJ code in the input defaultdict separated by ', '.
+        
+        """
+        
+        bpejCodeAreaPricesStr = ''
+        
+        for bpejCode, values in bpejCodeAreaPrices.items():
+            bpejCodeAreaPricesStr += str(bpejCode)
+            bpejCodeAreaPricesStr += '-'
+            bpejCodeAreaPricesStr += str(values['bpejPrice'])
+            bpejCodeAreaPricesStr += '-'
+            bpejCodeAreaPricesStr += str(int(values['roundedArea']))
+            bpejCodeAreaPricesStr += '-'
+            bpejCodeAreaPricesStr += str(values['price'])
+            bpejCodeAreaPricesStr += ', '
+        
+        bpejCodeAreaPricesStr = \
+            bpejCodeAreaPricesStr.strip(', ')
+        
+        return bpejCodeAreaPricesStr
 
 
 class BpejLabelPuCaWidget(PuCaWidget):
