@@ -130,7 +130,7 @@ Obvod pozemkových úprav je území dotčené pozemkovými úpravami, které je
 
 Všechny pozemky v obvodu pozemkových úprav bez ohledu na dosavadní způsob využívání a stávající vlastnické vztahy jsou předmětem \zk{PU}. Převážně se jedná o zemědělské pozemky, ale i další pozemky v extravilánu mohou být zahrnuty.
 
-Pozemky v \zk{ObPU} se dělí na tyto skupiny:
+Pozemky v \zk{ObPU} se dělí na tyto kategorie:
 	\begin{itemize}[leftmargin=1.5cm]
 		\item \underline{pozemky v~\zk{ObPU} řešené} - pozemky, u~kterých ve většině případů dochází ke~změnám v jejich poloze. Mohou být děleny, scelovány a~musí být zajištěna jejich přístupnost.
 		\item \underline{pozemky v~\zk{ObPU} neřešené} - pozemky v~obvodu pozemkových úprav, u~kterých se pouze obnovují geodetické informace. U~těchto pozemků se zjistí průběh jejich hranic, označí se lomové body a~vypočítá se nová výměra ze~souřadnic v~S-JTSK. Do~\zk{PU} jsou zahrnuty proto, aby nová katastrální mapa neobsahovala vynechané části. Tyto pozemky se neoceňují.
@@ -156,7 +156,7 @@ Po zahájení \zk{PU} je svoláno úvodní jednání, na které jsou pozváni v�
 
 Při zjišťování průběhu hranic se srovnává skutečnost se stavem zakresleným v katastrální mapě a s výsledky přechozích zeměměříčských prací. Lomové body vnitřní i vnější hranice obvodu se v terénu vyznačí a později i zaměří. Zjišťování se účastní zástupce obce, zpracovatel, zástupci pozemkového a katastrálního úřadu a zejména samotní vlastníci. Také se vytyčí a označí vlastnické hranice pozemků, které nejsou v terénu trvale stabilizovány.
 
-Velmi důležitým krokem přípravné fáze je sestavení nároků vlastníků, na jehož základě se posuzuje přiměřenost návrhu nového umístění pozemků. V potaz se berou zejména výměry pozemků, vzdálenost těžistě pozemků od zvoleného referenčního bodu a ocenění podle \zk{BPEJ}.
+Velmi důležitým krokem přípravné fáze je sestavení nároků vlastníků, na jehož základě se posuzuje přiměřenost návrhu nového umístění pozemků. V potaz se berou zejména výměry pozemků, vzdálenost těžistě pozemků od zvoleného referenčního bodu a ocenění podle \zk{BPEJ}. Touto problematikou se podrobněji zabývá samostatná sekce (viz \ref{naroky})
 
 \subsection{Projekční fáze}
 \label{projekcni_faze}
@@ -195,30 +195,88 @@ Soupisy vstupních nároků se vyhotovují pro všechny vlastníky pozemků, kte
 Pro sestavení soupisu nároků se používají tyto podklady:
 	\begin{itemize}[leftmargin=1.5cm]
 		\item katastrální operát - \zk{SPI} a \zk{SGI}
-		\item údaje o \zk{BPEJ}
-		\item platný cenový předpis pro ocenění pozemků
 		\item mapy dřívější pozemkové evidence
-		\item výsledky podrobného zaměření hranice obvodu pozemkové úpravy
+		\item výsledky podrobného zaměření hranice \zk{ObPU}
+		\item údaje o \zk{BPEJ}
+		\item cenový předpis pro oceňování pozemků
 	\end{itemize}
 
-Během zpracování \zk{PU} se odstraňují chyby v katastrálním operátu, aby se v obvodu pozemkové úpravy nenacházel pozemek bez vlastníka a také se kontrolují nabývací tituly, na jejichž základě bylo vlastnictví zapsáno do \zk{KN}.
+Během zpracování \zk{PU} se odstraňují chyby v katastrálním operátu, aby se v obvodu pozemkové úpravy nenacházel pozemek bez vlastníka, a také se kontrolují nabývací tituly, na jejichž základě bylo vlastnictví zapsáno do \zk{KN}.
 
-Na sestavení nárokových listů vlastníků se podílí geodet a projektant. Prací geodeta je zpracovat podklady a provést digitalizaci mapových podkladů. Připravená data potom poskytne projektantovi, který vytvoří vlastnickou mapu a nárokové listy pro jednotlivé listy vlastnictví.
+Na sestavení nárokových listů vlastníků se podílí geodet a projektant. Prací geodeta je zpracovat podklady a případně provést digitalizaci mapových podkladů. Připravená data potom poskytne projektantovi, který vytvoří vlastnickou mapu a nárokové listy pro jednotlivé listy vlastnictví.
 
-Proces vyhotovení vstupních soupisů nároků je popsán v následujících sekcích.
+Proces vyhotovení vstupních soupisů nároků je popsán v následujících částech.
 
 \subsection{Digitalizace mapových podkladů}
 \label{digitalizace}
 
-V územích, kde se provádí pozemkové úpravy, je nejčastěji k dispozici grafická katastrální mapa v sáhovém měřítku 1:2 880. Pro digitalizaci je nejprve nutné naskenovanou katastrální mapu pomocí identických bodů transformovat do \zk{S-JTSK}. Do \zk{S-JTSK} se se kvůli identifikaci parcel vedených ve zjednodušené evidenci natransformují i mapy předchozích pozemkových evidencí. Mapy se poté převedou do vektorového formátu a výsledkem je tzv. vlastnická mapa, ve které na rozdíl od platné katastrální mapy má každá parcela svého vlastníka.
+V územích, kde se provádí pozemkové úpravy, je nejčastěji k dispozici grafická katastrální mapa v sáhovém měřítku 1:2 880. Pro digitalizaci je nejprve nutné naskenovanou katastrální mapu pomocí identických bodů transformovat do \zk{S-JTSK}. Do \zk{S-JTSK} se kvůli identifikaci parcel vedených ve zjednodušené evidenci natransformují i mapy předchozích pozemkových evidencí. Mapy se poté digitalizací převedou do vektorového formátu.
 
-Vlastnická mapa se potom vytiskne v barevném provedení, kde jsou parcely pro každý list vlastnictví znázorněny jinou barvou nebo šrafou.
+\subsection{Vlastnická mapa}
+\label{vlastnicka_mapa}
+
+Projektant od geodeta obdrží vektorová data a vytvoří tzv. vlastnickou mapu, ve které na rozdíl od platné katastrální mapy má každá parcela svého vlastníka.
+
+Vlastnická mapa se potom vytiskne v barevném provedení, kde jsou parcely pro každý list vlastnictví znázorněny jinou barvou nebo šrafou. Součástí vytištěné vlastnické mapy je i legenda.
+
+Během procesu pozemkové úpravy se vlastnická mapa vyhotovuje dvakrát. Nejprve na začátku \zk{PU}, kdy slouží k projednávání soupisu nároku. Této variantě vlastnické mapy se také říká mapa nároků. Podruhé je vytvořena takzvaná mapa návrhu, která obsahuje nový stav navržených pozemků a používá se k seznámení vlastníků s umístěním a tvarem nových pozemků. Ukázka vlastnické mapy se nachází na obrázku \ref{fig:vlastnicka_mapa}.
 
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.8\textwidth]{./pictures/vlastnicka_mapa.pdf}
 		\caption[Vlastnická mapa]{Vlastnická mapa(zdroj:~\citep{skvorec})}
 		\label{fig:vlastnicka_mapa}
+ 	\end{figure}
+
+\subsection{Kontrola souladu SPI a SGI}
+\label{soulad_spi_sgi}
+
+Pro všechny parcely zahrnuté do obvodu pozemkové úpravy se provádí kontrola souladu souboru popisných a geodetických informací. Kontroluje se, zda jsou všechny parcely vedené v \zk{SPI} přítomny v \zk{SGI} a naopak. Dále se porovnávají výměry parcel evidovaných v \zk{SPI} s výměrou vypočtenou z \zk{SGI}. Mezní odchylka výměr se vypočte pomocí vzorce z tabulky \ref{tab:odchylky_vymer}, kde \(\displaystyle P \) je větší z porovnávaných výměr v metrech čtverečních.
+
+		\begin{table}[H]
+		\begin{tabular}{|l|l|}
+		\hline
+		 \begin{tabular}{@{}l@{}} kód kvality nejméně přesně \\ určeného bodu na hranici parcely \end{tabular} & mezní odchylka [m\textsuperscript{2}] \\
+		\hline
+		\hline
+		 3 & \(\displaystyle 2 \) \\ \hline
+		 4 & \(\displaystyle 0.4*\sqrt{P}+4 \) \\ \hline
+		 5 & \(\displaystyle 1.2*\sqrt{P}+12 \) \\ \hline
+		 6 & \(\displaystyle 0.3*\sqrt{P}+3 \) \\ \hline
+		 7 & \(\displaystyle 0.8*\sqrt{P}+8 \) \\ \hline
+		 8 & \(\displaystyle 2.0*\sqrt{P}+20 \) \\
+		 \hline
+		\end{tabular}
+		 \centering
+		  \caption{Mezní odchylky výměr (zdroj \citep{zakon_357})}
+		  \label{tab:odchylky_vymer}
+		\end{table}
+
+\subsection{Výpočet opravného koeficientu výměr}
+\label{vypocet_ok}
+
+Výpočtu opravného koeficientu výměr předchází zjišťování průběhu hranice obvodu pozemkové úpravy za účasti vlastníků. Lomové body jsou v terénu označeny, případně vytyčeny a stabilizovány. Poté jsou tyto body s požadovanou přesností (střední souřadnicová chyba \(\displaystyle m\textsubscript{xy}=0.14~m \), kód charakteristiky kvality bodu \(\displaystyle 3 \)) zaměřeny do systému \zk{S-JTSK} a provede se výpočet výměry obvodu pozemkových úprav ze souřadnic. Součet výměr všech parcel v obvodu pozemkové úpravy dá dohromady výměru obvodu pozemkových úprav podle katastru nemovitostí.
+
+Opravný koeficient (\zk{OK}) se vypočte pomocí následujícího vztahu:
+
+\begin{equation}
+	OK = \frac{P\textsubscript{S-JTSK}}{P\textsubscript{KN}}
+\end{equation}
+
+kde \(\displaystyle P\textsubscript{S-JTSK} \) je výměra \zk{ObPU} vypočtená ze souřadnic a \(\displaystyle P\textsubscript{KN} \) je výměra \zk{ObPU} určená součtem výměr parcel zahrnutých do \zk{ObPU} podle katastru nemovitostí.
+
+Výsledná hodnota opravného koeficientu je číslo, které by se mělo jen málo lišit od  \(\displaystyle 1 \). Pokud je \zk{OK} menší než \(\displaystyle 1 \), pak se nároky zmenšují, v opačném případě se nároky zvětšují. Opravný koeficient výměr slouží k úpravě nároků podle skutečnosti.
+
+\subsection{Ocenění pozemků}
+\label{oceneni}
+
+Všechny řešené pozemky se oceňují. K oceňování se používají data s hranicemi \zk{BPEJ} od Výzkumného ústavu meliorací a půdy (\zk{VUMOP}). Ocenění se provede jako průnik vlastnické mapy a hranic \zk{BPEJ}.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.5\textwidth]{./pictures/vumop.jpg}
+		\caption[Zpracování nároku]{Logo Výzkumného ústavu meliorací a půdy (zdroj:~\citep{vumop})}
+		\label{fig:pozem-obrazek}
  	\end{figure}
 
 \section{Programy používané pro zpracování pozemkových úprav}

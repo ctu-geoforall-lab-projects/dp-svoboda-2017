@@ -5,7 +5,7 @@ Nejdůležitějším podkladem pro zásuvný modul vytvořený v rámci mé dipl
 
 Na rozdíl od starého výměnného formátu (\zk{SVF}) obsahuje \zk{VFK} jak soubor popisných informací (\zk{SPI}) - tedy informace o vlastnících, parcelách, stavbách a dalších skutečnostech - tak i soubor geodetických informací (\zk{SGI}) - informace o polohovém určení.
 
-\zk{VFK} je poskytován nejen zpracovatelům pozemkových úprav, ale také pozemkovým úřadům, obecním úřadům a zhotovitelům geometrických plánů. Slouží k vzájemnému předávání dat mezi informačním systémem katastru nemovitostí (\zk{ISKN}) a jinými systémy.
+Soubory \zk{VFK} jsou poskytovány zpracovatelům pozemkových úprav, pozemkovým úřadům, obecním úřadům a zhotovitelům geometrických plánů. Slouží k vzájemnému předávání dat mezi informačním systémem katastru nemovitostí (\zk{ISKN}) a jinými systémy.
 
 Výměnný formát katastru nemovitostí je tvořen textovým souborem s koncovkou *.vfk, který má tuto strukturu:
 	\begin{itemize}[leftmargin=1.5cm]
@@ -103,8 +103,8 @@ Tabulka \ref{tab:hlavicka_priklady} obsahuje příklady položek hlavičky. Kvů
 		 příklad & popis \\
 		\hline
 		\hline
-		 \begin{tabular}{l@{}l@{}l@{}} \texttt{\&HPLATNOST;} \\ \texttt{"03.12.2013 09:56:42";} \\ \texttt{"03.12.2013 		09:56:42"} \end{tabular} & stav dat k určitému okamžiku \\ \hline
-		 \begin{tabular}{l@{}l@{}l@{}} \texttt{\&HPLATNOST;} \\ \texttt{"03.12.2012 09:56:42";} \\ \texttt{"03.12.2013 09:56:42"} \end{tabular} & stav dat pro určité období \\
+		 \begin{tabular}{@{}l@{}l@{}} \texttt{\&HPLATNOST;} \\ \texttt{"03.12.2013 09:56:42";} \\ \texttt{"03.12.2013 		09:56:42"} \end{tabular} & stav dat k určitému okamžiku \\ \hline
+		 \begin{tabular}{@{}l@{}l@{}} \texttt{\&HPLATNOST;} \\ \texttt{"03.12.2012 09:56:42";} \\ \texttt{"03.12.2013 09:56:42"} \end{tabular} & stav dat pro určité období \\
 		 \hline
 		\end{tabular}
 		 \centering
@@ -196,6 +196,58 @@ Ukázka řádku s vlastními daty pro objekt parcely.
 ;;;"PKN";693936;;1;37;;1;;6780;2;13;;;332;;"";674674306;;
 323700306;"a";"n";;"n"
 	\end{lstlisting}
+\end{description}
+
+\subsection{Zásuvný modul}
+\label{datove_bloky_zasuvny_modul}
+
+Soubor výměnného formátu katastru nemovitostí obsahuje mnoho datový bloků. Tato sekce se věnuje pouze blokům, které jsou reletvatní pro zásuvný modul.
+
+V současné době zásuvný modul pracuje s těmito datovými bloky\footnote{Zásuvný modul nevyužívá dat \zk{BPEJ} přímo ze souboru \zk{VFK}, protože hranice \zk{BPEJ} není polohopisným prvkem katastrální mapy. Více o \zk{BPEJ} viz kapitola \ref{bpej}.}:
+
+	\begin{itemize}[leftmargin=1.5cm]
+		\item \zk{PAR} - parcely
+		\item \zk{SOBR} - souřadnice obrazu bodů polohopisu v mapě
+		\item \zk{SPOL} - souřadnice polohy bodů polohopisu (měřené)
+	\end{itemize}
+
+\begin{description}	
+	\item[PAR:] Tabulka \zk{PAR} obsahuje parcely evidované v \zk{ISKN}. Z pohledu zásuvného modulu vytvořeného v rámci této práce se jedná o nejdůležitější část souboru \zk{VFK}. Je součástí největší skupiny datových bloků nemovitosti. V tabulce \ref{tab:par_sloupce} jsou uvedeny sloupce, kterých využívá zásuvný modul.
+	
+		\begin{table}[H]
+		\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		 název & povinný & typ & velikost & popis\\
+		\hline
+		\hline
+		ID & ano & N & 30.0 & \begin{tabular}{@{}l@{}} unikátní generované \\ číslo parcely \end{tabular} \\ \hline
+		KMENOVE\_CISLO\_PAR & ano & N & 5 & kmenové parcelní číslo \\ \hline
+		PODDELENI\_CISLA\_PAR & ne & N & 3 & poddělení čísla parcely \\ \hline
+		DRUPOZ\_KOD & ne & N & 2.0 & kód druhu pozemku. \\ \hline
+		VYMERA\_PARCELY & ano & N & 9.0 & \begin{tabular}{@{}l@{}} výměra parcely \\ v metrech čtverečních \end{tabular} \\
+		 \hline
+		\end{tabular}
+		 \centering
+		  \caption{Sloupce datového bloku \zk{PAR} (zdroj \citep{struktura_vfk})}
+		  \label{tab:par_sloupce}
+		\end{table}
+		
+	\item[SOBR, SPOL:] Tabulka \zk{SOBR} obsahuje body polohopisu (čísla bodů a souřadnice obrazu v mapě). V tabulce \zk{SPOL} jsou uvedeny body polohopisu (čísla bodů a souřadnice polohy). Obě tabulky jsou součástí skupiny datových bloků prvky katastrální mapy. Zásuvný modul používá pouze jeden sloupec z těchto datových bloků (viz \ref{tab:sobr_spol_sloupce}).
+	
+		\begin{table}[H]
+		\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		 název & povinný & typ & velikost & popis\\
+		\hline
+		\hline
+		KODCHB\_KOD & ne & N & 2.0 & \begin{tabular}{@{}l@{}} kód charakteristiky \\ kvality bodu \end{tabular} \\
+		 \hline
+		\end{tabular}
+		 \centering
+		  \caption{Sloupce datových bloků \zk{SOBR} a \zk{SPOL} (zdroj \citep{struktura_vfk})}
+		  \label{tab:sobr_spol_sloupce}
+		\end{table}	
+	
 \end{description}
 
 \section{Koncový znak}
