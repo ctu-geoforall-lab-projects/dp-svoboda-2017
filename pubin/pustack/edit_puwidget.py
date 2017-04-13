@@ -99,10 +99,6 @@ class EditPuWidget(PuWidget):
         self.addFeatureAction.setObjectName(u'addFeatureAction')
         self.editToolBar.addAction(self.addFeatureAction)
         
-        self.moveFeatureAction = self.iface.actionMoveFeature()
-        self.moveFeatureAction.setObjectName(u'moveFeatureAction')
-        self.editToolBar.addAction(self.moveFeatureAction)
-        
         self.nodeToolAction = self.iface.actionNodeTool()
         self.nodeToolAction.setObjectName(u'nodeToolAction')
         self.editToolBar.addAction(self.nodeToolAction)
@@ -110,6 +106,10 @@ class EditPuWidget(PuWidget):
         self.deleteSelectedAction = self.iface.actionDeleteSelected()
         self.deleteSelectedAction.setObjectName(u'deleteSelectedAction')
         self.editToolBar.addAction(self.deleteSelectedAction)
+        
+        self.addPartAction = self.iface.actionAddPart()
+        self.addPartAction.setObjectName(u'addPartAction')
+        self.editToolBar.addAction(self.addPartAction)
         
         self.splitFeaturesAction = self.iface.actionSplitFeatures()
         self.splitFeaturesAction.setObjectName(u'splitFeaturesAction')
