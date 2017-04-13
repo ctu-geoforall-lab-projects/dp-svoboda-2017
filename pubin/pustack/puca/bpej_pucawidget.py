@@ -594,7 +594,7 @@ class BpejPuCaWidget(PuCaWidget):
         return (prices, missingBpejCodes, bpejCodeAreasPrices)
     
     def _get_bpej_string(self, bpejCodeAreaPrices):
-        """Returns BPEJ string.
+        """Returns a BPEJ string.
         
         Args:
             bpejCodeAreaPrices (defaultdict): A defaultdict with BPEJ codes

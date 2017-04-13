@@ -56,7 +56,11 @@ class AreaPuCaWidget(PuCaWidget):
             self.pW.set_text_statusbar.emit(
                 u'Provádím kontrolu - výměra nad mezní odchylkou...', 0, False)
             
-            expression = QgsExpression("$geometry is not null")
+            expression = QgsExpression(
+                "$geometry is not null "
+                "and "
+                "\"{}\" in (1, 2)"
+                .format(self.dW.puCategoryColumnName))
             
             self.dW.select_features_by_expression(layer, expression)
             
@@ -305,8 +309,16 @@ class AreaPuCaWidget(PuCaWidget):
             for feature in features:
                 rowid = feature.attribute(rowidColumnName)
                 
-                puAreaMaxQualityCode = feature.attribute(
-                    maxQualityCodeColumnName)
+                puBasisScale = feature.attribute(
+                    self.dW.puBasisScaleColumnName[:10])
+                
+                if type(puBasisScale) == QPyNullVariant or puBasisScale == 0:
+                    puAreaMaxQualityCode = feature.attribute(
+                        maxQualityCodeColumnName)
+                else:
+                    puAreaMaxQualityCode = \
+                        self._get_pu_area_max_quality_code_from_basis_scale(
+                            puBasisScale)
                 
                 if type(puAreaMaxQualityCode) == QPyNullVariant:
                     continue
@@ -315,6 +327,30 @@ class AreaPuCaWidget(PuCaWidget):
                     puAreaMaxQualityCodes[rowid] = puAreaMaxQualityCode
         
         return puAreaMaxQualityCodes
+    
+    def _get_pu_area_max_quality_code_from_basis_scale(self, puBasisScale):
+        """Returns a PU area max quality code.
+        
+        Returns a PU area max quality code calculated according to 
+        the given PU basis scale.
+        
+        Args:
+            puBasisScale (long): A PU basis scale value.
+        
+        Returns:
+            int: A PU area max quality code calculated according to 
+                the given PU basis scale.
+        
+        """
+        
+        if puBasisScale in (1000, 1250):
+            puAreaMaxQualityCode = 6
+        elif puBasisScale in (2000, 2500):
+            puAreaMaxQualityCode = 7
+        else:
+            puAreaMaxQualityCode = 8
+        
+        return puAreaMaxQualityCode
     
     def _get_pu_area_limit_deviation(
             self, sgiArea, spiArea, puAreaMaxQualityCode):

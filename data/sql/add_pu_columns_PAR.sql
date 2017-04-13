@@ -24,4 +24,6 @@ alter table PAR add column PU_CENA real;
 
 alter table PAR add column PU_BPEJ_BPEJCENA_VYMERA_CENA text;
 
+alter table PAR add column PU_MERITKO_PODKLADU integer;
+
 commit

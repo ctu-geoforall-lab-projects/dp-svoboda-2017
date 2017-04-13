@@ -554,7 +554,10 @@ class LoadVfkPuWidget(PuWidget):
         # SpatiaLite fix - end
         
         if layer.isValid():
+            self._set_scale_for_features_with_no_or_invalid_geometry(layer)
+            
             self.dW.set_layer_style(layer, layerCode)
+            
             self._set_layer_form_config(layer)
             self._set_layer_table_config(layer)
              
@@ -569,6 +572,21 @@ class LoadVfkPuWidget(PuWidget):
                 u'Layer {} is not valid.'.format(layerCode),
                 u'Vrstva {} není platná.'.format(layerCode),
                 u'Vrstva {} není platná.'.format(layerCode))
+    
+    def _set_scale_for_features_with_no_or_invalid_geometry(self, layer):
+        """Sets basis scale to zero for features with no or invalid geometry.
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the layer.
+        
+        """
+        
+        expression = QgsExpression("$geometry is null")
+        
+        features = layer.getFeatures(QgsFeatureRequest(expression))
+        
+        self.dW.set_field_value_for_features(
+            layer, features, self.dW.puBasisScaleColumnName, 0)
     
     def _set_layer_form_config(self, layer):
         """Sets layer form config.

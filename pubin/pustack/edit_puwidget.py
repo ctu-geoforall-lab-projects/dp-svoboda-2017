@@ -472,10 +472,10 @@ class EditPuWidget(PuWidget):
             editing = self.dW.check_editing()
             
             if self.setCategoryValue == 0:
-                self._set_pu_category_for_selected(layer, perimeterLayer)
+                self._set_category_for_selected(layer, perimeterLayer)
             
             if self.setCategoryValue == 1:
-                self._set_pu_category_by_perimeter(layer, perimeterLayer)
+                self._set_category_by_perimeter(layer, perimeterLayer)
             
             if editing:
                 self.toggleEditingAction.trigger()
@@ -487,7 +487,7 @@ class EditPuWidget(PuWidget):
                 u'Error setting parcel category.',
                 u'Chyba při zařazování do kategorie parcel.')
     
-    def _set_pu_category_for_selected(self, layer, perimeterLayer):
+    def _set_category_for_selected(self, layer, perimeterLayer):
         """Sets a categoryValue to categoryName column for selected features.
         
         Also updates the perimeter layer.
@@ -605,7 +605,7 @@ class EditPuWidget(PuWidget):
     
         self.iface.setActiveLayer(layer)
     
-    def _set_pu_category_by_perimeter(self, layer, perimeterLayer):
+    def _set_category_by_perimeter(self, layer, perimeterLayer):
         """Sets a categoryValue to categoryName column for all features
         according to current layer in perimeterMapLayerComboBox.
         

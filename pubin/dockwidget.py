@@ -71,10 +71,12 @@ class DockWidget(QDockWidget):
         
         self.puMajorParNumberColumnName = 'PU_KMENOVE_CISLO_PAR'
         self.puMinorParNumberColumnName = 'PU_PODDELENI_CISLA_PAR'
+        self.puBasisScaleColumnName = 'PU_MERITKO_PODKLADU'
         
         self.editablePuColumns = (
             self.puMajorParNumberColumnName,
-            self.puMinorParNumberColumnName)
+            self.puMinorParNumberColumnName,
+            self.puBasisScaleColumnName)
         
         self.puCategoryColumnName = 'PU_KATEGORIE'
         self.puAreaColumnName = 'PU_VYMERA_PARCELY'

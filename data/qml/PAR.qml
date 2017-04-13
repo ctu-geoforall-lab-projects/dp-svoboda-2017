@@ -133,6 +133,9 @@
     <edittype widgetv2type="Hidden" name="PU_BPEJ_BPEJCENA_VYMERA_CENA">
       <widgetv2config fieldEditable="0" constraint="" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
+    <edittype widgetv2type="TextEdit" name="PU_MERITKO_PODKLADU">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
   </edittypes>
   <renderer-v2 forceraster="0" symbollevels="0" type="RuleRenderer" enableorderby="0">
     <rules key="{794a0e50-5e6d-43f2-9bd4-2fea107535e0}">
@@ -582,6 +585,7 @@
     <alias field="PU_VZDALENOST" index="41" name="VZDALENOST"/>
     <alias field="PU_CENA" index="42" name="CELK. CENA"/>
     <alias field="PU_BPEJ_BPEJCENA_VYMERA_CENA" index="43" name="BPEJ KOD-CENA ZA M2-VYMERA-CENA"/>
+    <alias field="PU_MERITKO_PODKLADU" index="44" name="MERITKO PODKL."/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
@@ -632,6 +636,7 @@
       <column width="105" hidden="0" type="field" name="PU_VZDALENOST"/>
       <column width="95" hidden="0" type="field" name="PU_CENA"/>
       <column width="250" hidden="0" type="field" name="PU_BPEJ_BPEJCENA_VYMERA_CENA"/>
+      <column width="130" hidden="0" type="field" name="PU_MERITKO_PODKLADU"/>
       <column width="-1" hidden="1" type="actions"/>
     </columns>
   </attributetableconfig>
@@ -708,6 +713,7 @@ def my_form_open(dialog, layer, feature):
     <default field="PU_VZDALENOST" expression=""/>
     <default field="PU_CENA" expression=""/>
     <default field="PU_BPEJ_BPEJCENA_VYMERA_CENA" expression=""/>
+    <default field="PU_MERITKO_PODKLADU" expression=""/>
   </defaults>
   <previewExpression>COALESCE("ID", '&lt;NULL>')</previewExpression>
   <layerGeometryType>2</layerGeometryType>
