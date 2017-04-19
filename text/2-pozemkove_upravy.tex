@@ -3,7 +3,7 @@
 
 Tato kapitola se věnuje pozemkovým úpravám s~důrazem na~části, kterých se týka zásuvný modul vytvořený v~rámci této práce. Cílem není obsáhnout všechny informace o~pozemkových úpravách, to by stačilo na~samostatnou knihu a~takových již o~tomto tématu bylo publikováno nespočet, ale pouze čtenáři přiblížit nejdůležitější principy a myšlenky.
 
-V~této kapitole bylo čerpáno ze zákona o pozemkových úpravách \citep{pu_zakon}, metodického návrhu \citep{metodicky_navrh}, skript \citep{pu_skripta} a dalších zdrojů \citep{pu_cr}.
+V~této kapitole bylo čerpáno ze zákona o pozemkových úpravách \citep{pu_zakon}, metodického návrhu \citep{metodicky_navod}, skript \citep{pu_skripta} a dalších zdrojů \citep{pu_cr}.
 
 \section{Pojem pozemkových úprav}
 \label{pojem_pu}
@@ -210,21 +210,21 @@ Proces vyhotovení vstupních soupisů nároků je popsán v~následujících č
 
 Pokud jsou mapové podklady v~grafické formě, je nutné je převést do~digitální podoby. V~územích, kde se provádí pozemkové úpravy, je nejčastěji k dispozici grafická katastrální mapa v~sáhovém měřítku 1:2880. Pro digitalizaci je nejprve nutné naskenovanou katastrální mapu pomocí identických bodů transformovat\ do~\zk{S-JTSK}. Do~\zk{S-JTSK} se kvůli identifikaci parcel vedených ve~zjednodušené evidenci natransformují i~mapy předchozích pozemkových evidencí. Mapy se poté digitalizací převedou do~vektorového formátu. Kód kvality podrobných bodů určených digitalizací je stanoven na základě měřítka katastrální mapy, viz tabulka \ref{tab:kody_kvality_digit}.
 
-		\begin{table}[H]
-		\begin{tabular}{|l|l|l|}
-		\hline
-		 kód kvality & měřítko katastrální mapy & základní střední souřadnicová chyba \\
-		\hline
-		\hline
-		 6 & 1:1000, 1:1250 & 0.21 m \\ \hline
-		 7 & 1:2000, 1:2500 & 0.51 m \\ \hline
-		 8 & 1:2880 a jiné & 1.00 m \\
-		 \hline
-		\end{tabular}
-		 \centering
-		  \caption[Kódy kvality podrobných bodů určených digitalizací]{Kódy kvality podrobných bodů určených digitalizací (zdroj \citep{zakon_357})}
-		  \label{tab:kody_kvality_digit}
-		\end{table}
+\begin{table}[H]
+    \begin{tabular}{|l|l|l|}
+        \hline
+         kód kvality & měřítko katastrální mapy & základní střední souřadnicová chyba \\
+        \hline
+        \hline
+         6 & 1:1000, 1:1250 & 0.21 m \\ \hline
+         7 & 1:2000, 1:2500 & 0.51 m \\ \hline
+         8 & 1:2880 a jiné & 1.00 m \\
+         \hline
+    \end{tabular}
+    \centering
+    \caption[Kódy kvality podrobných bodů určených digitalizací]{Kódy kvality podrobných bodů určených digitalizací (zdroj:~\citep{vyhlaska_357})}
+    \label{tab:kody_kvality_digit}
+\end{table}
 
 Základní střední souřadnicová chyba je dána vztahem:
 
@@ -246,24 +246,24 @@ Pro všechny parcely zahrnuté do~obvodu pozemkové úpravy se provádí kontrol
 
 Dále se porovnávají výměry parcel evidovaných v \zk{SPI} s~výměrou vypočtenou z~\zk{SGI}. Mezní odchylka výměr se vypočte pomocí vzorce z~tabulky~\ref{tab:odchylky_vymer}, kde $P$ je větší z~porovnávaných výměr v~metrech čtverečních.
 
-		\begin{table}[H]
-		\begin{tabular}{|l|l|}
-		\hline
-		 \begin{tabular}{@{}l@{}} kód kvality nejméně přesně \\ určeného bodu na~hranici parcely \end{tabular} & mezní odchylka [m\textsuperscript{2}] \\
-		\hline
-		\hline
-		 3 & \(\displaystyle 2 \) \\ \hline
-		 4 & \(\displaystyle 0.4*\sqrt{P}+4 \) \\ \hline
-		 5 & \(\displaystyle 1.2*\sqrt{P}+12 \) \\ \hline
-		 6 & \(\displaystyle 0.3*\sqrt{P}+3 \) \\ \hline
-		 7 & \(\displaystyle 0.8*\sqrt{P}+8 \) \\ \hline
-		 8 & \(\displaystyle 2.0*\sqrt{P}+20 \) \\
-		 \hline
-		\end{tabular}
-		 \centering
-		  \caption[Mezní odchylky výměr]{Mezní odchylky výměr (zdroj \citep{zakon_357})}
-		  \label{tab:odchylky_vymer}
-		\end{table}
+\begin{table}[H]
+    \begin{tabular}{|l|l|}
+        \hline
+         \begin{tabular}{@{}l@{}} kód kvality nejméně přesně \\ určeného bodu na~hranici parcely \end{tabular} & mezní odchylka [m\textsuperscript{2}] \\
+        \hline
+        \hline
+         3 & \(\displaystyle 2 \) \\ \hline
+         4 & \(\displaystyle 0.4*\sqrt{P}+4 \) \\ \hline
+         5 & \(\displaystyle 1.2*\sqrt{P}+12 \) \\ \hline
+         6 & \(\displaystyle 0.3*\sqrt{P}+3 \) \\ \hline
+         7 & \(\displaystyle 0.8*\sqrt{P}+8 \) \\ \hline
+         8 & \(\displaystyle 2.0*\sqrt{P}+20 \) \\
+         \hline
+    \end{tabular}
+    \centering
+    \caption[Mezní odchylky výměr]{Mezní odchylky výměr (zdroj:~\citep{vyhlaska_357})}
+    \label{tab:odchylky_vymer}
+\end{table}
 
 \subsection{Vlastnická mapa}
 \label{vlastnicka_mapa}
@@ -277,7 +277,7 @@ Během procesu pozemkové úpravy se vlastnická mapa vyhotovuje dvakrát. Nejpr
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.8\textwidth]{./pictures/vlastnicka_mapa.pdf}
-		\caption[Vlastnická mapa]{Vlastnická mapa(zdroj:~\citep{skvorec})}
+		\caption[Vlastnická mapa]{Vlastnická mapa (zdroj:~\citep{skvorec})}
 		\label{fig:vlastnicka_mapa}
  	\end{figure}
 
