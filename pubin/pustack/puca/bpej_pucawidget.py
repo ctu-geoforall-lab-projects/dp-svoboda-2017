@@ -55,7 +55,7 @@ class BpejPuCaWidget(PuCaWidget):
         self.bpejMapLayerComboBox.setObjectName(u'bpejMapLayerComboBox')
         self.bpejMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PolygonLayer)
-        self.bpejMapLayerComboBox.activated.connect(self.set_last_bpej_layer)
+        self.bpejMapLayerComboBox.activated.connect(self._set_last_bpej_layer)
         QgsMapLayerRegistry.instance().layersAdded.connect(
             self._rollback_bpej_layer)
         QgsMapLayerRegistry.instance().layersRemoved.connect(
@@ -87,7 +87,7 @@ class BpejPuCaWidget(PuCaWidget):
         
         self.bpejMapLayerComboBox.setLayer(bpejLayer)
     
-    def set_last_bpej_layer(self):
+    def _set_last_bpej_layer(self):
         """Sets the lastBpejLayer.
         
         Sets the lastBpejLayer according to the current layer

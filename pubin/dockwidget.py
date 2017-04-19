@@ -575,6 +575,29 @@ class DockWidget(QDockWidget):
         if startCommit:
             layer.commitChanges()
     
+    def get_addressed_features(self, layer):
+        """Returns addressed features from the given layer.
+        
+        categoryValue - description:
+            0 - mimo obvod
+            1 - v obvodu - neřešené
+            2 - v obvodu - řešené
+        
+        Args:
+            layer (QgsVectorLayer): A reference to the layer.
+        
+        Returns:
+            QgsFeatureIterator: An iterator of addressed features.
+        
+        """
+        
+        expression = QgsExpression(
+            "\"{}\" = 2".format(self.puCategoryColumnName))
+        
+        features = layer.getFeatures(QgsFeatureRequest(expression))
+        
+        return features
+    
     def set_layer_style(self, layer, qmlFileBaseName):
         """Sets layer style according to the given QML file base name.
         

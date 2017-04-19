@@ -47,14 +47,16 @@ class DistancePuCaWidget(PuCaWidget):
             u'refPointMapLayerComboBox')
         self.refPointMapLayerComboBox.setFilters(
             QgsMapLayerProxyModel.PointLayer)
+        self.refPointMapLayerComboBox.activated.connect(
+            self._set_last_ref_point_layer)
         QgsMapLayerRegistry.instance().layersAdded.connect(
             self._rollback_ref_point_layer)
         QgsMapLayerRegistry.instance().layersRemoved.connect(
             self._reset_ref_point_layer)
-        self.set_ref_point_layer(self.lastRefPointLayer)
+        self._set_ref_point_layer(self.lastRefPointLayer)
         self.vBoxLayout.addWidget(self.refPointMapLayerComboBox)
     
-    def set_ref_point_layer(self, refPointLayer, lastRefPointLayer=True):
+    def _set_ref_point_layer(self, refPointLayer, lastRefPointLayer=True):
         """Sets the reference point layer in the refPointMapLayerComboBox.
         
         Args:
@@ -70,19 +72,32 @@ class DistancePuCaWidget(PuCaWidget):
         
         self.refPointMapLayerComboBox.setLayer(refPointLayer)
     
+    def _set_last_ref_point_layer(self):
+        """Sets the lastRefPointLayer.
+        
+        Sets the lastRefPointLayer according to the current layer
+        in the refPointMapLayerComboBox.
+        
+        """
+        
+        refPointLayer = self.refPointMapLayerComboBox.currentLayer()
+        
+        if refPointLayer != self.lastRefPointLayer:
+            self.lastRefPointLayer = refPointLayer
+    
     def _reset_ref_point_layer(self):
         """Resets the reference point layer."""
         
         layers = self.iface.legendInterface().layers()
         
         if self.lastRefPointLayer not in layers:
-            self.set_ref_point_layer(None)
+            self._set_ref_point_layer(None)
     
     def _rollback_ref_point_layer(self):
         """Rolls the reference point layer back."""
         
         if self.lastRefPointLayer == None:
-            self.set_ref_point_layer(self.lastRefPointLayer, False)
+            self._set_ref_point_layer(self.lastRefPointLayer, False)
         else:
             self.lastRefPointLayer = \
                 self.refPointMapLayerComboBox.currentLayer()
@@ -125,7 +140,7 @@ class DistancePuCaWidget(PuCaWidget):
             layer.removeSelection()
             refPointLayer.removeSelection()
             
-            features = layer.getFeatures()
+            features = self.dW.get_addressed_features(layer)
             
             self.pW.set_text_statusbar.emit(
                 u'Provádím analýzu - měření vzdálenosti...', 0, False)
