@@ -188,6 +188,8 @@ class DockWidget(QDockWidget):
         self.stackedWidget = StackedWidget(
             self, self.dWName, self.iface, self.pluginDir)
         self.gridLayout.addWidget(self.stackedWidget, 1, 0, 1, 1)
+        
+        # self.gridLayout.setColumnStretch(1, 1)
     
     def display_error_messages(
             self,

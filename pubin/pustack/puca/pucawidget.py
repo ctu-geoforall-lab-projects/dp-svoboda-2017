@@ -74,4 +74,9 @@ class PuCaWidget(QWidget):
         """Builds own widgets."""
         
         raise NotImplementedError
+    
+    def execute(self):
+        """Executes the check or analysis."""
+        
+        raise NotImplementedError
 
