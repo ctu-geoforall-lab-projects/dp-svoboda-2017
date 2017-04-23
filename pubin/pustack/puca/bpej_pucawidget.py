@@ -318,7 +318,7 @@ class BpejPuCaWidget(PuCaWidget):
         """Returns BPEJ code prices.
         
         Returns:
-            dict: A dictionary with BPEJ codes as keys (str)
+            dict: A dictionary with BPEJ codes as keys (int)
                 and prices as values (float).
         
         """
@@ -483,7 +483,7 @@ class BpejPuCaWidget(PuCaWidget):
             formatTimeStr (str): A string for time formatting.
         
         Returns:
-            dict: A dictionary with BPEJ codes as keys (str)
+            dict: A dictionary with BPEJ codes as keys (int)
                 and prices as values (float).
         
         """
@@ -519,7 +519,7 @@ class BpejPuCaWidget(PuCaWidget):
                         validToDateStr, formatTimeStr).date()
                 
                 if validFromDate <= todayDate <= validToDate:
-                    code = row[codeColumnIndex]
+                    code = int(row[codeColumnIndex])
                     price = row[priceColumnIndex]
                     
                     bpejCodePrices[code] = float(price)
@@ -536,7 +536,7 @@ class BpejPuCaWidget(PuCaWidget):
             multiToSingleLayer (QgsVectorLayer): A reference to the single
                 features layer.
             bpejField (str): A name of the BPEJ field.
-            bpejCodePrices (dict): A dictionary with BPEJ codes as keys (str)
+            bpejCodePrices (dict): A dictionary with BPEJ codes as keys (int)
                 and prices as values (float).
         
         Returns:
@@ -567,7 +567,7 @@ class BpejPuCaWidget(PuCaWidget):
             bpejCode = str(feature.attribute(bpejField))
             geometry = feature.geometry()
             
-            editedBpejCode = bpejCode.replace('.', '')
+            editedBpejCode = int(bpejCode.replace('.', ''))
             
             if editedBpejCode in bpejCodePrices:
                 bpejPrice = bpejCodePrices[editedBpejCode]
