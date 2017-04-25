@@ -9,12 +9,10 @@
 [general]
 name=PU Plugin
 qgisMinimumVersion=2.16
-description=Plugin pro pozemkové úpravy
+description=Plugin pro zpracování přípravné fáze pozemkových úprav.
 version=0.1
 author=Ondřej Svoboda
 email=svoboond@gmail.com
-
-about=Plugin pro pozemkové úpravy
 
 tracker=https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017/issues
 repository=https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017
@@ -26,7 +24,7 @@ repository=https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=pu
+tags=PU, pozemkove upravy, vfk
 
 homepage=https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017
 category=Plugins
