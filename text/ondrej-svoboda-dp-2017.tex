@@ -92,6 +92,19 @@
 \renewcommand{\figurename}{Obrázek}
 \def\figurename{Obrázek}
 
+\lstdefinestyle{python}{
+   language=python,
+   basicstyle={\footnotesize\ttfamily},
+   keywordstyle=\color{blue}\ttfamily,
+   stringstyle=\color{green}\ttfamily,
+   commentstyle=\color{brown}\ttfamily,
+   showstringspaces=false,
+   morekeywords={True, False}
+}
+
+\renewcommand\lstlistingname{Kód}
+\renewcommand*{\lstlistlistingname}{Seznam ukázek kódu}
+
 % ========================================================================
 % Definice informací o dokumentu
 % ========================================================================
@@ -192,6 +205,12 @@
 
 % vysázení seznamu tabulek
 \seznamtabulek
+
+% vysázení seznamu ukázek kódu
+\cleardoublepage
+\thispagestyle{empty}
+\lstlistoflistings
+\newpage
 
 % jednotlivé kapitoly
 \include{1-uvod}
