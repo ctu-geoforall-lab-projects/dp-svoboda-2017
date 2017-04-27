@@ -149,8 +149,6 @@ Prvním krokem při prácí se zásuvným modulem je načtení \zk{VFK} souboru.
 \subsection{Grafické uživatelské rozhraní}
 \label{nacteni_vfk_gui}
 
-Grafické uživatelské rozhraní záložky je velmi jednoduché a intuitivní.
-
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.55\textwidth]{./pictures/nacteni_vfk_gui.png}
@@ -168,7 +166,7 @@ Grafické uživatelské rozhraní záložky je velmi jednoduché a intuitivní.
 \subsection{Postup}
 \label{postup_nacteni_vfk}
 
-Nejprve uživatel zvolí, který \zk{VFK} soubor chce načíst. K~dispozici jsou dva způsoby. Buď poklepá na~tlačítko \textit{Procházet} (viz prvek~2 na obr.~\ref{fig:nacteni_vfk_gui}), vybere požadovaný soubor a~cesta k~souboru se automaticky zapíše do~textového pole (viz prvek~1 na obr.~\ref{fig:nacteni_vfk_gui}), nebo zkopíruje cestu k~\zk{VFK} souboru přímo do~zmíněného textové pole. V~momentě, kdy se v~textovém poli nachází cesta k~validnímu \zk{VFK} souboru, se aktivuje tlačítko pro~načítání (viz prvek~4 na obr.~\ref{fig:nacteni_vfk_gui}) a~je možné zahájit import. O~průběhu načítání je uživatel informován indikátorem průběhu (viz prvek~3 na obr.~\ref{fig:main_gui}) a zprávami ve~stavovém řádku (viz prvek~4 na obr.~\ref{fig:main_gui}).
+Nejprve uživatel zvolí, který \zk{VFK} soubor chce načíst. K~dispozici jsou dva způsoby. Buď poklepá na~tlačítko \textit{Procházet} (prvek~2 na obr.~\ref{fig:nacteni_vfk_gui}), vybere požadovaný soubor a~cesta k~souboru se automaticky zapíše do~textového pole (prvek~1 na obr.~\ref{fig:nacteni_vfk_gui}), nebo zkopíruje cestu k~\zk{VFK} souboru přímo do~zmíněného textové pole. V~momentě, kdy se v~textovém poli nachází cesta k~validnímu \zk{VFK} souboru, se aktivuje tlačítko pro~načítání (prvek~4 na obr.~\ref{fig:nacteni_vfk_gui}) a~je možné zahájit import. O~průběhu načítání je uživatel informován indikátorem průběhu (prvek~3 na obr.~\ref{fig:main_gui}) a zprávami ve~stavovém řádku (prvek~4 na obr.~\ref{fig:main_gui}).
 
 \subsection{Algoritmus}
 \label{nacteni_vfk_algoritmus}
@@ -239,10 +237,10 @@ Během prvních experimentů s daty souboru \zk{VFK} bylo zjištěno, že OGR po
 
 {\scriptsize
 \begin{lstlisting}[style=python, caption={Kontrola verze programu QGIS}, captionpos=b, label=kontrola_verze_qgis, backgroundcolor = \color{light-gray},  numbers=left]
-        if QGis.QGIS_VERSION < '2.18.5':
-            self.fixedSqliteDriver = False
-        else:
-            self.fixedSqliteDriver = True
+if QGis.QGIS_VERSION < '2.18.5':
+    self.fixedSqliteDriver = False
+else:
+    self.fixedSqliteDriver = True
 \end{lstlisting}}
 
 \subsubsection{Popis algoritmu}
@@ -254,10 +252,10 @@ Pokud v adresáři, ve kterém se nachází vstupní \zk{VFK} soubor, neexistuje
 
 {\scriptsize
 \begin{lstlisting}[style=python, caption={Vytvoření SQLite databáze pomocí VFK Driveru}, captionpos=b, label=vytvoreni_db_vfk_driver, backgroundcolor = \color{light-gray},  numbers=left]
-	QgsApplication.registerOgrDrivers()
+QgsApplication.registerOgrDrivers()
 
-	vfkDriver = ogr.GetDriverByName('VFK')
-	vfkDataSource = vfkDriver.Open(filePath)
+vfkDriver = ogr.GetDriverByName('VFK')
+vfkDataSource = vfkDriver.Open(filePath)
 \end{lstlisting}}
 
 Poté algoritmus zkontroluje, zda je v~databázi tabulka parcel (\zk{PAR}). Celý plugin pracuje téměř výhradně právě s~touto tabulkou, proto když ji databáze neobsahuje, algoritmus se ukončí. Uživatele na tento problém upozorní zprávy ve~stavovém řádku, poli zpráv i~logovací záložce (viz sekce~\ref{komunikace}). Následuje tvorba geometrie pro~tabulky \zk{PAR}, \zk{SPOL} a \zk{SOBR}.
@@ -290,9 +288,20 @@ V~dalším kroku se otevře databázové připojení. Databázovým dotazem se z
 
 Když je proces nahrávání spuštěn ve verzi programu nižší než 2.18.5, všechna data databáze SQLite se naimportují do databáze SpatiaLite.
 
-Nakonec se tabulka parcel nahraje do~programu QGIS jako platná vrstva.
+Nakonec se tabulka parcel v závislosti na verzi QGISu pomocí SQLite (viz \ref{vytvoreni_vrstvy_parcel_pomoci_sqlite}) nebo SpatiaLite Driveru nahraje do~programu QGIS jako platná vrstva.
 
 Načtení \zk{VFK} souboru je spuštěno v samostatném vlákně. Pro přehlednost celý popsaný proces ilustruje diagram na obr. \ref{fig:diagram_nacitani_vfk}.
+
+{\scriptsize
+\begin{lstlisting}[style=python, caption={Vytvoření vrstvy parcel pomocí SQLite Driveru}, captionpos=b, label=vytvoreni_vrstvy_parcel_pomoci_sqlite, backgroundcolor = \color{light-gray},  numbers=left]
+blacklistedDriver = ogr.GetDriverByName('VFK')
+blacklistedDriver.Deregister()
+
+composedURI = dbPath + '|layername=PAR'
+layer = QgsVectorLayer(composedURI, layerName, 'ogr')
+	
+blacklistedDriver.Register()
+\end{lstlisting}}
 
 	\begin{figure}[H]
 		\centering
@@ -432,16 +441,25 @@ Nejdůležitější funkcionalitou této záložky je ovšem zařazení parcel d
 
 Pokud cesta k vrstvě obvodu není uživatelem definována (rozbalovací menu je prázdné), nebo je v rozbalovací menu vybrána vrstva, která nebyla vytvořena zásuvným modulem a tudíž neobsahuje potřebné sloupce, plugin automaticky vytvoří vrstvu obvodu ve stejném adresáři, ve kterém se nachází aktivní \zk{VFK} vrstva.
 
-Funkce pro vytvoření obvodu je volána v momentě, kdy je pro vrstvu \zk{VFK} uložena změna geometrie\footnote{Signál s názvem \textit{committedGeometriesChanges}.}, uložena změna, při které došlo k vymazání prvku\footnote{Signál s názvem \textit{committedFeaturesRemoved}.}, nebo je pomocí tlačítka \textit{Zařadit} (viz prvek 7 na obr. \ref{fig:editace_gui}) provedeno zařazení parcel.
+Funkce pro vytvoření obvodu je volána v momentě, kdy je pro vrstvu \zk{VFK} uložena změna geometrie\footnote{Signál s názvem \textit{committedGeometriesChanges}.}, uložena změna, při které došlo k vymazání prvku\footnote{Signál s názvem \textit{committedFeaturesRemoved}.}, nebo je pomocí tlačítka \textit{Zařadit} (prvek 7 na obr. \ref{fig:editace_gui}) provedeno zařazení parcel.
 
 Zásuvný modul nabízí dvě varianty zařazení parcel (viz prvek 6 na obr. \ref{fig:editace_gui}). První a zcela jistě více používanou možností je volba \textit{vybrané parcely}, která provede zařazení vybraných parcel do zvolené kategorie (viz prvek~4 na obr. \ref{fig:editace_gui}).
 
 Druhý způsob nazvaný \textit{obvodem} rozřadí všechny parcely ve~\zk{VFK} vrstvě do~kategorií. Jako podklad použije aktuálně vybranou vrstvu obvodu (viz prvek~2 na obr. \ref{fig:editace_gui}). Tato varianta pracuje pouze s obvody, které vytvořil zásuvný modul pro pozemkové úpravy. Pro~zařazení do~kategorie musí být parcela kompletně uvnitř geometrie příslušného prvku obvodu\footnote{Plugin používá nástroj \textit{Select by location} s~geometrickým predikátem \textit{within}.}.
 
-Pro kontrolu nabízí zásuvný modul tlačítko \textit{Zobrazit} (viz prvek 5 na~obr. \ref{fig:editace_gui}), které vybere, a~tím pádem zvýrazní, prvky v~kategorii.
+Pro kontrolu nabízí zásuvný modul tlačítko \textit{Zobrazit} (viz prvek 5 na~obr. \ref{fig:editace_gui}), které vybere, a~tím pádem zvýrazní, prvky v~kategorii (viz \ref{vyber_prvku_v_kategorii}).
+
+{\scriptsize
+\begin{lstlisting}[style=python, caption={Výběr prvků v kategorii parcel}, captionpos=b, label=vyber_prvku_v_kategorii, backgroundcolor = \color{light-gray},  numbers=left]
+expression = QgsExpression("\"PU_KATEGORIE\" = {}".format(value))
+features = layer.getFeatures(QgsFeatureRequest(expression))
+
+ids = [feature.id() for feature in features]
+layer.selectByIds(ids)
+\end{lstlisting}}
 
 %% TODO - doplnit referenci
-Při~zpracování pozemkových úprav se stává, že je potřeba zdigitalizovat parcelu na~základě podkladové mapy. Právě proto přidává zásuvný modul do~tabulky parcel sloupec \detokenize{PU_MERITKO_PODKLADU} (alias MERITKO PODKL.). Pokud tedy uživatel vytvoří novou parcelu, nebo~pomocí nástroje \textit{Přidat část} doplní popisné údaje o geometrii, měl by vyplnit měřítko podkladů. Tento údaj používá kontrola TODO (viz část TODO).
+Při~zpracování pozemkových úprav se stává, že je potřeba zdigitalizovat parcelu na~základě podkladové mapy. Právě proto přidává zásuvný modul do~tabulky parcel sloupec \detokenize{PU_MERITKO_PODKLADU} (alias MERITKO PODKL.). Pokud tedy uživatel vytvoří novou parcelu, nebo~pomocí nástroje \textit{Přidat část} doplní popisné údaje o geometrii, měl by vyplnit měřítko podkladů. Tento údaj používá \textit{kontrola - výměra nad mezní odchylkou} (viz část TODO).
 
 \subsection{Symbologie vrstvy obvodu}
 \label{symbologie_obvod}
@@ -456,9 +474,9 @@ Symbologie vrstvy obvodu se stejně jako u~vrstvy parcel řídí podle QML soubo
  	\end{figure}
 
 \subsection{Atributová tabulka vrstvy obvodu}
-\label{symbologie_obvod}
+\label{tabulka_obvod}
 
-Vrstva obvodu se vytváří z vrstvy parcel, ovšem pouze informace o~kategorii je proaobvod relevantní. Z~toho důvodu je viditelný pouze sloupec \detokenize{PU_KATEGORIE}, viz tab.~\ref{tab:viditelne_sloupce_aliasy_obvod}.
+Vrstva obvodu se vytváří z vrstvy parcel, ovšem pouze informace o~kategorii je pro~obvod relevantní. Z~toho důvodu je viditelný pouze sloupec \detokenize{PU_KATEGORIE}, viz tab.~\ref{tab:viditelne_sloupce_aliasy_obvod}.
 
 \begin{table}[H]
     \begin{tabular}{|l|l|}
@@ -479,22 +497,33 @@ Vrstva obvodu se vytváří z vrstvy parcel, ovšem pouze informace o~kategorii 
 \section{Kontroly a analýzy}
 \label{kontroly_analyzy}
 
-Poslední záložka zásuvného modulu nabízí možnost zkontrolovat data, zejména soulad mezi \zk{SPI} a \zk{SGI}, a provést analýzy nezbytné pro sestavení nárokových listů.
+Poslední záložka zásuvného modulu nabízí možnost zkontrolovat data, zejména soulad mezi~\zk{SPI} a~\zk{SGI}, a~provést analýzy nezbytné pro~sestavení nárokových listů.
 
 \subsection{Grafické uživatelské rozhraní}
-\label{editace_gui}
+\label{ca_gui}
 
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.55\textwidth]{./pictures/ca_gui.png}
 		\caption[Grafické uživatelské rozhraní záložky \textit{Kontroly a analýzy}]{Grafické uživatelské rozhraní záložky \textit{Kontroly a analýzy}}
-		\label{fig:editace_gui}
+		\label{fig:ca_gui}
  	\end{figure}
 
 \begin{description}
 	\item[Prvek 1:] Rozbalovací menu pro přepínání mezi kontrolami a analýzami.
 	\item[Prvek 2:] Okna kontrol a analýz zobrazující se v~závislosti na~tom, která položka rozbalovacího menu (prvek~1) je vybrána.
-	\item[Prvek 3:] Tlačítko pro provedení kontroly či analýzy. Jeho text je pro kontroly a analýzy rozdílný.
+	\item[Prvek 3:] Tlačítko pro provedení kontroly či analýzy. Jeho text je pro kontroly a~analýzy rozdílný.
 \end{description}
+
+\subsection{Postup}
+\label{postup_ca}
+
+Práce v~záložce \textit{Kontroly a~analýzy} je velmi jednoduchá a~intuitivní. V~rozbalovacím menu uživatel zvolí kontrolu či~analýzu, důsledkem čehož se změní okno kontroly (prvek 2 na~obr.~\ref{fig:ca_gui}). Některé kontroly nevyžadují žádné nastavení, u analýz a jiných kontrol se od uživatele očekává určitá interakce, bez které není možné pokračovat. Když je vše potřebné zadané, lze kontrolu či analýzu spustit.
+
+\subsection{Kontroly}
+\label{kontroly}
+
+\subsubsection{Kontrola - obvodem}
+\label{kontrola_obvodem}
 
 %%BPEJ je zjednodusene - viz 9.8 http://www.spucr.cz/frontend/webroot/uploads/files/2015/12/metodickynavodkprovadenipozemkovychuprav1327.pdf
