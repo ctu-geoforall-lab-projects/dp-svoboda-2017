@@ -59,8 +59,8 @@ class AreaPuCaWidget(PuCaWidget):
             expression = QgsExpression(
                 "$geometry is not null "
                 "and "
-                "\"{}\" in (1, 2)"
-                .format(self.dW.puCategoryColumnName))
+                "\"{}\" is not null"
+                .format(self.dW.deafultAreaColumnName))
             
             self.dW.select_features_by_expression(layer, expression)
             
@@ -105,9 +105,6 @@ class AreaPuCaWidget(PuCaWidget):
                 
                 if puArea != originalPuArea:
                     layer.changeAttributeValue(id, puAreaFieldId, puArea)
-                
-                if type(defaultArea) == QPyNullVariant:
-                    continue
                 
                 originalPuAreaAbsDifference = feature.attribute(
                     puAreaAbsDifferenceColumnName)
@@ -312,16 +309,24 @@ class AreaPuCaWidget(PuCaWidget):
                 puBasisScale = feature.attribute(
                     self.dW.puBasisScaleColumnName[:10])
                 
-                if type(puBasisScale) == QPyNullVariant or puBasisScale == 0:
-                    puAreaMaxQualityCode = feature.attribute(
-                        maxQualityCodeColumnName)
-                else:
-                    puAreaMaxQualityCode = \
+                puAreaSobrSpolMaxQualityCode = feature.attribute(
+                    maxQualityCodeColumnName)
+                
+                puAreaBasisScaleMaxQualityCode = None
+                
+                if type(puBasisScale) != QPyNullVariant and puBasisScale != 0:
+                    puAreaBasisScaleMaxQualityCode = \
                         self._get_pu_area_max_quality_code_from_basis_scale(
                             puBasisScale)
                 
-                if type(puAreaMaxQualityCode) == QPyNullVariant:
+                if (type(puAreaSobrSpolMaxQualityCode) == QPyNullVariant
+                    and puAreaBasisScaleMaxQualityCode == None):
                     continue
+                elif type(puAreaSobrSpolMaxQualityCode) == QPyNullVariant:
+                    puAreaMaxQualityCode = puAreaBasisScaleMaxQualityCode
+                else:
+                    puAreaMaxQualityCode = max(puAreaSobrSpolMaxQualityCode,
+                                               puAreaBasisScaleMaxQualityCode)
                 
                 if puAreaMaxQualityCode > puAreaMaxQualityCodes[rowid]:
                     puAreaMaxQualityCodes[rowid] = puAreaMaxQualityCode
