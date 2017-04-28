@@ -43,7 +43,7 @@ Když je plugin nainstalován, objeví se v~liště zásuvných modulů jeho iko
 \section{Grafické uživatelské rozhraní}
 \label{gui}
 
-Grafické uživatelské rozhraní zásuvného modulu je reprezentováno jedním oknem (viz obr. \ref{fig:main_gui}), které je možné ukotvit do samotného programu QGIS.
+Grafické uživatelské rozhraní zásuvného modulu je reprezentováno jedním oknem (viz obr. \ref{fig:main_gui}), které je možné ukotvit do samotného programu QGIS. Protože zásuvný modul se řídí podle~legislativy české republiky a~používá výměnný formát katastru nemovitostí, je grafické uživatelské rozhraní v~českém jazyce.
 
 	\begin{figure}[H]
 		\centering
@@ -518,7 +518,7 @@ Poslední záložka zásuvného modulu nabízí možnost zkontrolovat data, zejm
 \subsection{Postup}
 \label{postup_ca}
 
-Práce v~záložce \textit{Kontroly a~analýzy} je velmi jednoduchá a~intuitivní. V~rozbalovacím menu uživatel zvolí kontrolu či~analýzu, důsledkem čehož se změní okno kontroly (prvek 2 na~obr.~\ref{fig:ca_gui}). Některé kontroly nevyžadují žádné nastavení, u analýz a jiných kontrol se od uživatele očekává určitá interakce, bez které není možné pokračovat. Když je vše potřebné zadané, lze kontrolu či analýzu spustit. O výsledku je uživatel informován pomocí zpráv ve stavovém řádku.
+Práce v~záložce \textit{Kontroly a~analýzy} je velmi jednoduchá a~intuitivní. V~rozbalovacím menu uživatel zvolí kontrolu či~analýzu, důsledkem čehož se změní okno kontroly (prvek~2 na~obr.~\ref{fig:ca_gui}). Některé kontroly nevyžadují žádné nastavení, u~analýz a~jiných kontrol se od~uživatele očekává určitá interakce, bez~které není možné pokračovat. Když je vše potřebné zadané, lze kontrolu či~analýzu spustit. O~výsledku je uživatel informován pomocí zpráv ve~stavovém řádku.
 
 \subsection{Kontroly}
 \label{kontroly}
@@ -542,11 +542,23 @@ Jediným potřebným vstupem je zmiňovaná vrstva obvodu v~rozbalovacím menu (
 \subsubsection{Kontrola - není v SPI}
 \label{kontrola_neni_v_spi}
 
-Jak vyplývá z~názvu, kontrola \textit{není v SPI} slouží k~zobrazení parcel, které nejsou v~souboru popisných informací. Pro výběr je použit sloupec \detokenize{KMENOVE_CISLO_PAR}, neboť patří mezi povinně vyplněné \citep{struktura_vfk}. Pokud má parcela tento sloupec prázdný, znamená to, že se jedná o~nově vytvořenu parcelu. Provedení kontroly \textit{není v SPI} nevyžaduje žádné nastavení, jedinou podmínkou je aktivní vrstva parcel.
+Jak vyplývá z~názvu, kontrola \textit{není v SPI} slouží k~zobrazení parcel, které nejsou v~souboru popisných informací. Pro výběr používá sloupec \detokenize{KMENOVE_CISLO_PAR}, neboť patří mezi povinně vyplněné \citep{struktura_vfk}. Pokud má parcela tento sloupec prázdný, znamená to, že se jedná o~nově vytvořenu parcelu. Provedení kontroly \textit{není v SPI} nevyžaduje žádné nastavení, jedinou podmínkou je aktivní vrstva parcel.
 
 \subsubsection{Kontrola - není v mapě}
 \label{kontrola_neni_v_mape}
 
+Ani~pro~spuštění kontroly \textit{není v mapě} uživatel nemusí cokoli zadávat, stačí mít aktivní vrstvu \zk{PAR}. Po~dokončení jsou vybrány parcely, které mají nulovou geometrii a~tudíž se nezobrazují v~mapovém okně\footnote{Vybrány jsou též parcely s~nevalidní geometrií.}.
 
+\subsubsection{Kontrola - výměra nad mezní odchylkou}
+\label{kontrola_vymera}
+
+Kontrola \textit{výměra nad~mezní odchylkou} ověřuje, zda~rozdíl mezi výměrou dle~\zk{SPI} a~výměrou vypočtenou z~\zk{SGI} nepřekračuje mezní odchylku. Ta je stanovena katastrální vyhláškou \citep{vyhlaska_357} a~závisí na~kódu kvality nejméně přesně určeného lomového bodu na~hranici parcely, viz tab.~\ref{tab:odchylky_vymer}. Jestliže je parcela digitalizovaná, kód kvality podrobných bodů se určí podle~měřítka podkladové mapy, viz tab.~\ref{tab:kody_kvality_digit}.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.2\textwidth]{./pictures/vymera.pdf}
+		\caption[Diagram algoritmu kontroly \textit{výměra nad mezní odchylkou}]{Diagram algoritmu kontroly \textit{výměra nad mezní odchylkou}}
+		\label{fig:diagram_vymera}
+ 	\end{figure}
 
 %%BPEJ je zjednodusene - viz 9.8 http://www.spucr.cz/frontend/webroot/uploads/files/2015/12/metodickynavodkprovadenipozemkovychuprav1327.pdf
