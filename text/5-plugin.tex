@@ -91,7 +91,7 @@ Grafické uživatelské rozhraní zásuvného modulu je reprezentováno jedním 
 Zásuvný modul komunikuje s uživatelem třemi způsoby:
 
 \begin{enumerate}[leftmargin=1.5cm, noitemsep]
-	\item \underline{Stavový řádek} (viz prvek~4 obr.~\ref{fig:main_gui}) představuje nejčastější způsob zobrazování zpráv zásuvného modulu. Pokud  uživatel neví jak postupovat, zde s~největší pravděpodobností najde potřebné informace. Běžné zprávy mají černou barvu písma, důležíté zprávy se~zobrazují červeně (viz obr.~\ref{fig:dulezita_zprava}).
+	\item \underline{Stavový řádek} (viz prvek~4 obr.~\ref{fig:main_gui}) představuje nejčastější způsob zobrazování zpráv zásuvného modulu. Když uživatel neví jak postupovat, zde s~největší pravděpodobností najde potřebné informace. Běžné zprávy mají černou barvu písma, důležíté zprávy se~zobrazují červeně (viz obr.~\ref{fig:dulezita_zprava}).
 	
 	\begin{figure}[H]
 		\centering
@@ -173,9 +173,9 @@ Nejprve uživatel zvolí, který \zk{VFK} soubor chce načíst. K~dispozici jsou
 
 Algoritmus pro náčítání \zk{VFK} souborů patří mezi komplikovanější části zásuvného modulu a je klíčový pro správný chod navazujících procesů, proto je mu zde věnována zvýšená pozornost.
 
-První verze tohoto algoritmu byla inspirována \zk{VFK} Pluginem\footnote{\detokenize{http://freegis.fsv.cvut.cz/gwiki/VFK_/_QGIS_plugin}}, ale během vývoje bylo nezbytné algoritmus mnohokrát upravovat a ve výsledku se dosti liší.
+První verze tohoto algoritmu byla inspirována \zk{VFK} Pluginem\footnote{\url{\detokenize{http://freegis.fsv.cvut.cz/gwiki/VFK_/_QGIS_plugin}}}, ale během vývoje bylo nezbytné algoritmus mnohokrát upravovat a ve výsledku se dosti liší.
 
-Pro čtení \zk{VFK} souborů používá QGIS knihovnu GDAL (viz kapitola č.~\ref{podklady}), konkrétně se jedná o \zk{VFK} Driver\footnote{\detokenize{http://www.gdal.org/drv_vfk.html}}. Ten funguje tak, že při prvním čtení souboru vytvoří ve stejném adresáři, ve kterém se nachází čtený \zk{VFK} soubor, SQLite databázi a do ní naimportuje všechna data. Pří dalším čtení se již databáze nevytváří, proto je čtení mnohonásobně rychlejší, viz tab.~\ref{tab:nacteni_vfk_driver}. 
+Pro čtení \zk{VFK} souborů používá QGIS knihovnu GDAL (viz kapitola č.~\ref{podklady}), konkrétně se jedná o \zk{VFK} Driver\footnote{\url{\detokenize{http://www.gdal.org/drv_vfk.html}}}. Ten funguje tak, že při prvním čtení souboru vytvoří ve stejném adresáři, ve kterém se nachází čtený \zk{VFK} soubor, SQLite databázi a do ní naimportuje všechna data. Pří dalším čtení se již databáze nevytváří, proto je čtení mnohonásobně rychlejší, viz tab.~\ref{tab:nacteni_vfk_driver}. 
 
 \begin{table}[H]
     \begin{tabular}{|l|l|}
@@ -194,7 +194,7 @@ Pro čtení \zk{VFK} souborů používá QGIS knihovnu GDAL (viz kapitola č.~\r
 
 \zk{VFK} Driver ovšem umožňuje otevřít \zk{VFK} soubor pouze v~režimu čtení a to je pro~potřeby zpracování pozemkových úprav nedostatečné.
 
-Pro takové případy je knihovna GDAL vybavena SQLite Driverem\footnote{\detokenize{http://gdal.org/drv_sqlite.html}}, který nabízí možnost zápisu do SQLite databáze. Aby byl SQLite driver schopen rozpoznat a přečíst geometrii, musí databáze obsahovat tabulky \textit{\detokenize{geometry_columns}} a~\textit{\detokenize{spatial_ref_sys}}. V~tabulce \textit{\detokenize{geometry_columns}} je uveden seznam tabulek, které mají geometrii, společně s~údaji jako název sloupce s~geometrií, typ geometrie, souřadnicový systém a~další, viz tab. \ref{tab:geometry_columns}. Údaje o souřadnicovém systému odkazují na~tabulku \textit{\detokenize{spatial_ref_sys}}, ve~které jsou souřadnicové systémy definovány. Seznam sloupců tabulky \textit{\detokenize{spatial_ref_sys}} a~jejich datové typy popisuje tab. \ref{tab:spatial_ref_sys}. 
+Pro takové případy je knihovna GDAL vybavena SQLite Driverem\footnote{\url{\detokenize{http://gdal.org/drv_sqlite.html}}}, který nabízí možnost zápisu do SQLite databáze. Aby byl SQLite driver schopen rozpoznat a přečíst geometrii, musí databáze obsahovat tabulky \textit{\detokenize{geometry_columns}} a~\textit{\detokenize{spatial_ref_sys}}. V~tabulce \textit{\detokenize{geometry_columns}} je uveden seznam tabulek, které mají geometrii, společně s~údaji jako název sloupce s~geometrií, typ geometrie, souřadnicový systém a~další, viz tab. \ref{tab:geometry_columns}. Údaje o souřadnicovém systému odkazují na~tabulku \textit{\detokenize{spatial_ref_sys}}, ve~které jsou souřadnicové systémy definovány. Seznam sloupců tabulky \textit{\detokenize{spatial_ref_sys}} a~jejich datové typy popisuje tab. \ref{tab:spatial_ref_sys}. 
 
 \begin{table}[H]
     \begin{tabular}{|l|l|}
@@ -233,7 +233,7 @@ Pro takové případy je knihovna GDAL vybavena SQLite Driverem\footnote{\detoke
 \end{table}
 
 %% TODO - pridat odkaz na prilohu
-Během prvních experimentů s daty souboru \zk{VFK} bylo zjištěno, že OGR poskytovatel programu QGIS při změně atributových hodnot nepoužíval transakce. V~důsledku toho trvalo uložení změn extrémně dlouho. Tato chyba byla nahlášena vývojářům systému QGIS, ti ji opravili a od verze 2.18.5 poskytovatel OGR transakce využívá. Podrobněji se tomuto tématu věnuje příloha TODO. Algoritmus zásuvného modulu pro načítání \zk{VFK} souboru zmíněný problém zohledňuje. Ve verzi programu QGIS nižší než 2.18.5 naimportuje data to databáze SpatiaLite\footnote{SpatiaLite je extenze SQLite, která umožňuje ukládat geoprostorová data. Obsahuje také mnoho funkcí pro analýzu geoprostorových dat \citep{spatialite} \citep{wiki_spatialite}} a dále s~ní pracuje (viz~\ref{kontrola_verze_qgis}). Poskytovatel SpatiaLite programu QGIS totiž ukládá změny v~transakcích a~tudíž nemá problémy s~pomalým zápisem.
+Během prvních experimentů s daty souboru \zk{VFK} bylo zjištěno, že OGR poskytovatel programu QGIS při změně atributových hodnot nepoužíval transakce. V~důsledku toho trvalo uložení změn extrémně dlouho. Tato chyba byla nahlášena vývojářům systému QGIS, ti ji opravili a od verze 2.18.5 poskytovatel OGR transakce využívá. Podrobněji se tomuto tématu věnuje příloha TODO. Algoritmus zásuvného modulu pro načítání \zk{VFK} souboru zmíněný problém zohledňuje. Ve verzi programu QGIS nižší než 2.18.5 naimportuje data to databáze SpatiaLite\footnote{SpatiaLite je extenze SQLite, která umožňuje ukládat geoprostorová data. Obsahuje také mnoho funkcí pro analýzu geoprostorových dat \citep{spatialite} \citep{wiki_spatialite}.} a dále s~ní pracuje (viz~\ref{kontrola_verze_qgis}). Poskytovatel SpatiaLite programu QGIS totiž ukládá změny v~transakcích a~tudíž nemá problémy s~pomalým zápisem.
 
 {\scriptsize
 \begin{lstlisting}[style=python, caption={Kontrola verze programu QGIS}, captionpos=b, label=kontrola_verze_qgis, backgroundcolor = \color{light-gray},  numbers=left]
@@ -260,7 +260,7 @@ vfkDataSource = vfkDriver.Open(filePath)
 
 Poté algoritmus zkontroluje, zda je v~databázi tabulka parcel (\zk{PAR}). Celý plugin pracuje téměř výhradně právě s~touto tabulkou, proto když ji databáze neobsahuje, algoritmus se ukončí. Uživatele na tento problém upozorní zprávy ve~stavovém řádku, poli zpráv i~logovací záložce (viz sekce~\ref{komunikace}). Následuje tvorba geometrie pro~tabulky \zk{PAR}, \zk{SPOL} a \zk{SOBR}.
 
-V~dalším kroku se otevře databázové připojení. Databázovým dotazem se zkontroluje přítomnost tabulek \textit{\detokenize{geometry_columns}} a~\textit{\detokenize{spatial_ref_sys}}. Pokud to je nutné, pomocí SQL dávky se obě tabulky vytvoří a~nahrají se do nich potřebné údaje. Při editaci a~navazujících kontrolách a~analýzách zásuvný modul do tabulky parcel zapisuje vlastní data, proto je zapotřebí přidat vlastní sloupce. Dotazem se zjistí, jestli již v databázi existují, pokud ne, další SQL dávka zajistí jejich vytvoření. Seznam přidaných sloupců a jejich datové typy se nachází v~tab.~\ref{tab:pridane_sloupce_par}.
+V~dalším kroku se otevře databázové připojení. Databázovým dotazem se zkontroluje přítomnost tabulek \textit{\detokenize{geometry_columns}} a~\textit{\detokenize{spatial_ref_sys}}. Pokud to je nutné, pomocí SQL dávky se obě tabulky vytvoří a~nahrají se do nich potřebné údaje. Při editaci a~navazujících kontrolách a~analýzách zásuvný modul do tabulky parcel zapisuje vlastní data, proto je zapotřebí přidat vlastní sloupce. Dotazem se zjistí, jestli již v databázi existují, když ne, další SQL dávka zajistí jejich vytvoření. Seznam přidaných sloupců a jejich datové typy se nachází v~tab.~\ref{tab:pridane_sloupce_par}.
 
 \begin{table}[H]
     \begin{tabular}{|l|l|}
@@ -518,7 +518,7 @@ Poslední záložka zásuvného modulu nabízí možnost zkontrolovat data, zejm
 \subsection{Postup}
 \label{postup_ca}
 
-Práce v~záložce \textit{Kontroly a~analýzy} je velmi jednoduchá a~intuitivní. V~rozbalovacím menu uživatel zvolí kontrolu či~analýzu, důsledkem čehož se změní okno kontroly (prvek~2 na~obr.~\ref{fig:ca_gui}). Některé kontroly nevyžadují žádné nastavení, u~analýz a~jiných kontrol se od~uživatele očekává určitá interakce, bez~které není možné pokračovat. Když je vše potřebné zadané, lze kontrolu či~analýzu spustit. O~výsledku je uživatel informován pomocí zpráv ve~stavovém řádku.
+Práce v~záložce \textit{Kontroly a~analýzy} je velmi jednoduchá a~intuitivní. V~rozbalovacím menu uživatel zvolí kontrolu či~analýzu, důsledkem čehož se změní dolní okno (prvek~2 na~obr.~\ref{fig:ca_gui}). Všechny kontroly až na jednu nevyžadují žádné nastavení, pouze u~kontroly \textit{obvodem} a~analýz se od~uživatele očekává určitá interakce, bez~které není možné pokračovat. Když je vše potřebné zadané, lze kontrolu či~analýzu spustit. O~výsledku je uživatel informován pomocí zpráv ve~stavovém řádku.
 
 \subsection{Kontroly}
 \label{kontroly}
@@ -528,7 +528,7 @@ Práce v~záložce \textit{Kontroly a~analýzy} je velmi jednoduchá a~intuitivn
 
 Kontrola obvodem provádí výběr parcel, které nejsou kompletně uvnitř vrstvy obvodu\footnote{Použit je nástroj \textit{Select by location} s~geometrickým predikátem \textit{within} a~poté je zavolána funkce pro~převrácení výběru prvků.}.
 
-Pokud uživatel pracuje od~začátku pouze s~jednou vrstvou obvodu, měl by být výsledek této kontroly stejný jako při~zvolení kategorie \textit{bez kategorie} (viz prvek~4 na obr.~\ref{fig:editace_gui}) a~provedení výběru prvků v~kategorii pomocí tlačítka \textit{Zobrazit} (viz prvek 5 na obr. \ref{fig:editace_gui}). Lišit se tyto dvě metody budou v~momentě, kdy si uživatel nahraje vrstvu obvodu, kterou vytvořil s jinou vrstvou parcel. Jinými slovy tato kontrola používá geometrii vrstvy obvodu a tlačítko \textit{Zobrazit} v záložce \textit{Editace} vybírá parcely na základě údajů uložených v~atributové tabulce.
+Jestliže uživatel pracuje od~začátku pouze s~jednou vrstvou obvodu, měl by být výsledek této kontroly stejný jako při~zvolení kategorie \textit{bez kategorie} (viz prvek~4 na obr.~\ref{fig:editace_gui}) a~provedení výběru prvků v~kategorii pomocí tlačítka \textit{Zobrazit} (viz prvek 5 na obr. \ref{fig:editace_gui}). Lišit se tyto dvě metody budou v~momentě, kdy si uživatel nahraje vrstvu obvodu, kterou vytvořil s jinou vrstvou parcel. Jinými slovy tato kontrola používá geometrii vrstvy obvodu a tlačítko \textit{Zobrazit} v záložce \textit{Editace} vybírá parcely na základě údajů uložených v~atributové tabulce.
 
 Jediným potřebným vstupem je zmiňovaná vrstva obvodu v~rozbalovacím menu (viz obr.~\ref{fig:kontrola_obvodem_gui}), které je propojené s~menu vrstvy obvodu v~záložce \textit{Editace}.
 
@@ -554,11 +554,76 @@ Ani~pro~spuštění kontroly \textit{není v mapě} uživatel nemusí cokoli zad
 
 Kontrola \textit{výměra nad~mezní odchylkou} ověřuje, zda~rozdíl mezi výměrou dle~\zk{SPI} a~výměrou vypočtenou z~\zk{SGI} nepřekračuje mezní odchylku. Ta je stanovena katastrální vyhláškou \citep{vyhlaska_357} a~závisí na~kódu kvality nejméně přesně určeného lomového bodu na~hranici parcely, viz tab.~\ref{tab:odchylky_vymer}. Jestliže je parcela digitalizovaná, kód kvality podrobných bodů se určí podle~měřítka podkladové mapy, viz tab.~\ref{tab:kody_kvality_digit}.
 
+Algoritmus z~vrstvy parcel nejdříve vyfiltruje prvky, které mají validní geometrii a~zadanou výměru podle \zk{SPI}. Poté v~cyklu všemi takovými prvky prochází. Pro identifikaci parcel, které byly digitalizované, slouží sloupec \detokenize{PU_MERITKO_PODKLADU} (alias MERITKO PODKL.). Hodnota 1 značí, že parcela nemá validní geometrii, jiné číslo udává měřítko podkladové mapy. Pokud je tedy v~tomto sloupci uvedeno číslo různé od~1, znamená to, že~se jedná o~digitalizovanou parcelu. V~takovém případě algoritmus zjistí kód kvality podrobných bodů podle tab. \ref{tab:kody_kvality_digit}. Pomocí lomového bodu s~největším kódem kvality se vypočte mezní odchylka výměr a~porovná se s~absolutním rozdílem výměr dle~\zk{SPI} a~\zk{SGI}. Když je mezní odchylka překročena, přidá se do výběru. V~momentě, když už není k dispozici žádný další prvek, se kontrola ukončí. Celý postup znázorňuje diagram na obr.~\ref{fig:diagram_vymera}.
+
+\subsubsection{Kontrola - bez vlastníka}
+\label{kontrola_bez_vlastnika}
+
+Kontrola \textit{bez~vlastníka} vybírá parcely, které jsou bez vlastníka, tzn. že~nemají přiřazený list vlastnictví. Takové parcely se označují jako \textit{LV~0}.
+
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=1.2\textwidth]{./pictures/vymera.pdf}
 		\caption[Diagram algoritmu kontroly \textit{výměra nad mezní odchylkou}]{Diagram algoritmu kontroly \textit{výměra nad mezní odchylkou}}
 		\label{fig:diagram_vymera}
+ 	\end{figure}
+
+\subsection{Analýzy}
+\label{analyzy}
+
+\subsubsection{Analýza - měření vzdálenosti}
+\label{analyza_vzdalenosti}
+
+Analýza \textit{měření vzdálenosti} vypočítá pro~všechny parcely v~kategorii \textit{v~obvodu~-~řešené~(2)} vzdálenost jejich těžiště od referenčního bodu. Výsledné zaokrouhlené hodnoty v~metrech ukládá do sloupce \detokenize{PU_VZDALENOST} (alias VZDALENOST).
+
+Pro spuštění této kontroly je zapotřebí v rozbalovacím menu, které filtruje bodové vrstvy, zvolit vrstu referenčního bodu, viz obr. \ref{fig:analyza_vzdalenosti_gui}. Vybraná vrstva referenčního bodu musí obsahovat právě jeden prvek a~kvůli zamezení neočekávaných výsledků musí mít stejný souřadnicový systém jako vrstva parcel.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.55\textwidth]{./pictures/analyza_vzdalenost.png}
+		\caption[Grafické uživatelské rozhraní analýzy \textit{měření vzdálenosti}]{Grafické uživatelské rozhraní analýzy \textit{měření vzdálenosti}}
+		\label{fig:analyza_vzdalenosti_gui}
+ 	\end{figure}
+
+{\scriptsize
+\begin{lstlisting}[style=python, caption={Výpočet vzdálenosti težiště parcely od refenčního bodu}, captionpos=b, label=vypocet_vzdalenosti_teziste_parcely_od_ref_bodu, backgroundcolor = \color{light-gray},  numbers=left]
+centroid = geometry.centroid().asPoint()
+distanceDouble = sqrt(refPoint.sqrDist(centroid))
+distance = int(round(distanceDouble))
+\end{lstlisting}}
+
+\subsubsection{Analýza - oceňování podle BPEJ}
+\label{analyza_bpej}
+
+Analýza \textit{oceňování podle BPEJ} počítá cenu pozemku na základě vrstvy hranic \zk{BPEJ}.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.55\textwidth]{./pictures/analyza_bpej.png}
+		\caption[Grafické uživatelské rozhraní analýzy \textit{oceňování podle BPEJ}]{Grafické uživatelské rozhraní analýzy \textit{oceňování podle BPEJ}}
+		\label{fig:analyza_bpej_gui}
+ 	\end{figure}
+
+\begin{description}
+	\item[Prvek 1:] Rozbalovací menu s~aktuálně načtenými polygonovými vrstvami.
+	\item[Prvek 2:] Rozbalovací menu se~sloupci vybrané vrstvy \zk{BPEJ}.
+\end{description}
+
+Uživatel nejprve vybere vrstvu hranic \zk{BPEJ} (viz prvek~1 na obr.~\ref{fig:analyza_bpej_gui}) a~poté zvolí sloupec, ve~kterém jsou uloženy kódy \zk{BPEJ}\footnote{Analýza pracuje s~kódy zapsanými s tečkou i bez ní.}. Vrstva hranic \zk{BPEJ} musí mít stejný souřadnicový systém jako vrstva \zk{PAR}.
+
+Pro určení ceny za metr čtvereční jednotlivých kódů \zk{BPEJ} analýza používá číselník \zk{BPEJ} z Českého úřadu zeměměřičského a katastrálního\footnote{Informace o~číselníku jsou dostupné na~\url{https://goo.gl/uXf8FC}. Samotný číselník lze stáhnout z~\url{http://www.cuzk.cz/CUZK/media/CiselnikyISKN/SC_BPEJ/SC_BPEJ.zip?ext=.zip}.}.
+
+Do algoritmu vstupují vrstvy \zk{PAR} a~hranice \zk{BPEJ}, na~které je volán nástroj vektorového překryvu\footnote{Nástroj \textit{Union}.}. Poté se zkontroluje aktuálnost číselníku \zk{BPEJ}. Jesliže číselník není aktuální a~lze se připojit k~internetu\footnote{Pro testování internetového připojení byla zvolena adresa \url{https://www.google.com}.}, stáhne zásuvný modul nový číselník. V~dalším kroku se z~nejnovějšího dostupného číselníku přečtou data a~vypočítá se cena. Do~atributové tabulky se zápíše nejen cena celková (sloupec \detokenize{PU_CENA} s aliasem CELK. CENA), ale také cena za metr čtvereční, výměra a cena dle jednotlivých bonit v příslušné parcele (sloupec \detokenize{PU_BPEJ_BPEJCENA_VYMERA_CENA} s aliasem BPEJ KOD-CENA ZA M2-VYMERA-CENA). Může se stát, že uživatel zvolí špatný sloupec, nebo že kód \zk{BPEJ} nebude uveden v číselníku. V~takovém případě plugin vybere ve~vrstvě obvodu prvky, pro~které nenalezl ceny, a~informuje uživatele o~problému.
+
+Algoritmus počítá i~s~možností změny adresy pro~stažení číselníku, když tato situace nastane, oznámí to uživateli.
+
+Princip algoritmu je znázorněn na obr. \ref{fig:diagram_bpej}.
+
+	\begin{figure}[H]
+		%%\centering
+		\includegraphics[width=1.2\textwidth]{./pictures/bpej.pdf}
+		\caption[Diagram algoritmu analýzy \textit{oceňování podle BPEJ}]{Diagram algoritmu analýzy \textit{oceňování podle BPEJ}}
+		\label{fig:diagram_bpej}
  	\end{figure}
 
 %%BPEJ je zjednodusene - viz 9.8 http://www.spucr.cz/frontend/webroot/uploads/files/2015/12/metodickynavodkprovadenipozemkovychuprav1327.pdf

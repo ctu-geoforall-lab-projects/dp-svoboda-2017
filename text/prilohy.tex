@@ -1,0 +1,123 @@
+\chapter{Struktura zásuvného modulu}
+\label{struktura_pluginu}
+
+\begin{minipage}{0.9\textwidth}
+  \dirtree{%
+  .1 puplugin/.
+  .2 data/.
+  .3 bpej/.
+  .4 \detokenize{SC_BPEJ.csv}.
+  .3 icons/.
+  .4 checkanalysis.png.
+  .4 edit.png.
+  .4 loadvfk.png.
+  .3 qml/.
+  .4 PAR.qml.
+  .4 perimeter.qml.
+  .3 sql/.
+  .4 \detokenize{add_pu_columns_PAR.sql}.
+  .4 \detokenize{check_gc_srs.sql}.
+  .4 \detokenize{check_pu_columns_PAR.sql}.
+  .4 \detokenize{create_fill_gc_srs.sql}.
+  .4 \detokenize{create_sobr_spol.sql}.
+  .2 docs/.
+  .2 pubin/.
+  .2 text/.
+  .2 zadani/.
+  .2 .gitignore.
+  .2 \detokenize{__init__.py}.
+  .2 metadata.txt.
+  .2 puplugin.cfg.
+  .2 puplugin.png.
+  .2 puplugin.py.
+  .2 puplugin.svg.
+  .2 README.md.
+  }
+\end{minipage}
+
+\begin{description}
+	\item[\texttt{data}:] Složka obsahující všechna potřebná data.
+	\begin{description}[leftmargin=1cm]
+		\item[\texttt{bpej}:] Složka obsahující data pro~analýzu \textit{oceňování podle BPEJ}.
+		\begin{description}[leftmargin=1cm]
+			\item[\texttt{\detokenize{SC_BPEJ.csv}}:] Číselník \zk{BPEJ}.
+		\end{description}
+		\item[\texttt{icons}:] Složka obsahující ikony záložek.
+		\begin{description}[leftmargin=1cm]
+			\item[\texttt{checkanalysis.png}:] Ikona záložky \textit{Kontroly a analýzy}.
+			\item[\texttt{edit.png}:] Ikona záložky \textit{Editace}.
+			\item[\texttt{loadvfk.png}:] Ikona záložky \textit{Načtení VFK souboru}.
+		\end{description}
+		\item[\texttt{icons}:] Složka obsahující QML soubory.
+		\begin{description}[leftmargin=1cm]
+			\item[\texttt{PAR.qml}:] QML soubor pro~vrstvu \zk{PAR}.
+			\item[\texttt{perimeter.qml}:] QML soubor pro~vrstvu obvodu.
+		\end{description}
+		\item[\texttt{sql}:] Složka obsahující SQL dávky.
+		\begin{description}[leftmargin=1cm]
+			\item[\texttt{\detokenize{add_pu_columns_PAR.sql}}:] SQL dávka pro přidání vlastních sloupců.
+			\item[\texttt{\detokenize{check_gc_srs.sql}}:] SQL dávka pro kontrolu přítomnosti tabulek \textit{\detokenize{geometry_columns}} a~\textit{\detokenize{spatial_ref_sys}}.
+			\item[\texttt{\detokenize{check_pu_columns_PAR.sql}}:] SQL dávka pro~kontrolu přítomnosti vlastních sloupců.
+			\item[\texttt{\detokenize{create_fill_gc_srs.sql}}:] SQL dávka pro~vytvoření a~naplnění tabulek \textit{\detokenize{geometry_columns}} a~\textit{\detokenize{spatial_ref_sys}}.
+			\item[\texttt{\detokenize{create_sobr_spol.sql}}:] SQL dávka pro~vytvoření tabulek \zk{SOBR} a~\zk{SPOL}.
+		\end{description}
+	\end{description}
+	\item[\texttt{docs}:] Složka obsahující návod k~zásuvnému modulu.
+	\item[\texttt{pubin}:] Složka Python balíčku se~všemi třídami, více viz příloha \ref{popis_trid}.
+	\item[\texttt{text}:] Složka obsahující text práce.
+	\item[\texttt{zadani}:] Složka obsahující zadání práce.
+	\item[\texttt{.gitignore}:] Soubor verzovacího systému Git pro~ignorování souborů.
+	\item[\texttt{\detokenize{__init__.py}}:] Modul pro~inicializaci zásuvného modulu.
+	\item[\texttt{metadata.txt}:] Soubor obsahující metadata o~zásuvném modulu.
+	\item[\texttt{puplugin.cfg}:] Konfigurační soubor zásuvného modulu.
+	\item[\texttt{puplugin.png}:] Ikona zásuvného modulu ve~formátu PNG.
+	\item[\texttt{puplugin.py}:] Hlavní Python modul zásuvného modulu.
+	\item[\texttt{README.md}:] Soubor obsahující základní informace o~repozitáři.
+\end{description}
+
+\chapter{Popis tříd zásuvného modulu}
+\label{popis_trid}
+
+Všechny třídy zásuvného modulu se nachází v balíčku \texttt{pubin}. Struktura balíčku odpovídá hierarchii tříd.
+
+\bigskip
+
+\begin{minipage}{0.9\textwidth}
+  \dirtree{%
+  .1 pubin/.
+  .2 pustack/.
+  .3 puca/.
+  .4 \detokenize{__init__.py}.
+  .4 \detokenize{area_pucawidget.py}.
+  .4 \detokenize{bpej_pucawidget.py}.
+  .4 \detokenize{distance_pucawidget.py}.
+  .4 \detokenize{notinmap_pucawidget.py}.
+  .4 \detokenize{notinspi_pucawidget.py}.
+  .4 \detokenize{perimeter_pucawidget.py}.
+  .4 pucawidget.py.
+  .4 \detokenize{unowned_pucawidget.py}.
+  .3 \detokenize{__init__.py}.
+  .3 \detokenize{checkanalysis_puwidget.py}.
+  .3 \detokenize{edit_puwidget.py}.
+  .3 \detokenize{execute_thread.py}.
+  .3 \detokenize{load_thread.py}.
+  .3 \detokenize{loadvfk_puwidget.py}.
+  .3 puwidget.py.
+  .2 \detokenize{__init__.py}.
+  .2 dockwidget.py.	
+  .2 stackedwidget.py.
+  .2 statusbar.py.
+  .2 toolbar.py.
+  }
+\end{minipage}
+
+\begin{description}
+	\item[\texttt{pustack}:] Balíček obsahující moduly všech záložek a~jimi používaných tříd.
+	\begin{description}[leftmargin=1cm]
+		\item[\texttt{puca}:] Balíček obsahující moduly záložky \textit{Kontroly a analýzy}.
+		\begin{description}[leftmargin=1cm]
+			\item[\texttt{\detokenize{__init__.py}}:] Modul pro inicializaci balíčku.
+			\item[\texttt{\detokenize{area_pucawidget.py}}:] Modul pro kontrolu \textit{výměra nad~mezní odchylkou}. Obsahuje třídu \texttt{AreaPuCaWidget} s kódem samotné kontroly.
+		\end{description}
+	\end{description}
+\end{description}
