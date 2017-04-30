@@ -1,43 +1,15 @@
 \chapter{Zásuvný modul}
 \label{4-plugin}
 
-V~této kapitole je popsán samotný zásuvný modul. Pro~názornost a~srozumitelnost jsou zde uvedeny důležité části kódu a~diagramy znázorňující složitější algoritmy. Všechny snímky obrazovky byly pořízeny ve stylu grafického uživatelského prostředí \textit{GTK+}.
+V~této kapitole je popsán samotný zásuvný modul. Pro~názornost a~srozumitelnost jsou zde uvedeny důležité části kódu a~diagramy znázorňující složitější algoritmy. Všechny snímky obrazovky byly pořízeny ve~stylu grafického uživatelského prostředí \textit{GTK+}.
 
 Během~vývoje zásuvného modulu bylo čerpáno z~literatury zabývající se programem QGIS \citep{pyqgis_book}~\citep{qgis_book}, programovacím jazykem Python \citep{dive_into_python} \citep{python3_oop_book} a modulem PyQt \citep{pyqt_book}.
-
-\section{Instalace}
-\label{instalace}
-
-Zásuvný modul není součástí oficiálního repozitáře QGIS, přesto ho lze nainstalovat stejným způsobem jako~jiné pluginy. Stačí do~programu QGIS přidat repozitář organizace GeoForAll Lab\footnote{http://geomatics.fsv.cvut.cz/research/geoforall/}. Nejprve je tedy nutné otevřít okno s~repozitáři \textit{Zásuvné moduly $\rightarrow$ Spravovat a~instalovat zásuvné moduly $\rightarrow$ Nastavení} (viz obr.~\ref{fig:pridani_repozitare}) a~zde pomocí tlačítka \textit{Přidat...} doplnit repozitář GeoForAll Lab dostupný na~adrese \url{http://geo.fsv.cvut.cz/geoforall/qgis-plugins.xml} (viz obr.~\ref{fig:pridani_repozitare_geoforall_lab}). Zásuvný modul se řadí mezi experimentální, proto je zapotřebí aktivovat volbu \textit{Zobrazit také experimentální zásuvné moduly}, viz obr.~\ref{fig:pridani_repozitare}. Poté už stačí do~vyhledávacího pole zadat \textit{PU Plugin} a~zásuvný modul pro~pozemkové úpravy nainstalovat (viz obr.~\ref{fig:instalace_puplugin}).
-
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=.7\textwidth]{./pictures/pridani_repozitare.png}
-		\caption[Přidání repozitáře]{Přidání repozitáře}
-		\label{fig:pridani_repozitare}
- 	\end{figure}
- 	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=.5\textwidth]{./pictures/pridani_repozitare-geoforall_lab.png}
-		\caption[Přidání repozitáře GeoForAll Lab]{Přidání repozitáře GeoForAll Lab}
-		\label{fig:pridani_repozitare_geoforall_lab}
- 	\end{figure}
-
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=.6\textwidth]{./pictures/instalace_puplugin.png}
-		\caption[Instalace zásuvného modulu]{Instalace zásuvného modulu}
-		\label{fig:instalace_puplugin}
- 	\end{figure}
-
-Když je plugin nainstalován, objeví se v~liště zásuvných modulů jeho ikona (viz obr.~\ref{fig:ikona_puplugin}). Okno zásuvného modulu je možné vyvolat poklepáním na~jeho ikonu nebo volbou \textit{Zásuvné moduly $\rightarrow$ PU Plugin $\rightarrow$ PU Plugin}.
 
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.1\textwidth]{./pictures/puplugin.png}
 		\caption[Ikona zásuvného modulu]{Ikona zásuvného modulu}
-		\label{fig:ikona_puplugin}
+		\label{fig:ikona_pluginu}
  	\end{figure}
 
 \section{Grafické uživatelské rozhraní}
@@ -233,7 +205,9 @@ Pro takové případy je knihovna GDAL vybavena SQLite Driverem\footnote{\url{\d
 \end{table}
 
 %% TODO - pridat odkaz na prilohu
-Během prvních experimentů s daty souboru \zk{VFK} bylo zjištěno, že OGR poskytovatel programu QGIS při změně atributových hodnot nepoužíval transakce. V~důsledku toho trvalo uložení změn extrémně dlouho. Tato chyba byla nahlášena vývojářům systému QGIS, ti ji opravili a od verze 2.18.5 poskytovatel OGR transakce využívá. Podrobněji se tomuto tématu věnuje příloha TODO. Algoritmus zásuvného modulu pro načítání \zk{VFK} souboru zmíněný problém zohledňuje. Ve verzi programu QGIS nižší než 2.18.5 naimportuje data to databáze SpatiaLite\footnote{SpatiaLite je extenze SQLite, která umožňuje ukládat geoprostorová data. Obsahuje také mnoho funkcí pro analýzu geoprostorových dat \citep{spatialite} \citep{wiki_spatialite}.} a dále s~ní pracuje (viz~\ref{kontrola_verze_qgis}). Poskytovatel SpatiaLite programu QGIS totiž ukládá změny v~transakcích a~tudíž nemá problémy s~pomalým zápisem.
+Během experimentů s daty souboru \zk{VFK} bylo zjištěno, že OGR poskytovatel dat programu QGIS při změně atributových hodnot nepoužíval transakce. V~důsledku toho trvalo uložení změn extrémně dlouho. Proto byla podána žádost\footnote{\url{https://issues.qgis.org/issues/16216}}, chyba byla opravena a~od verze 2.18.5 poskytovatel dat OGR transakce využívá.
+
+Algoritmus zásuvného modulu pro~načítání \zk{VFK} souboru zmíněný problém zohledňuje. Ve~verzi programu QGIS nižší než~2.18.5 naimportuje data do~databáze SpatiaLite\footnote{SpatiaLite je extenze SQLite, která umožňuje ukládat geoprostorová data a~obsahuje mnoho prostorových funkcí \citep{spatialite} \citep{wiki_spatialite}.} a~dále s~ní pracuje (viz~\ref{kontrola_verze_qgis}). Poskytovatel dat SpatiaLite programu QGIS totiž ukládá změny v~transakcích a~tudíž nemá problémy s~pomalým zápisem. Pro~potřeby zásuvného modulu funkcionalita databáze SQLite dostačuje, a proto je převod do SpatiaLite pouze dočasné řešení, které zajišťuje použitelnost pluginu i~ve~starších verzích QGISu.
 
 {\scriptsize
 \begin{lstlisting}[style=python, caption={Kontrola verze programu QGIS}, captionpos=b, label=kontrola_verze_qgis, backgroundcolor = \color{light-gray},  numbers=left]
@@ -248,7 +222,7 @@ else:
 
 Algoritmus načtení \zk{VFK} souboru funguje následovně.
 
-Pokud v adresáři, ve kterém se nachází vstupní \zk{VFK} soubor, neexistuje databáze SQLite se stejným názvem, vytvoří se pomocí \zk{VFK} Driveru knihovny GDAL (viz~\ref{vytvoreni_db_vfk_driver}).
+Pokud v~adresáři, ve~kterém se nachází vstupní \zk{VFK} soubor, neexistuje databáze SQLite se~stejným názvem, vytvoří se pomocí \zk{VFK} Driveru knihovny GDAL (viz~\ref{vytvoreni_db_vfk_driver}).
 
 {\scriptsize
 \begin{lstlisting}[style=python, caption={Vytvoření SQLite databáze pomocí VFK Driveru}, captionpos=b, label=vytvoreni_db_vfk_driver, backgroundcolor = \color{light-gray},  numbers=left]
@@ -293,7 +267,7 @@ Nakonec se tabulka parcel v závislosti na verzi QGISu pomocí SQLite (viz \ref{
 Načtení \zk{VFK} souboru je spuštěno v samostatném vlákně. Pro přehlednost celý popsaný proces ilustruje diagram na obr. \ref{fig:diagram_nacitani_vfk}.
 
 {\scriptsize
-\begin{lstlisting}[style=python, caption={Vytvoření vrstvy parcel pomocí SQLite Driveru}, captionpos=b, label=vytvoreni_vrstvy_parcel_pomoci_sqlite, backgroundcolor = \color{light-gray},  numbers=left]
+\begin{lstlisting}[style=python, caption={Vytvoření QGIS vrstvy parcel pomocí SQLite Driveru}, captionpos=b, label=vytvoreni_vrstvy_parcel_pomoci_sqlite, backgroundcolor = \color{light-gray},  numbers=left]
 blacklistedDriver = ogr.GetDriverByName('VFK')
 blacklistedDriver.Deregister()
 
@@ -340,7 +314,7 @@ Symbologie nahrané vrstvy parcel je dána podle předem připraveného QML soub
 
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=1.0\textwidth]{./pictures/symbologie_par.png}
+		\includegraphics[width=.9\textwidth]{./pictures/symbologie_par.png}
 		\caption[Symbologie vrstvy parcel]{Symbologie vrstvy parcel}
 		\label{fig:symbologie_par}
  	\end{figure}
@@ -547,7 +521,7 @@ Jak vyplývá z~názvu, kontrola \textit{není v SPI} slouží k~zobrazení parc
 \subsubsection{Kontrola - není v mapě}
 \label{kontrola_neni_v_mape}
 
-Ani~pro~spuštění kontroly \textit{není v mapě} uživatel nemusí cokoli zadávat, stačí mít aktivní vrstvu \zk{PAR}. Po~dokončení jsou vybrány parcely, které mají nulovou geometrii a~tudíž se nezobrazují v~mapovém okně\footnote{Vybrány jsou též parcely s~nevalidní geometrií.}.
+Ani~pro~spuštění kontroly \textit{není v~mapě} uživatel nemusí cokoli zadávat, stačí mít aktivní vrstvu \zk{PAR}. Po~dokončení jsou vybrány parcely, které mají nulovou geometrii a~tudíž se nezobrazují v~mapovém okně\footnote{Vybrány jsou též parcely s~nevalidní geometrií.}.
 
 \subsubsection{Kontrola - výměra nad mezní odchylkou}
 \label{kontrola_vymera}
