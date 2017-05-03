@@ -37,22 +37,22 @@ Každý řádek hlavičky začíná skupinu znaků \texttt{\&H}, za~kterou násl
          položka & popis \\
         \hline
         \hline
-         VERZE & označení verze \zk{VFK} \\ \hline
-         VYTVORENO & datum a čas vytvoření souboru \\ \hline
-         PUVOD & původ dat \\ \hline
-         CODEPAGE & označení kódování \\ \hline
-         SKUPINA & seznam datových bloků \\ \hline
-         JMENO & jméno autora souboru \\ \hline
-         PLATNOST & časová podmínka použitá pro vytvoření souboru \\ \hline
-         ZMENY & typ souboru \\ \hline
-         KATUZE & omezující podmínka - katastrální území \\ \hline
-         OPSUB & omezující podmínka - oprávněné subjekty \\ \hline
-         PAR & omezující podmínka - parcely \\ \hline
-         POLYG & omezující podmínka - polygon \\
+         \texttt{VERZE} & označení verze \zk{VFK} \\ \hline
+         \texttt{VYTVORENO} & datum a čas vytvoření souboru \\ \hline
+         \texttt{PUVOD} & původ dat \\ \hline
+         \texttt{CODEPAGE} & označení kódování \\ \hline
+         \texttt{SKUPINA} & seznam datových bloků \\ \hline
+         \texttt{JMENO} & jméno autora souboru \\ \hline
+         \texttt{PLATNOST} & časová podmínka použitá pro vytvoření souboru \\ \hline
+         \texttt{ZMENY} & typ souboru \\ \hline
+         \texttt{KATUZE} & omezující podmínka - katastrální území \\ \hline
+         \texttt{OPSUB} & omezující podmínka - oprávněné subjekty \\ \hline
+         \texttt{PAR} & omezující podmínka - parcely \\ \hline
+         \texttt{POLYG} & omezující podmínka - polygon \\
          \hline
     \end{tabular}
     \centering
-    \caption[Položky hlavičky]{Položky hlavičky (zdroj \citep{struktura_vfk})}
+    \caption[\zk{VFK} - položky hlavičky]{\zk{VFK} - položky hlavičky (zdroj \citep{struktura_vfk})}
     \label{tab:polozky_hlavicky}
 \end{table}
 
@@ -64,26 +64,26 @@ Tabulka \ref{tab:hlavicka_priklady} obsahuje příklady položek hlavičky. Kvů
          položka & příklad \\
         \hline
         \hline
-         VERZE & \texttt{\&HVERZE;"5.1"} \\ \hline
-         VYTVORENO & \texttt{\&HVYTVORENO;"03.12.2013 09:58:42"} \\ \hline
-         PUVOD & \texttt{\&HPUVOD;"ISKN"} \\ \hline
-         CODEPAGE & \texttt{\&HCODEPAGE;"WE8ISO8859P2"} \\ \hline
-         SKUPINA & \texttt{\&HSKUPINA;"NEMO";"JEDN";"BDPA";"VLST"} \\ \hline
-         JMENO & \texttt{\&HJMENO;"Kokeš Petr Ing."} \\ \hline
-         PLATNOST & \texttt{\&HPLATNOST;"03.12.2013 09:56:42";"03.12.2013 09:56:42"} \\ \hline
-         ZMENY & \texttt{\&HZMENY;0} \\
+         \texttt{VERZE} & \texttt{\&HVERZE;"5.1"} \\ \hline
+         \texttt{VYTVORENO} & \texttt{\&HVYTVORENO;"03.12.2013 09:58:42"} \\ \hline
+         \texttt{PUVOD} & \texttt{\&HPUVOD;"ISKN"} \\ \hline
+         \texttt{CODEPAGE} & \texttt{\&HCODEPAGE;"WE8ISO8859P2"} \\ \hline
+         \texttt{SKUPINA} & \texttt{\&HSKUPINA;"NEMO";"JEDN";"BDPA";"VLST"} \\ \hline
+         \texttt{JMENO} & \texttt{\&HJMENO;"Kokeš Petr Ing."} \\ \hline
+         \texttt{PLATNOST} & \texttt{\&HPLATNOST;"03.12.2013 09:56:42";"03.12.2013 09:56:42"} \\ \hline
+         \texttt{ZMENY} & \texttt{\&HZMENY;0} \\
          \hline
     \end{tabular}
     \centering
-    \caption[Příklady položek hlavičky]{Příklady položek hlavičky (zdroj \citep{struktura_vfk})}
+    \caption[\zk{VFK} - příklady položek hlavičky]{\zk{VFK} - příklady položek hlavičky (zdroj \citep{struktura_vfk})}
     \label{tab:hlavicka_priklady}
 \end{table}
 
 \begin{description}
-	\item[VERZE:] Právě jeden řádek obsahující informaci o~verzi \zk{VFK} souboru. Tato informace je důležitá pro programy, které s \zk{VFK} pracují.
-	\item[VYTVOŘENO:] Právě jeden řádek s~časem a~datem vytvoření souboru.
-	\item[PŮVOD:] Právě jeden řádek specfikující původ dat. Může obsahovat libovolný text.
-	\item[CODEPAGE:] Právě jeden řádek označující kódóvání souboru. Možné hodnoty a~odpovídající kódování popisuje tabulka 	\ref{tab:kodovani}.
+	\item[\texttt{VERZE}:] Právě jeden řádek obsahující informaci o~verzi \zk{VFK} souboru. Tato informace je důležitá pro programy, které s \zk{VFK} pracují.
+	\item[\texttt{VYTVORENO}:] Právě jeden řádek s~časem a~datem vytvoření souboru.
+	\item[\texttt{PUVOD}:] Právě jeden řádek specfikující původ dat. Může obsahovat libovolný text.
+	\item[\texttt{CODEPAGE}:] Právě jeden řádek označující kódóvání souboru. Možné hodnoty a~odpovídající kódování popisuje tabulka 	\ref{tab:kodovani}.
 
     \begin{table}[H]
         \begin{tabular}{|l|l|}
@@ -96,13 +96,13 @@ Tabulka \ref{tab:hlavicka_priklady} obsahuje příklady položek hlavičky. Kvů
              \hline
         \end{tabular}
         \centering
-        \caption[Hodnoty kódóvání a jejich popis]{Hodnoty kódóvání a jejich popis (zdroj \citep{struktura_vfk})}
+        \caption[\zk{VFK} - hodnoty kódóvání]{\zk{VFK} - hodnoty kódóvání (zdroj \citep{struktura_vfk})}
         \label{tab:kodovani}
     \end{table}
 
-	\item[SKUPINA:] Právě jeden řádek obsahující seznam datových bloků souboru.
-	\item[JMÉNO:] Právě jeden řádek se~jménem autora souboru.
-	\item[PLATNOST:] Právě jeden řádek s~časovou podmínkou použitou pro~vytvoření souboru. Tabulka \ref{tab:platnost} uvádí dvě možnosti zápisu.
+	\item[\texttt{SKUPINA}:] Právě jeden řádek obsahující seznam datových bloků souboru.
+	\item[\texttt{JMENO}:] Právě jeden řádek se~jménem autora souboru.
+	\item[\texttt{PLATNOST}:] Právě jeden řádek s~časovou podmínkou použitou pro~vytvoření souboru. Tabulka \ref{tab:platnost} uvádí dvě možnosti zápisu.
 
     \begin{table}[H]
         \begin{tabular}{|l|l|}
@@ -115,11 +115,11 @@ Tabulka \ref{tab:hlavicka_priklady} obsahuje příklady položek hlavičky. Kvů
              \hline
         \end{tabular}
         \centering
-        \caption[Možnosti zápisu časové podmínky]{Možnosti zápisu časové podmínky (zdroj \citep{struktura_vfk})}
+        \caption[\zk{VFK} - možnosti zápisu časové podmínky]{\zk{VFK} - možnosti zápisu časové podmínky (zdroj \citep{struktura_vfk})}
         \label{tab:platnost}
     \end{table}
 
-	\item[ZMĚNY:] Právě jeden řádek informující o~typu souboru. Možné hodnoty a~jejich popis se nachází v~tabulce \ref{tab:zmeny}.
+	\item[\texttt{ZMENY}:] Právě jeden řádek informující o~typu souboru. Možné hodnoty a~jejich popis se nachází v~tabulce \ref{tab:zmeny}.
 
     \begin{table}[H]
         \begin{tabular}{|l|l|}
@@ -132,13 +132,13 @@ Tabulka \ref{tab:hlavicka_priklady} obsahuje příklady položek hlavičky. Kvů
              \hline
         \end{tabular}
         \centering
-        \caption[Hodnoty typu souborů a~jejich popis]{Hodnoty typu souborů a jejich popis (zdroj \citep{struktura_vfk})}
+        \caption[\zk{VFK} - hodnoty typu souborů]{\zk{VFK} - hodnoty typu souborů (zdroj \citep{struktura_vfk})}
         \label{tab:zmeny}
     \end{table}
 
 Stavový soubor obsahuje všechny informace ke~konkrétnímu času a~datu, ve~změnovém souboru se nachází pouze změny za~určitý časový úsek.
 
-	\item[KATUZE, OPSUB, PAR, POLYG:] Soubor \zk{VFK} může být vytvořen pro konkrétní katastrální území, oprávněné subjekty, parcely, nebo~pro~oblast zadanou polygonem. Jedná se o~jeden řádek, který obsahuje hlavičku omezující podmínky a~za~ním následují řádky definující samotnou omezující podmínku. V~případě, že je omezující podmínka prázdná, není za~hlavičkou ani jeden řádek s daty. Příklad pro katastrální území:
+	\item[\texttt{KATUZE}, \texttt{OPSUB}, \texttt{PAR}, \texttt{POLYG}:] Soubor \zk{VFK} může být vytvořen pro konkrétní katastrální území, oprávněné subjekty, parcely, nebo~pro~oblast zadanou polygonem. Jedná se o~jeden řádek, který obsahuje hlavičku omezující podmínky a~za~ním následují řádky definující samotnou omezující podmínku. V~případě, že je omezující podmínka prázdná, není za~hlavičkou ani jeden řádek s daty. Příklad pro katastrální území:
 
 \begin{lstlisting}[basicstyle=\footnotesize\ttfamily, backgroundcolor = \color{light-gray},  numbers=left]
 &HKATUZE;KOD N6;OBCE_KOD N6;NAZEV T48;PLATNOST_OD D;
@@ -171,7 +171,7 @@ Každý datový blok obsahuje tyto řádky:
          \hline
     \end{tabular}
     \centering
-    \caption[Datové typy]{Datové typy (zdroj \citep{struktura_vfk})}
+    \caption[\zk{VFK} - datové typy]{\zk{VFK} - datové typy (zdroj \citep{struktura_vfk})}
     \label{tab:datove_typy}
 \end{table}
 
@@ -212,13 +212,13 @@ Soubor výměnného formátu katastru nemovitostí obsahuje mnoho datový bloků
 V~současné době zásuvný modul pracuje s~těmito datovými bloky\footnote{Zásuvný modul nevyužívá dat \zk{BPEJ} přímo ze~souboru \zk{VFK}, protože hranice \zk{BPEJ} není polohopisným prvkem katastrální mapy. Více o~\zk{BPEJ} viz část \ref{bpej}.}:
 
 	\begin{itemize}[leftmargin=1.5cm, noitemsep]
-		\item \zk{PAR} - parcely
-		\item \zk{SOBR} - souřadnice obrazu bodů polohopisu v~mapě
-		\item \zk{SPOL} - souřadnice polohy bodů polohopisu (měřené)
+		\item \texttt{\zk{PAR}} - parcely
+		\item \texttt{\zk{SOBR}} - souřadnice obrazu bodů polohopisu v~mapě
+		\item \texttt{\zk{SPOL}} - souřadnice polohy bodů polohopisu (měřené)
 	\end{itemize}
 
 \begin{description}	
-	\item[PAR:] Tabulka \zk{PAR} obsahuje parcely evidované v~\zk{ISKN}. Z~pohledu zásuvného modulu vytvořeného v~rámci této práce se jedná o~nejdůležitější část souboru \zk{VFK}. Je součástí největší skupiny datových bloků nemovitosti. V~tabulce \ref{tab:par_sloupce} jsou uvedeny sloupce, kterých využívá zásuvný modul.
+	\item[\texttt{PAR}:] Tabulka \texttt{\zk{PAR}} obsahuje parcely evidované v~\zk{ISKN}. Z~pohledu zásuvného modulu vytvořeného v~rámci této práce se jedná o~nejdůležitější část souboru \zk{VFK}. Je součástí největší skupiny datových bloků nemovitosti. V~tabulce \ref{tab:par_sloupce} jsou uvedeny sloupce, kterých využívá zásuvný modul.
 	
     \begin{table}[H]
         \begin{tabular}{|l|l|l|l|l|}
@@ -226,19 +226,19 @@ V~současné době zásuvný modul pracuje s~těmito datovými bloky\footnote{Z�
              název & povinný & typ & velikost & popis\\
             \hline
             \hline
-            ID & ano & N & 30.0 & \begin{tabular}{@{}l@{}} unikátní generované \\ číslo parcely \end{tabular} \\ \hline
-            KMENOVE\_CISLO\_PAR & ano & N & 5 & kmenové parcelní číslo \\ \hline
-            PODDELENI\_CISLA\_PAR & ne & N & 3 & poddělení čísla parcely \\ \hline
-            DRUPOZ\_KOD & ne & N & 2.0 & kód druhu pozemku. \\ \hline
-            VYMERA\_PARCELY & ano & N & 9.0 & \begin{tabular}{@{}l@{}} výměra parcely \\ v metrech čtverečních \end{tabular} \\
+            \texttt{ID} & ano & \texttt{N} & \texttt{30.0} & \begin{tabular}{@{}l@{}} unikátní generované \\ číslo parcely \end{tabular} \\ \hline
+            \texttt{KMENOVE\_CISLO\_PAR} & ano & \texttt{N} & \texttt{5} & kmenové parcelní číslo \\ \hline
+            \texttt{PODDELENI\_CISLA\_PAR} & ne & \texttt{N} & \texttt{3} & poddělení čísla parcely \\ \hline
+            \texttt{DRUPOZ\_KOD} & ne & \texttt{N} & \texttt{2.0} & kód druhu pozemku. \\ \hline
+            \texttt{VYMERA\_PARCELY} & ano & \texttt{N} & \texttt{9.0} & \begin{tabular}{@{}l@{}} výměra parcely \\ v metrech čtverečních \end{tabular} \\
              \hline
         \end{tabular}
         \centering
-        \caption[Sloupce datového bloku \zk{PAR}]{Sloupce datového bloku \zk{PAR} (zdroj \citep{struktura_vfk})}
+        \caption[\zk{VFK} - sloupce datového bloku \texttt{\zk{PAR}}]{\zk{VFK} - sloupce datového bloku \texttt{\zk{PAR}} (zdroj \citep{struktura_vfk})}
         \label{tab:par_sloupce}
     \end{table}   
 		
-	\item[SOBR, SPOL:] Tabulka \zk{SOBR} obsahuje body polohopisu (čísla bodů a~souřadnice obrazu v~mapě). V~tabulce \zk{SPOL} jsou uvedeny body polohopisu (čísla bodů a~souřadnice polohy). Obě tabulky jsou součástí skupiny datových bloků prvky katastrální mapy. Zásuvný modul používá pouze jeden sloupec z~těchto datových bloků (viz~\ref{tab:sobr_spol_sloupce}).
+	\item[\texttt{SOBR}, \texttt{SPOL}:] Tabulka \texttt{\zk{SOBR}} obsahuje body polohopisu (čísla bodů a~souřadnice obrazu v~mapě). V~tabulce \texttt{\zk{SPOL}} jsou uvedeny body polohopisu (čísla bodů a~souřadnice polohy). Obě tabulky jsou součástí skupiny datových bloků prvky katastrální mapy. Zásuvný modul používá pouze jeden sloupec z~těchto datových bloků (viz~\ref{tab:sobr_spol_sloupce}).
 	
     \begin{table}[H]
         \begin{tabular}{|l|l|l|l|l|}
@@ -246,11 +246,11 @@ V~současné době zásuvný modul pracuje s~těmito datovými bloky\footnote{Z�
              název & povinný & typ & velikost & popis\\
             \hline
             \hline
-            KODCHB\_KOD & ne & N & 2.0 & \begin{tabular}{@{}l@{}} kód charakteristiky \\ kvality bodu \end{tabular} \\
+            \texttt{KODCHB\_KOD} & ne & \texttt{N} & \texttt{2.0} & \begin{tabular}{@{}l@{}} kód charakteristiky \\ kvality bodu \end{tabular} \\
              \hline
         \end{tabular}
         \centering
-        \caption[Sloupce datových bloků \zk{SOBR} a \zk{SPOL}]{Sloupce datových bloků \zk{SOBR} a \zk{SPOL} (zdroj \citep{struktura_vfk})}
+        \caption[\zk{VFK} - sloupce datových bloků \texttt{\zk{SOBR}} a~\texttt{\zk{SPOL}}]{\zk{VFK} - sloupce datových bloků \texttt{\zk{SOBR}} a~\texttt{\zk{SPOL}} (zdroj \citep{struktura_vfk})}
         \label{tab:sobr_spol_sloupce}
     \end{table}
 	
@@ -328,7 +328,7 @@ Pro všechny nezemědělské nebo nebonitované plochy se od roku 2008 použív�
          \hline
     \end{tabular}
     \centering
-    \caption[Pomocné kódy pro nebonitované plochy]{Pomocné kódy pro nebonitované plochy (zdroj:~\citep{metodika_bpej})}
+    \caption[\zk{BPEJ} - pomocné kódy pro~nebonitované plochy]{\zk{BPEJ} - pomocné kódy pro~nebonitované plochy (zdroj:~\citep{metodika_bpej})}
     \label{tab:pomocne_kody_bpej}
 \end{table}
 
@@ -368,7 +368,7 @@ V České republice je vymezeno 10 klimatických regionů označených kódy 0~a
 
 Hlavní půdní jednotka je definována jako účelové seskupení půdních forem s~příbuznými ekologickými a~agronomickými vlastnostmi. Je charakterizována genetickým půdním typem, subtypem, půdotvorným substrátem, hloubkou půdního profilu, zrnitostí a~stupněm hydromorfismu. V~systému \zk{BPEJ} se uvádí na druhém a~třetím místě číselného kódu.
 
-V současné době systém \zk{BPEJ} vymezuje 78 hlavních půdních jednotek a~ty jsou dále seskupeny do 13 půdních typů. Obrázek~\ref{fig:klimaticke_regiony} znázorňuje rozložení půdních typů.
+V~současné době systém \zk{BPEJ} vymezuje 78 hlavních půdních jednotek a~ty jsou dále seskupeny do~13 půdních typů. Obrázek~\ref{fig:klimaticke_regiony} znázorňuje rozložení půdních typů.
 
 	\begin{figure}[H]
 		\centering
@@ -382,15 +382,15 @@ V současné době systém \zk{BPEJ} vymezuje 78 hlavních půdních jednotek a~
 
 Sklonitost se rozděluje do~sedmi skupin. V~terénu se sklonitost určujě sklonoměrem, jako pomocný podklad lze využít mapy s~podrobným výškopisem.
 
-Expozice vyjadřuje polohu území \zk{BPEJ} vůči světovým stranám. V klimatických regionech 0, 1, 2, 3, 4 a 5 se jižní expozice samostatně hodnotí jako negativní, zbývající expozice se slučují bez~rozlišení. Samostatně se severní expozice v~klimatických regionech 6, 7, 8, 9 uvažuje jako negativní, expozice východní, západní a~jižní se hodnotí jako sobě rovné. Expozice se dělí na čtyři kategorie.
+Expozice vyjadřuje polohu území \zk{BPEJ} vůči světovým stranám. V klimatických regionech 0, 1, 2, 3, 4 a~5 se jižní expozice samostatně hodnotí jako negativní, zbývající expozice se slučují bez~rozlišení. Samostatně se severní expozice v~klimatických regionech 6, 7, 8, 9 uvažuje jako negativní, expozice východní, západní a~jižní se hodnotí jako sobě rovné. Expozice se dělí na~čtyři kategorie.
 
-Výsledná třetí číslice kódu \zk{BPEJ} vznikne kombinací sklonitosti a expozice~\citep{vyhlaska_327}.
+Výsledná třetí číslice kódu \zk{BPEJ} vznikne kombinací sklonitosti a~expozice~\citep{vyhlaska_327}.
 
 \subsubsection{Obsah skeletu a hloubka půdy}
 \label{hloubka_pudy_obsah_skeletu}
 
-Obsah skeletu závisí na obsahu kamene (pevné částice nad 30 mm) a~štěrku (pevné částice hornin od 4 do 30 mm), je rozdělen do~čtyř kategorií.
+Obsah skeletu závisí na~obsahu kamene (pevné částice nad 30 mm) a~štěrku (pevné částice hornin od~4~do~30~mm), je rozdělen do~čtyř kategorií.
 
 Hloubka půdy je dána částí půdního profilu omezeného silnou skeletovostí, nebo pevnou horninou. Ve~vyhlášce~\citep{vyhlaska_327} jsou definovány tři kategorie hloubky půdy.
 
-Na pátém místě číselného kódu \zk{BPEJ} se uvádí kód kombinace obsahu skeletu a hloubky půdy~\citep{vyhlaska_327}.
+Na pátém místě číselného kódu \zk{BPEJ} se uvádí kód kombinace obsahu skeletu a~hloubky půdy~\citep{vyhlaska_327}.
