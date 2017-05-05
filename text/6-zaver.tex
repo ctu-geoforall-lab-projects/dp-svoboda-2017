@@ -1,5 +1,24 @@
 \chapter{Závěr}
 \label{zaver}
 
+Cílem této práce bylo vyvinout zásuvný modul QGIS pro~zpracování přípravné fáze komplexních pozemkových úprav. Plugin byl napsán v~programovacím jazyce Python, grafické uživatelské rozhraní bylo vytvořeno pomocí modulu PyQt.
 
-%% zminka o podpore int64 v GDALu 2.2
+Funkcionalita zásuvného modulu se dělí na~tři části.
+
+Prvním krokem je načtení vrstvy parcel ze~souboru výměnného formátu katastru nemovitostí. K~tomu se používá \zk{VFK} Driver knihovny GDAL, který importuje veškerá data do~SQLite databáze. Aby bylo možné vrstvu editovat, otevírá se vytvořená databáze pomocí SQLite Driveru, jež je rovněž součástí jmenované knihovny.
+
+Po~úspěšném importu přichází na~řadu editace. Zásuvný modul umožňuje zařazení parcel do~kategorií. Díky samostatné vrstvě obvodu, jejíž umístění může uživatel definovat, je na~první pohled jasně patrné, do~které kategorie jednotlivé parcely náleží. Data lze také samozřejmě upravovat pomocí standardních nástrojů programu QGIS.
+
+Poslední sekce zásuvného modulu nese název \textit{kontroly a~analýzy}. \textit{Kontroly} nabízí možnost ověření souladu souboru popisných a~geodetických informací, \textit{analýzy} slouží k~provedení výpočtů nutných pro~vyhotovení vstupních soupisů nároků vlastníků.
+
+Vytvořený zásuvny modul si mohou uživatelé nainstalovat stejnou cestou jako jiné pluginy, stačí si přidat repozitář organizace GeoForAll Lab.
+
+Přínos této práce spočívá nejen v~samotném zásuvném modulu, ale také ve~vylepšení poskytovatele dat OGR systému QGIS. Bylo totiž zjištěno, že při~ukládání změn zmíněný poskytovatel dat nepoužíval transakce, důsledkem čehož trvalo uložení editací velmi dlouho. Chyba byla nahlášena a~následně za~přispění Ing. Martia Landy, Ph.D. opravena. Od~verze 2.18.5 je tato korekce implementována do~programu QGIS a~benefitují z~ní všichni uživatelé SQLite databazí.
+
+Počínaje dubnem 2017 zásuvný modul testují projektanti pozemkových úprav a~podávají zpětnou vazbu, díky které je plugin dále vylepšován.
+
+Zájem projevili i~zaměstnanci Státního pozemkového úřadu České republiky, kteří by zásuvný modul rádi používali během programové fáze, ve~které se určuje finanční a~časová náročnost provedení pozemkových úprav jednotlivých katastrálních území. Aby se pro~ně zásuvny modul stal v~tomto ohledu atraktivnější, je potřeba implementovat nové funkce.
+
+Mezi témata dalšího vývoje patří sestavení vlastních nárokových listů, zvýšení rychlosti kontroly \textit{výměra nad~mezní odchylkou}, přidání volby symbologie podle listu vlastnictví, čtení z~více VFK souborů najednou a~další, více viz GitHub repozitář\footnote{\url{https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017}}.
+
+V~rámci této práce byl vytvořen zásuvný modul pro~pozemkové úpravy, který disponuje klíčovou funkcionalitou. Aby byl schopen konkurovat komerčnímu softwaru, je další vývoj nezbytný.
