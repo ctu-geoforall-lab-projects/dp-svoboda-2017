@@ -22,19 +22,13 @@
   .4 \detokenize{check_pu_columns_PAR.sql}.
   .4 \detokenize{create_fill_gc_srs.sql}.
   .4 \detokenize{create_sobr_spol.sql}.
-  .2 docs/.
-  .2 .git/.
   .2 pubin/.
-  .2 text/.
-  .2 zadani/.
-  .2 .gitignore.
   .2 \detokenize{__init__.py}.
   .2 metadata.txt.
   .2 puplugin.cfg.
   .2 puplugin.png.
   .2 puplugin.py.
   .2 puplugin.svg.
-  .2 README.md.
   }
 \end{minipage}
 
@@ -65,18 +59,12 @@
 			\item[\texttt{\detokenize{create_sobr_spol.sql}}:] SQL dávka pro~vytvoření tabulek \zk{SOBR} a~\zk{SPOL}.
 		\end{description}
 	\end{description}
-	\item[\texttt{docs}:] Složka obsahující návod k~zásuvnému modulu.
-	\item[\texttt{.git}:] Složka verzovacího systému Git.
 	\item[\texttt{pubin}:] Složka vytvořeného Python balíčku, více viz příloha \ref{popis_python_balicku}.
-	\item[\texttt{text}:] Složka obsahující text práce.
-	\item[\texttt{zadani}:] Složka obsahující zadání práce.
-	\item[\texttt{.gitignore}:] Soubor verzovacího systému Git pro~ignorování souborů.
 	\item[\texttt{\detokenize{__init__.py}}:] Modul pro~inicializaci zásuvného modulu.
 	\item[\texttt{metadata.txt}:] Soubor obsahující metadata o~zásuvném modulu.
 	\item[\texttt{puplugin.cfg}:] Konfigurační soubor zásuvného modulu.
 	\item[\texttt{puplugin.png}:] Ikona zásuvného modulu ve~formátu PNG.
 	\item[\texttt{puplugin.py}:] Hlavní Python modul zásuvného modulu.
-	\item[\texttt{README.md}:] Soubor obsahující základní informace o~repozitáři.
 \end{description}
 
 \chapter{Popis vytvořeného Python balíčku}
@@ -192,7 +180,7 @@ Když je plugin nainstalován, objeví se v~liště zásuvných modulů jeho iko
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.1\textwidth]{./pictures/puplugin.png}
-		\caption[Plugin - ikona]{Plugin - ikona}
+		\caption[Plugin~– ikona]{Plugin~– ikona}
 		\label{fig:ikona_puplugin}
  	\end{figure}
 
@@ -202,7 +190,7 @@ Když je plugin nainstalován, objeví se v~liště zásuvných modulů jeho iko
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.55\textwidth]{./pictures/main_gui.png}
-		\caption[Zásuvný modul - grafické uživatelské rozhraní]{Zásuvný modul - grafické uživatelské rozhraní}
+		\caption[Zásuvný modul~– grafické uživatelské rozhraní]{Zásuvný modul~– grafické uživatelské rozhraní}
 		\label{fig:manual_main_gui}
  	\end{figure}
 
@@ -231,7 +219,7 @@ Zásuvný modul komunikuje s~uživatelem třemi způsoby:
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.23\textwidth]{./pictures/statusbar-red_message.png}
-		\caption[Důležitá zpráva ve~stavovém řádku]{Důležitá zpráva ve~stavovém řádku}
+		\caption[Stavový řádek~– důležitá zpráva]{Stavový řádek~– důležitá zpráva}
 		\label{fig:manual_dulezita_zprava}
  	\end{figure}	
 
@@ -240,11 +228,11 @@ Zásuvný modul komunikuje s~uživatelem třemi způsoby:
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.7\textwidth]{./pictures/message_bar-message.png}
-		\caption[Zpráva upozornění v poli zpráv]{Zpráva upozornění v poli zpráv}
+		\caption[Pole zpráv~– zpráva upozornění]{Pole zpráv~– zpráva upozornění}
 		\label{fig:manual_zprava_pole_zprav}
  	\end{figure}
 
-	\item \underline{Logování} je posledním prostředkem pro~předávání informací, který zásuvný modul používá. Informace v~anglickém jazyce, zejména chybové hlášky, zapisuje do~vlastní záložky s~názvem \textit{PU Plugin} (viz obr. \ref{fig:manual_logovaci_panel}). Panel logovacích zpráv lze zobrazit kliknutím na~ikonu \img{./pictures/log.png} v~pravém dolním rohu QGISu.
+	\item \underline{Logování} je posledním prostředkem pro~předávání informací, který zásuvný modul používá. Informace v~anglickém jazyce, zejména chybové hlášky, zapisuje do~vlastní záložky s~názvem \textit{PU Plugin} (viz obr.~\ref{fig:manual_logovaci_panel}). Panel logovacích zpráv lze zobrazit kliknutím na~ikonu \img{./pictures/log.png} v~pravém dolním rohu QGISu.
 
 	\begin{figure}[H]
 		\centering
@@ -265,7 +253,7 @@ Záložka \textit{Načtení VFK souboru} slouží k~načtení vrstvy parcel ze~s
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.55\textwidth]{./pictures/nacteni_vfk_gui.png}
-		\caption[Záložka \textit{Načtení VFK souboru} - grafické uživatelské rozhraní]{Záložka \textit{Načtení VFK souboru} - grafické uživatelské rozhraní}
+		\caption[Záložka \textit{Načtení VFK souboru}~– grafické uživatelské rozhraní]{Záložka \textit{Načtení VFK souboru}~– grafické uživatelské rozhraní}
 		\label{fig:manual_nacteni_vfk_gui}
  	\end{figure}
 
@@ -278,7 +266,7 @@ Záložka \textit{Načtení VFK souboru} slouží k~načtení vrstvy parcel ze~s
 
 Nejprve je zapotřebí zvolit \zk{VFK} soubor, který chcete načíst. To lze udělat dvěma způsoby. Buď kliknete na~tlačítko \textit{Procházet} (prvek~2), vyberete požadovaný soubor a~cesta k~souboru se automaticky zapíše do~textového pole (prvek~1), nebo zkopírujete cestu k~\zk{VFK} souboru přímo do~zmíněného textové pole. Když se v~textovém poli nachází cesta k~validnímu \zk{VFK} souboru, aktivuje se tlačítko \textit{Načíst} (prvek~4) a~můžete zahájit import. O~průběhu načítání vás informuje indikátor průběhu (prvek~3) a~zprávy ve~stavovém řádku.
 
-Symbologie načtené vrstvy parcel se řídí podle druhu pozemku. Při měřítku 1:4000 a~větším přiblížení se zobrazí parcelní čísla, viz obr. \ref{fig:manual_symbologie_par}.
+Symbologie načtené vrstvy parcel se řídí podle druhu pozemku. Při měřítku 1:4000 a~větším přiblížení se zobrazí parcelní čísla, viz obr.~\ref{fig:manual_symbologie_par}.
 
 	\begin{figure}[H]
 		\centering
@@ -299,7 +287,7 @@ Po úspěšném nahrání vrstvy parcel lze začít s~editací. Záložka \texti
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.55\textwidth]{./pictures/editace_gui.png}
-		\caption[Záložka \textit{Editace} - grafické uživatelské rozhraní]{Záložka \textit{Editace} - grafické uživatelské rozhraní}
+		\caption[Záložka \textit{Editace}~– grafické uživatelské rozhraní]{Záložka \textit{Editace}~– grafické uživatelské rozhraní}
 		\label{fig:manual_editace_gui}
  	\end{figure}
 
@@ -310,15 +298,15 @@ Po úspěšném nahrání vrstvy parcel lze začít s~editací. Záložka \texti
 	\item[Prvek 4:] Rozbalovací menu s~kategoriemi parcel. Na~výběr jsou tyto kategorie, číslo v~závorce udává hodnotu, kterou zásuvný modul pro~kategorii používá:
 	\begin{itemize}[leftmargin=1.5cm, noitemsep]
 		\item \textit{mimo obvod (0)}
-		\item \textit{v~obvodu - neřešené (1)}
-		\item \textit{v~obvodu - řešené (2)}
+		\item \textit{v~obvodu~– neřešené (1)}
+		\item \textit{v~obvodu~– řešené (2)}
 		\item \textit{bez kategorie}
 	\end{itemize}
 	\item[Prvek 5:] Tlačítko pro~zobrazení (výběr) parcel v~aktuálně zvolené kategorii.
 	\item[Prvek 6:] Rozbalovací menu s~variantami zařazení parcel. K~dispozici jsou dvě možnosti:
 	\begin{itemize}[leftmargin=1.5cm, noitemsep]
-		\item \textit{vybrané parcely} - zařadí vybrané parcely do~aktuálně zvolené kategorie.
-		\item \textit{obvodem} - zařadí všechny parcely do~kategorií na~základě obvodu.
+		\item \textit{vybrané parcely}~– zařadí vybrané parcely do~aktuálně zvolené kategorie.
+		\item \textit{obvodem}~– zařadí všechny parcely do~kategorií na~základě obvodu.
 	\end{itemize}
 	\item[Prvek 7:] Tlačítko pro~provedení zařazení.
 \end{description}
@@ -401,7 +389,7 @@ Kontrola \textit{není v~mapě} vybírá parcely, které mají nulovou geometrii
 \subsubsection{Kontrola - výměra nad mezní odchylkou}
 \label{manual_kontrola_vymera}
 
-Kontrola \textit{výměra nad~mezní odchylkou} ověřuje, zda~rozdíl mezi výměrou dle~\zk{SPI} a~výměrou vypočtenou z~\zk{SGI} nepřekračuje mezní odchylku. Ta je stanovena katastrální vyhláškou a~závisí na~kódu kvality nejméně přesně určeného lomového bodu na~hranici parcely. Jestliže je parcela digitalizovaná, kód kvality podrobných bodů se určí podle~měřítka podkladové mapy, viz sloupec \textit{MERITKO PODKL.}.
+Kontrola \textit{výměra nad~mezní odchylkou} ověřuje, zda~rozdíl mezi výměrou dle~\zk{SPI} a~výměrou vypočtenou z~\zk{SGI} nepřekračuje mezní odchylku. Ta je stanovena katastrální vyhláškou a~závisí na~kódu kvality nejméně přesně určeného lomového bodu na~hranici parcely. Jestliže je parcela digitalizovaná, kód kvality podrobných bodů se určí podle~měřítka podkladové mapy, viz sloupec \texttt{MERITKO PODKL.}.
 
 \subsubsection{Kontrola - bez vlastníka}
 \label{manual_kontrola_bez_vlastnika}
@@ -443,4 +431,4 @@ Vyberte vrstvu hranic \zk{BPEJ} (prvek~1) a~poté zvolte sloupec, ve~kterém jso
 
 Pro určení ceny za~metr čtvereční jednotlivých kódů \zk{BPEJ} analýza používá číselník \zk{BPEJ} z~Českého úřadu zeměměřičského a~katastrálního.
 
-Do~atributové tabulky se zápíše nejen cena celková (sloupec CELK. CENA), ale~také cena za~metr čtvereční, výměra a~cena dle jednotlivých bonit v~příslušné parcele (sloupec  BPEJ KOD-CENA ZA M2-VYMERA-CENA). Pokud omylem zvolíte špatný sloupec, nebo když kód \zk{BPEJ} není nalezen v~číselníku, zásuvný modul vybere ve~vrstvě obvodu prvky, pro~které nenalezl ceny, a~informuje vás o~problému.
+Do~atributové tabulky se zápíše nejen cena celková (sloupec \texttt{CELK. CENA}), ale~také cena za~metr čtvereční, výměra a~cena dle jednotlivých bonit v~příslušné parcele (sloupec \texttt{BPEJ KOD-CENA ZA M2-VYMERA-CENA}). Pokud omylem zvolíte špatný sloupec, nebo když kód \zk{BPEJ} není nalezen v~číselníku, zásuvný modul vybere ve~vrstvě obvodu prvky, pro~které nenalezl ceny, a~informuje vás o~problému.
