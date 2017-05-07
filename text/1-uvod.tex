@@ -1,22 +1,22 @@
 \chapter{Úvod}
 \label{1-uvod}
 
-Vlivem působení člověka se krajina v~České republice změnila. Zanikly polní cesty, přirozené liniové prvky a~další krajinotvorné elementy. Důsledkem toho došlo ke~snížení ekologické stability krajiny, poškození zemědělského půdního fondu vodní a~větrnou erozí, narušení krajinného rázu a~zhoršení životního prostředí. Postupným převáděním, dělením a~slučováním vznikly pozemky, které mají nevhodné tvary, jsou přerušené komunikacemi, polními cestami, vodními toky, či~se~nachází uvnitř jiného bloku pozemků a~tím pádem na~ně není přístup.
+Vlivem působení člověka se krajina v~České republice změnila. Zanikly polní cesty, přirozené liniové prvky a~další krajinotvorné elementy. Důsledkem toho došlo ke~sní\-žení ekologické stability krajiny, poškození zemědělského půdního fondu vodní a~vě\-trnou erozí, narušení krajinného rázu a~zhoršení životního prostředí. Postupným převáděním, dělením a~slučováním vznikly pozemky, které mají nevhodné tvary, jsou přerušené komunikacemi, polními cestami, vodními toky, či~se~nachází uvnitř jiného bloku pozemků a~tím pádem na~ně není přístup.
 
 Na~velké části území se stále používají katastrální mapy, jejichž původ se datuje do~1.~poloviny 19.~století, a~katastr nemovitostí bohužel i~při veškeré snaze obsahuje řadu chyb. Tato situace nejasného vlastnictví omezuje možnosti hospodaření a~komplikuje podnikání.
 
-Všechny uvedené problémy a~mnohé další je možné zmírnit, či~úplně odstranit pomocí pozemkových úprav (\zk{PU}). Výsledkem pozemkových úprav je nová digitální katastrální mapa, obnovený operát katastru nemovitostí a~nové uspořádání pozemků. V~terénu jsou vyznačeny hranice nových pozemků, je vybudována síť polních cest, protierozních opatření a~jsou vymezeny prostory pro~prvky zvyšující ekologickou stabilitu.
+Všechny uvedené problémy a~mnohé další je možné zmírnit, či~úplně odstranit pomocí pozemkových úprav (\zk{PU}). Výsledkem pozemkových úprav je nová digi\-tální katastrální mapa, obnovený operát katastru nemovitostí a~nové uspořádání pozemků. V~terénu jsou vyznačeny hranice nových pozemků, je vybudována síť polních cest, protierozních opatření a~jsou vymezeny prostory pro~prvky zvyšující ekologickou stabilitu.
 
 Složitého procesu pozemkových úprav se účastní mnoho odborníků a~jejich práce se neobejde bez~kvalitního softwaru. V~současné době se všechny běžně používané programy pro~pozemkové úpravy řadí mezi komerční software a~jsou distribuovány pouze pro~platformu Windows.
 
 S~rozmachem open-source projektů se nabízí možnost poskytnout zpracovatelům pozemkových úprav svobodný a~otevřený software, který by při~své práci mohli využít.
 
-Mezi stále populárnější open-source programy pro~práci s~prostorovými daty patří geografický informační systém QGIS. Hlavními výhodami systému QGIS jsou intuitivní grafické uživatelské rozhraní a~široká nabídka zásuvných modulů (pluginů), které rozšiřují jeho funkcionalitu. Pluginy do~programu QGIS lze vyvíjet v~programovacím jazyce C++ nebo Python, v~prospěch jazyka Python oproti C++ hovoří lepší přenositelnost mezi platformami. Systém QGIS navíc používá knihovnu GDAL, jejíž součástí je VFK Driver. Ten umožňuje čtení důležitého formátu dat pro~pozemkové úpravy~– výměnného formátu katastru nemovitostí (\zk{VFK}).
+Mezi stále populárnější open-source programy pro~práci s~prostorovými daty patří geografický informační systém QGIS. Hlavními výhodami systému QGIS jsou intuitivní grafické uživatelské rozhraní a~široká nabídka zásuvných modulů (pluginů), které rozšiřují jeho funkcionalitu. Pluginy do~programu QGIS lze vyvíjet v~programovacím jazyce C++ nebo Python, v~prospěch jazyka Python oproti C++ ho\-voří lepší přenositelnost mezi platformami. Systém QGIS navíc používá knihovnu GDAL, jejíž součástí je VFK Driver. Ten umožňuje čtení důležitého formátu dat pro~pozemkové úpravy~– výměnného formátu katastru nemovitostí (\zk{VFK}).
 
 Tato práce se zabývá vývojem nástroje pro~zpracování pozemkových úprav, který implementuje jako zásuvný modul do~programu QGIS psaný v~programovacím jazyce Python. Zaměřuje se na~jeden z~úvodních kroků pozemkových úprav~– přípravnou fázi.
 
-První kapitola teoretické části se zabývá samotnými pozemkovými úpravami. Snaží se poskytnout informace, díky kterým bude patrné, jak v~celém procesu figuruje vytvořený zásuvný modul. Zvýšená pozoronost je věnována sestavení soupisů nároků vlastníků, pojednává i~o~nejvíce rozšířených programech pro~pozemkové úpravy.
+První kapitola teoretické části se zabývá samotnými pozemkovými úpravami. Snaží se poskytnout informace, díky kterým bude patrné, jak v~celém procesu figuruje vytvořený zásuvný modul. Zvýšená pozornost je věnována sestavení soupisů nároků vlastníků, pojednává i~o~nejvíce rozšířených programech pro~pozemkové úpravy.
 
-Druhá kapitola teoretického úvodu popisuje dva nejdůležitější podklady zásuvného modulu~– \zk{VFK} a~hranice bonitovaných půdně ekologických jednotek (\zk{BPEJ}).
+Druhá kapitola teoretického úvodu popisuje dva nejdůležitější podklady zásuvné\-ho modulu~– \zk{VFK} a~hranice bonitovaných půdně ekologických jednotek (\zk{BPEJ}).
 
 Praktická část se zaobírá samotným zásuvným modulem a~jeho technickým řešením. Neobsahuje návod, jak se~zásuvným modulem pracovat, to je předmětem uživatelského manuálu v~příloze tohoto dokumentu.

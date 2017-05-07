@@ -17,7 +17,7 @@ Kapitola se věnuje zejména technickému řešení a~jeho důvodům. Popis toho
 
 Vývoj projektu probíhal pomocí verzovacího systému Git\footnote{\url{https://git-scm.com/}}, zdrojový kód je dostupný na~serveru GitHub\footnote{\url{https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017}}.
 
-Pro~vytvoření základní kostry pluginu byl použit zásuvný modul \textit{Plugin Builder}\footnote{\url{https://github.com/g-sherman/Qgis-Plugin-Builder}}, který je součástí oficiálního repozitáře programu QGIS. Postupem času byly ovšem názvy tříd, modulů a~celá struktura zásuvného modulu změněny.
+Pro~vytvoření základní kostry pluginu byl použit zásuvný modul \textit{Plugin Builder}\footnote{\url{https://github.com/g-sherman/Qgis-Plugin-Builder}}, který je součástí oficiálního repositáře programu QGIS. Postupem času byly ovšem názvy tříd, modulů a~celá struktura zásuvného modulu změněny.
 
 K~testování a~ladění byly použity další zásuvné moduly \textit{Remote Debug}\footnote{\url{https://github.com/sourcepole/qgis-remote-debug}}, \textit{Plugin Reloader}\footnote{\url{https://github.com/borysiasty/plugin_reloader}} a~\textit{Script Runner}\footnote{\url{https://github.com/g-sherman/Script-Runner}}.
 
@@ -28,7 +28,7 @@ Během~vývoje zásuvného modulu bylo čerpáno z~literatury zabývající se p
 
 Grafické uživatelské rozhraní zásuvného modulu je reprezentováno jedním oknem třídy \texttt{QDockWidget}\footnote{\url{http://pyqt.sourceforge.net/Docs/PyQt4/qdockwidget.html}}, jehož hlavní výhodou je možnost ukotvení do~samotného programu QGIS. Díky tomu není nutné přepínat mezi~okny a~práce s~pluginem se stává uživatelsky přívětivou. 
 
-Protože zásuvný modul se řídí podle~legislativy České republiky a~používá výměnný formát katastru nemovitostí, je grafické uživatelské rozhraní v~českém jazyce. 
+Protože zásuvný modul se řídí podle~legislativy České republiky a~používá výmě\-nný formát katastru nemovitostí, je grafické uživatelské rozhraní v~českém jazyce. 
 
 \section{Načtení VFK souboru}
 \label{nacteni_vfk}
@@ -61,7 +61,7 @@ Pro čtení \zk{VFK} souborů používá QGIS knihovnu GDAL (viz kapitola č.~\r
 
 \zk{VFK} Driver ovšem umožňuje otevřít \zk{VFK} soubor pouze v~režimu čtení a~to je pro~potřeby zpracování pozemkových úprav nedostatečné.
 
-Pro~takové případy je knihovna GDAL vybavena SQLite Driverem\footnote{\url{\detokenize{http://gdal.org/drv_sqlite.html}}}, který nabízí možnost zápisu do SQLite databáze. Aby byl SQLite driver schopen rozpoznat a~přečíst geometrii, musí databáze obsahovat tabulky \texttt{\detokenize{geometry_columns}} a~\texttt{\detokenize{spatial_ref_sys}}. V~tabulce \texttt{\detokenize{geometry_columns}} je uveden seznam tabulek, které mají geometrii, společně s~údaji jako název sloupce s~geometrií, typ geometrie, souřadnicový systém a~další, viz tab.~\ref{tab:geometry_columns}. Údaje o~souřadnicovém systému odkazují na~tabulku \texttt{\detokenize{spatial_ref_sys}}, ve~které jsou souřadnicové systémy definovány. Seznam sloupců tabulky \texttt{\detokenize{spatial_ref_sys}} a~jejich datové typy popisuje tab.~\ref{tab:spatial_ref_sys}. 
+Pro~takové případy je knihovna GDAL vybavena SQLite Driverem\footnote{\url{\detokenize{http://gdal.org/drv_sqlite.html}}}, který nabízí možnost zápisu do SQLite databáze. Aby byl SQLite driver schopen rozpoznat a~přečíst geometrii, musí databáze obsahovat tabulky \texttt{\detokenize{geometry_columns}} a~\texttt{\detokenize{spatial-}}\\\texttt{\detokenize{_ref_sys}}. V~tabulce \texttt{\detokenize{geometry_columns}} je uveden seznam tabulek, které mají geometrii, společně s~údaji jako název sloupce s~geometrií, typ geometrie, souřadnicový systém a~další, viz tab.~\ref{tab:geometry_columns}. Údaje o~souřadnicovém systému odkazují na~tabulku \texttt{\detokenize{spatial_ref_sys}}, ve~které jsou souřadnicové systémy definovány. Seznam sloupců tabulky \texttt{\detokenize{spatial_ref_sys}} a~jejich datové typy popisuje tab.~\ref{tab:spatial_ref_sys}. 
 
 \begin{table}[H]
     \begin{tabular}{|l|l|}
@@ -101,7 +101,7 @@ Pro~takové případy je knihovna GDAL vybavena SQLite Driverem\footnote{\url{\d
 
 Během práce s~daty souboru \zk{VFK} bylo zjištěno, že OGR poskytovatel dat programu QGIS při~změně atributových hodnot nepoužíval transakce. V~důsledku toho trvalo uložení změn extrémně dlouho. Proto byla podána žádost\footnote{\url{https://issues.qgis.org/issues/16216}}, chyba byla opravena a~od verze 2.18.5 poskytovatel dat OGR transakce využívá.
 
-Algoritmus zásuvného modulu pro~načítání \zk{VFK} souboru zmíněný problém zohledňuje. Ve~verzi programu QGIS nižší než~2.18.5 naimportuje data do~databáze SpatiaLite\footnote{SpatiaLite je extenze SQLite, která umožňuje ukládat geoprostorová data a~obsahuje mnoho prostorových funkcí \citep{spatialite} \citep{wiki_spatialite}.} a~dále s~ní pracuje (viz ukázka kódu~\ref{kontrola_verze_qgis}). Poskytovatel dat SpatiaLite programu QGIS totiž ukládá změny v~transakcích a~tudíž nemá problémy s~pomalým zápisem. Pro~potřeby zásuvného modulu funkcionalita databáze SQLite dostačuje, a~proto je převod do~SpatiaLite pouze dočasné řešení, které zajišťuje použitelnost pluginu i~ve~starších verzích QGISu.
+Algoritmus zásuvného modulu pro~načítání \zk{VFK} souboru zmíněný problém zo\-hledňuje. Ve~verzi programu QGIS nižší než~2.18.5 naimportuje data do~databáze SpatiaLite\footnote{SpatiaLite je extenze SQLite, která umožňuje ukládat geoprostorová data a~obsahuje mnoho prostorových funkcí \citep{spatialite} \citep{wiki_spatialite}.} a~dále s~ní pracuje (viz ukázka kódu~\ref{kontrola_verze_qgis}). Poskytovatel dat SpatiaLite programu QGIS totiž ukládá změny v~transakcích a~tudíž nemá problémy s~pomalým zápisem. Pro~potřeby zásuvného modulu funkcionalita databáze SQLite dostačuje, a~proto je převod do~SpatiaLite pouze dočasné řešení, které zajišťuje použitelnost pluginu i~ve~starších verzích QGISu.
 
 {\scriptsize
 \begin{lstlisting}[style=python, caption={Kontrola verze programu QGIS}, captionpos=b, label=kontrola_verze_qgis, backgroundcolor = \color{light-gray},  numbers=left]
@@ -157,7 +157,7 @@ V~dalším kroku se otevře databázové připojení. Databázovým dotazem se z
 
 Když je proces nahrávání spuštěn ve~verzi programu nižší než 2.18.5, všechna data databáze SQLite se naimportují do~databáze SpatiaLite.
 
-Nakonec se tabulka parcel vazávislosti na~verzi QGISu pomocí SQLite (viz ukázka kódu~\ref{vytvoreni_vrstvy_parcel_pomoci_sqlite}) nebo SpatiaLite Driveru nahraje do~programu QGIS jako platná vrstva.
+Nakonec se tabulka parcel v závislosti na~verzi QGISu pomocí SQLite (viz ukázka kódu~\ref{vytvoreni_vrstvy_parcel_pomoci_sqlite}) nebo SpatiaLite Driveru nahraje do~programu QGIS jako platná vrstva.
 
 Celé načtení \zk{VFK} souboru je spuštěno v~samostatném vlákně. Pro~přehlednost celý popsaný proces ilustruje diagram na~obr.~\ref{fig:diagram_nacitani_vfk}.
 
@@ -232,7 +232,7 @@ Tabulka parcel sama o~sobě obsahuje mnoho sloupců. Společně se~sloupci, kter
           \begin{tabular}{@{}l@{}} \texttt{\detokenize{PU_VYMERA_PARCELY}} \\ \texttt{\detokenize{_MEZNI_ODCHYLKA}} \end{tabular} & \texttt{MEZ. ODCH. ROZ. VYMER} \\ \hline
           \texttt{\detokenize{PU_VZDALENOST}} & \texttt{VZDALENOST} \\ \hline
           \texttt{\detokenize{PU_CENA}} & \texttt{CELK. CENA} \\ \hline
-          \begin{tabular}{@{}l@{}} \texttt{\detokenize{PU_BPEJ}} \\ \texttt{\detokenize{_BPEJCENA_VYMERA_CENA}} \end{tabular} & \begin{tabular}{@{}l@{}} \texttt{BPEJ KOD-CENA ZA M2} \\ -VYMERA-CENA \end{tabular} \\ \hline
+          \begin{tabular}{@{}l@{}} \texttt{\detokenize{PU_BPEJ}} \\ \texttt{\detokenize{_BPEJCENA_VYMERA_CENA}} \end{tabular} & \begin{tabular}{@{}l@{}} \texttt{BPEJ KOD-CENA ZA M2} \\ \texttt{-VYMERA-CENA} \end{tabular} \\ \hline
           \texttt{\detokenize{PU_MERITKO_PODKLADU}} & \texttt{MERITKO PODKL.} \\
          \hline
     \end{tabular}
@@ -246,14 +246,14 @@ Tabulka parcel sama o~sobě obsahuje mnoho sloupců. Společně se~sloupci, kter
 \section{Editace}
 \label{editace}
 
-Velmi důležitou činností běhěm přípravné fáze pozemkových úprav je určení obvodu pozemkové úpravy a~rozdělení parcel do~kategorií (viz~\ref{obvod_a_predmet_pu}).
+Velmi důležitou činností během přípravné fáze pozemkových úprav je určení obvodu pozemkové úpravy a~rozdělení parcel do~kategorií (viz~\ref{obvod_a_predmet_pu}).
 
 Algoritmus načtení \zk{VFK} souboru otvírá vrstvu parcel pomocí SQLite Driveru\footnote{Ve~verzi programu QGIS nižší než~2.18.5 je vrstva otevřená Spatialite Driverem, viz~\ref{nacteni_vfk_algoritmus}.}, takže ji lze editovat.
 
 \subsection{Kategorie parcel}
 \label{kategorie_parcel}
 
-Kvůli zařazení parcel do~kategorií se běhěm načítání přidává do~vrstvy parcel sloupec \texttt{\detokenize{PU_KATEGORIE}} (alias \texttt{KATEGORIE}), jehož datový typ je celé číslo (\texttt{integer}). Zásuvný modul místo dlouhých názvů jednotlivých kategorií používá číslice \texttt{0} - \texttt{2}, viz~tab~\ref{tab:kategorie_hodnoty}. 
+Kvůli zařazení parcel do~kategorií se během načítání přidává do~vrstvy parcel sloupec \texttt{\detokenize{PU_KATEGORIE}} (alias \texttt{KATEGORIE}), jehož datový typ je celé číslo (\texttt{integer}). Zásuvný modul místo dlouhých názvů jednotlivých kategorií používá číslice \texttt{0} - \texttt{2}, viz~tab~\ref{tab:kategorie_hodnoty}. 
 
 \begin{table}[H]
     \begin{tabular}{|l|l|}
@@ -421,12 +421,12 @@ expression = QgsExpression("\"TEL_ID\" is null")
 \subsubsection{Analýza - měření vzdálenosti}
 \label{analyza_vzdalenosti}
 
-Analýza \textit{měření vzdálenosti} určuje pro~všechny parcely v~kategorii \textit{v~obvodu~-~řešené~(2)} vzdálenost jejich těžiště od~referenčního bodu, viz ukázka kódu~\ref{analyza_vzdalenost_vypocet_vzdalenosti_teziste_od_ref_bodu}. Výsledné zaokrouhlené hodnoty v~metrech ukládá do~sloupce \texttt{\detokenize{PU_VZDALENOST}}
+Analýza \textit{měření vzdálenosti} určuje pro~všechny parcely v~kategorii \textit{v~obvodu~- řešené~(2)} vzdálenost jejich těžiště od~referenčního bodu, viz ukázka kódu~\ref{analyza_vzdalenost_vypocet_vzdalenosti_teziste_od_ref_bodu}. Výsledné zaokrouhlené hodnoty v~metrech ukládá do~sloupce \texttt{\detokenize{PU_VZDALENOST}}
 
-Do~kontroly kromě vrstvy parcel vstupuje i~vrstva referečního bodu, která musí obsahovat právě jeden prvek a~kvůli zamezení neočekávaných výsledků musí mít stejný souřadnicový systém jako vrstva parcel.
+Do~kontroly kromě vrstvy parcel vstupuje i~vrstva referenčního bodu, která musí obsahovat právě jeden prvek a~kvůli zamezení neočekávaných výsledků musí mít stejný souřadnicový systém jako vrstva parcel.
 
 {\scriptsize
-\begin{lstlisting}[style=python, caption={Analýza \textit{měření vzdálenosti}~– výpočet vzdálenosti težiště od~refenčního bodu}, captionpos=b, label=analyza_vzdalenost_vypocet_vzdalenosti_teziste_od_ref_bodu, backgroundcolor = \color{light-gray},  numbers=left]
+\begin{lstlisting}[style=python, caption={Analýza \textit{měření vzdálenosti}~– výpočet vzdálenosti těžiště\newline od~referenčního bodu}, captionpos=b, label=analyza_vzdalenost_vypocet_vzdalenosti_teziste_od_ref_bodu, backgroundcolor = \color{light-gray},  numbers=left]
 centroid = geometry.centroid().asPoint()
 distanceDouble = sqrt(refPoint.sqrDist(centroid))
 distance = int(round(distanceDouble))
@@ -439,7 +439,7 @@ Analýza \textit{oceňování podle BPEJ} vypočítá cenu pozemku na~základě 
 
 Pro~určení ceny za~metr čtvereční jednotlivých kódů \zk{BPEJ} analýza používá číselník \zk{BPEJ} z~Českého úřadu zeměměřičského a katastrálního\footnote{Informace o~číselníku jsou dostupné na~\url{https://goo.gl/uXf8FC}. Samotný číselník lze stáhnout z~\url{http://www.cuzk.cz/CUZK/media/CiselnikyISKN/SC_BPEJ/SC_BPEJ.zip?ext=.zip}.}. Tento číselník je aktualizován každý den kolem třetí hodiny ranní.
 
-Do~algoritmu vstupují vrstvy \texttt{\zk{PAR}} a~hranice \zk{BPEJ}, na~které je volán nástroj vektorového překryvu \textit{Union}. Poté se zkontroluje aktuálnost číselníku \zk{BPEJ}. Jesliže číselník není aktuální a~lze se připojit k~internetu\footnote{Pro testování internetového připojení byla zvolena adresa \url{https://www.google.com}.}, stáhne zásuvný modul nový číselník. V~dalším kroku se z~nejnovějšího dostupného číselníku přečtou data a~vypočítá se cena. Do~atributové tabulky se zápíše nejen cena celková (sloupec \texttt{\detokenize{PU_CENA}}), ale~také cena za~metr čtvereční, výměra a~cena dle jednotlivých bonit v~příslušné parcele (sloupec \texttt{\detokenize{PU_BPEJ_BPEJCENA_VYMERA_CENA}}). Může se stát, že uživatel zvolí špatný sloupec, nebo že kód \zk{BPEJ} nebude uveden v~číselníku. V~takovém případě plugin vybere ve~vrstvě obvodu prvky, pro~které nenalezl ceny, a~informuje uživatele o~problému.
+Do~algoritmu vstupují vrstvy \texttt{\zk{PAR}} a~hranice \zk{BPEJ}, na~které je volán nástroj vektorového překryvu \textit{Union}. Poté se zkontroluje aktuálnost číselníku \zk{BPEJ}. Jestliže číselník není aktuální a~lze se připojit k~internetu\footnote{Pro testování internetového připojení byla zvolena adresa \url{https://www.google.com}.}, stáhne zásuvný modul nový číselník. V~dalším kroku se z~nejnovějšího dostupného číselníku přečtou data a~vypočítá se cena. Do~atributové tabulky se zapíše nejen cena celková (sloupec \texttt{\detokenize{PU_CENA}}), ale~také cena za~metr čtvereční, výměra a~cena dle jednotlivých bonit v~příslušné parcele (sloupec \texttt{\detokenize{PU_BPEJ_BPEJCENA_VYMERA_CENA}}). Může se stát, že uživatel zvolí špatný sloupec, nebo že kód \zk{BPEJ} nebude uveden v~číselníku. V~takovém případě plugin vybere ve~vrstvě obvodu prvky, pro~které nenalezl ceny, a~informuje uživatele o~problému.
 
 Algoritmus počítá i~s~možností změny adresy pro~stažení číselníku, když tato situace nastane, oznámí to uživateli.
 

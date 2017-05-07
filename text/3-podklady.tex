@@ -3,16 +3,16 @@
 
 Dvěma nejdůležitějšími podklady pro~zásuvný modul vytvořený v rámci mé diplomové práce jsou výměnný formát katastru nemovitostí a~hranice bonitovaných půdně ekologických jednotek.
 
-V~první části této kapitoly je stručně představen výměnný formát katastru nemovitostí. Uvedené informace byly čerpány z~oficiální dokumentace \citep{struktura_vfk}, ukázky formátu pochází právě odtud nebo z~veřejně dostupných dat \citep{zdroj_vfk}.
+V~první části této kapitoly je stručně představen výměnný formát katastru nemo\-vitostí. Uvedené informace byly čerpány z~oficiální dokumentace \citep{struktura_vfk}, ukázky formátu pochází právě odtud nebo z~veřejně dostupných dat \citep{zdroj_vfk}.
 
-Bonitovaným půdně ekologickým jednotkám se věnuje druhá část kapitoly, kde zaazdroj informací posloužil eKatalog \zk{BPEJ}~\citep{vumop_bpej} a~skripta~\citep{pu_skripta}.
+Bonitovaným půdně ekologickým jednotkám se věnuje druhá část kapitoly, kde za zdroj informací posloužil eKatalog \zk{BPEJ}~\citep{vumop_bpej} a~skripta~\citep{pu_skripta}.
 
 \section{VFK}
 \label{vfk}
 
 Na~rozdíl od~starého výměnného formátu obsahuje \zk{VFK} jak soubor popisných informací (\zk{SPI})~– tedy informace o~vlastnících, parcelách, stavbách a~dalších skutečnostech - tak i~soubor geodetických informací (\zk{SGI})~– informace o~polohovém určení.
 
-Soubory \zk{VFK} jsou poskytovány zpracovatelům pozemkových úprav, pozemkovým úřadům, obecním úřadům a~zhotovitelům geometrických plánů. Slouží k~vzájemnému předávání dat mezi~informačním systémem katastru nemovitostí (\zk{ISKN}) a~jinými systémy.
+Soubory \zk{VFK} jsou poskytovány zpracovatelům pozemkových úprav, pozemko\-vým úřadům, obecním úřadům a~zhotovitelům geometrických plánů. Slouží k~vzájemnému předávání dat mezi~informačním systémem katastru nemovitostí (\zk{ISKN}) a~jiný\-mi systémy.
 
 Výměnný formát katastru nemovitostí je tvořen textovým souborem s~koncovkou \textit{*.vfk}, který má tuto strukturu:
 	\begin{itemize}[leftmargin=1.5cm, noitemsep]
@@ -21,7 +21,7 @@ Výměnný formát katastru nemovitostí je tvořen textovým souborem s~koncovk
 		\item \underline{koncový znak}~– znak \texttt{\&K}
 	\end{itemize}
 
-Datový soubor je kódován v~češtině dle~ČSN ISO 8859-2 (ISO Latin2), ve~výjimečných případech kódování dle
+Datový soubor je kódován v~češtině dle~ČSN ISO 8859-2 (ISO Latin2), ve~výjimeč\-ných případech kódování dle
 WIN1250. Oddělovačem desetinných čísel je tečka, datum a~čas je zapsán ve~tvaru "\texttt{03.06.1999 09:58:42}", jednotlivé údaje na~řádku jsou odděleny středníkem, textové a~datumové položky se uvádí v~uvozovkách.
 
 Věty hlavičky (\texttt{\&H}), definice bloku (\texttt{\&B}) a~věty dat (\texttt{\&D}) jsou zakončeny znaky \texttt{<CR><LF>}.
@@ -82,8 +82,8 @@ Tab.~\ref{tab:hlavicka_priklady} obsahuje příklady položek hlavičky. Kvůli 
 \begin{description}
 	\item[\texttt{VERZE}:] Právě jeden řádek obsahující informaci o~verzi \zk{VFK} souboru. Tato informace je důležitá pro programy, které s~\zk{VFK} pracují.
 	\item[\texttt{VYTVORENO}:] Právě jeden řádek s~časem a~datem vytvoření souboru.
-	\item[\texttt{PUVOD}:] Právě jeden řádek specfikující původ dat. Může obsahovat libovolný text.
-	\item[\texttt{CODEPAGE}:] Právě jeden řádek označující kódóvání souboru. Možné hodnoty a~odpovídající kódování popisuje tab.~\ref{tab:kodovani}.
+	\item[\texttt{PUVOD}:] Právě jeden řádek specifikující původ dat. Může obsahovat libovolný text.
+	\item[\texttt{CODEPAGE}:] Právě jeden řádek označující kódování souboru. Možné hodnoty a~odpo\-vídající kódování popisuje tab.~\ref{tab:kodovani}.
 
     \begin{table}[H]
         \begin{tabular}{|l|l|}
@@ -96,7 +96,7 @@ Tab.~\ref{tab:hlavicka_priklady} obsahuje příklady položek hlavičky. Kvůli 
              \hline
         \end{tabular}
         \centering
-        \caption[\zk{VFK} - hodnoty kódóvání]{\zk{VFK} - hodnoty kódóvání (zdroj \citep{struktura_vfk})}
+        \caption[\zk{VFK} - hodnoty kódování]{\zk{VFK} - hodnoty kódování (zdroj \citep{struktura_vfk})}
         \label{tab:kodovani}
     \end{table}
 
@@ -136,9 +136,9 @@ Tab.~\ref{tab:hlavicka_priklady} obsahuje příklady položek hlavičky. Kvůli 
         \label{tab:zmeny}
     \end{table}
 
-Stavový soubor obsahuje všechny informace ke~konkrétnímu času a~datu, ve~změnovém souboru se nachází pouze změny za~určitý časový úsek.
+Stavový soubor obsahuje všechny informace ke~konkrétnímu času a~datu, ve~změno\-vém souboru se nachází pouze změny za~určitý časový úsek.
 
-	\item[\texttt{KATUZE}, \texttt{OPSUB}, \texttt{PAR}, \texttt{POLYG}:] Soubor \zk{VFK} může být vytvořen pro konkrétní katastrální území, oprávněné subjekty, parcely, nebo~pro~oblast zadanou polygonem. Jedná se o~jeden řádek, který obsahuje hlavičku omezující podmínky a~za~ním následují řádky definující samotnou omezující podmínku. V~případě, že je omezující podmínka prázdná, není za~hlavičkou ani jeden řádek s~daty. Příklad pro katastrální území:
+	\item[\texttt{KATUZE}, \texttt{OPSUB}, \texttt{PAR}, \texttt{POLYG}:] Soubor \zk{VFK} může být vytvořen pro konkrétní kata\-strální území, oprávněné subjekty, parcely, nebo~pro~oblast zadanou polygonem. Jedná se o~jeden řádek, který obsahuje hlavičku omezující podmínky a~za~ním následují řádky definující samotnou omezující podmínku. V~případě, že je omezující podmínka prázdná, není za~hlavičkou ani jeden řádek s~daty. Příklad pro katastrální území:
 
 \begin{lstlisting}[basicstyle=\footnotesize\ttfamily, backgroundcolor = \color{light-gray},  numbers=left]
 &HKATUZE;KOD N6;OBCE_KOD N6;NAZEV T48;PLATNOST_OD D;
@@ -207,7 +207,7 @@ Ukázka řádku s~vlastními daty pro~objekt parcely:
 \subsubsection{Datové bloky důležité pro zásuvný modul}
 \label{datove_bloky_zasuvny_modul}
 
-Soubor výměnného formátu katastru nemovitostí obsahuje mnoho datový bloků. Tato sekce se věnuje pouze blokům, které jsou reletvatní pro~zásuvný modul.
+Soubor výměnného formátu katastru nemovitostí obsahuje mnoho datový bloků. Tato sekce se věnuje pouze blokům, které jsou relevantní pro~zásuvný modul.
 
 V~současné době zásuvný modul pracuje s~těmito datovými bloky\footnote{Zásuvný modul nevyužívá dat \zk{BPEJ} přímo ze~souboru \zk{VFK}, protože hranice \zk{BPEJ} není polohopisným prvkem katastrální mapy. Více o~\zk{BPEJ} viz část \ref{bpej}.}:
 
@@ -267,13 +267,13 @@ Znak \texttt{\&K} signalizuje konec souboru \zk{VFK}. Pro~software, který nač�
 \subsection{Systém BPEJ}
 \label{system_bpej}
 
-Bonitovaná půdně ekologická jednotka vyjadřuje produkční potenciál zemědělské půdy s~ohledem na~místo, kde se půda nachází. Systém \zk{BPEJ} vznikl mezi lety~1973 a~1980 na~základě Komplexního průzkumu zemědělských půd. Původně byl systém \zk{BPEJ} zamýšlen jako~podklad pro~plánování zemědělské produkce, ale~po~roce 1989 se začal používat i~pro~jiné učely. Z~toho vyplývají některá jeho omezení a~nedostatky.
+Bonitovaná půdně ekologická jednotka vyjadřuje produkční potenciál zemědělské půdy s~ohledem na~místo, kde se půda nachází. Systém \zk{BPEJ} vznikl mezi lety~1973 a~1980 na~základě Komplexního průzkumu zemědělských půd. Původně byl systém \zk{BPEJ} zamýšlen jako~podklad pro~plánování zemědělské produkce, ale~po~roce 1989 se začal používat i~pro~jiné účely. Z~toho vyplývají některá jeho omezení a~nedostatky.
 
 Správcem a~garantem údajů \zk{BPEJ} je Výzkumný ústav meliorací a~půdy sídlící v~Praze Zbraslavi.
 
-Od roku 1998 jsou údaje \zk{BPEJ} vedeny v~katastru nemovitostí a~používají je další orgány státní správy. Číselné vyjádření ceny \zk{BPEJ} za~metr čtvereční slouží naříklad pro~výpočet daně z~nemovitostí, pro~stanovení úředních cen zemědělské půdy, nebo~pro~určení nároků v~ceně při~pozemkových úpravách.
+Od roku 1998 jsou údaje \zk{BPEJ} vedeny v~katastru nemovitostí a~používají je další orgány státní správy. Číselné vyjádření ceny \zk{BPEJ} za~metr čtvereční slouží například pro~výpočet daně z~nemovitostí, pro~stanovení úředních cen zemědělské půdy, nebo~pro~určení nároků v~ceně při~pozemkových úpravách.
 
-Celostátní databáze \zk{BPEJ} je od~dubna 2017 veřejně dostupná\footnote{\url{http://www.spucr.cz/bpej/celostatni-databaze-bpej}}. V~době psaní tohoto dokumentu byly hranice \zk{BPEJ} k~nahlížení v mapové aplikaci, nebo bylo data možné stáhnout ve~formátu shapefile.
+Celostátní databáze \zk{BPEJ} je od~dubna 2017 veřejně dostupná\footnote{\url{http://www.spucr.cz/bpej/celostatni-databaze-bpej}}. V~době psaní tohoto dokumentu byly hranice \zk{BPEJ} k~nahlížení v mapové aplikaci, nebo bylo data možné stáhnout ve~formátu Esri Shapefile.
 
 \subsection{Kód BPEJ}
 \label{kod_bpej}
@@ -317,7 +317,7 @@ Pro~všechny nezemědělské nebo nebonitované plochy se od~roku 2008 použív�
 
 Klimatický region je území s~přibližně stejnými klimatickými podmínkami pro~růst a~vývoj zemědělských plodin. V~kódu~\zk{BPEJ} se uvádí jako první číslice.
 
-Vymezení klimatických regionů pro~účely systému \zk{BPEJ} bylo provedeno na~základě údajů Českého hydrometeorologického ústavu z~let 1901 až~1950. V~úvahu se brala tato kritéria:
+Vymezení klimatických regionů pro~účely systému \zk{BPEJ} bylo provedeno na~zá\-kladě údajů Českého hydrometeorologického ústavu z~let 1901 až~1950. V~úvahu se brala tato kritéria:
 	\begin{itemize}[leftmargin=1.5cm, noitemsep]
 		\item suma průměrných denních teplot nad $10^\circ$C
 		\item průměrná roční teplota
@@ -346,7 +346,7 @@ V~České republice je vymezeno 10 klimatických regionů označených kódy \te
 \subsubsection{Hlavní půdní jednotka}
 \label{hpj}
 
-Hlavní půdní jednotka je definována jako účelové seskupení půdních forem s~příbuznými ekologickými a~agronomickými vlastnostmi. Je charakterizována genetickým půdním typem, subtypem, půdotvorným substrátem, hloubkou půdního profilu, zrnitostí a~stupněm hydromorfismu. V~systému \zk{BPEJ} se uvádí na~druhém a~třetím místě číselného kódu.
+Hlavní půdní jednotka je definována jako účelové seskupení půdních forem s~příbuz\-nými ekologickými a~agronomickými vlastnostmi. Je charakterizována genetickým půdním typem, subtypem, půdotvorným substrátem, hloubkou půdního profilu, zrnitostí a~stupněm hydromorfismu. V~systému \zk{BPEJ} se uvádí na~druhém a~třetím místě číselného kódu.
 
 V~současné době systém \zk{BPEJ} vymezuje 78 hlavních půdních jednotek a~ty jsou dále seskupeny do~13 půdních typů. Obr.~\ref{fig:klimaticke_regiony} znázorňuje rozložení půdních typů.
 
@@ -360,7 +360,7 @@ V~současné době systém \zk{BPEJ} vymezuje 78 hlavních půdních jednotek a~
 \subsubsection{Sklonitost a expozice}
 \label{sklonitost_expozice}
 
-Sklonitost se rozděluje do~sedmi skupin. V~terénu se sklonitost určujě sklonoměrem, jako pomocný podklad lze využít mapy s~podrobným výškopisem.
+Sklonitost se rozděluje do~sedmi skupin. V~terénu se sklonitost určuje sklonoměrem, jako pomocný podklad lze využít mapy s~podrobným výškopisem.
 
 Expozice vyjadřuje polohu území \zk{BPEJ} vůči světovým stranám. V~klimatických regionech \texttt{0}, \texttt{1}, \texttt{2}, \texttt{3}, \texttt{4} a~\texttt{5} se jižní expozice samostatně hodnotí jako negativní, zbývající expozice se slučují bez~rozlišení. Samostatně se severní expozice v~klimatických regionech \texttt{6}, \texttt{7}, \texttt{8}, \texttt{9} uvažuje jako negativní, expozice východní, západní a~jižní se hodnotí jako sobě rovné. Expozice se dělí na~čtyři kategorie.
 
@@ -371,6 +371,6 @@ Výsledná třetí číslice kódu \zk{BPEJ} vznikne kombinací sklonitosti a~ex
 
 Obsah skeletu závisí na~obsahu kamene (pevné částice nad 30 mm) a~štěrku (pevné částice hornin od~4~do~30~mm), je rozdělen do~čtyř kategorií.
 
-Hloubka půdy je dána částí půdního profilu omezeného silnou skeletovostí, nebo pevnou horninou. Ve~vyhlášce~\citep{vyhlaska_327} jsou definovány tři kategorie hloubky půdy.
+Hloubka půdy je dána částí půdního profilu omezeného silnou skeletovitostí, nebo pevnou horninou. Ve~vyhlášce~\citep{vyhlaska_327} jsou definovány tři kategorie hloubky půdy.
 
 Na pátém místě číselného kódu \zk{BPEJ} se uvádí kód kombinace obsahu skeletu a~hloubky půdy~\citep{vyhlaska_327}.

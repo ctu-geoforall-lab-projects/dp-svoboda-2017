@@ -1,8 +1,6 @@
 \chapter{Struktura zásuvného modulu}
 \label{struktura_pluginu}
 
-%% TODO - vymazat adresare, ktere nebudou v pluginu
-
 \begin{minipage}{0.9\textwidth}
   \dirtree{%
   .1 /.
@@ -53,9 +51,9 @@
 		\item[\texttt{sql}:] Složka obsahující SQL dávky.
 		\begin{description}[leftmargin=1cm]
 			\item[\texttt{\detokenize{add_pu_columns_PAR.sql}}:] SQL dávka pro přidání vlastních sloupců.
-			\item[\texttt{\detokenize{check_gc_srs.sql}}:] SQL dávka pro kontrolu přítomnosti tabulek \textit{\detokenize{geometry_columns}} a~\textit{\detokenize{spatial_ref_sys}}.
+			\item[\texttt{\detokenize{check_gc_srs.sql}}:] SQL dávka pro kontrolu přítomnosti tabulek \texttt{\detokenize{geo-}}\newline\texttt{\detokenize{metry_columns}} a~\texttt{\detokenize{spatial_ref_sys}}.
 			\item[\texttt{\detokenize{check_pu_columns_PAR.sql}}:] SQL dávka pro~kontrolu přítomnosti vlastních sloupců.
-			\item[\texttt{\detokenize{create_fill_gc_srs.sql}}:] SQL dávka pro~vytvoření a~naplnění tabulek \textit{\detokenize{geometry_columns}} a~\textit{\detokenize{spatial_ref_sys}}.
+			\item[\texttt{\detokenize{create_fill_gc_srs.sql}}:] SQL dávka pro~vytvoření a~naplnění tabulek \texttt{\detokenize{geometry_columns}} a~\texttt{\detokenize{spatial_ref_sys}}.
 			\item[\texttt{\detokenize{create_sobr_spol.sql}}:] SQL dávka pro~vytvoření tabulek \zk{SOBR} a~\zk{SPOL}.
 		\end{description}
 	\end{description}
@@ -70,7 +68,7 @@
 \chapter{Popis vytvořeného Python balíčku}
 \label{popis_python_balicku}
 
-Všechny třídy a~metody balíčku mají svůj vlastní \textit{docstring}, tedy komentář, ve~kterém je stručne napsáno, k~čemu třída či~metoda slouží, jaké má vstupní hodnoty, jaké vyvolává výjimky a~co za~hodnoty vrací. Při~vytváření těchto komentářu bylo vycházeno z~\textit{Google Python Style Guide}\footnote{\url{https://google.github.io/styleguide/pyguide.html}}.
+Všechny třídy a~metody balíčku mají svůj vlastní \textit{docstring}, tedy komentář, ve~kterém je stručně napsáno, k~čemu třída či~metoda slouží, jaké má vstupní hodnoty, jaké vyvolává výjimky a~co za~hodnoty vrací. Při~vytváření těchto komentářů bylo vycházeno z~\textit{Google Python Style Guide}\footnote{\url{https://google.github.io/styleguide/pyguide.html}}.
 
 Plugin se bude dále vyvíjet, proto jsou zde popsány pouze základní informace, díky kterým je možné se v balíčku a modulech orientovat.
 
@@ -108,7 +106,7 @@ Plugin se bude dále vyvíjet, proto jsou zde popsány pouze základní informac
 \begin{description}
 	\item[\texttt{pubin}:] Hlavní Python balíček, který obsahuje všechny vytvořené moduly.
 	\begin{description}[leftmargin=1cm]
-		\item[\texttt{pustack}:] Balíček obsahující moduly všech záložek a~jimi používaných tříd. Třídy záložek dědí z~abstraktní bázové třídy \texttt{PuWidget} nacházející se v~modulu \texttt{puwidget.py}.
+		\item[\texttt{pustack}:] Balíček obsahující moduly všech záložek a~jimi používaných tříd. Třídy záložek dědí z~abstraktní bázové třídy \texttt{PuWidget} nacházející se v~mo\-dulu \texttt{puwidget.py}.
 		\begin{description}[leftmargin=1cm]
 			\item[\texttt{puca}:] Balíček obsahující moduly záložky \textit{Kontroly a~analýzy}. Písmena \texttt{ca} jsou zkratkou pro~anglický název záložky - \texttt{CheckAnalysis}. Všechny třídy kontrol a~analýz dědí z abstraktní bázové třídy \texttt{PuCaWidget} nacházející se v~modulu \texttt{pucawidget.py}. Pro spuštění kontroly nebo~analýzy slouží metoda \texttt{execute}.
 			\begin{description}[leftmargin=1cm]
@@ -125,10 +123,10 @@ Plugin se bude dále vyvíjet, proto jsou zde popsány pouze základní informac
 			\item[\texttt{\detokenize{__init__.py}}:] Modul pro~inicializaci balíčku.
 			\item[\texttt{\detokenize{checkanalysis_puwidget.py}}:] Modul pro~záložku \textit{Kontroly a~analýzy}.
 			\item[\texttt{\detokenize{edit_puwidget.py}}:] Modul pro~záložku \textit{Editace}.
-			\item[\texttt{\detokenize{execute_thread.py}}:] Modul pro~spouštění procesů editace, kontrol a~analýz v~samostatném vlákně.
+			\item[\texttt{\detokenize{execute_thread.py}}:] Modul pro~spouštění procesů editace, kontrol a~ana\-lýz v~samostatném vlákně.
 			\item[\texttt{\detokenize{load_thread.py}}:] Modul pro~spouštění procesu načítání \zk{VFK} souboru v~samostatném vlákně.
 			\item[\texttt{\detokenize{loadvfk_puwidget.py}}:] Modul pro~záložku \textit{Načtení VFK souboru}.
-			\item[\texttt{puwidget.py}:] Abstraktní bázová třída, ze~které dědí všechny třídy záložek.
+			\item[\texttt{puwidget.py}:] Abstraktní bázová třída, ze~které dědí všechny třídy zálo\-žek.
 		\end{description}
 		\item[\texttt{\detokenize{__init__.py}}:] Modul pro~inicializaci balíčku.
 		\item[\texttt{dockwidget.py}:] Modul pro~hlavní grafickou komponentu pluginu.
@@ -144,9 +142,9 @@ Plugin se bude dále vyvíjet, proto jsou zde popsány pouze základní informac
 \section{Instalace}
 \label{manual_instalace}
 
-Zásuvný modul není součástí oficiálního repozitáře QGIS, přesto ho lze nainstalovat stejným způsobem jako~jiné pluginy. Stačí do~programu QGIS přidat repozitář organizace GeoForAll Lab\footnote{\url{http://geomatics.fsv.cvut.cz/research/geoforall/}}.
+Zásuvný modul není součástí oficiálního repositáře QGIS, přesto ho lze nainstalovat stejným způsobem jako~jiné pluginy. Stačí do~programu QGIS přidat repositář organizace GeoForAll Lab\footnote{\url{http://geomatics.fsv.cvut.cz/research/geoforall/}}.
 
-Nejprve je tedy nutné otevřít okno s~repozitáři \textit{Zásuvné moduly $\rightarrow$ Spravovat a~instalovat zásuvné moduly $\rightarrow$ Nastavení} (viz obr.~\ref{fig:pridani_repozitare}) a~zde pomocí tlačítka \textit{Přidat...} doplnit repozitář GeoForAll Lab dostupný na~adrese:
+Nejprve je tedy nutné otevřít okno s~repositáři \textit{Zásuvné moduly $\rightarrow$ Spravovat a~instalovat zásuvné moduly $\rightarrow$ Nastavení} (viz obr.~\ref{fig:pridani_repozitare}) a~zde pomocí tlačítka \textit{Přidat...} doplnit repositář GeoForAll Lab dostupný na~adrese:
 
 \begin{lstlisting}[basicstyle=\footnotesize\ttfamily, backgroundcolor = \color{light-gray},  numbers=left]
 http://geo.fsv.cvut.cz/geoforall/qgis-plugins.xml
@@ -157,14 +155,14 @@ Zásuvný modul se řadí mezi experimentální, proto je zapotřebí aktivovat 
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.9\textwidth]{./pictures/pridani_repozitare.png}
-		\caption[Přidání repozitáře]{Přidání repozitáře}
+		\caption[Přidání repositáře]{Přidání repositáře}
 		\label{fig:pridani_repozitare}
  	\end{figure}
  	
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.6\textwidth]{./pictures/pridani_repozitare-geoforall_lab.png}
-		\caption[Přidání repozitáře GeoForAll Lab]{Přidání repozitáře GeoForAll Lab}
+		\caption[Přidání repositáře GeoForAll Lab]{Přidání repositáře GeoForAll Lab}
 		\label{fig:pridani_repozitare_geoforall_lab}
  	\end{figure}
 
@@ -202,7 +200,7 @@ Když je plugin nainstalován, objeví se v~liště zásuvných modulů jeho iko
 		\item \img{./pictures/checkanalysis.png} \textit{Kontroly a analýzy}
  	\end{itemize} 	
 	\item[Prvek 2:] Skupina nástrojů, které jsou propojené se~standardními nástroji programu QGIS.
-	\item[Prvek 3:] Okna záložek zobrazující se v~závislosti na~tom, která ze~tří ikon záložek (prvkek~1) je aktivní.
+	\item[Prvek 3:] Okna záložek zobrazující se v~závislosti na~tom, která ze~tří ikon záložek (prvek~1) je aktivní.
 	\item[Prvek 4:] Stavový řádek, ve~kterém se ukazují zprávy.
 \end{description}
 
@@ -214,7 +212,7 @@ Když je plugin nainstalován, objeví se v~liště zásuvných modulů jeho iko
 Zásuvný modul komunikuje s~uživatelem třemi způsoby:
 
 \begin{enumerate}[leftmargin=1.5cm, noitemsep]
-	\item \underline{Stavový řádek} (viz prvek~4 obr.~\ref{fig:manual_main_gui}) představuje nejčastější způsob zobrazování zpráv zásuvného modulu. Když nevíte jak postupovat, zde s~největší pravděpodobností najdete potřebné informace. Běžné zprávy mají černou barvu písma, důležíté zprávy se~zobrazují červeně (viz obr.~\ref{fig:manual_dulezita_zprava}).
+	\item \underline{Stavový řádek} (viz prvek~4 obr.~\ref{fig:manual_main_gui}) představuje nejčastější způsob zobrazování zpráv zásuvného modulu. Když nevíte jak postupovat, zde s~největší pravděpodobností najdete potřebné informace. Běžné zprávy mají černou barvu písma, důležité zprávy se~zobrazují červeně (viz obr.~\ref{fig:manual_dulezita_zprava}).
 	
 	\begin{figure}[H]
 		\centering
@@ -292,7 +290,7 @@ Po úspěšném nahrání vrstvy parcel lze začít s~editací. Záložka \texti
  	\end{figure}
 
 \begin{description}
-	\item[Prvek 1:] Skupina nástrojů pro~editaci, které jsou propojené se~standardními nástroji programu QGIS.
+	\item[Prvek 1:] Skupina nástrojů pro~editaci, které jsou propojené se~standardními nástro\-ji programu QGIS.
 	\item[Prvek 2:] Rozbalovací menu s~aktuálně načtenými polygonovými vrstvami.
 	\item[Prvek 3:] Tlačítko pro~zobrazení dialogového, ve~kterém lze zvolit adresář a~název vrstvy obvodu. Filtruje soubory s~příponou \textit{*.pu.shp}, pamatuje si poslední použitou cestu.
 	\item[Prvek 4:] Rozbalovací menu s~kategoriemi parcel. Na~výběr jsou tyto kategorie, číslo v~závorce udává hodnotu, kterou zásuvný modul pro~kategorii používá:
@@ -332,11 +330,11 @@ Pro symbologii vrstvy obvodu byla zvolena červená barva, popisky obsahují pou
 
 Zásuvný modul nabízí dvě varianty zařazení parcel (prvek~6). První možností je volba \textit{vybrané parcely}, která provede zařazení vybraných parcel do~zvolené kategorie (prvek~4).
 
-Druhý způsob nazvaný \textit{obvodem} rozřadí všechny parcely ve~\zk{VFK} vrstvě do~kategorií. Jako podklad použije aktuálně vybranou vrstvu obvodu (viz prvek~2). Tato varianta pracuje pouze s~obvody, které vytvořil zásuvný modul pro~pozemkové úpravy. Pro~zařazení do~kategorie musí být parcela kompletně uvnitř geometrie příslušného prvku obvodu.
+Druhý způsob nazvaný \textit{obvodem} rozřadí všechny parcely ve~\zk{VFK} vrstvě do~ka\-tegorií. Jako podklad použije aktuálně vybranou vrstvu obvodu (viz prvek~2). Tato varianta pracuje pouze s~obvody, které vytvořil zásuvný modul pro~pozemkové úpravy. Pro~zařazení do~kategorie musí být parcela kompletně uvnitř geometrie příslušného prvku obvodu.
 
 Pro kontrolu nabízí zásuvný modul tlačítko \textit{Zobrazit} (prvek~5), které vybere, a~tím pádem zvýrazní, prvky v~kategorii.
 
-Pokud vytvoříte novou parcelu, nebo~pomocí nástroje \textit{Přidat část} doplníte popisné údaje o~geometrii, vyplňte měřítko podkladů do~sloupce \textit{MERITKO PODKL.}. Tento údaj používá kontrola \textit{výměra nad mezní odchylkou}.
+Pokud vytvoříte novou parcelu, nebo~pomocí nástroje \textit{Přidat část} doplníte popis\-né údaje o~geometrii, vyplňte měřítko podkladů do~sloupce \textit{MERITKO PODKL.}. Tento údaj používá kontrola \textit{výměra nad mezní odchylkou}.
 
 \newpage
 
@@ -358,14 +356,14 @@ Poslední záložka zásuvného modulu nabízí možnost zkontrolovat data, zejm
 	\item[Prvek 3:] Tlačítko pro~provedení kontroly či~analýzy.
 \end{description}
 
-V~rozbalovacím menu (prvek~1) zvolte kontrolu či~analýzu, důsledkem čehož se změní dolní okno (prvek~2). Když je vše potřebné zadané, lze kontrolu či~analýzu spustit. Zprávy ve~stavovém řádku poskytují informace o~výledku.
+V~rozbalovacím menu (prvek~1) zvolte kontrolu či~analýzu, důsledkem čehož se změní dolní okno (prvek~2). Když je vše potřebné zadané, lze kontrolu či~analýzu spustit. Zprávy ve~stavovém řádku poskytují informace o~výsledku.
 
 \subsubsection{Kontrola - obvodem}
 \label{manual_kontrola_obvodem}
 
 Kontrola obvodem provádí výběr parcel, které nejsou kompletně uvnitř vrstvy obvodu.
 
-Jestliže od~začátku pracujete pouze s~jednou vrstvou obvodu, měl by být výsledek této kontroly stejný jako při~zvolení kategorie \textit{bez kategorie} (viz prvek~4 na~obr.~\ref{fig:manual_editace_gui}) a~provedení výběru prvků v~kategorii pomocí tlačítka \textit{Zobrazit} (viz prvek~5 na~obr.~\ref{fig:manual_editace_gui}). Lišit se tyto dvě metody budou v~momentě, kdy si do~QGISu nahrajete vrstvu obvodu, kterou jste vytvořili s~jinou vrstvou parcel. Jinými slovy tato kontrola používá geometrii vrstvy obvodu a~tlačítko \textit{Zobrazit} v~záložce \textit{Editace} vybírá parcely na~základě údajů uložených v~atributové tabulce.
+Jestliže od~začátku pracujete pouze s~jednou vrstvou obvodu, měl by být výsledek této kontroly stejný jako při~zvolení kategorie \textit{bez kategorie} (prvek~4 na~obr.~\ref{fig:manual_editace_gui}) a~provedení výběru prvků v~kategorii pomocí tlačítka \textit{Zobrazit} (prvek~5 na~obr.~\ref{fig:manual_editace_gui}). Lišit se tyto dvě metody budou v~momentě, kdy si do~QGISu nahrajete vrstvu obvodu, kterou jste vytvořili s~jinou vrstvou parcel. Jinými slovy tato kontrola používá geometrii vrstvy obvodu a~tlačítko \textit{Zobrazit} v~záložce \textit{Editace} vybírá parcely na~základě údajů uložených v~atributové tabulce.
 
 Jediným potřebným vstupem je zmiňovaná vrstva obvodu v~rozbalovacím menu (viz obr.~\ref{fig:manual_kontrola_obvodem_gui}), které je propojené s~menu vrstvy obvodu v~záložce \textit{Editace}.
 
@@ -401,7 +399,7 @@ Kontrola \textit{bez~vlastníka} vybírá parcely, které jsou bez~vlastníka, t
 
 Analýza \textit{měření vzdálenosti} počítá pro~všechny řešené parcely vzdálenost jejich těžiště od~referenčního bodu. Výsledné zaokrouhlené hodnoty v~metrech ukládá do sloupce \texttt{VZDALENOST}.
 
-Pro~spuštění této kontroly je zapotřebí v~rozbalovacím menu, které filtruje bodové vrstvy, zvolit vrstu referenčního bodu, viz obr.~\ref{fig:manual_analyza_vzdalenosti_gui}. Vybraná vrstva referenčního bodu musí obsahovat právě jeden prvek a~musí mít stejný souřadnicový systém jako vrstva parcel.
+Pro~spuštění této kontroly je zapotřebí v~rozbalovacím menu, které filtruje bodové vrstvy, zvolit vrstvu referenčního bodu, viz obr.~\ref{fig:manual_analyza_vzdalenosti_gui}. Vybraná vrstva referenčního bodu musí obsahovat právě jeden prvek a~musí mít stejný souřadnicový systém jako vrstva parcel.
 
 	\begin{figure}[H]
 		\centering
@@ -431,4 +429,4 @@ Vyberte vrstvu hranic \zk{BPEJ} (prvek~1) a~poté zvolte sloupec, ve~kterém jso
 
 Pro určení ceny za~metr čtvereční jednotlivých kódů \zk{BPEJ} analýza používá číselník \zk{BPEJ} z~Českého úřadu zeměměřičského a~katastrálního.
 
-Do~atributové tabulky se zápíše nejen cena celková (sloupec \texttt{CELK. CENA}), ale~také cena za~metr čtvereční, výměra a~cena dle jednotlivých bonit v~příslušné parcele (sloupec \texttt{BPEJ KOD-CENA ZA M2-VYMERA-CENA}). Pokud omylem zvolíte špatný sloupec, nebo když kód \zk{BPEJ} není nalezen v~číselníku, zásuvný modul vybere ve~vrstvě obvodu prvky, pro~které nenalezl ceny, a~informuje vás o~problému.
+Do~atributové tabulky se zapíše nejen cena celková (sloupec \texttt{CELK. CENA}), ale~také cena za~metr čtvereční, výměra a~cena dle jednotlivých bonit v~příslušné parcele (sloupec \texttt{BPEJ KOD-CENA ZA M2-VYMERA-CENA}). Pokud omylem zvolíte špatný slou\-pec, nebo když kód \zk{BPEJ} není nalezen v~číselníku, zásuvný modul vybere ve~vrstvě obvodu prvky, pro~které nenalezl ceny, a~informuje vás o~problému.

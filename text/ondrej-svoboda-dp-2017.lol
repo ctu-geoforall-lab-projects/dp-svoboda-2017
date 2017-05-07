@@ -8,4 +8,4 @@
 \contentsline {lstlisting}{\numberline {5.8}Kontrola \textit {nen\IeC {\'\i } v~SPI}~\IeC {\textendash } vzorec pro~v\IeC {\'y}b\IeC {\v e}r prvk\IeC {\r u}}{58}{lstlisting.212}
 \contentsline {lstlisting}{\numberline {5.9}Kontrola \textit {nen\IeC {\'\i } v~map\IeC {\v e}}~\IeC {\textendash } vzorec pro~v\IeC {\'y}b\IeC {\v e}r prvk\IeC {\r u}}{58}{lstlisting.215}
 \contentsline {lstlisting}{\numberline {5.10}Kontrola \textit {bez~vlastn\IeC {\'\i }ka}~\IeC {\textendash } vzorec pro~v\IeC {\'y}b\IeC {\v e}r prvk\IeC {\r u}}{59}{lstlisting.219}
-\contentsline {lstlisting}{\numberline {5.11}Anal\IeC {\'y}za \textit {m\IeC {\v e}\IeC {\v r}en\IeC {\'\i } vzd\IeC {\'a}lenosti}~\IeC {\textendash } v\IeC {\'y}po\IeC {\v c}et vzd\IeC {\'a}lenosti te\IeC {\v z}i\IeC {\v s}t\IeC {\v e} od~refen\IeC {\v c}n\IeC {\'\i }ho bodu}{61}{lstlisting.224}
+\contentsline {lstlisting}{\numberline {5.11}Anal\IeC {\'y}za \textit {m\IeC {\v e}\IeC {\v r}en\IeC {\'\i } vzd\IeC {\'a}lenosti}~\IeC {\textendash } v\IeC {\'y}po\IeC {\v c}et vzd\IeC {\'a}lenosti t\IeC {\v e}\IeC {\v z}i\IeC {\v s}t\IeC {\v e}\newline od~referen\IeC {\v c}n\IeC {\'\i }ho bodu}{61}{lstlisting.224}
