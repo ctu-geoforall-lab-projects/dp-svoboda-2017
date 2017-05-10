@@ -213,7 +213,7 @@ Symbologie nahrané vrstvy parcel je dána podle předem připraveného QML soub
 \subsection{Atributová tabulka vrstvy \texttt{\zk{PAR}}}
 \label{tabulka_par}
 
-Tabulka parcel sama o~sobě obsahuje mnoho sloupců. Společně se~sloupci, které přidává zásuvný modul, se stává nepřehlednou, proto plugin všechny nepotřebné sloupce v~atributové tabulce skrývá. Kvůli větší srozumitelnost pro~uživatele navíc přidává sloupcům aliasy, viz tab.~\ref{tab:viditelne_sloupce_aliasy_par}.
+Tabulka parcel sama o~sobě obsahuje mnoho sloupců. Společně se~sloupci, které přidává zásuvný modul, se stává nepřehlednou, proto plugin všechny nepotřebné sloupce v~atributové tabulce skrývá. Kvůli větší srozumitelnosti pro~uživatele navíc přidává sloupcům aliasy, viz tab.~\ref{tab:viditelne_sloupce_aliasy_par}.
 
 \begin{table}[H]
     \begin{tabular}{|l|l|}
@@ -304,7 +304,7 @@ Obvod pozemkové úpravy je území dotčené pozemkovými úpravami, patří do
 
 Bývá znázorňován tak, že všechny sousedící pozemky ve~stejné kategorii tvoří pouze jeden prvek, u~kterého nejsou viditelné vnitřní hranice. Tyto větší sloučené prvky je zvykem doplňovat o~popisky, které značí, do~které kategorie náleží.
 
-Zásuvný modul vytváří vrstvu obvodu na~základě sloupce \texttt{\detokenize{PU_KATEGORIE}} ve~vrstvě parcel. Nejprve je na~vrstvu \texttt{\zk{PAR}} zavolán nástroj \textit{Dissolve} s~parametrem sloupce \texttt{\detokenize{PU_KATEGORIE}}. Díky tomu se sousedící parcely v~jednotlivých kategoriích sloučí do~větších celků. Programu QGIS funguje tak, že prvky, které jsou tvořeny několika body, liniemi, nebo polygony, mají pouze jeden popisek. Výstupem nástroje \textit{Dissolve} mohou být i~multipolygony (prvky tvořeny více polygony), proto je nutné zavolat funkci \textit{Multiparts to~singleparts}, která problémové multipolygony rozdělí. Nakonec se odstraní prvky, které mají nulovou hodnotu ve~sloupci \texttt{\detokenize{PU_KATEGORIE}}, neboť takové prvky do vrstvy obvodu nepatří. Ukázka kódu \ref{obvod_tvorba} obsahuje volání nástrojů \textit{Dissolve} a~\textit{Multiparts to~singleparts}.
+Zásuvný modul vytváří vrstvu obvodu na~základě sloupce \texttt{\detokenize{PU_KATEGORIE}} ve~vrstvě parcel. Nejprve je na~vrstvu \texttt{\zk{PAR}} zavolán nástroj \textit{Dissolve} s~parametrem sloupce \texttt{\detokenize{PU_KATEGORIE}}. Díky tomu se sousedící parcely v~jednotlivých kategoriích sloučí do~větších celků. Program QGIS funguje tak, že prvky, které jsou tvořeny několika body, liniemi, nebo polygony, mají pouze jeden popisek. Výstupem nástroje \textit{Dissolve} mohou být i~multipolygony (prvky tvořeny více polygony), proto je nutné zavolat funkci \textit{Multiparts to~singleparts}, která problémové multipolygony rozdělí. Nakonec se odstraní prvky, které mají nulovou hodnotu ve~sloupci \texttt{\detokenize{PU_KATEGORIE}}, neboť takové prvky do vrstvy obvodu nepatří. Ukázka kódu \ref{obvod_tvorba} obsahuje volání nástrojů \textit{Dissolve} a~\textit{Multiparts to~singleparts}.
 
 {\scriptsize
 \begin{lstlisting}[style=python, caption={Vrstva obvodu~– tvorba}, captionpos=b, label=obvod_tvorba, backgroundcolor = \color{light-gray},  numbers=left]
@@ -374,7 +374,7 @@ layer.invertSelection()
 \subsubsection{Kontrola - není v SPI}
 \label{kontrola_neni_v_spi}
 
-Jak vyplývá z~názvu, kontrola \textit{není v~SPI} provádí výběr parcel, které nejsou uvedeny v~souboru popisných informací. Pro výběr používá sloupec \texttt{\detokenize{KMENOVE_CISLO_PAR}}, neboť patří mezi povinně vyplněné \citep{struktura_vfk}. Pokud má parcela tento sloupec prázdný, znamená to, že se jedná o~chybu nebo nově vytvořenu parcelu.
+Jak vyplývá z~názvu, kontrola \textit{není v~SPI} provádí výběr parcel, které nejsou uvedeny v~souboru popisných informací. Pro výběr používá sloupec \texttt{\detokenize{KMENOVE_CISLO_PAR}}, neboť patří mezi povinně vyplněné \citep{struktura_vfk}. Pokud má parcela tento sloupec prázdný, znamená to, že se jedná o~chybu nebo nově vytvořenou parcelu.
 
 {\scriptsize
 \begin{lstlisting}[style=python, caption={Kontrola \textit{není v~SPI}~– vzorec pro~výběr prvků}, captionpos=b, label=kontrola_spi_kod, backgroundcolor = \color{light-gray},  numbers=left]
@@ -421,7 +421,7 @@ expression = QgsExpression("\"TEL_ID\" is null")
 \subsubsection{Analýza - měření vzdálenosti}
 \label{analyza_vzdalenosti}
 
-Analýza \textit{měření vzdálenosti} určuje pro~všechny parcely v~kategorii \textit{v~obvodu~- řešené~(2)} vzdálenost jejich těžiště od~referenčního bodu, viz ukázka kódu~\ref{analyza_vzdalenost_vypocet_vzdalenosti_teziste_od_ref_bodu}. Výsledné zaokrouhlené hodnoty v~metrech ukládá do~sloupce \texttt{\detokenize{PU_VZDALENOST}}
+Analýza \textit{měření vzdálenosti} určuje pro~všechny parcely v~kategorii \textit{v~obvodu~- řešené (2)} vzdálenost jejich těžiště od~referenčního bodu, viz ukázka kódu~\ref{analyza_vzdalenost_vypocet_vzdalenosti_teziste_od_ref_bodu}. Výsledné zaokrouhlené hodnoty v~metrech ukládá do~sloupce \texttt{\detokenize{PU_VZDALENOST}}
 
 Do~kontroly kromě vrstvy parcel vstupuje i~vrstva referenčního bodu, která musí obsahovat právě jeden prvek a~kvůli zamezení neočekávaných výsledků musí mít stejný souřadnicový systém jako vrstva parcel.
 

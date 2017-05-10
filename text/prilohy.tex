@@ -68,7 +68,7 @@
 \chapter{Popis vytvořeného Python balíčku}
 \label{popis_python_balicku}
 
-Všechny třídy a~metody balíčku mají svůj vlastní \textit{docstring}, tedy komentář, ve~kterém je stručně napsáno, k~čemu třída či~metoda slouží, jaké má vstupní hodnoty, jaké vyvolává výjimky a~co za~hodnoty vrací. Při~vytváření těchto komentářů bylo vycházeno z~\textit{Google Python Style Guide}\footnote{\url{https://google.github.io/styleguide/pyguide.html}}.
+Všechny třídy a~metody balíčku mají svůj vlastní \textit{docstring}, tedy komentář, ve~kterém je stručně napsáno, k~čemu třída či~metoda slouží, jaké má vstupní hodnoty, jaké vyvolává výjimky a~jaké~hodnoty vrací. Při~vytváření těchto komentářů bylo vycházeno z~\textit{Google Python Style Guide}\footnote{\url{https://google.github.io/styleguide/pyguide.html}}.
 
 Plugin se bude dále vyvíjet, proto jsou zde popsány pouze základní informace, díky kterým je možné se v balíčku a modulech orientovat.
 
@@ -387,7 +387,7 @@ Kontrola \textit{není v~mapě} vybírá parcely, které mají nulovou geometrii
 \subsubsection{Kontrola - výměra nad mezní odchylkou}
 \label{manual_kontrola_vymera}
 
-Kontrola \textit{výměra nad~mezní odchylkou} ověřuje, zda~rozdíl mezi výměrou dle~\zk{SPI} a~výměrou vypočtenou z~\zk{SGI} nepřekračuje mezní odchylku. Ta je stanovena katastrální vyhláškou a~závisí na~kódu kvality nejméně přesně určeného lomového bodu na~hranici parcely. Jestliže je parcela digitalizovaná, kód kvality podrobných bodů se určí podle~měřítka podkladové mapy, viz sloupec \texttt{MERITKO PODKL.}.
+Kontrola \textit{výměra nad~mezní odchylkou} ověřuje, zda~rozdíl mezi výměrou dle~\zk{SPI} a~výměrou vypočtenou z~\zk{SGI} nepřekračuje mezní odchylku. Ta je stanovena katastrální vyhláškou a~závisí na~kódu kvality nejméně přesně určeného lomového bodu na~hranici parcely. Jestliže je parcela digitalizovaná, kód kvality podrobných bodů se určí podle~měřítka podkladové mapy (viz sloupec \texttt{MERITKO PODKL.}).
 
 \subsubsection{Kontrola - bez vlastníka}
 \label{manual_kontrola_bez_vlastnika}

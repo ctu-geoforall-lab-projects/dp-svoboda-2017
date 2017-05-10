@@ -1,7 +1,7 @@
 \chapter{Podklady}
 \label{podklady}
 
-Dvěma nejdůležitějšími podklady pro~zásuvný modul vytvořený v rámci mé diplomové práce jsou výměnný formát katastru nemovitostí a~hranice bonitovaných půdně ekologických jednotek.
+Dvěma nejdůležitějšími podklady pro~zásuvný modul vytvořený v rámci této diplomové práce jsou výměnný formát katastru nemovitostí a~hranice bonitovaných půdně ekologických jednotek.
 
 V~první části této kapitoly je stručně představen výměnný formát katastru nemo\-vitostí. Uvedené informace byly čerpány z~oficiální dokumentace \citep{struktura_vfk}, ukázky formátu pochází právě odtud nebo z~veřejně dostupných dat \citep{zdroj_vfk}.
 
@@ -10,7 +10,7 @@ Bonitovaným půdně ekologickým jednotkám se věnuje druhá část kapitoly, 
 \section{VFK}
 \label{vfk}
 
-Na~rozdíl od~starého výměnného formátu obsahuje \zk{VFK} jak soubor popisných informací (\zk{SPI})~– tedy informace o~vlastnících, parcelách, stavbách a~dalších skutečnostech - tak i~soubor geodetických informací (\zk{SGI})~– informace o~polohovém určení.
+Na~rozdíl od~starého výměnného formátu obsahuje \zk{VFK} jak soubor popisných informací (\zk{SPI})~– tedy informace o~vlastnících, parcelách, stavbách a~dalších skutečnostech~– tak i~soubor geodetických informací (\zk{SGI})~– informace o~polohovém určení.
 
 Soubory \zk{VFK} jsou poskytovány zpracovatelům pozemkových úprav, pozemko\-vým úřadům, obecním úřadům a~zhotovitelům geometrických plánů. Slouží k~vzájemnému předávání dat mezi~informačním systémem katastru nemovitostí (\zk{ISKN}) a~jiný\-mi systémy.
 
@@ -218,7 +218,7 @@ V~současné době zásuvný modul pracuje s~těmito datovými bloky\footnote{Z�
 	\end{itemize}
 
 \begin{description}	
-	\item[\texttt{PAR}:] Tabulka \texttt{\zk{PAR}} obsahuje parcely evidované v~\zk{ISKN}. Z~pohledu zásuvného modulu vytvořeného v~rámci této práce se jedná o~nejdůležitější část souboru \zk{VFK}. Je součástí největší skupiny datových bloků nemovitosti. V~tab.~\ref{tab:par_sloupce} jsou uvedeny sloupce, kterých využívá zásuvný modul.
+	\item[\texttt{PAR}:] Tabulka \texttt{\zk{PAR}} obsahuje parcely evidované v~\zk{ISKN}. Z~pohledu zásuvného modulu vytvořeného v~rámci této práce se jedná o~nejdůležitější část souboru \zk{VFK}.\linebreak Je součástí největší skupiny datových bloků nemovitosti. V~tab.~\ref{tab:par_sloupce} jsou uvedeny sloupce, kterých využívá zásuvný modul.
 	
     \begin{table}[H]
         \begin{tabular}{|l|l|l|l|l|}
@@ -238,7 +238,7 @@ V~současné době zásuvný modul pracuje s~těmito datovými bloky\footnote{Z�
         \label{tab:par_sloupce}
     \end{table}   
 		
-	\item[\texttt{SOBR}, \texttt{SPOL}:] Tabulka \texttt{\zk{SOBR}} obsahuje body polohopisu (čísla bodů a~souřadnice obrazu v~mapě). V~tabulce \texttt{\zk{SPOL}} jsou uvedeny body polohopisu (čísla bodů a~souřadnice polohy). Obě tabulky jsou součástí skupiny datových bloků prvky katastrální mapy. Zásuvný modul používá pouze jeden sloupec z~těchto datových bloků (viz~tab.~\ref{tab:sobr_spol_sloupce}).
+	\item[\texttt{SOBR}, \texttt{SPOL}:] Tabulka \texttt{\zk{SOBR}} obsahuje body polohopisu (čísla bodů a~souřadnice\linebreak obrazu v~mapě). V~tabulce \texttt{\zk{SPOL}} jsou uvedeny body polohopisu (čísla bodů a~souřadnice polohy). Obě tabulky jsou součástí skupiny datových bloků prvky katastrální mapy. Zásuvný modul používá pouze jeden sloupec z~těchto datových bloků (viz~tab.~\ref{tab:sobr_spol_sloupce}).
 	
     \begin{table}[H]
         \begin{tabular}{|l|l|l|l|l|}
@@ -271,7 +271,7 @@ Bonitovaná půdně ekologická jednotka vyjadřuje produkční potenciál země
 
 Správcem a~garantem údajů \zk{BPEJ} je Výzkumný ústav meliorací a~půdy sídlící v~Praze Zbraslavi.
 
-Od roku 1998 jsou údaje \zk{BPEJ} vedeny v~katastru nemovitostí a~používají je další orgány státní správy. Číselné vyjádření ceny \zk{BPEJ} za~metr čtvereční slouží například pro~výpočet daně z~nemovitostí, pro~stanovení úředních cen zemědělské půdy, nebo~pro~určení nároků v~ceně při~pozemkových úpravách.
+Od roku 1998 jsou údaje \zk{BPEJ} vedeny v~katastru nemovitostí a~používají je další orgány státní správy. Číselné vyjádření ceny \zk{BPEJ} za~metr čtvereční slouží například pro~výpočet daně z~nemovitostí, pro~stanovení úředních cen zemědělské půdy nebo~pro~určení nároků v~ceně při~pozemkových úpravách.
 
 Celostátní databáze \zk{BPEJ} je od~dubna 2017 veřejně dostupná\footnote{\url{http://www.spucr.cz/bpej/celostatni-databaze-bpej}}. V~době psaní tohoto dokumentu byly hranice \zk{BPEJ} k~nahlížení v mapové aplikaci, nebo bylo data možné stáhnout ve~formátu Esri Shapefile.
 
