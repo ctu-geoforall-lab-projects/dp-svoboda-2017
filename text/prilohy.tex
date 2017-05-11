@@ -146,7 +146,7 @@ Zásuvný modul není součástí oficiálního repositáře QGIS, přesto ho lz
 
 Nejprve je tedy nutné otevřít okno s~repositáři \textit{Zásuvné moduly $\rightarrow$ Spravovat a~instalovat zásuvné moduly $\rightarrow$ Nastavení} (viz obr.~\ref{fig:pridani_repozitare}) a~zde pomocí tlačítka \textit{Přidat...} doplnit repositář GeoForAll Lab dostupný na~adrese:
 
-\begin{lstlisting}[basicstyle=\footnotesize\ttfamily, backgroundcolor = \color{light-gray},  numbers=left]
+\begin{lstlisting}[basicstyle=\footnotesize\ttfamily, backgroundcolor = \color{light-gray},  numbers=left, columns=fullflexible]
 http://geo.fsv.cvut.cz/geoforall/qgis-plugins.xml
 \end{lstlisting}
 
@@ -246,7 +246,7 @@ Zásuvný modul komunikuje s~uživatelem třemi způsoby:
 \section{Načtení VFK souboru}
 \label{manual_nacteni_vfk}
 
-Záložka \textit{Načtení VFK souboru} slouží k~načtení vrstvy parcel ze~souboru~\zk{VFK} souboru.
+Záložka \textit{Načtení VFK souboru} slouží k~načtení vrstvy parcel ze~souboru~\zk{VFK}.
 
 	\begin{figure}[H]
 		\centering
@@ -262,7 +262,9 @@ Záložka \textit{Načtení VFK souboru} slouží k~načtení vrstvy parcel ze~s
 	\item[Prvek 4:] Tlačítko pro~načítání \zk{VFK} souboru. Aktivuje se pouze v~případě, že textové pole (prvek~1) obsahuje cestu k~existujícímu \zk{VFK} souboru.
 \end{description}
 
-Nejprve je zapotřebí zvolit \zk{VFK} soubor, který chcete načíst. To lze udělat dvěma způsoby. Buď kliknete na~tlačítko \textit{Procházet} (prvek~2), vyberete požadovaný soubor a~cesta k~souboru se automaticky zapíše do~textového pole (prvek~1), nebo zkopírujete cestu k~\zk{VFK} souboru přímo do~zmíněného textové pole. Když se v~textovém poli nachází cesta k~validnímu \zk{VFK} souboru, aktivuje se tlačítko \textit{Načíst} (prvek~4) a~můžete zahájit import. O~průběhu načítání vás informuje indikátor průběhu (prvek~3) a~zprávy ve~stavovém řádku.
+Nejprve je zapotřebí zvolit \zk{VFK} soubor, který chcete načíst. To lze udělat dvěma způsoby. Buď kliknete na~tlačítko \textit{Procházet} (prvek~2), vyberete požadovaný soubor a~cesta k~souboru se automaticky zapíše do~textového pole (prvek~1), nebo zkopírujete cestu k~\zk{VFK} souboru přímo do~zmíněného textové pole.
+
+Když se v~textovém poli nachází cesta k~validnímu \zk{VFK} souboru, aktivuje se tlačítko \textit{Načíst} (prvek~4) a~můžete zahájit import. O~průběhu načítání vás informuje indikátor průběhu (prvek~3) a~zprávy ve~stavovém řádku.
 
 Symbologie načtené vrstvy parcel se řídí podle druhu pozemku. Při měřítku 1:4000 a~větším přiblížení se zobrazí parcelní čísla, viz obr.~\ref{fig:manual_symbologie_par}.
 
