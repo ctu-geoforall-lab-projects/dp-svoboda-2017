@@ -6,7 +6,7 @@ které je možné ukotvit do samotného programu QGIS.
 
 .. figure:: images/gui-hlavni_gui.png
 
-   Grafické uživatelské rozhraní.
+   Zásuvný modul – grafické uživatelské rozhraní.
 
 Prvek 1:
    Skupina tří ikon pro přepínání mezi záložkami:
@@ -24,10 +24,12 @@ Prvek 1:
       .. |kontrolyaanalyzy| image:: images/zalozka-kontroly_a_analyzy.png
 
 Prvek 2:
-   Skupina nástrojů, které jsou propojené se standardními nástroji programu QGIS.
+   Skupina nástrojů, které jsou propojené se standardními nástroji programu
+   QGIS.
 
 Prvek 3:
-   Okna záložek zobrazující se v závislosti na tom, která ze tří ikon záložek (prvek 1) je aktivní.
+   Okna záložek zobrazující se v závislosti na tom, která ze tří ikon záložek
+   (prvek 1) je aktivní.
 
 Prvek 4:
    Stavový řádek, ve kterém se ukazují zprávy.
