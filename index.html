@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -30,7 +32,9 @@
   
 
   
-    <link rel="top" title="QGIS PU Plugin 0.1 documentation" href="#"/> 
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="QGIS PU Plugin 0.1 documentation" href="#"/>
+        <link rel="next" title="Instalace" href="instalace.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -39,6 +43,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -79,14 +84,18 @@
           
             
             
-                <!-- Local TOC -->
-                <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Zásuvný modul QGIS pro pozemkové úpravy</a><ul>
-<li><a class="reference internal" href="#autori">Autoři</a></li>
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="instalace.html">Instalace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">Grafické uživatelské rozhraní</a></li>
+<li class="toctree-l1"><a class="reference internal" href="komunikace.html">Komunikace s uživatelem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nacteni.html">Načtení VFK souboru</a></li>
+<li class="toctree-l1"><a class="reference internal" href="editace.html">Editace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kontrolyaanalyzy.html">Kontroly a analýzy</a></li>
 </ul>
-</li>
-</ul>
-</div>
+
             
           
         </div>
@@ -97,8 +106,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="#">QGIS PU Plugin</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">QGIS PU Plugin</a>
+        
       </nav>
 
 
@@ -107,23 +118,40 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="#">Docs</a> &raquo;</li>
-      
-    <li>Zásuvný modul QGIS pro pozemkové úpravy</li>
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Zásuvný modul QGIS pro pozemkové úpravy</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/index.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -131,11 +159,49 @@
             
   <div class="section" id="zasuvny-modul-qgis-pro-pozemkove-upravy">
 <h1>Zásuvný modul QGIS pro pozemkové úpravy<a class="headerlink" href="#zasuvny-modul-qgis-pro-pozemkove-upravy" title="Permalink to this headline">¶</a></h1>
-<p>Zásuvný modul QGIS pro zpracování přípravné fáze komplexních
-pozemkových úprav...</p>
-<div class="admonition-todo admonition" id="index-0">
-<p class="first admonition-title">Todo</p>
-<p class="last">...</p>
+<p>Zásuvný modul slouží ke zpracování přípravné fáze komplexních
+pozemkových úprav.</p>
+<p>Funkcionalitu zásuvného modulu lze rozdělit do tří částí:</p>
+<ul class="simple">
+<li>načtení vrstvy parcel ze souboru VFK v režimu zápisu</li>
+<li>editace vrstvy parcel pomocí standardních nástrojů programu QGIS, rozdělení
+parcel do kategorií</li>
+<li>sada nástrojů pro kontrolu souladu SPI, SGI a analýzy nezbytné
+pro sestavení nárokových listů</li>
+</ul>
+<p>Případné nápady, připomínky a chyby prosím napiště na <a class="reference external" href="https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017/issues">stránku zásuvného modulu</a>.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="instalace.html">Instalace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">Grafické uživatelské rozhraní</a></li>
+<li class="toctree-l1"><a class="reference internal" href="komunikace.html">Komunikace s uživatelem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nacteni.html">Načtení VFK souboru</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nacteni.html#graficke-uzivatelske-rozhrani">Grafické uživatelské rozhraní</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nacteni.html#postup">Postup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nacteni.html#symbologie-vrstvy-parcel">Symbologie vrstvy parcel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nacteni.html#atributova-tabulka-vrstvy-parcel">Atributová tabulka vrstvy parcel</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="editace.html">Editace</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="editace.html#graficke-uzivatelske-rozhrani">Grafické uživatelské rozhraní</a></li>
+<li class="toctree-l2"><a class="reference internal" href="editace.html#postup">Postup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="editace.html#symbologie-vrstvy-obvodu">Symbologie vrstvy obvodu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="editace.html#atributova-tabulka-vrstvy-obvodu">Atributová tabulka vrstvy obvodu</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kontrolyaanalyzy.html">Kontroly a analýzy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kontrolyaanalyzy.html#graficke-uzivatelske-rozhrani">Grafické uživatelské rozhraní</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kontrolyaanalyzy.html#postup">Postup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kontrolyaanalyzy.html#kontrola-obvodem">Kontrola - obvodem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kontrolyaanalyzy.html#kontrola-neni-v-spi">Kontrola - není v SPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kontrolyaanalyzy.html#kontrola-neni-v-mape">Kontrola - není v mapě</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kontrolyaanalyzy.html#kontrola-vymera-nad-mezni-odchylkou">Kontrola - výměra nad mezní odchylkou</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kontrolyaanalyzy.html#kontrola-bez-vlastnika">Kontrola - bez vlastníka</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kontrolyaanalyzy.html#analyza-mereni-vzdalenosti">Analýza - měření vzdálenosti</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kontrolyaanalyzy.html#analyza-ocenovani-podle-bpej">Analýza - oceňování podle BPEJ</a></li>
+</ul>
+</li>
+</ul>
 </div>
 <div class="section" id="autori">
 <h2>Autoři<a class="headerlink" href="#autori" title="Permalink to this headline">¶</a></h2>
@@ -150,8 +216,18 @@ učení technické v Praze</p>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="instalace.html" class="btn btn-neutral float-right" title="Instalace" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
   
 
   <hr/>
@@ -183,7 +259,8 @@ učení technické v Praze</p>
             VERSION:'0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>

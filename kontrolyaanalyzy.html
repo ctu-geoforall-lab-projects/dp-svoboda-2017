@@ -1,0 +1,354 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kontroly a analýzy &mdash; QGIS PU Plugin 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="QGIS PU Plugin 0.1 documentation" href="index.html"/>
+        <link rel="prev" title="Editace" href="editace.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> QGIS PU Plugin
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="instalace.html">Instalace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">Grafické uživatelské rozhraní</a></li>
+<li class="toctree-l1"><a class="reference internal" href="komunikace.html">Komunikace s uživatelem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nacteni.html">Načtení VFK souboru</a></li>
+<li class="toctree-l1"><a class="reference internal" href="editace.html">Editace</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Kontroly a analýzy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#graficke-uzivatelske-rozhrani">Grafické uživatelské rozhraní</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#postup">Postup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kontrola-obvodem">Kontrola - obvodem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kontrola-neni-v-spi">Kontrola - není v SPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kontrola-neni-v-mape">Kontrola - není v mapě</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kontrola-vymera-nad-mezni-odchylkou">Kontrola - výměra nad mezní odchylkou</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kontrola-bez-vlastnika">Kontrola - bez vlastníka</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analyza-mereni-vzdalenosti">Analýza - měření vzdálenosti</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analyza-ocenovani-podle-bpej">Analýza - oceňování podle BPEJ</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">QGIS PU Plugin</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Kontroly a analýzy</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/kontrolyaanalyzy.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kontroly-a-analyzy">
+<h1>Kontroly a analýzy<a class="headerlink" href="#kontroly-a-analyzy" title="Permalink to this headline">¶</a></h1>
+<p>Poslední záložka zásuvného modulu nabízí možnost zkontrolovat data, zejména
+soulad mezi SPI, SGI, a provést analýzy nezbytné pro sestavení nárokových
+listů.</p>
+<div class="section" id="graficke-uzivatelske-rozhrani">
+<h2>Grafické uživatelské rozhraní<a class="headerlink" href="#graficke-uzivatelske-rozhrani" title="Permalink to this headline">¶</a></h2>
+<div class="figure align-center" id="id1">
+<img alt="_images/ka-gui.png" src="_images/ka-gui.png" />
+<p class="caption"><span class="caption-text">Figure 1: Záložka Kontroly a analýzy – grafické uživatelské rozhraní.</span></p>
+</div>
+<dl class="docutils">
+<dt>Prvek 1:</dt>
+<dd>Rozbalovací menu pro přepínání mezi kontrolami a analýzami.</dd>
+<dt>Prvek 2:</dt>
+<dd>Okna kontrol a analýz zobrazující se v závislosti na tom, která položka
+rozbalovacího menu (prvek 1) je vybrána.</dd>
+<dt>Prvek 3:</dt>
+<dd>Tlačítko pro provedení kontroly či analýzy.</dd>
+</dl>
+</div>
+<div class="section" id="postup">
+<h2>Postup<a class="headerlink" href="#postup" title="Permalink to this headline">¶</a></h2>
+<p>V rozbalovacím menu (prvek 1) zvolte kontrolu či analýzu, důsledkem čehož se
+změní dolní okno (prvek 2). Když je vše potřebné zadané, lze kontrolu či analýzu
+spustit. Zprávy ve stavovém řádku poskytují informace o výsledku.</p>
+</div>
+<div class="section" id="kontrola-obvodem">
+<h2>Kontrola - obvodem<a class="headerlink" href="#kontrola-obvodem" title="Permalink to this headline">¶</a></h2>
+<p>Kontrola <em>obvodem</em> provádí výběr parcel, které nejsou kompletně uvnitř vrstvy
+obvodu.</p>
+<p>Jestliže od začátku pracujete pouze s jednou vrstvou obvodu, měl by být výsledek
+této kontroly stejný jako při zvolení kategorie <em>bez kategorie</em> (prvek 4
+v záložce <a class="reference internal" href="editace.html#editace-gui"><span class="std std-ref">Editace</span></a>) a provedení výběru prvků v kategorii
+pomocí tlačítka <span class="guilabel">Zobrazit</span> (prvek 5 v záložce
+<a class="reference internal" href="editace.html#editace-gui"><span class="std std-ref">Editace</span></a>). Lišit se tyto dvě metody budou v případě,
+že si do QGISu nahrajete vrstvu obvodu, kterou jste vytvořili s jinou vrstvou
+parcel. Jinými slovy tato kontrola používá geometrii vrstvy obvodu a tlačítko
+<span class="guilabel">Zobrazit</span> v záložce Editace vybírá parcely na základě údajů uložených
+v atributové tabulce.</p>
+<p>Jediným potřebným vstupem je zmiňovaná vrstva obvodu v rozbalovacím menu,
+které je propojené s menu vrstvy obvodu v záložce <a class="reference internal" href="editace.html#editace-gui"><span class="std std-ref">Editace</span></a>.</p>
+<div class="figure align-center" id="id2">
+<img alt="_images/ka-kontrola-obvodem.png" src="_images/ka-kontrola-obvodem.png" />
+<p class="caption"><span class="caption-text">Figure 2: Kontrola obvodem – grafické uživatelské rozhraní.</span></p>
+</div>
+</div>
+<div class="section" id="kontrola-neni-v-spi">
+<h2>Kontrola - není v SPI<a class="headerlink" href="#kontrola-neni-v-spi" title="Permalink to this headline">¶</a></h2>
+<p>Kontrola <em>není v SPI</em> slouží k zobrazení parcel, které nejsou v souboru
+popisných informací.</p>
+</div>
+<div class="section" id="kontrola-neni-v-mape">
+<h2>Kontrola - není v mapě<a class="headerlink" href="#kontrola-neni-v-mape" title="Permalink to this headline">¶</a></h2>
+<p>Kontrola <em>není v mapě</em> vybírá parcely, které mají nulovou geometrii a tudíž
+se nezobrazují v mapovém okně.</p>
+</div>
+<div class="section" id="kontrola-vymera-nad-mezni-odchylkou">
+<h2>Kontrola - výměra nad mezní odchylkou<a class="headerlink" href="#kontrola-vymera-nad-mezni-odchylkou" title="Permalink to this headline">¶</a></h2>
+<p>Kontrola <em>výměra nad mezní odchylkou</em> ověřuje, zda rozdíl mezi výměrou dle SPI
+a výměrou vypočtenou z SGI nepřekračuje mezní odchylku. Ta je stanovena
+katastrální vyhláškou a závisí na kódu kvality nejméně přesně určeného lomového
+bodu na hranici parcely. Jestliže je parcela digitalizovaná, kód kvality
+podrobných bodů se určí podle měřítka podkladové mapy, viz sloupec
+<code class="docutils literal"><span class="pre">MERITKO</span> <span class="pre">PODKL.</span></code>.</p>
+</div>
+<div class="section" id="kontrola-bez-vlastnika">
+<h2>Kontrola - bez vlastníka<a class="headerlink" href="#kontrola-bez-vlastnika" title="Permalink to this headline">¶</a></h2>
+<p>Kontrola <em>bez vlastníka</em> vybírá parcely, které jsou bez vlastníka,
+tzn. že nemají přiřazený list vlastnictví.</p>
+</div>
+<div class="section" id="analyza-mereni-vzdalenosti">
+<h2>Analýza - měření vzdálenosti<a class="headerlink" href="#analyza-mereni-vzdalenosti" title="Permalink to this headline">¶</a></h2>
+<p>Analýza <em>měření vzdálenosti</em> počítá pro všechny řešené parcely vzdálenost jejich
+těžiště od referenčního bodu. Výsledné zaokrouhlené hodnoty v metrech ukládá
+do sloupce <code class="docutils literal"><span class="pre">VZDALENOST</span></code>.
+Pro spuštění této kontroly je zapotřebí v rozbalovacím menu, které filtruje
+bodové vrstvy, zvolit vrstvu referenčního bodu. Vybraná vrstva referenčního
+bodu musí obsahovat právě jeden prvek a musí mít stejný souřadnicový systém jako
+vrstva parcel.</p>
+<div class="figure align-center" id="id3">
+<img alt="_images/ka-analyza-vzdalenost.png" src="_images/ka-analyza-vzdalenost.png" />
+<p class="caption"><span class="caption-text">Figure 3: Analýza měření vzdálenosti – grafické uživatelské rozhraní.</span></p>
+</div>
+</div>
+<div class="section" id="analyza-ocenovani-podle-bpej">
+<h2>Analýza - oceňování podle BPEJ<a class="headerlink" href="#analyza-ocenovani-podle-bpej" title="Permalink to this headline">¶</a></h2>
+<p>Analýza oceňování podle BPEJ počítá cenu pozemku na základě vrstvy hranic
+BPEJ.</p>
+<div class="figure align-center" id="id4">
+<img alt="_images/ka-analyza-vzdalenost.png" src="_images/ka-analyza-vzdalenost.png" />
+<p class="caption"><span class="caption-text">Figure 4: Analýza oceňování podle BPEJ – grafické uživatelské rozhraní.</span></p>
+</div>
+<dl class="docutils">
+<dt>Prvek 1:</dt>
+<dd>Rozbalovací menu s aktuálně načtenými polygonovými vrstvami.</dd>
+<dt>Prvek 2:</dt>
+<dd>Rozbalovací menu se sloupci vybrané vrstvy BPEJ.</dd>
+</dl>
+<p>Vyberte vrstvu hranic BPEJ (prvek 1) a poté zvolte sloupec, ve kterém jsou
+uloženy kódy BPEJ. Vrstva hranic BPEJ musí mít stejný souřadnicový systém jako
+vrstva parcel.</p>
+<p>Pro určení ceny za metr čtvereční jednotlivých kódů BPEJ analýza používá
+číselník BPEJ z <em>Českého úřadu zeměměřičského a katastrálního</em>.</p>
+<p>Do atributové tabulky se zapíše nejen cena celková (sloupec <code class="docutils literal"><span class="pre">CELK.</span> <span class="pre">CENA</span></code>),
+ale také cena za metr čtvereční, výměra a cena dle jednotlivých bonit
+v příslušné parcele (sloupec <code class="docutils literal"><span class="pre">BPEJ</span> <span class="pre">KOD-CENA</span> <span class="pre">ZA</span> <span class="pre">M2-VYMERA-CENA</span></code>).</p>
+<p>Pokud omylem zvolíte špatný sloupec, nebo když kód BPEJ není nalezen
+v číselníku, zásuvný modul vybere ve vrstvě obvodu prvky, pro které nenalezl
+ceny, a informuje vás o problému.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="editace.html" class="btn btn-neutral" title="Editace" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016-2017 GeoForAll CVUT v Praze.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
