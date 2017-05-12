@@ -108,7 +108,7 @@ Plugin se bude dále vyvíjet, proto jsou zde popsány pouze základní informac
 	\begin{description}[leftmargin=1cm]
 		\item[\texttt{pustack}:] Balíček obsahující moduly všech záložek a~jimi používaných tříd. Třídy záložek dědí z~abstraktní bázové třídy \texttt{PuWidget} nacházející se v~mo\-dulu \texttt{puwidget.py}.
 		\begin{description}[leftmargin=1cm]
-			\item[\texttt{puca}:] Balíček obsahující moduly záložky \textit{Kontroly a~analýzy}. Písmena \texttt{ca} jsou zkratkou pro~anglický název záložky - \texttt{CheckAnalysis}. Všechny třídy kontrol a~analýz dědí z abstraktní bázové třídy \texttt{PuCaWidget} nacházející se v~modulu \texttt{pucawidget.py}. Pro spuštění kontroly nebo~analýzy slouží metoda \texttt{execute}.
+			\item[\texttt{puca}:] Balíček obsahující moduly záložky \textit{Kontroly a~analýzy}. Písmena \texttt{ca} jsou zkratkou pro~anglický název záložky~– \texttt{CheckAnalysis}. Všechny třídy kontrol a~analýz dědí z abstraktní bázové třídy \texttt{PuCaWidget} nacházející se v~modulu \texttt{pucawidget.py}. Pro spuštění kontroly nebo~analýzy slouží metoda \texttt{execute}.
 			\begin{description}[leftmargin=1cm]
 				\item[\texttt{\detokenize{__init__.py}}:] Modul pro~inicializaci balíčku.
 				\item[\texttt{\detokenize{area_pucawidget.py}}:] Modul pro~kontrolu \textit{výměra nad~mezní odchylkou}.
@@ -144,7 +144,7 @@ Plugin se bude dále vyvíjet, proto jsou zde popsány pouze základní informac
 
 Zásuvný modul není součástí oficiálního repositáře QGIS, přesto ho lze nainstalovat stejným způsobem jako~jiné pluginy. Stačí do~programu QGIS přidat repositář organizace GeoForAll Lab\footnote{\url{http://geomatics.fsv.cvut.cz/research/geoforall/}}.
 
-Nejprve je tedy nutné otevřít okno s~repositáři \textit{Zásuvné moduly $\rightarrow$ Spravovat a~instalovat zásuvné moduly $\rightarrow$ Nastavení} (viz obr.~\ref{fig:pridani_repozitare}) a~zde pomocí tlačítka \textit{Přidat...} doplnit repositář GeoForAll Lab dostupný na~adrese:
+Nejprve otevřete okno s~repositáři \textit{Zásuvné moduly $\rightarrow$ Spravovat a~instalovat zásuvné moduly $\rightarrow$ Nastavení} (viz obr.~\ref{fig:pridani_repozitare}) a~zde pomocí tlačítka \textit{Přidat...} doplňte repositář GeoForAll Lab dostupný na~adrese:
 
 \begin{lstlisting}[basicstyle=\footnotesize\ttfamily, backgroundcolor = \color{light-gray},  numbers=left, columns=fullflexible]
 http://geo.fsv.cvut.cz/geoforall/qgis-plugins.xml
@@ -313,11 +313,11 @@ Po úspěšném nahrání vrstvy parcel lze začít s~editací. Záložka \texti
 
 Zásuvný modul pracuje s~aktivní vrstvou, tj. vrstva vybraná v~panelu vrstev, který se ve~výchozím nastavení nachází na~levé straně okna.
 
-Vrstvu parcel je možné editovat pomocí sady standardních nástrojů v~horní části pluginu (prvek~1).
+Vrstvu parcel můžete editovat pomocí sady standardních nástrojů v~horní části pluginu (prvek~1).
 
 Nejdůležitější funkcionalitou této záložky je ovšem zařazení parcel do~kategorií. Aby bylo na~první pohled zřejmé, ve~které kategorii jsou jednotlivé parcely zařazeny, používá zásuvný modul tzv.~vrstvu obvodu. Jedná se o~samostatnou vrstvu ve~formátu \textit{shapefile}. Pro~odlišení od~jiných dat mají vrstvy obvodu příponu \textit{*.pu.shp}. Adresář a~název této vrstvy můžete specifikovat pomocí tlačítka \textit{Vytvořit} (prvek~3). Po~poklepání na~zmíněné tlačítko se otevře dialogové okno, kde lze zvolit umístění vrstvy obvodu. Z~aktivní vrstvy, která musí být \zk{VFK}, se vytvoří vrstva obvodu, zásuvný modul ji načte a~vybere v~rozbalovacím menu (prvek~2).
 
-Pokud cesta k~vrstvě obvodu není uživatelem definována (rozbalovací menu je prázdné), nebo je v~rozbalovací menu vybrána vrstva, která nebyla vytvořena zásuvným modulem a~tudíž neobsahuje potřebné sloupce, plugin automaticky vytvoří vrstvu obvodu ve~stejném adresáři, ve~kterém se nachází aktivní vrstva parcel.
+Pokud cesta k~vrstvě obvodu není definována (rozbalovací menu je prázdné), nebo je v~rozbalovací menu vybrána vrstva, která nebyla vytvořena zásuvným modulem a~tudíž neobsahuje potřebné sloupce, plugin automaticky vytvoří vrstvu obvodu ve~stejném adresáři, ve~kterém se nachází aktivní vrstva parcel.
 
 Funkce pro~vytvoření obvodu je volána v~momentě, kdy je pro~vrstvu parcel uložena změna geometrie, uložena změna, při~které došlo k~vymazání prvku, nebo je pomocí tlačítka \textit{Zařadit} (prvek~7) provedeno zařazení parcel.
 
@@ -348,7 +348,7 @@ Poslední záložka zásuvného modulu nabízí možnost zkontrolovat data, zejm
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.55\textwidth]{./pictures/ca_gui.png}
-		\caption[Záložka \textit{Kontroly a analýzy} - grafické uživatelské rozhraní]{Záložka \textit{Kontroly a analýzy} - grafické uživatelské rozhraní}
+		\caption[Záložka \textit{Kontroly a analýzy}~– grafické uživatelské rozhraní]{Záložka \textit{Kontroly a analýzy}~– grafické uživatelské rozhraní}
 		\label{fig:manual_ca_gui}
  	\end{figure}
 
@@ -372,7 +372,7 @@ Jediným potřebným vstupem je zmiňovaná vrstva obvodu v~rozbalovacím menu (
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.55\textwidth]{./pictures/kontrola-obvodem.png}
-		\caption[Kontrola \textit{obvodem} - grafické uživatelské rozhraní]{Kontrola \textit{obvodem} - grafické uživatelské rozhraní}
+		\caption[Kontrola \textit{obvodem}~– grafické uživatelské rozhraní]{Kontrola \textit{obvodem}~– grafické uživatelské rozhraní}
 		\label{fig:manual_kontrola_obvodem_gui}
  	\end{figure}
 
@@ -406,7 +406,7 @@ Pro~spuštění této kontroly je zapotřebí v~rozbalovacím menu, které filtr
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.55\textwidth]{./pictures/analyza_vzdalenost.png}
-		\caption[Analýza \textit{měření vzdálenosti} - grafické uživatelské rozhraní]{Analýza \textit{měření vzdálenosti} - grafické uživatelské rozhraní}
+		\caption[Analýza \textit{měření vzdálenosti}~– grafické uživatelské rozhraní]{Analýza \textit{měření vzdálenosti}~– grafické uživatelské rozhraní}
 		\label{fig:manual_analyza_vzdalenosti_gui}
  	\end{figure}
 
@@ -418,7 +418,7 @@ Analýza \textit{oceňování podle BPEJ} počítá cenu pozemku na~základě vr
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.55\textwidth]{./pictures/analyza_bpej.png}
-		\caption[Analýza \textit{oceňování podle BPEJ} - grafické uživatelské rozhraní]{Analýza \textit{oceňování podle BPEJ} - grafické uživatelské rozhraní}
+		\caption[Analýza \textit{oceňování podle BPEJ}~– grafické uživatelské rozhraní]{Analýza \textit{oceňování podle BPEJ}~– grafické uživatelské rozhraní}
 		\label{fig:manual_analyza_bpej_gui}
  	\end{figure}
 
@@ -431,4 +431,6 @@ Vyberte vrstvu hranic \zk{BPEJ} (prvek~1) a~poté zvolte sloupec, ve~kterém jso
 
 Pro určení ceny za~metr čtvereční jednotlivých kódů \zk{BPEJ} analýza používá číselník \zk{BPEJ} z~Českého úřadu zeměměřičského a~katastrálního.
 
-Do~atributové tabulky se zapíše nejen cena celková (sloupec \texttt{CELK. CENA}), ale~také cena za~metr čtvereční, výměra a~cena dle jednotlivých bonit v~příslušné parcele (sloupec \texttt{BPEJ KOD-CENA ZA M2-VYMERA-CENA}). Pokud omylem zvolíte špatný slou\-pec, nebo když kód \zk{BPEJ} není nalezen v~číselníku, zásuvný modul vybere ve~vrstvě obvodu prvky, pro~které nenalezl ceny, a~informuje vás o~problému.
+Do~atributové tabulky se zapíše nejen cena celková (sloupec \texttt{CELK. CENA}), ale~také cena za~metr čtvereční, výměra a~cena dle jednotlivých bonit v~příslušné parcele (sloupec \texttt{BPEJ KOD-CENA ZA M2-VYMERA-CENA}).
+
+Pokud omylem zvolíte špatný slou\-pec, nebo když kód \zk{BPEJ} není nalezen v~číselníku, zásuvný modul vybere ve~vrstvě obvodu prvky, pro~které nenalezl ceny, a~informuje vás o~problému.
