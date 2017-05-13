@@ -115,5 +115,6 @@ Vrstva obvodu se vytváří z vrstvy parcel, ovšem pouze informace o kategorii 
 pro obvod relevantní. Z toho důvodu je viditelný pouze sloupec ``KATEGORIE``.
 
 .. figure:: images/editace-tabulka.png
+   :width: 70%
 
    Atributová tabulka vrstvy obvodu.
