@@ -101,7 +101,7 @@ Analýza - oceňování podle BPEJ
 Analýza oceňování podle BPEJ počítá cenu pozemku na základě vrstvy hranic
 BPEJ.
 
-.. figure:: images/ka-analyza-vzdalenost.png
+.. figure:: images/ka-analyza-bpej.png
 
    Analýza oceňování podle BPEJ – grafické uživatelské rozhraní.
 
