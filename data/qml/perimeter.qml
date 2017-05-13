@@ -1,5 +1,5 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.18.4" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.18.7" simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
     <edittype widgetv2type="TextEdit" name="rowid">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
@@ -130,6 +130,12 @@
     <edittype widgetv2type="TextEdit" name="PU_CENA">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
+    <edittype widgetv2type="TextEdit" name="PU_BPEJ_BP">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="PU_MERITKO">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
   </edittypes>
   <renderer-v2 forceraster="0" symbollevels="0" type="singleSymbol" enableorderby="0">
     <symbols>
@@ -154,7 +160,6 @@
   </renderer-v2>
   <labeling type="simple"/>
   <customproperties>
-    <property key="embeddedWidgets/count" value="0"/>
     <property key="labeling" value="pal"/>
     <property key="labeling/addDirectionSymbol" value="false"/>
     <property key="labeling/angleOffset" value="0"/>
@@ -395,6 +400,8 @@
     <alias field="PU_KATEGOR" index="40" name="KATEGORIE"/>
     <alias field="PU_VZDALEN" index="41" name=""/>
     <alias field="PU_CENA" index="42" name=""/>
+    <alias field="PU_BPEJ_BP" index="43" name=""/>
+    <alias field="PU_MERITKO" index="44" name=""/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
@@ -445,6 +452,8 @@
       <column width="-1" hidden="1" type="field" name="PU_VYMER_1"/>
       <column width="-1" hidden="1" type="field" name="PU_VYMER_2"/>
       <column width="-1" hidden="1" type="field" name="PU_VYMER_3"/>
+      <column width="-1" hidden="1" type="field" name="PU_BPEJ_BP"/>
+      <column width="-1" hidden="1" type="field" name="PU_MERITKO"/>
     </columns>
   </attributetableconfig>
   <editform>.</editform>
@@ -519,6 +528,8 @@ def my_form_open(dialog, layer, feature):
     <default field="PU_KATEGOR" expression=""/>
     <default field="PU_VZDALEN" expression=""/>
     <default field="PU_CENA" expression=""/>
+    <default field="PU_BPEJ_BP" expression=""/>
+    <default field="PU_MERITKO" expression=""/>
   </defaults>
   <previewExpression>COALESCE( "rowid", '&lt;NULL>' )</previewExpression>
   <layerGeometryType>2</layerGeometryType>
