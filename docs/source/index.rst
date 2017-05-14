@@ -14,7 +14,7 @@ Funkcionalitu zásuvného modulu lze rozdělit do tří částí:
 *   sada nástrojů pro kontrolu souladu SPI, SGI a analýzy nezbytné
     pro sestavení nárokových listů 
 
-Případné nápady, připomínky a chyby prosím napiště na `stránku zásuvného modulu
+Případné nápady, připomínky a chyby prosím napište na `stránku zásuvného modulu
 <https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017/issues>`__.
 
 .. toctree::
