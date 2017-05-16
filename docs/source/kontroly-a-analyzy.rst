@@ -86,6 +86,7 @@ Analýza - měření vzdálenosti
 Analýza *měření vzdálenosti* počítá pro všechny řešené parcely vzdálenost jejich
 těžiště od referenčního bodu. Výsledné zaokrouhlené hodnoty v metrech ukládá
 do sloupce ``VZDALENOST``.
+
 Pro spuštění této kontroly je zapotřebí v rozbalovacím menu, které filtruje
 bodové vrstvy, zvolit vrstvu referenčního bodu. Vybraná vrstva referenčního
 bodu musí obsahovat právě jeden prvek a musí mít stejný souřadnicový systém jako

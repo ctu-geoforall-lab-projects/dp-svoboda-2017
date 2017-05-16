@@ -25,7 +25,7 @@ Případné nápady, připomínky a chyby prosím napište na `stránku zásuvn�
    komunikace
    nacteni
    editace
-   kontrolyaanalyzy
+   kontroly-a-analyzy
 
 Autoři
 ******
