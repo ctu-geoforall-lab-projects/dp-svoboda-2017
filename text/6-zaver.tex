@@ -3,6 +3,8 @@
 
 Cílem této práce bylo vyvinout zásuvný modul QGIS pro~zpracování přípravné fáze komplexních pozemkových úprav. Plugin byl napsán v~programovacím jazyce Python, grafické uživatelské rozhraní bylo vytvořeno pomocí modulu PyQt.
 
+Zásuvný modul je šířen pod licencí \textit{GNU General Public License}, zdrojový kód se nachází v~GitHub repositáři\footnote{\url{https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017}}.
+
 Funkcionalita zásuvného modulu se dělí na~tři části.
 
 Prvním krokem je načtení vrstvy parcel ze~souboru výměnného formátu katastru nemovitostí. K~tomu se používá \zk{VFK} Driver knihovny GDAL, který importuje veš\-kerá data do~SQLite databáze. Aby bylo možné vrstvu editovat, otevírá se vytvořená databáze pomocí SQLite Driveru, jež je rovněž součástí jmenované knihovny.
@@ -19,6 +21,6 @@ Počínaje dubnem 2017 zásuvný modul testují projektanti pozemkových úprav 
 
 Zájem projevili i~zaměstnanci Státního pozemkového úřadu České republiky, kteří by zásuvný modul rádi používali během programové fáze, ve~které se určuje finanční a~časová náročnost provedení pozemkových úprav jednotlivých katastrálních území. Aby se pro~ně zásuvný modul stal v~tomto ohledu atraktivnější, je potřeba implementovat nové funkce.
 
-Mezi témata dalšího vývoje patří sestavení vlastních nárokových listů, zvýšení rychlosti kontroly \textit{výměra nad~mezní odchylkou}, přidání volby symbologie podle listu vlastnictví, čtení z~více VFK souborů najednou a~další, více viz GitHub repositář\footnote{\url{https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017}}.
+Mezi témata dalšího vývoje patří sestavení vlastních nárokových listů, zvýšení rychlosti kontroly \textit{výměra nad~mezní odchylkou}, přidání volby symbologie podle listu vlastnictví, čtení z~více VFK souborů najednou a~další, více viz sekce GitHub repositáře\footnote{\url{https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017/issues}}.
 
 V~rámci této práce byl vytvořen zásuvný modul pro~pozemkové úpravy, který disponuje klíčovou funkcionalitou. Aby byl schopen konkurovat komerčnímu softwaru, je další vývoj nezbytný.
