@@ -6,7 +6,7 @@ nainstalovat stejným způsobem jako jiné pluginy. Stačí do programu QGIS př
 repositář organizace *GeoForAll Lab*.
 
 Nejprve tedy otevřete okno :guilabel:`Zásuvné moduly` :menuselection:`-->`
-:guilabel:`Spravovat a instalovat zásuvné moduly`:
+:guilabel:`Spravovat a instalovat zásuvné moduly`.
 
 .. figure:: images/instalace-otevreni_okna_zasuvne_moduly.png
 
@@ -28,7 +28,7 @@ Pomocí tlačítka :guilabel:`Přidat` doplňte repositář organizace `GeoForAl
    Přidání repositáře.
 
 .. figure:: images/instalace-pridani_repositare_geoforall.png
-   :width: 70%
+   :width: 60%
 
    Přidání repositáře GeoForAll Lab.
 
@@ -40,11 +40,11 @@ V záložce :guilabel:`Vše` nebo :guilabel:`Nenainstalované` vyhledejte
 
    Instalace zásuvného modulu.
 
-Po úspešném nainstalování se v :guilabel:`Panelu nástrojů zásuvného modulu`
-objeví jeho ikona.
+Po úspěšném nainstalování se v :guilabel:`Panelu nástrojů zásuvného modulu`
+objeví jeho ikona. Okno zásuvného modulu je možné vyvolat poklepáním na jeho
+ikonu nebo volbou :guilabel:`Zásuvné moduly` :menuselection:`-->`
+:guilabel:`PU Plugin` :menuselection:`-->` :guilabel:`PU Plugin`.
 
 .. figure:: images/instalace-toolbar.png
 
    Ikona zásuvného modulu v panelu nástrojů.
-
-Nyní je zásuvný modul připraven k použití.
