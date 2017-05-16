@@ -144,42 +144,54 @@ Plugin se bude dále vyvíjet, proto jsou zde popsány pouze základní informac
 
 Zásuvný modul není součástí oficiálního repositáře QGIS, přesto ho lze nainstalovat stejným způsobem jako~jiné pluginy. Stačí do~programu QGIS přidat repositář organizace GeoForAll Lab\footnote{\url{http://geomatics.fsv.cvut.cz/research/geoforall/}}.
 
-Nejprve otevřete okno s~repositáři \textit{Zásuvné moduly $\rightarrow$ Spravovat a~instalovat zásuvné moduly $\rightarrow$ Nastavení} (viz obr.~\ref{fig:pridani_repozitare}) a~zde pomocí tlačítka \textit{Přidat...} doplňte repositář GeoForAll Lab dostupný na~adrese:
-
-\begin{lstlisting}[basicstyle=\footnotesize\ttfamily, backgroundcolor = \color{light-gray},  numbers=left, columns=fullflexible]
-http://geo.fsv.cvut.cz/geoforall/qgis-plugins.xml
-\end{lstlisting}
-
-Zásuvný modul se řadí mezi experimentální, proto je zapotřebí aktivovat volbu \textit{Zobrazit také experimentální zásuvné moduly}, viz obr.~\ref{fig:pridani_repozitare}. Poté už stačí do~vyhledávacího pole zadat \textit{PU Plugin} a~zásuvný modul pro~pozemkové úpravy nainstalovat (viz obr.~\ref{fig:instalace_puplugin}).
+Nejprve tedy otevřete okno \textit{Zásuvné moduly $\rightarrow$ Spravovat a~instalovat zásuvné moduly}.
 
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=.9\textwidth]{./pictures/pridani_repozitare.png}
+		\includegraphics[width=.6\textwidth]{./pictures/instalace-otevreni_okna_zasuvne_moduly.png}
+		\caption[Otevření okna \textit{Zásuvné moduly}]{Otevření okna \textit{Zásuvné moduly}}
+		\label{fig:manual_otevreni_okna_zasuvne_moduly}
+ 	\end{figure}
+
+V~záložce \textit{Nastavení} aktivujte volbu \textit{Zobrazit také experimentální zásuvné moduly}.
+
+Pomocí tlačítka \textit{Přidat...} doplňte repositář organizace GeoForAll Lab:
+
+\begin{lstlisting}[basicstyle=\footnotesize\ttfamily, backgroundcolor = \color{light-gray},  numbers=left, columns=fullflexible, keepspaces=true]
+Název:   CVUT GeoForAll Lab
+URL:     http://geo.fsv.cvut.cz/geoforall/qgis-plugins.xml
+\end{lstlisting}
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.85\textwidth]{./pictures/instalace-pridani_repositare.png}
 		\caption[Přidání repositáře]{Přidání repositáře}
-		\label{fig:pridani_repozitare}
+		\label{fig:manual_pridani_repozitare}
  	\end{figure}
  	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=.6\textwidth]{./pictures/pridani_repozitare-geoforall_lab.png}
+		\includegraphics[width=.6\textwidth]{./pictures/instalace-pridani_repositare_geoforall.png}
 		\caption[Přidání repositáře GeoForAll Lab]{Přidání repositáře GeoForAll Lab}
-		\label{fig:pridani_repozitare_geoforall_lab}
+		\label{fig:manual_pridani_repozitare_geoforall_lab}
  	\end{figure}
+
+V záložce \textit{Vše} nebo \textit{Nenainstalované} vyhledejte \textit{PU Plugin}. Vyberte zásuvný modul a klikněte na \textit{Instalovat zásuvný modul}.
 
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=.8\textwidth]{./pictures/instalace_puplugin.png}
-		\caption[Instalace zásuvného modulu]{Instalace zásuvného modulu}
-		\label{fig:instalace_puplugin}
+		\includegraphics[width=.8\textwidth]{./pictures/instalace-instalace_zasuvneho_modulu.png}
+		\caption[Zásuvný modul~– instalace]{Zásuvný modul~– instalace}
+		\label{fig:manual_instalace_puplugin}
  	\end{figure}
 
-Když je plugin nainstalován, objeví se v~liště zásuvných modulů jeho ikona (viz obr.~\ref{fig:ikona_puplugin}). Okno zásuvného modulu je možné vyvolat poklepáním na~jeho ikonu nebo volbou \textit{Zásuvné moduly $\rightarrow$ PU Plugin $\rightarrow$ PU Plugin}.
+Po úspěšném nainstalování se v~\textit{Panelu nástrojů zásuvného modulu} objeví jeho ikona. Okno zásuvného modulu je možné vyvolat poklepáním na~jeho ikonu nebo volbou \textit{Zásuvné moduly $\rightarrow$ PU Plugin $\rightarrow$ PU Plugin}.
 
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=.1\textwidth]{./pictures/puplugin.png}
-		\caption[Plugin~– ikona]{Plugin~– ikona}
-		\label{fig:ikona_puplugin}
+		\includegraphics[width=.4\textwidth]{./pictures/instalace-toolbar.png}
+		\caption[Ikona zásuvného modulu v panelu nástrojů]{Ikona zásuvného modulu v panelu nástrojů}
+		\label{fig:manual_ikona_v_panelu_nastroju}
  	\end{figure}
 
 \section{Grafické uživatelské rozhraní}
@@ -262,20 +274,38 @@ Záložka \textit{Načtení VFK souboru} slouží k~načtení vrstvy parcel ze~s
 	\item[Prvek 4:] Tlačítko pro~načítání \zk{VFK} souboru. Aktivuje se pouze v~případě, že textové pole (prvek~1) obsahuje cestu k~existujícímu \zk{VFK} souboru.
 \end{description}
 
+\subsection{Postup}
+\label{manual_nacteni_postup}
+
 Nejprve je zapotřebí zvolit \zk{VFK} soubor, který chcete načíst. To lze udělat dvěma způsoby. Buď kliknete na~tlačítko \textit{Procházet} (prvek~2), vyberete požadovaný soubor a~cesta k~souboru se automaticky zapíše do~textového pole (prvek~1), nebo zkopírujete cestu k~\zk{VFK} souboru přímo do~zmíněného textové pole.
 
-Když se v~textovém poli nachází cesta k~validnímu \zk{VFK} souboru, aktivuje se tlačítko \textit{Načíst} (prvek~4) a~můžete zahájit import. O~průběhu načítání vás informuje indikátor průběhu (prvek~3) a~zprávy ve~stavovém řádku.
+Když se v~textovém poli nachází cesta k~validnímu \zk{VFK} souboru, aktivuje se tlačítko \textit{Načíst} (prvek~4) a~můžete zahájit import.
 
-Symbologie načtené vrstvy parcel se řídí podle druhu pozemku. Při měřítku 1:4000 a~větším přiblížení se zobrazí parcelní čísla, viz obr.~\ref{fig:manual_symbologie_par}.
+O~průběhu načítání vás informuje indikátor průběhu (prvek~3) a~zprávy ve~stavovém řádku.
+
+\subsection{Symbologie vrstvy parcel}
+\label{manual_nacteni_symbologie}
+
+Symbologie načtené vrstvy parcel se řídí podle druhu pozemku. Při měřítku 1:4000 a~větším přiblížení se zobrazí parcelní čísla.
 
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.9\textwidth]{./pictures/symbologie_par.png}
-		\caption[Symbologie vrstvy parcel]{Symbologie vrstvy parcel}
+		\caption[Vrstva parcel~– symbologie]{Vrstva parcel~– symbologie}
 		\label{fig:manual_symbologie_par}
  	\end{figure}
 
+\subsection{Atributová tabulka vrstvy parcel}
+\label{manual_nacteni_tabulka}
+
 Zásuvný modul v~atributové tabulce kvůli přehlednosti skrývá všechny nepotřebné sloupce. Pro~větší srozumitelnost mají viditelné sloupce aliasy.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.95\textwidth]{./pictures/nacteni-tabulka.png}
+		\caption[Vrstva parcel~– atributová tabulka]{Vrstva parcel~– atributová tabulka}
+		\label{fig:manual_tabulka_par}
+ 	\end{figure}
 
 \newpage
 
@@ -311,6 +341,9 @@ Po úspěšném nahrání vrstvy parcel lze začít s~editací. Záložka \texti
 	\item[Prvek 7:] Tlačítko pro~provedení zařazení.
 \end{description}
 
+\subsection{Postup}
+\label{manual_editace_postup}
+
 Zásuvný modul pracuje s~aktivní vrstvou, tj. vrstva vybraná v~panelu vrstev, který se ve~výchozím nastavení nachází na~levé straně okna.
 
 Vrstvu parcel můžete editovat pomocí sady standardních nástrojů v~horní části pluginu (prvek~1).
@@ -321,7 +354,18 @@ Pokud cesta k~vrstvě obvodu není definována (rozbalovací menu je prázdné),
 
 Funkce pro~vytvoření obvodu je volána v~momentě, kdy je pro~vrstvu parcel uložena změna geometrie, uložena změna, při~které došlo k~vymazání prvku, nebo je pomocí tlačítka \textit{Zařadit} (prvek~7) provedeno zařazení parcel.
 
-Pro symbologii vrstvy obvodu byla zvolena červená barva, popisky obsahují pouze číslo kategorie, viz obr.~\ref{fig:manual_symbologie_obvod}.
+Zásuvný modul nabízí dvě varianty zařazení parcel (prvek~6). První možností je volba \textit{vybrané parcely}, která provede zařazení vybraných parcel do~zvolené kategorie (prvek~4).
+
+Druhý způsob nazvaný \textit{obvodem} rozřadí všechny parcely ve~\zk{VFK} vrstvě do~ka\-tegorií. Jako podklad použije aktuálně vybranou vrstvu obvodu (viz prvek~2). Tato varianta pracuje pouze s~obvody, které vytvořil zásuvný modul pro~pozemkové úpravy. Pro~zařazení do~kategorie musí být parcela kompletně uvnitř geometrie příslušného prvku obvodu.
+
+Pro kontrolu nabízí zásuvný modul tlačítko \textit{Zobrazit} (prvek~5), které vybere, a~tím pádem zvýrazní, prvky v~kategorii.
+
+Pokud vytvoříte novou parcelu, nebo~pomocí nástroje \textit{Přidat část} doplníte popis\-né údaje o~geometrii, vyplňte měřítko podkladů do~sloupce \textit{MERITKO PODKL.}. Tento údaj používá kontrola \textit{výměra nad mezní odchylkou}.
+
+\subsection{Symbologie vrstvy obvodu}
+\label{manual_editace_symbologie}
+
+Pro symbologii vrstvy obvodu byla zvolena červená barva, popisky obsahují pouze číslo kategorie.
 
 	\begin{figure}[H]
 		\centering
@@ -330,13 +374,17 @@ Pro symbologii vrstvy obvodu byla zvolena červená barva, popisky obsahují pou
 		\label{fig:manual_symbologie_obvod}
  	\end{figure}
 
-Zásuvný modul nabízí dvě varianty zařazení parcel (prvek~6). První možností je volba \textit{vybrané parcely}, která provede zařazení vybraných parcel do~zvolené kategorie (prvek~4).
+\subsection{Atributová tabulka vrstvy obvodu}
+\label{manual_editace_tabulka}
 
-Druhý způsob nazvaný \textit{obvodem} rozřadí všechny parcely ve~\zk{VFK} vrstvě do~ka\-tegorií. Jako podklad použije aktuálně vybranou vrstvu obvodu (viz prvek~2). Tato varianta pracuje pouze s~obvody, které vytvořil zásuvný modul pro~pozemkové úpravy. Pro~zařazení do~kategorie musí být parcela kompletně uvnitř geometrie příslušného prvku obvodu.
+Vrstva obvodu se vytváří z~vrstvy parcel, ovšem pouze informace o kategorii je pro obvod relevantní. Z~toho důvodu je viditelný pouze sloupec \texttt{KATEGORIE}.
 
-Pro kontrolu nabízí zásuvný modul tlačítko \textit{Zobrazit} (prvek~5), které vybere, a~tím pádem zvýrazní, prvky v~kategorii.
-
-Pokud vytvoříte novou parcelu, nebo~pomocí nástroje \textit{Přidat část} doplníte popis\-né údaje o~geometrii, vyplňte měřítko podkladů do~sloupce \textit{MERITKO PODKL.}. Tento údaj používá kontrola \textit{výměra nad mezní odchylkou}.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.7\textwidth]{./pictures/editace-tabulka.png}
+		\caption[Vrstva obvodu~– atributová tabulka]{Vrstva obvodu~– atributová tabulka}
+		\label{fig:manual_tabulka_par}
+ 	\end{figure}
 
 \newpage
 
