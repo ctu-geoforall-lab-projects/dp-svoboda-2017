@@ -15,8 +15,8 @@ Nejprve tedy otevřete okno :guilabel:`Zásuvné moduly` :menuselection:`-->`
 V záložce :guilabel:`Nastavení` aktivujte volbu :guilabel:`Zobrazit také
 experimentální zásuvné moduly`.
 
-Pomocí tlačítka :guilabel:`Přidat` doplňte repositář organizace `GeoForAll Lab
-<http://geomatics.fsv.cvut.cz/research/geoforall/>`__:
+Pomocí tlačítka :guilabel:`Přidat...` doplňte repositář organizace `GeoForAll
+Lab <http://geomatics.fsv.cvut.cz/research/geoforall/>`__:
 
 ::
 
