@@ -1,6 +1,7 @@
 \chapter{Úvod}
 \label{1-uvod}
 
+%%% ML: to je Tvuj puvodni text, pokud ne, tak tam chybi citace
 Vlivem působení člověka se krajina v~České republice změnila. Zanikly
 polní cesty, přirozené liniové prvky a~další krajinotvorné
 elementy. Důsledkem toho došlo k~naru\-šení ekologické stability
@@ -25,23 +26,25 @@ a~jsou vymezeny prostory pro~prvky zvyšující ekologickou stabilitu.
 Složitého procesu pozemkových úprav se účastní mnoho odborníků
 a~jejich práce se neobejde bez~kvalitního softwaru. V~současné době se
 všechny běžně používané programy pro~pozemkové úpravy řadí mezi
-komerční software a~jsou distribuovány pouze pro~platformu Windows.
+%%% ML: tady se hodilo spise proprietarni, open source muze byt
+%%% komercni take, v textu je to na vice mistech, ale to je detail
+komerční software a~jsou distribuovány pouze pro~platformu Microsoft
+Windows.
 
 S~rozmachem open-source projektů se nabízí možnost poskytnout
 zpracovatelům pozemkových úprav svobodný a~otevřený software, který by
-při~své práci mohli využít.
+při~své práci mohli využít. Mezi stále populárnější open-source
+programy pro~práci s~prostorovými daty patří geografický informační
+systém QGIS. Hlavními výhodami systému QGIS jsou intuitivní grafické
+uživatelské rozhraní a~široká nabídka zásuvných modulů (pluginů),
+které rozšiřují jeho funkcionalitu. Pluginy do~programu QGIS lze
+vyvíjet v~programovacím jazyce C++ nebo Python, v~prospěch jazyka
+Python oproti C++ ho\-voří především snadnější přenositelnost mezi
+platformami. Systém QGIS navíc používá knihovnu GDAL, jejíž součástí
+je VFK Driver. Ten umožňuje čtení důležitého formátu dat pro~pozemkové
+úpravy~– výměnného formátu katastru nemovitostí (\zk{VFK}).
 
-Mezi stále populárnější open-source programy pro~práci s~prostorovými
-daty patří geografický informační systém QGIS. Hlavními výhodami
-systému QGIS jsou intuitivní grafické uživatelské rozhraní a~široká
-nabídka zásuvných modulů (pluginů), které rozšiřují jeho
-funkcionalitu. Pluginy do~programu QGIS lze vyvíjet v~programovacím
-jazyce C++ nebo Python, v~prospěch jazyka Python oproti C++ ho\-voří
-lepší přenositelnost mezi platformami. Systém QGIS navíc používá
-knihovnu GDAL, jejíž součástí je VFK Driver. Ten umožňuje čtení
-důležitého formátu dat pro~pozemkové úpravy~– výměnného formátu
-katastru nemovitostí (\zk{VFK}).
-
+%%% ML: vetu preformulovat, neco tam chybi
 Tato práce se zabývá vývojem nástroje pro~zpracování pozemkových
 úprav, který implementuje jako zásuvný modul do~programu QGIS psaný
 v~programovacím jazyce Python. Zaměřuje se na~jeden z~úvodních kroků
