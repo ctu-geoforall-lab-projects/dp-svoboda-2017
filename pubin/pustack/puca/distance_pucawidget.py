@@ -27,8 +27,6 @@ from PyQt4.QtCore import Qt
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
 from qgis.core import *
 
-import processing
-
 from math import sqrt
 
 from pucawidget import PuCaWidget
