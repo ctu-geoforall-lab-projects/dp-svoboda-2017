@@ -324,7 +324,7 @@ Po úspěšném nahrání vrstvy parcel lze začít s~editací. Záložka \texti
 \begin{description}
 	\item[Prvek 1:] Skupina nástrojů pro~editaci, které jsou propojené se~standardními nástro\-ji programu QGIS.
 	\item[Prvek 2:] Rozbalovací menu s~aktuálně načtenými polygonovými vrstvami.
-	\item[Prvek 3:] Tlačítko pro~zobrazení dialogového, ve~kterém lze zvolit adresář a~název vrstvy obvodu. Filtruje soubory s~příponou \textit{*.pu.shp}, pamatuje si poslední použitou cestu.
+	\item[Prvek 3:] Tlačítko pro~zobrazení dialogového, ve~kterém lze zvolit adresář a~název vrstvy obvodu. Filtruje soubory s~příponou \textit{*.shp}, pamatuje si poslední použitou cestu.
 	\item[Prvek 4:] Rozbalovací menu s~kategoriemi parcel. Na~výběr jsou tyto kategorie, číslo v~závorce udává hodnotu, kterou zásuvný modul pro~kategorii používá:
 	\begin{itemize}[leftmargin=1.5cm, noitemsep]
 		\item \textit{mimo obvod (0)}
@@ -348,7 +348,7 @@ Zásuvný modul pracuje s~aktivní vrstvou, tj. vrstva vybraná v~panelu vrstev,
 
 Vrstvu parcel můžete editovat pomocí sady standardních nástrojů v~horní části pluginu (prvek~1).
 
-Nejdůležitější funkcionalitou této záložky je ovšem zařazení parcel do~kategorií. Aby bylo na~první pohled zřejmé, ve~které kategorii jsou jednotlivé parcely zařazeny, používá zásuvný modul tzv.~vrstvu obvodu. Jedná se o~samostatnou vrstvu ve~formátu \textit{shapefile}. Pro~odlišení od~jiných dat mají vrstvy obvodu příponu \textit{*.pu.shp}. Adresář a~název této vrstvy můžete specifikovat pomocí tlačítka \textit{Vytvořit} (prvek~3). Po~poklepání na~zmíněné tlačítko se otevře dialogové okno, kde lze zvolit umístění vrstvy obvodu. Z~aktivní vrstvy, která musí být \zk{VFK}, se vytvoří vrstva obvodu, zásuvný modul ji načte a~vybere v~rozbalovacím menu (prvek~2).
+Nejdůležitější funkcionalitou této záložky je ovšem zařazení parcel do~kategorií. Aby bylo na~první pohled zřejmé, ve~které kategorii jsou jednotlivé parcely zařazeny, používá zásuvný modul tzv.~vrstvu obvodu. Jedná se o~samostatnou vrstvu ve~formátu \textit{shapefile}. Adresář a~název této vrstvy můžete specifikovat pomocí tlačítka \textit{Vytvořit} (prvek~3). Po~poklepání na~zmíněné tlačítko se otevře dialogové okno, kde lze zvolit umístění vrstvy obvodu. Z~aktivní vrstvy, která musí být \zk{VFK}, se vytvoří vrstva obvodu, zásuvný modul ji načte a~vybere v~rozbalovacím menu (prvek~2).
 
 Pokud cesta k~vrstvě obvodu není definována (rozbalovací menu je prázdné), nebo je v~rozbalovací menu vybrána vrstva, která nebyla vytvořena zásuvným modulem a~tudíž neobsahuje potřebné sloupce, plugin automaticky vytvoří vrstvu obvodu ve~stejném adresáři, ve~kterém se nachází aktivní vrstva parcel.
 

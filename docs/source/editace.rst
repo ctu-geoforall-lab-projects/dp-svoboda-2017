@@ -24,7 +24,7 @@ Prvek 2:
 
 Prvek 3:
    Tlačítko pro zobrazení dialogového, ve kterém lze zvolit adresář a název
-   vrstvy obvodu. Filtruje soubory s příponou :file:`*.pu.shp` , pamatuje si
+   vrstvy obvodu. Filtruje soubory s příponou :file:`*.shp` , pamatuje si
    poslední použitou cestu.
 
 Prvek 4:
@@ -65,8 +65,7 @@ pluginu (prvek 1).
 Nejdůležitější funkcionalitou této záložky je ovšem zařazení parcel
 do kategorií. Aby bylo na první pohled zřejmé, ve které kategorii jsou
 jednotlivé parcely zařazeny, používá zásuvný modul tzv. vrstvu obvodu. Jedná se
-o samostatnou vrstvu ve formátu *shapefile*. Pro odlišení od jiných dat mají
-vrstvy obvodu příponu :file:`*.pu.shp`. Adresář a název této vrstvy můžete
+o samostatnou vrstvu ve formátu *shapefile*. Adresář a název této vrstvy můžete
 specifikovat pomocí tlačítka :guilabel:`Vytvořit` (prvek 3). Po poklepání
 na zmíněné tlačítko se otevře dialogové okno, kde lze zvolit umístění vrstvy
 obvodu. Z aktivní vrstvy, která musí být VFK, se vytvoří vrstva obvodu, zásuvný

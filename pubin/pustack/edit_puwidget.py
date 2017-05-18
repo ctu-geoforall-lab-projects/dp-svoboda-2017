@@ -295,7 +295,7 @@ class EditPuWidget(PuWidget):
             editing = self.dW.check_editing()
             
             title = u'Uložit vrstvu obvodu jako...'
-            filters = u'.pu.shp (*.pu.shp)'
+            filters = u'.shp (*.shp)'
             
             perimeterLayerFilePath = self.dW.open_file_dialog(
                 title, filters, False)
@@ -310,10 +310,6 @@ class EditPuWidget(PuWidget):
                     perimeterLayerFilePath = \
                         fileInfo.absoluteFilePath() + u'.shp'
                     fileInfo = QFileInfo(perimeterLayerFilePath)
-                
-                if u'pu.shp' not in fileInfo.completeSuffix():
-                    perimeterLayerFilePath = QDir(fileInfo.absolutePath())\
-                        .filePath(fileInfo.completeBaseName() + u'.pu.shp')
                 
                 selectedFeaturesIds = layer.selectedFeaturesIds()
                 
@@ -336,7 +332,7 @@ class EditPuWidget(PuWidget):
                     self.set_perimeter_layer(loadedLayer, False)
                     self.sync_perimeter_map_layer_combo_box()
                 else:
-                    self.add_perimeter_layer(perimeterLayer)
+                    QgsMapLayerRegistry.instance().addMapLayer(perimeterLayer)
                 
                 layer.selectByIds(selectedFeaturesIds)
                 
@@ -399,7 +395,7 @@ class EditPuWidget(PuWidget):
         perimeterLayer = QgsVectorLayer(
             perimeterLayerFilePath, perimeterLayerName, 'ogr')
         
-        self.add_perimeter_layer(perimeterLayer)
+        QgsMapLayerRegistry.instance().addMapLayer(perimeterLayer)
         
         expression = QgsExpression(
             "\"{}\" is null".format(self.shortCategoryName))
@@ -407,23 +403,6 @@ class EditPuWidget(PuWidget):
         self.dW.delete_features_by_expression(perimeterLayer, expression)
         
         return perimeterLayer
-        
-    def add_perimeter_layer(self, perimeterLayer):
-        """Adds the perimeter layer to the map canvas.
-        
-        Args:
-            perimeterLayer (QgsVectorLayer): A reference to the  perimeter
-                layer.
-        
-        """
-        
-        if perimeterLayer.isValid():
-            QgsMapLayerRegistry.instance().addMapLayer(perimeterLayer)
-            
-            self.set_perimeter_layer(perimeterLayer, False)
-            self.sync_perimeter_map_layer_combo_box()
-            
-            self.set_perimeter_layer_table_config(perimeterLayer)
     
     def set_perimeter_layer_table_config(self, perimeterLayer):
         """Sets perimeter layer table config.
@@ -558,7 +537,7 @@ class EditPuWidget(PuWidget):
         
         if not self.dW.check_perimeter_layer(perimeterLayer, layer):
             # SpatiaLite fix - start
-            perimeterString = u'-obvod.pu.shp'
+            perimeterString = u'-obvod.shp'
             
             if not self.dW.fixedSqliteDriver:
                 composedURI = QgsDataSourceURI(layer.source())
@@ -587,7 +566,7 @@ class EditPuWidget(PuWidget):
                 self.set_perimeter_layer(loadedLayer, False)
                 self.sync_perimeter_map_layer_combo_box()
             else:
-                self.add_perimeter_layer(perimeterLayer)
+                QgsMapLayerRegistry.instance().addMapLayer(perimeterLayer)
         else:
             perimeterLayerFilePath = perimeterLayer.source()
             perimeterLayerName = perimeterLayer.name()

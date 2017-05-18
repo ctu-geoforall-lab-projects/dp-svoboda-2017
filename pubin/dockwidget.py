@@ -32,6 +32,7 @@ from qgis.utils import QGis
 import traceback
 import sys
 import os
+import platform
 
 from statusbar import StatusBar
 from toolbar import ToolBar
@@ -320,8 +321,13 @@ class DockWidget(QDockWidget):
                 self, title, lastUsedFilePath, filters, lastUsedFilter)
         else:
             filePath, usedFilter = QFileDialog.getSaveFileNameAndFilter(
-                self, title, lastUsedFilePath, filters, lastUsedFilter,
-                QFileDialog.DontConfirmOverwrite)
+                self, title, lastUsedFilePath, filters, lastUsedFilter)
+            
+            fileInfo = QFileInfo(filePath)
+            
+            if platform.system() == u'Linux' and fileInfo.suffix() != u'shp':
+                filePath = QDir(fileInfo.absolutePath())\
+                    .filePath(fileInfo.completeBaseName() + u'.shp')
         
         if filePath and usedFilter:
             self._set_settings(sender + '-' + 'lastUsedFilePath', filePath)
@@ -427,9 +433,8 @@ class DockWidget(QDockWidget):
     def check_perimeter_layer(self, perimeterLayer, layer=None, sender=None):
         """Checks the perimeter layer.
         
-        Checks if the perimeter layer contains all required columns,
-        if the suffix is 'pu.shp' and if the perimeter layer has same CRS
-        as the given layer.
+        Checks if the perimeter layer is vector, if it has the same CRS
+        as the given layer and if it contains all required columns.
         
         Args:
             perimeterLayer (QgsVectorLayer): A reference to the perimeter layer.
@@ -437,8 +442,8 @@ class DockWidget(QDockWidget):
             sender (object): A reference to the sender object.
         
         Returns:
-            bool: True when the perimeter layer contains all required columns
-                and the suffix is 'pu.shp', False otherwise.
+            bool: True when the perimeter layer is vector, it has the same CRS
+                as the given layer and it contains all required columns.
         
         """
         
@@ -457,6 +462,23 @@ class DockWidget(QDockWidget):
                     u'Vrstva obvodu není vektorová.', duration, warning)
             return False
         
+        if not perimeterLayer.wkbType() == QGis.WKBPolygon:
+            if sender:
+                sender.set_text_statusbar.emit(
+                    u'Vrstva obvodu není polygonová.', duration, warning)
+            return False
+        
+        if layer:
+            perimeterLayerCrs = perimeterLayer.crs().authid()
+            layerCrs = layer.crs().authid()
+            
+            if perimeterLayerCrs != layerCrs:
+                if sender:
+                    sender.set_text_statusbar.emit(
+                        u'Aktivní vrstva a vrstva obvodu nemají stejný '
+                        u'souřadnicový systém.', duration, warning)
+                return False
+        
         perimeterFieldNames = \
             [field.name().upper() for field in perimeterLayer.pendingFields()]
         
@@ -472,29 +494,9 @@ class DockWidget(QDockWidget):
                    for column in self.requiredColumns):
             if sender:
                 sender.set_text_statusbar.emit(
-                    u'Vrstva obvodu nebyla vytvořena PU Pluginem.',
-                    duration, warning)
-            return False
-        
-        perimeterFileInfo = QFileInfo(perimeterLayer.source())
-        
-        if u'pu.shp' not in perimeterFileInfo.completeSuffix():
-            if sender:
-                sender.set_text_statusbar.emit(
                     u'Vrstva obvodu není obvod vytvořený PU Pluginem.',
                     duration, warning)
             return False
-        
-        if layer:
-            perimeterLayerCrs = perimeterLayer.crs().authid()
-            layerCrs = layer.crs().authid()
-            
-            if perimeterLayerCrs != layerCrs:
-                if sender:
-                    self.set_text_statusbar.emit(
-                        u'Aktivní vrstva a vrstva obvodu nemají stejný '
-                        u'souřadnicový systém.', duration, warning)
-                return False
         
         return True
     
@@ -767,14 +769,13 @@ class DockWidget(QDockWidget):
             for layer in layers:
                 if self.check_perimeter_layer(layer):
                     self.set_layer_style(layer, 'perimeter')
+                    self.stackedWidget\
+                        .editPuWidget.set_perimeter_layer_table_config(layer)
                     
                     if not self.stackedWidget\
                         .editPuWidget.check_perimeter_map_layer_combo_box():
                         self.stackedWidget\
                             .editPuWidget.set_perimeter_layer(layer, False)
-                        self.stackedWidget\
-                            .editPuWidget.set_perimeter_layer_table_config(
-                                layer)
                         self.stackedWidget\
                             .editPuWidget.sync_perimeter_map_layer_combo_box()
         except:
