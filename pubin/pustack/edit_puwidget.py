@@ -23,7 +23,7 @@
 
 from PyQt4.QtGui import (QGridLayout, QToolBar, QToolButton, QIcon,
                          QPixmap, QMenu, QLabel, QComboBox, QPushButton)
-from PyQt4.QtCore import pyqtSignal, QFileInfo, QDir, Qt
+from PyQt4.QtCore import pyqtSignal, QFileInfo, QDir, Qt, QPyNullVariant
 
 from qgis.gui import QgsMapLayerComboBox, QgsMapLayerProxyModel
 from qgis.core import *
@@ -43,7 +43,7 @@ class EditPuWidget(PuWidget):
         """Sets up self."""
         
         self.categoryValue = 0
-        self.categoryValues = (0, 1, 2)
+        self.categoryValues = (0, 1, 2, None)
         self.categoryName = self.dW.puCategoryColumnName
         self.shortCategoryName = self.categoryName[:10]
         self.setCategoryValue = 0
@@ -615,17 +615,33 @@ class EditPuWidget(PuWidget):
         perimeterLayer.removeSelection()
         
         for categoryValue in self.categoryValues:
-            self.dW.select_features_by_field_value(
-                perimeterLayer, self.shortCategoryName, categoryValue)
-        
-            processing.runalg(
-                'qgis:selectbylocation',
-                layer, perimeterLayer, u'within', 0, 0)
-        
-            features = layer.selectedFeaturesIterator()
-        
-            self.dW.set_field_value_for_features(
-                layer, features, self.categoryName, categoryValue)
+            if categoryValue == None:
+                perimeterLayer.selectAll()
+            else:
+                self.dW.select_features_by_field_value(
+                    perimeterLayer, self.shortCategoryName, categoryValue)
+            
+            if perimeterLayer.selectedFeatureCount() != 0:
+                selectedFeaturesLayerFilePath = processing.runalg(
+                    'qgis:saveselectedfeatures',
+                    perimeterLayer, None)['OUTPUT_LAYER']
+                
+                selectedFeaturesLayer = QgsVectorLayer(
+                    selectedFeaturesLayerFilePath,
+                    'selectedFeaturesLayer', 'ogr')
+                
+                processing.runalg(
+                    'qgis:selectbylocation',
+                    layer, selectedFeaturesLayer, u'within', 0, 0)
+                
+                if categoryValue == None:
+                    layer.invertSelection()
+                    categoryValue = QPyNullVariant
+                
+                features = layer.selectedFeaturesIterator()
+                
+                self.dW.set_field_value_for_features(
+                    layer, features, self.categoryName, categoryValue)
         
         layer.selectByIds(selectedFeaturesIds)
         perimeterLayer.selectByIds(perimeterSelectedFeaturesIds)
