@@ -451,6 +451,12 @@ class DockWidget(QDockWidget):
                     u'Žádná vrstva obvodu.', duration, warning)
             return False
         
+        if not perimeterLayer.type() == 0:
+            if sender:
+                sender.set_text_statusbar.emit(
+                    u'Vrstva obvodu není vektorová.', duration, warning)
+            return False
+        
         perimeterFieldNames = \
             [field.name().upper() for field in perimeterLayer.pendingFields()]
         
