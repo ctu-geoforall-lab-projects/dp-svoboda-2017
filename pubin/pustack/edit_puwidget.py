@@ -619,6 +619,11 @@ class EditPuWidget(PuWidget):
         if not self.dW.check_perimeter_layer(perimeterLayer, layer, self):
             return
         
+        if perimeterLayer.featureCount() == 0:
+            self.set_text_statusbar.emit(
+                u'Vrstva obvodu neobsahuje žádný prvek.', 10, True)
+            return
+        
         warning = False
         
         self.set_text_statusbar.emit(
