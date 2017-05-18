@@ -460,6 +460,14 @@ class DockWidget(QDockWidget):
         perimeterFieldNames = \
             [field.name().upper() for field in perimeterLayer.pendingFields()]
         
+        if all(column.upper() in perimeterFieldNames \
+                   for column in self.requiredColumns):
+            if sender:
+                sender.set_text_statusbar.emit(
+                    u'Vrstvu parcel nelze použít jako vrstvu obvodu.',
+                    duration, warning)
+            return False
+        
         if not all(column.upper()[:10] in perimeterFieldNames \
                    for column in self.requiredColumns):
             if sender:
