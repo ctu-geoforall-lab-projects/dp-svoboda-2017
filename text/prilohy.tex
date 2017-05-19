@@ -222,8 +222,8 @@ moduly}]{Otevření okna \textit{Zásuvné moduly} (zdroj: autor)}
 V~záložce \textit{Nastavení} aktivujte volbu \textit{Zobrazit také
 experimentální zásuvné moduly}.
 
-Pomocí tlačítka \textit{Přidat...} doplňte repositář organizace
-GeoForAll Lab:
+Pomocí tlačítka \textit{Přidat...} doplňte repositář laboratoře
+CTU GeoForAll Lab:
 
 \begin{lstlisting}[basicstyle=\footnotesize\ttfamily, backgroundcolor
 = \color{light-gray}, numbers=left, columns=fullflexible,
@@ -318,7 +318,7 @@ obr.~\ref{fig:manual_dulezita_zprava}).
  	\end{figure}
 
 	\item \underline{Pole zpráv} je standardní způsob komunikace
-mezi programem QGIS a~uživatelem. Zobrazuje pole v~horní části
+programu QGIS s~uživatelem. Zobrazuje pole v~horní části
 mapového okna, které může být nastaveno tak, že po~určité době samo
 zmizí, nebo vyžaduje manuální zavření. Zásuvný modul využívá této
 komunikace pouze pro~zobrazení významných zpráv, které by neměly být
@@ -478,7 +478,7 @@ Nejdůležitější funkcionalitou této záložky je ovšem zařazení parcel
 do~kategorií. Aby bylo na~první pohled zřejmé, ve~které kategorii jsou
 jednotlivé parcely zařazeny, používá zásuvný modul tzv.~vrstvu
 obvodu. Jedná se o~samostatnou vrstvu ve~formátu
-\textit{shapefile}. Adresář a~název této vrstvy můžete specifikovat
+\textit{Esri Shapefile}. Adresář a~název této vrstvy můžete specifikovat
 pomocí tlačítka \textit{Vytvořit} (prvek~3). Po~poklepání na~zmíněné
 tlačítko se otevře dialogové okno, kde lze zvolit umístění vrstvy
 obvodu. Z~aktivní vrstvy, která musí být \zk{VFK}, se vytvoří vrstva
@@ -491,6 +491,7 @@ automaticky vytvoří vrstvu obvodu ve~stejném adresáři, ve~kterém se
 nachází aktivní vrstva parcel.
 
 Funkce pro~vytvoření obvodu je volána v~momentě, kdy je pro~vrstvu
+%%% ML: ulozena zmena je dvakrat ve stejne vete, preformulovat
 parcel uložena změna geometrie, uložena změna, při~které došlo
 k~vymazání prvku, nebo je pomocí tlačítka \textit{Zařadit} (prvek~7)
 provedeno zařazení parcel.
@@ -510,7 +511,8 @@ Pro kontrolu nabízí zásuvný modul tlačítko \textit{Zobrazit}
 (prvek~5), které vybere, a~tím pádem zvýrazní, prvky v~kategorii.
 
 Pokud vytvoříte novou parcelu, nebo~pomocí nástroje \textit{Přidat
-část} doplníte popis\-né údaje o~geometrii, vyplňte měřítko podkladů
+  část} doplníte popis\-né údaje o~geometrii, vyplňte měřítko podkladů
+%%% ML: ta tecka je soucasti nazvu sloupce, to je divne?
 do~sloupce \textit{MERITKO PODKL.}. Tento údaj používá kontrola
 \textit{výměra nad mezní odchylkou}.
 
@@ -681,6 +683,7 @@ používá číselník \zk{BPEJ} z~Českého úřadu zeměměřičského
 a~katastrálního.
 
 Do~atributové tabulky se zapíše nejen cena celková (sloupec
+%%% ML: opet tecka v nazvu sloupce (aaa, uz to mam, to je alias :-)...
 \texttt{CELK. CENA}), ale~také cena za~metr čtvereční, výměra a~cena
 dle jednotlivých bonit v~příslušné parcele (sloupec \texttt{BPEJ
 KOD-CENA ZA M2-VYMERA-CENA}).
