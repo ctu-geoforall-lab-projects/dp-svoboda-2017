@@ -12,7 +12,7 @@ příloha~\ref{uzivatelsky_manual}.
 
 	\begin{figure}[H] \centering
 		\includegraphics[width=.1\textwidth]{./pictures/puplugin.png}
-		\caption[Zásuvný modul~– ikona]{Zásuvný modul~– ikona}
+		\caption[Zásuvný modul~– ikona]{Zásuvný modul~– ikona (zdroj: autor)}
 		\label{fig:ikona_pluginu}
  	\end{figure}
 
@@ -20,23 +20,18 @@ příloha~\ref{uzivatelsky_manual}.
 \label{vyvoj}
 
 Vývoj projektu probíhal pomocí verzovacího systému
-Git\footnote{\url{https://git-scm.com/}}, zdrojový kód je dostupný
-na~serveru
-GitHub\footnote{\url{https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017}}.
+Git, zdrojový kód je dostupný
+v~GitHub repositáři\footnote{\url{https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017}}.
 
 Pro~vytvoření základní kostry pluginu byl použit zásuvný modul
-\textit{Plugin
-Builder}\footnote{\url{https://github.com/g-sherman/Qgis-Plugin-Builder}},
-který je součástí oficiálního repositáře programu QGIS. Postupem času
+\textit{Plugin Builder}, který je součástí oficiálního repositáře
+programu QGIS\footnote{\label{oficialni_repositar_qgis}\url{http://plugins.qgis.org/}}. Postupem času
 byly ovšem názvy tříd, modulů a~celá struktura zásuvného modulu
 změněny.
 
 K~testování a~ladění byly použity další zásuvné moduly \textit{Remote
-Debug}\footnote{\url{https://github.com/sourcepole/qgis-remote-debug}},
-\textit{Plugin
-Reloader}\footnote{\url{https://github.com/borysiasty/plugin_reloader}}
-a~\textit{Script
-Runner}\footnote{\url{https://github.com/g-sherman/Script-Runner}}.
+Debug}, \textit{Plugin Reloader} a~\textit{ScriptRunner}, jež jsou rovněž
+dostupné z oficiálního repositáře\footnoteref{oficialni_repositar_qgis}.
 
 Během~vývoje zásuvného modulu bylo čerpáno z~literatury zabývající se
 programem QGIS \citep{pyqgis_book}, programovacím jazykem Python
@@ -89,7 +84,7 @@ tab.~\ref{tab:nacteni_vfk_driver}.
 první & 6.516 \\ \hline opakované & 0.160 \\ \hline
     \end{tabular} \centering
     \caption[VFK Driverem~– porovnání rychlosti načtení]{VFK
-Driverem~– porovnání rychlosti načtení}
+Driverem~– porovnání rychlosti načtení (zdroj: autor)}
     \label{tab:nacteni_vfk_driver}
 \end{table}
 
@@ -121,7 +116,7 @@ tab.~\ref{tab:spatial_ref_sys}.
 \texttt{\detokenize{GEOMETRY_FORMAT}} & \texttt{varchar} \\ \hline
     \end{tabular} \centering
     \caption[Tabulka \texttt{geometry\textunderscore columns}~–
-sloupce]{Tabulka \texttt{geometry\textunderscore columns}~– sloupce}
+sloupce]{Tabulka \texttt{geometry\textunderscore columns}~– sloupce (zdroj: autor)}
     \label{tab:geometry_columns}
 \end{table}
 
@@ -134,7 +129,7 @@ sloupce]{Tabulka \texttt{geometry\textunderscore columns}~– sloupce}
     \end{tabular} \centering
     \caption[Tabulka \texttt{spatial\textunderscore ref\textunderscore
 sys}~– sloupce]{Tabulka \texttt{spatial\textunderscore
-ref\textunderscore sys}~– sloupce}
+ref\textunderscore sys}~– sloupce (zdroj: autor)}
     \label{tab:spatial_ref_sys}
 \end{table}
 
@@ -223,7 +218,7 @@ v~tab.~\ref{tab:pridane_sloupce_par}.
 \\ \hline
     \end{tabular} \centering
     \caption[Tabulka \texttt{\zk{PAR}}~– přidané sloupce]{Tabulka
-\texttt{\zk{PAR}}~– přidané sloupce}
+\texttt{\zk{PAR}}~– přidané sloupce (zdroj: autor)}
     \label{tab:pridane_sloupce_par}
 \end{table}
 
@@ -254,8 +249,8 @@ blacklistedDriver.Register()
 %% TODO - zmenit pismo tabulek
 	\begin{figure}[H] \centering
 		\includegraphics[width=1.2\textwidth]{./pictures/nacitani_vfk_souboru.pdf}
-		\caption[Načítání \zk{VFK} souboru~– diagram
-algoritmu]{Načítání \zk{VFK} souboru~– diagram algoritmu}
+		\caption[Načtení \zk{VFK} souboru~– diagram
+algoritmu]{Načtení \zk{VFK} souboru~– diagram algoritmu (zdroj: autor)}
 		\label{fig:diagram_nacitani_vfk}
  	\end{figure}
 
@@ -324,7 +319,7 @@ C. (PUV.)} \\ \hline \texttt{\detokenize{PU_KMENOVE_CISLO_PAR}} &
 \hline
     \end{tabular} \centering
     \caption[Vrstva \texttt{\zk{PAR}}~– viditelné sloupce
-a~aliasy]{Vrstva \texttt{\zk{PAR}}~– viditelné sloupce a~aliasy}
+a~aliasy]{Vrstva \texttt{\zk{PAR}}~– viditelné sloupce a~aliasy (zdroj: autor)}
     \label{tab:viditelne_sloupce_aliasy_par}
 \end{table}
 
@@ -358,7 +353,7 @@ viz~tab~\ref{tab:kategorie_hodnoty}.
 neřešené \\ \hline \texttt{2} & v obvodu~– řešené \\ \hline
     \end{tabular} \centering
     \caption[Sloupec \texttt{PU\textunderscore KATEGORIE}~–
-hodnoty]{Sloupec \texttt{PU\textunderscore KATEGORIE}~– hodnoty}
+hodnoty]{Sloupec \texttt{PU\textunderscore KATEGORIE}~– hodnoty (zdroj: autor)}
     \label{tab:kategorie_hodnoty}
 \end{table}
 
@@ -453,7 +448,7 @@ tab.~\ref{tab:viditelne_sloupce_aliasy_obvod}.
 \hline
     \end{tabular} \centering
     \caption[Vrstva obvodu~– viditelné sloupce a~aliasy]{Vrstva
-obvodu~– viditelné sloupce a~aliasy}
+obvodu~– viditelné sloupce a~aliasy (zdroj: autor)}
     \label{tab:viditelne_sloupce_aliasy_obvod}
 \end{table}
 
@@ -570,7 +565,7 @@ numbers=left] expression = QgsExpression("\"TEL_ID\" is null")
 		\includegraphics[width=1.2\textwidth]{./pictures/vymera.pdf}
 		\caption[Kontrola \textit{výměra nad mezní
 odchylkou}~– diagram algoritmu]{Kontrola \textit{výměra nad mezní
-odchylkou}~– diagram algoritmu}
+odchylkou}~– diagram algoritmu (zdroj: autor)}
 		\label{fig:diagram_vymera}
  	\end{figure}
 
@@ -639,6 +634,6 @@ Princip algoritmu je znázorněn na obr.~\ref{fig:diagram_bpej}.
 		\includegraphics[width=1.2\textwidth]{./pictures/bpej.pdf}
 		\caption[Analýza \textit{oceňování podle BPEJ}~–
 diagram algoritmu]{Analýza \textit{oceňování podle BPEJ}~– diagram
-algoritmu}
+algoritmu (zdroj: autor)}
 		\label{fig:diagram_bpej}
  	\end{figure}

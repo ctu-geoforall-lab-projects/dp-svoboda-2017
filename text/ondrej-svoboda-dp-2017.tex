@@ -111,6 +111,10 @@
 	extendedchars=true,
 	literate={á}{{\'a}}1}
 
+\makeatletter
+\newcommand\footnoteref[1]{\protected@xdef\@thefnmark{\ref{#1}}\@footnotemark}
+\makeatother
+
 % ========================================================================
 % Definice informací o dokumentu
 % ========================================================================
@@ -144,7 +148,8 @@
 % abstrakt
 \abstrakt 
 %%% ML: mix pritomneho a budouciho casu, treba sladit
-{Cílem této práce je vyvinout zásuvný modul QGIS pro~zpracování
+% OS: Zmenil jsem cas prvni vety, v ostatnich, si myslim, pritomny cas nevadi.
+{Cílem této práce bylo vyvinout zásuvný modul QGIS pro~zpracování
   přípravné fáze komplexních pozemkových úprav. Zásuvný modul byl
   napsán v~programovacím jazyce Python, pro~tvorbu grafického
   uživatelského rozhraní byl použit framework PyQt. Vstu\-pní VFK data
@@ -155,11 +160,12 @@
   do~kategorií pozemkových úprav. Zásuvný modul nabízí několik
   nástrojů pro~kontrolu a~analýzu. Byl vytvořen zásuvný modul QGIS
   pro~pozemkové úpravy, který disponuje klíčovou funkcionalitou,
-  ale~aby se mohl rovnat běžně používanému komerčnímu softwaru, je
-  další vývoj nezbytný.}
+  jeho další vývoj je nezbytný.}
 % ML: tu posledni vetu bych naformuloval opatrneni, nic neporovnavat, v anglictine vysla veta lepe
+% OS: Napada me misto toho pouzit "konkurovat", ale to asi taky uplne vhodny, tak jsem to vyhodil.
 % ML: opet mix. casu
-{The goal of~this thesis is to~develop a~Complex Land Consolidation
+% OS: Opraveno.
+{The goal of~this thesis was to~develop a~Complex Land Consolidation
   Preliminary Stage QGIS Plugin. The plugin was written in~Python
   programming language, the graphical user interface was created
   by~using PyQt bindings. Input VFK data - Exchange Format
@@ -169,9 +175,7 @@
   tools and the~parcels can be classified into land consolidation
   categories. The~plugin offers several check and~analysis tools. QGIS
   plugin for~land consolidation with crucial functionality has been
-  developed but in~order to~match qualities of~proprietary software
-  commonly used in~the field of~land consolidation, further
-  development is necessary.}
+  developed; further development is necessary.}
 
 
 % klíčová slova
