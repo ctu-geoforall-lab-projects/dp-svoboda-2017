@@ -77,15 +77,19 @@ funguje tak, že při prvním čtení souboru vytvoří ve stejném adresáři,
 ve kterém se nachází čtený \zk{VFK} soubor, SQLite databázi a~do~ní
 naimportuje všechna data. Při~dalším čtení se již databáze nevytváří,
 proto je čtení mnohonásobně rychlejší, viz
-tab.~\ref{tab:nacteni_vfk_driver}.
+tab.~\ref{tab:nacteni_vfk_driver}. Pro porovnání rychlosti načtení byl
+použit veřejně dostupný \zk{VFK} soubor~\citep{zdroj_vfk}.
 
 %%% ML: uvest testovaci soubor (asi ten ze strane CUZK, je to tak?)
+% OS: Ano, vsechno jsem testoval na testovacim souboru z CUZK.
+% Zadal jsem i pana Bartu o data, ale bohuzel.
+% Pridal jsem vetu, ve ktere to zminuju.
 \begin{table}[H]
     \begin{tabular}{|l|l|} \hline načtení & čas [s] \\ \hline \hline
 první & 6.516 \\ \hline opakované & 0.160 \\ \hline
     \end{tabular} \centering
-    \caption[VFK Driverem~– porovnání rychlosti načtení]{VFK
-Driverem~– porovnání rychlosti načtení (zdroj: autor)}
+    \caption[VFK Driver~– porovnání rychlosti načtení]{VFK
+Driver~– porovnání rychlosti načtení (zdroj: autor)}
     \label{tab:nacteni_vfk_driver}
 \end{table}
 
@@ -135,7 +139,9 @@ ref\textunderscore sys}~– sloupce (zdroj: autor)}
 \end{table}
 
 %%% ML: vysvetlit, ze OGR je soucastni knihovny GDAL a je urcen pro cteni vektorovych dat
-Během práce s~daty souboru \zk{VFK} bylo zjištěno, že OGR poskytovatel
+% OS: Pridal jsem to jako poznamku pod carou.
+Během práce s~daty souboru \zk{VFK} bylo zjištěno, že OGR\footnote{Knihovna OGR
+slouží pro práci s vektorovými daty. Je součástí knihovny GDAL.} poskytovatel
 dat programu QGIS při~změně atributových hodnot nepoužíval
 transakce. V~důsledku toho trvalo uložení změn extrémně dlouho. Proto
 byla podána
@@ -148,21 +154,14 @@ problém zo\-hledňuje. Ve~verzi programu QGIS nižší než~2.18.5
 naimportuje data do~databáze SpatiaLite\footnote{SpatiaLite je extenze
 SQLite, která umožňuje ukládat geoprostorová data a~obsahuje mnoho
 prostorových funkcí \citep{spatialite} \citep{wiki_spatialite}.}
-a~dále s~ní pracuje (viz ukázka
-kódu~\ref{kontrola_verze_qgis}). Poskytovatel dat SpatiaLite programu
+a~dále s~ní pracuje. Poskytovatel dat SpatiaLite programu
 QGIS totiž ukládá změny v~transakcích a~tudíž nemá problémy s~pomalým
 zápisem. Pro~potřeby zásuvného modulu funkcionalita databáze SQLite
 dostačuje, a~proto je převod do~SpatiaLite pouze dočasné řešení, které
 zajišťuje použitelnost pluginu i~ve~starších verzích QGISu.
 
 %%% ML: tuto ukazku klidne vyrad (rozhodnuti necham na Tebe), navic preteka stranku
-{\scriptsize
-\begin{lstlisting}[style=python, caption={Kontrola verze programu
-QGIS}, captionpos=b, label=kontrola_verze_qgis, backgroundcolor =
-\color{light-gray}, numbers=left]
-if QGis.QGIS_VERSION < '2.18.5':
-   self.fixedSqliteDriver = False else: self.fixedSqliteDriver = True
-\end{lstlisting}}
+% OS: Vymazano.
 
 \subsubsection{Popis algoritmu}
 \label{popis_algoritmu_nacteni_vfk}
@@ -185,12 +184,16 @@ vfkDataSource = vfkDriver.Open(filePath)
 \end{lstlisting}}
 
 %%% ML: zde nebo jinde zminit, ze z tohoto duvodu plugin nepracuje s
-%%% verejne dostupnymi VFK daty (http://services.cvut.cz/vfk)
+%%% verejne dostupnymi VFK daty (http://services.cuzk.cz/vfk)
+% OS: Veta pridana.
 Poté algoritmus zkontroluje, zda je v~databázi tabulka
 \texttt{\zk{PAR}}. Celý plugin pracuje téměř výhradně právě s~touto
-tabulkou, proto když ji databáze neobsahuje, algoritmus se
-ukončí. Uživatele je na tento problém upozorněn. Následuje tvorba
-geometrie pro~tabulky \texttt{\zk{PAR}}, \texttt{\zk{SOBR}}
+tabulkou, proto když se v databázi nenachází, algoritmus se
+ukončí a uživatel je na tento problém upozorněn. Veřejně dostupná \zk{VFK}
+data\footnote{\url{http://services.cuzk.cz/vfk}} tabulku \texttt{\zk{PAR}}
+neobsahují, proto je nelze použít jako vstup zásuvného modulu.
+
+Následuje tvorba geometrie pro~tabulky \texttt{\zk{PAR}}, \texttt{\zk{SOBR}}
 a~\texttt{\zk{SPOL}}.
 
 V~dalším kroku se otevře databázové připojení. Databázovým dotazem se
@@ -232,30 +235,18 @@ Když je proces nahrávání spuštěn ve~verzi programu nižší než 2.18.5, t
 se všechna data z databáze SQLite naimportují do~databáze SpatiaLite.
 
 Nakonec se tabulka parcel v závislosti na~verzi QGISu pomocí SQLite
-(viz ukázka kódu~\ref{vytvoreni_vrstvy_parcel_pomoci_sqlite}) nebo
-SpatiaLite Driveru nahraje do~programu QGIS jako platná vrstva.
+nebo SpatiaLite Driveru nahraje do~programu QGIS jako platná vrstva.
 
 %%% ML: zmin proc to tak je
-Celé načtení \zk{VFK} souboru je spuštěno v~samostatném
+% OS: Zmineno.
+Celé načtení \zk{VFK} souboru je kvůli plynulosti spuštěno v~samostatném
 vlákně. Pro~přehlednost celý popsaný proces ilustruje diagram
 na~obr.~\ref{fig:diagram_nacitani_vfk}.
 
 %%% ML: ta ukazka zminuje zakazani VFK driveru, nemas to v textu posano
-{\scriptsize
-\begin{lstlisting}[style=python, caption={Vytvoření QGIS vrstvy parcel
-pomocí SQLite Driveru}, captionpos=b,
-label=vytvoreni_vrstvy_parcel_pomoci_sqlite, backgroundcolor =
-\color{light-gray}, numbers=left]
-blacklistedDriver = ogr.GetDriverByName('VFK')
-blacklistedDriver.Deregister()
+% OS: Tento kod prinasi vic otazek nez odpovedi, proto jsem ho vymazal.
+% Mas pravdu, ze ukazek kodu tam mam trochu moc, tak to trochu zredukuju.
 
-composedURI = dbPath + '|layername=PAR'
-layer = QgsVectorLayer(composedURI, layerName, 'ogr')
-
-blacklistedDriver.Register()
-\end{lstlisting}}
-
-%% TODO - zmenit pismo tabulek
 	\begin{figure}[H] \centering
 		\includegraphics[width=1.2\textwidth]{./pictures/nacitani_vfk_souboru.pdf}
 		\caption[Načtení \zk{VFK} souboru~– diagram
@@ -299,6 +290,7 @@ větší srozumitelnosti pro~uživatele navíc přidává sloupcům aliasy, viz
 tab.~\ref{tab:viditelne_sloupce_aliasy_par}.
 
 %%% ML: tabulka by mohla byt sirsi, potom by se text zbytecne nezalamoval
+% OS: Upraveno.
 \begin{table}[H]
     \begin{tabular}{|l|l|} \hline název sloupce & alias \\ \hline
 \hline \texttt{\detokenize{KMENOVE_CISLO_PAR}} & \texttt{KMENOVE
@@ -323,8 +315,7 @@ C. (PUV.)} \\ \hline \texttt{\detokenize{PU_KMENOVE_CISLO_PAR}} &
 \texttt{\detokenize{PU_CENA}} & \texttt{CELK. CENA} \\ \hline
           \begin{tabular}{@{}l@{}} \texttt{\detokenize{PU_BPEJ}} \\
 \texttt{\detokenize{_BPEJCENA_VYMERA_CENA}} \end{tabular}
-& \begin{tabular}{@{}l@{}} \texttt{BPEJ KOD-CENA ZA M2} \\
-\texttt{-VYMERA-CENA} \end{tabular} \\ \hline
+& \texttt{BPEJ KOD-CENA ZA M2-VYMERA-CENA} \\ \hline
 \texttt{\detokenize{PU_MERITKO_PODKLADU}} & \texttt{MERITKO PODKL.} \\
 \hline
     \end{tabular} \centering
@@ -469,7 +460,7 @@ obvodu~– viditelné sloupce a~aliasy (zdroj: autor)}
 
 %%% ML: je nutne aby podkapitola zacinala vzdy na nove strance?, pokud
 %%% to tak mas jinde v textu tak to nech
-\newpage
+% OS: Nutne to neni, mazu to.
 
 \section{Kontroly a analýzy}
 \label{kontroly_analyzy}
@@ -527,9 +518,7 @@ expression = QgsExpression("\"KMENOVE_CISLO_PAR\" is null")
 \label{kontrola_neni_v_mape}
 
 Výsledkem kontroly \textit{není v~mapě} je výběr parcel, které mají
-prázdnou geometrii a~tudíž se nezobrazují v~mapovém okně. Vybrány jsou
-%%% ML: co presne znamena nevalidni geometrie (kratce uvest)
-též parcely s~nevalidní geo\-metrií.
+prázdnou geometrii a~tudíž se nezobrazují v~mapovém okně.
 
 {\scriptsize
 \begin{lstlisting}[style=python, caption={Kontrola \textit{není
@@ -561,7 +550,8 @@ mapy. Pokud je tedy v~tomto sloupci uvedeno číslo různé od~\texttt{1},
 znamená to, že~se jedná o~digitalizovanou parcelu. V~takovém případě
 algoritmus zjistí kód kvality podrobných bodů podle
 %%% ML: co presne znaci nejvetsi kod kvality?
-tab.~\ref{tab:kody_kvality_digit}. Pomocí lomového bodu s~největším
+% OS: Opraveno na "nejvyšší".
+tab.~\ref{tab:kody_kvality_digit}. Pomocí lomového bodu s~nejvyšším
 kódem kvality se vypočte mezní odchylka výměr a~porovná se
 s~absolutním rozdílem výměr dle~\zk{SPI} a~\zk{SGI}. Když je mezní
 odchylka překročena, přidá se parcela do~výběru. V~momentě, kdy už není
@@ -642,6 +632,10 @@ internetového připojení byla zvolena adresa
 %%% ML: je potreba testovat pripojeni zvlast? Nestacilo by se pokusit
 %%% stahnout ciselnik a pripadne o tom informovat uzivatele? Ted to
 %%% tak ale uz nech.
+% OS: Testovani pripojeni k internetu jsem pridal kvuli tomu, ze by se mohlo
+% zmenit URL pro stazeni ciselniku. Kdyby tam to testovani nebylo, tak by
+% neslo rozlisit mezi tim, kdy se nelze pripojit k internetu a kdy se zmenilo
+% URL ciselniku.
 \url{http://www.google.com}.}, stáhne zásuvný modul nový
 číselník. V~dalším kroku se z~nejnovějšího dostupného číselníku
 přečtou data a~vypočítá se cena. Do~atributové tabulky se zapíše nejen
