@@ -56,7 +56,7 @@ uživatelské rozhraní v~českém jazyce.
 \label{nacteni_vfk}
 
 Soubor \zk{VFK} obsahuje mnoho datových bloků, pro~pozemkové úpravy je
-tím nejdůležitějším vrstva parcel (\texttt{\zk{PAR}}).
+tím nej\-důležitějším vrstva parcel (\texttt{\zk{PAR}}).
 
 \subsection{Algoritmus}
 \label{nacteni_vfk_algoritmus}
@@ -79,6 +79,7 @@ naimportuje všechna data. Při~dalším čtení se již databáze nevytváří,
 proto je čtení mnohonásobně rychlejší, viz
 tab.~\ref{tab:nacteni_vfk_driver}.
 
+%%% ML: uvest testovaci soubor (asi ten ze strane CUZK, je to tak?)
 \begin{table}[H]
     \begin{tabular}{|l|l|} \hline načtení & čas [s] \\ \hline \hline
 první & 6.516 \\ \hline opakované & 0.160 \\ \hline
@@ -98,7 +99,7 @@ schopen rozpoznat a~přečíst geometrii, musí databáze obsahovat tabulky
 \texttt{\detokenize{geometry_columns}}
 a~\texttt{\detokenize{spatial-}}\\\texttt{\detokenize{_ref_sys}}. V~tabulce
 \texttt{\detokenize{geometry_columns}} je uveden seznam tabulek, které
-mají geometrii, společně s~údaji jako název sloupce s~geometrií, typ
+mají geo\-metrii, společně s~údaji jako název sloupce s~geometrií, typ
 geometrie, souřadnicový systém a~další, viz
 tab.~\ref{tab:geometry_columns}. Údaje o~souřadnicovém systému
 odkazují na~tabulku \texttt{\detokenize{spatial_ref_sys}}, ve~které
@@ -133,6 +134,7 @@ ref\textunderscore sys}~– sloupce (zdroj: autor)}
     \label{tab:spatial_ref_sys}
 \end{table}
 
+%%% ML: vysvetlit, ze OGR je soucastni knihovny GDAL a je urcen pro cteni vektorovych dat
 Během práce s~daty souboru \zk{VFK} bylo zjištěno, že OGR poskytovatel
 dat programu QGIS při~změně atributových hodnot nepoužíval
 transakce. V~důsledku toho trvalo uložení změn extrémně dlouho. Proto
@@ -153,11 +155,13 @@ zápisem. Pro~potřeby zásuvného modulu funkcionalita databáze SQLite
 dostačuje, a~proto je převod do~SpatiaLite pouze dočasné řešení, které
 zajišťuje použitelnost pluginu i~ve~starších verzích QGISu.
 
+%%% ML: tuto ukazku klidne vyrad (rozhodnuti necham na Tebe), navic preteka stranku
 {\scriptsize
 \begin{lstlisting}[style=python, caption={Kontrola verze programu
 QGIS}, captionpos=b, label=kontrola_verze_qgis, backgroundcolor =
-\color{light-gray}, numbers=left] if QGis.QGIS_VERSION < '2.18.5':
-self.fixedSqliteDriver = False else: self.fixedSqliteDriver = True
+\color{light-gray}, numbers=left]
+if QGis.QGIS_VERSION < '2.18.5':
+   self.fixedSqliteDriver = False else: self.fixedSqliteDriver = True
 \end{lstlisting}}
 
 \subsubsection{Popis algoritmu}
@@ -176,10 +180,12 @@ pomocí VFK Driveru}, captionpos=b, label=vytvoreni_db_vfk_driver,
 backgroundcolor = \color{light-gray}, numbers=left]
 QgsApplication.registerOgrDrivers()
 
-vfkDriver = ogr.GetDriverByName('VFK') vfkDataSource =
-vfkDriver.Open(filePath)
+vfkDriver = ogr.GetDriverByName('VFK')
+vfkDataSource = vfkDriver.Open(filePath)
 \end{lstlisting}}
 
+%%% ML: zde nebo jinde zminit, ze z tohoto duvodu plugin nepracuje s
+%%% verejne dostupnymi VFK daty (http://services.cvut.cz/vfk)
 Poté algoritmus zkontroluje, zda je v~databázi tabulka
 \texttt{\zk{PAR}}. Celý plugin pracuje téměř výhradně právě s~touto
 tabulkou, proto když ji databáze neobsahuje, algoritmus se
@@ -222,27 +228,30 @@ v~tab.~\ref{tab:pridane_sloupce_par}.
     \label{tab:pridane_sloupce_par}
 \end{table}
 
-Když je proces nahrávání spuštěn ve~verzi programu nižší než 2.18.5,
-všechna data databáze SQLite se naimportují do~databáze SpatiaLite.
+Když je proces nahrávání spuštěn ve~verzi programu nižší než 2.18.5, tak
+se všechna data z databáze SQLite naimportují do~databáze SpatiaLite.
 
 Nakonec se tabulka parcel v závislosti na~verzi QGISu pomocí SQLite
 (viz ukázka kódu~\ref{vytvoreni_vrstvy_parcel_pomoci_sqlite}) nebo
 SpatiaLite Driveru nahraje do~programu QGIS jako platná vrstva.
 
+%%% ML: zmin proc to tak je
 Celé načtení \zk{VFK} souboru je spuštěno v~samostatném
 vlákně. Pro~přehlednost celý popsaný proces ilustruje diagram
 na~obr.~\ref{fig:diagram_nacitani_vfk}.
 
+%%% ML: ta ukazka zminuje zakazani VFK driveru, nemas to v textu posano
 {\scriptsize
 \begin{lstlisting}[style=python, caption={Vytvoření QGIS vrstvy parcel
 pomocí SQLite Driveru}, captionpos=b,
 label=vytvoreni_vrstvy_parcel_pomoci_sqlite, backgroundcolor =
-\color{light-gray}, numbers=left] blacklistedDriver =
-ogr.GetDriverByName('VFK') blacklistedDriver.Deregister()
+\color{light-gray}, numbers=left]
+blacklistedDriver = ogr.GetDriverByName('VFK')
+blacklistedDriver.Deregister()
 
-composedURI = dbPath + '|layername=PAR' layer =
-QgsVectorLayer(composedURI, layerName, 'ogr')
-	
+composedURI = dbPath + '|layername=PAR'
+layer = QgsVectorLayer(composedURI, layerName, 'ogr')
+
 blacklistedDriver.Register()
 \end{lstlisting}}
 
@@ -289,6 +298,7 @@ plugin všechny nepotřebné sloupce v~atributové tabulce skrývá. Kvůli
 větší srozumitelnosti pro~uživatele navíc přidává sloupcům aliasy, viz
 tab.~\ref{tab:viditelne_sloupce_aliasy_par}.
 
+%%% ML: tabulka by mohla byt sirsi, potom by se text zbytecne nezalamoval
 \begin{table}[H]
     \begin{tabular}{|l|l|} \hline název sloupce & alias \\ \hline
 \hline \texttt{\detokenize{KMENOVE_CISLO_PAR}} & \texttt{KMENOVE
@@ -364,14 +374,15 @@ kódu~\ref{nastaveni_hodnoty_kategorie}) a~pro~výběr prvků v~kategorii
 {\scriptsize
 \begin{lstlisting}[style=python, caption={Kategorie parcel~– nastavení
 hodnoty}, captionpos=b, label=nastaveni_hodnoty_kategorie,
-backgroundcolor = \color{light-gray}, numbers=left] fieldId =
-layer.fieldNameIndex('PU_KATEGORIE')
+backgroundcolor = \color{light-gray}, numbers=left]
+fieldId = layer.fieldNameIndex('PU_KATEGORIE')
 
 layer.startEditing() layer.updateFields()
 
-for feature in features: if feature.attribute('PU_KATEGORIE') !=
-value: id = feature.id() layer.changeAttributeValue(id, fieldId,
-value)
+for feature in features:
+   if feature.attribute('PU_KATEGORIE') != value:
+   id = feature.id()
+layer.changeAttributeValue(id, fieldId, value)
 
 layer.commitChanges()
 \end{lstlisting}}
@@ -379,11 +390,12 @@ layer.commitChanges()
 {\scriptsize
 \begin{lstlisting}[style=python, caption={Kategorie parcel~– výběr
 prvků v~kategorii}, captionpos=b, label=vyber_v_kategorii,
-backgroundcolor = \color{light-gray}, numbers=left] expression =
-QgsExpression("\"PU_KATEGORIE\" = {}".format(value)) features =
-layer.getFeatures(QgsFeatureRequest(expression))
+backgroundcolor = \color{light-gray}, numbers=left]
+expression = QgsExpression("\"PU_KATEGORIE\" = {}".format(value))
+features = layer.getFeatures(QgsFeatureRequest(expression))
 
-ids = [feature.id() for feature in features] layer.selectByIds(ids)
+ids = [feature.id() for feature in features]
+layer.selectByIds(ids)
 \end{lstlisting}}
 
 \subsection{Vrstva obvodu}
@@ -415,14 +427,17 @@ nástrojů \textit{Dissolve} a~\textit{Multiparts to~singleparts}.
 {\scriptsize
 \begin{lstlisting}[style=python, caption={Vrstva obvodu~– tvorba},
 captionpos=b, label=obvod_tvorba, backgroundcolor =
-\color{light-gray}, numbers=left] tempPerimeterLayerPath =
-processing.runalg( 'qgis:dissolve', layer, False, 'PU_KATEGORIE',
-None)['OUTPUT'] tempPerimeterLayer = QgsVectorLayer(
-tempPerimeterLayerPath, tempPerimeterLayerName, 'ogr')
+\color{light-gray}, numbers=left]
+tempPerimeterLayerPath = processing.runalg('qgis:dissolve', layer,
+                                           False, 'PU_KATEGORIE',
+                                           None)['OUTPUT']
+tempPerimeterLayer = QgsVectorLayer(tempPerimeterLayerPath,
+                                    tempPerimeterLayerName, 'ogr')
 
-processing.runalg( 'qgis:multiparttosingleparts', tempPerimeterLayer,
-perimeterLayerFilePath) perimeterLayer = QgsVectorLayer(
-perimeterLayerFilePath, perimeterLayerName, 'ogr')
+processing.runalg('qgis:multiparttosingleparts', tempPerimeterLayer,
+                  perimeterLayerFilePath)
+perimeterLayer = QgsVectorLayer(perimeterLayerFilePath,
+                                perimeterLayerName, 'ogr')
 \end{lstlisting}}
 
 \subsection{Symbologie vrstvy obvodu}
@@ -452,6 +467,8 @@ obvodu~– viditelné sloupce a~aliasy (zdroj: autor)}
     \label{tab:viditelne_sloupce_aliasy_obvod}
 \end{table}
 
+%%% ML: je nutne aby podkapitola zacinala vzdy na nove strance?, pokud
+%%% to tak mas jinde v textu tak to nech
 \newpage
 
 \section{Kontroly a analýzy}
@@ -471,16 +488,19 @@ nároků vlastníků.
 Kontrola \textit{obvodem} slouží k~výběru parcel, které se nenachází
 kompletně uvnitř vrstvy obvodu.
 
+%%% ML: z textu neni uplne zrejme, ze jde o nastroje QGISu, alespon
+%%% zde jsem to explicitne uvedl
 Do~algoritmu vstupuje vrstva parcel a~vrstva obvodu. Použit je nástroj
-\textit{Select by~location} s~geometrickým predikátem \textit{within}
-a~poté je zavolána funkce pro~převrácení výběru prvků, viz ukázka
-kódu~\ref{kontrola_obvodem_kod}.
+systému QGIS \textit{Select by~location} s~geometrickým predikátem
+\textit{within} a~poté je zavolána funkce pro~převrácení výběru prvků,
+viz ukázka kódu~\ref{kontrola_obvodem_kod}.
 
 {\scriptsize
 \begin{lstlisting}[style=python, caption={Kontrola \textit{obvodem}~–
 výběr prvků}, captionpos=b, label=kontrola_obvodem_kod,
-backgroundcolor = \color{light-gray}, numbers=left] processing.runalg(
-'qgis:selectbylocation', layer, perimeterLayer, u'within', 0, 0)
+backgroundcolor = \color{light-gray}, numbers=left]
+processing.runalg('qgis:selectbylocation', layer, perimeterLayer,
+                  u'within', 0, 0)
 
 layer.invertSelection()
 \end{lstlisting}}
@@ -499,22 +519,24 @@ parcelu.
 \begin{lstlisting}[style=python, caption={Kontrola \textit{není
 v~SPI}~– vzorec pro~výběr prvků}, captionpos=b,
 label=kontrola_spi_kod, backgroundcolor = \color{light-gray},
-numbers=left] expression = QgsExpression("\"KMENOVE_CISLO_PAR\" is
-null")
+numbers=left]
+expression = QgsExpression("\"KMENOVE_CISLO_PAR\" is null")
 \end{lstlisting}}
 
 \subsubsection{Kontrola - není v mapě}
 \label{kontrola_neni_v_mape}
 
 Výsledkem kontroly \textit{není v~mapě} je výběr parcel, které mají
-nulovou geometrii a~tudíž se nezobrazují v~mapovém okně. Vybrány jsou
-též parcely s~nevalidní geometrií.
+prázdnou geometrii a~tudíž se nezobrazují v~mapovém okně. Vybrány jsou
+%%% ML: co presne znamena nevalidni geometrie (kratce uvest)
+též parcely s~nevalidní geo\-metrií.
 
 {\scriptsize
 \begin{lstlisting}[style=python, caption={Kontrola \textit{není
 v~mapě}~– vzorec pro~výběr prvků}, captionpos=b,
 label=kontrola_mapa_kod, backgroundcolor = \color{light-gray},
-numbers=left] expression = QgsExpression("$geometry is null")
+numbers=left]
+expression = QgsExpression("$geometry is null")
 \end{lstlisting}}
 
 \subsubsection{Kontrola - výměra nad mezní odchylkou}
@@ -538,10 +560,11 @@ digitalizované, slouží sloupec
 mapy. Pokud je tedy v~tomto sloupci uvedeno číslo různé od~\texttt{1},
 znamená to, že~se jedná o~digitalizovanou parcelu. V~takovém případě
 algoritmus zjistí kód kvality podrobných bodů podle
+%%% ML: co presne znaci nejvetsi kod kvality?
 tab.~\ref{tab:kody_kvality_digit}. Pomocí lomového bodu s~největším
 kódem kvality se vypočte mezní odchylka výměr a~porovná se
 s~absolutním rozdílem výměr dle~\zk{SPI} a~\zk{SGI}. Když je mezní
-odchylka překročena, přidá se do~výběru. V~momentě, kdy už není
+odchylka překročena, přidá se parcela do~výběru. V~momentě, kdy už není
 k~dispozici žádný další prvek, se kontrola ukončí. Celý postup
 znázorňuje diagram na obr.~\ref{fig:diagram_vymera}.
 
@@ -558,7 +581,8 @@ kódu~\ref{kontrola_vlastnik_kod}. Takové parcely se označují jako
 \begin{lstlisting}[style=python, caption={Kontrola
 \textit{bez~vlastníka}~– vzorec pro~výběr prvků}, captionpos=b,
 label=kontrola_vlastnik_kod, backgroundcolor = \color{light-gray},
-numbers=left] expression = QgsExpression("\"TEL_ID\" is null")
+numbers=left]
+expression = QgsExpression("\"TEL_ID\" is null")
 \end{lstlisting}}
 
 	\begin{figure}[H] \centering
@@ -591,9 +615,10 @@ výsledků musí mít stejný souřadnicový systém jako vrstva parcel.
 vzdálenosti}~– výpočet vzdálenosti těžiště\newline od~referenčního
 bodu}, captionpos=b,
 label=analyza_vzdalenost_vypocet_vzdalenosti_teziste_od_ref_bodu,
-backgroundcolor = \color{light-gray}, numbers=left] centroid =
-geometry.centroid().asPoint() distanceDouble =
-sqrt(refPoint.sqrDist(centroid)) distance = int(round(distanceDouble))
+backgroundcolor = \color{light-gray}, numbers=left]
+centroid = geometry.centroid().asPoint()
+distanceDouble = sqrt(refPoint.sqrDist(centroid))
+distance = int(round(distanceDouble))
 \end{lstlisting}}
 
 \subsubsection{Analýza - oceňování podle BPEJ}
@@ -610,10 +635,13 @@ z~\url{http://www.cuzk.cz/CUZK/media/CiselnikyISKN/SC_BPEJ/SC_BPEJ.zip?ext=.zip}
 číselník je aktualizován každý den kolem třetí hodiny ranní.
 
 Do~algoritmu vstupují vrstvy \texttt{\zk{PAR}} a~hranice \zk{BPEJ},
-na~které je volán nástroj vektorového překryvu \textit{Union}. Poté se
+na~které je volán nástroj systému QGIS vektorového překryvu \textit{Union}. Poté se
 zkontroluje aktuálnost číselníku \zk{BPEJ}. Jestliže číselník není
 aktuální a~lze se připojit k~internetu\footnote{Pro testování
 internetového připojení byla zvolena adresa
+%%% ML: je potreba testovat pripojeni zvlast? Nestacilo by se pokusit
+%%% stahnout ciselnik a pripadne o tom informovat uzivatele? Ted to
+%%% tak ale uz nech.
 \url{https://www.google.com}.}, stáhne zásuvný modul nový
 číselník. V~dalším kroku se z~nejnovějšího dostupného číselníku
 přečtou data a~vypočítá se cena. Do~atributové tabulky se zapíše nejen
