@@ -77,18 +77,18 @@ a tudíž neobsahuje potřebné sloupce, plugin automaticky vytvoří vrstvu obv
 ve stejném adresáři, ve kterém se nachází aktivní vrstva parcel.
 
 Funkce pro vytvoření obvodu je volána v momentě, kdy je pro vrstvu parcel
-uložena změna geometrie, uložena změna, při které došlo k vymazání prvku,
+uložena změna geometrie, potvrzena editace, při které došlo k vymazání prvku,
 nebo je pomocí tlačítka :guilabel:`Zařadit` (prvek 7) provedeno zařazení parcel.
 
 Zásuvný modul nabízí dvě varianty zařazení parcel (prvek 6). První možností je
 volba *vybrané parcely*, která provede zařazení vybraných parcel do zvolené
 kategorie (prvek 4).
 
-Druhý způsob nazvaný *obvodem* rozřadí všechny parcely ve VFK vrstvě do kategorií.
-Jako podklad použije aktuálně vybranou vrstvu obvodu (viz prvek 2).
-Tato varianta pracuje pouze s obvody, které vytvořil zásuvný modul pro pozemkové
-úpravy. Pro zařazení do kategorie musí být parcela kompletně uvnitř geometrie
-příslušného prvku obvodu.
+Druhý způsob nazvaný *obvodem* rozřadí všechny parcely ve VFK vrstvě
+do kategorií. Jako podklad použije aktuálně vybranou vrstvu obvodu
+(viz prvek 2). Tato varianta pracuje pouze s obvody, které vytvořil zásuvný
+modul pro pozemkové úpravy. Pro zařazení do kategorie musí být parcela kompletně
+uvnitř geometrie příslušného prvku obvodu.
 
 Pro kontrolu nabízí zásuvný modul tlačítko :guilabel:`Zobrazit` (prvek 5),
 které vybere, a tím pádem zvýrazní, prvky v kategorii.
