@@ -93,6 +93,7 @@ položek hlavičky (zdroj \citep{struktura_vfk})}
     \label{tab:hlavicka_priklady}
 \end{table}
 
+%%% ML: Právě jeden řádek zní divně, ale klidne to nech
 \begin{description}
 	\item[\texttt{VERZE}:] Právě jeden řádek obsahující informaci
 o~verzi \zk{VFK} souboru. Tato informace je důležitá pro programy,
@@ -208,14 +209,15 @@ Ukázka uvozujícího řádku pro~blok parcela:
 
 	\begin{lstlisting}[basicstyle=\footnotesize\ttfamily,
             backgroundcolor = \color{light-gray}, numbers=left]
-&BPAR;ID N30;STAV_DAT N2;DATUM_VZNIKU D;DATUM_ZANIKU D; PRIZNAK_KONTEXTU
-N1;RIZENI_ID_VZNIKU N30;RIZENI_ID_ZANIKU N30; PKN_ID N30;PAR_TYPE
-T10;KATUZE_KOD N6;KATUZE_KOD_PUV N6; DRUH_CISLOVANI_PAR
-N1;KMENOVE_CISLO_PAR N5;ZDPAZE_KOD N1; PODDELENI_CISLA_PAR
-N3;DIL_PARCELY N1;MAPLIS_KOD N30; ZPURVY_KOD N1;DRUPOZ_KOD
-N2;ZPVYPA_KOD N4;TYP_PARCELY N1; VYMERA_PARCELY N9;CENA_NEMOVITOSTI
-N14.2;DEFINICNI_BOD_PAR T100; TEL_ID N30;PAR_ID N30;BUD_ID
-N30;IDENT_BUD T1;SOUCASTI T1; PS_ID N30;IDENT_PS T1
+&BPAR;ID N30;STAV_DAT N2;DATUM_VZNIKU D;DATUM_ZANIKU D;
+PRIZNAK_KONTEXTU N1;RIZENI_ID_VZNIKU N30;RIZENI_ID_ZANIKU N30;
+PKN_ID N30;PAR_TYPE T10;KATUZE_KOD N6;KATUZE_KOD_PUV N6;
+DRUH_CISLOVANI_PAR N1;KMENOVE_CISLO_PAR N5;ZDPAZE_KOD N1;
+PODDELENI_CISLA_PAR N3;DIL_PARCELY N1;MAPLIS_KOD N30;
+ZPURVY_KOD N1;DRUPOZ_KOD N2;ZPVYPA_KOD N4;TYP_PARCELY N1;
+VYMERA_PARCELY N9;CENA_NEMOVITOSTI N14.2;DEFINICNI_BOD_PAR T100;
+TEL_ID N30;PAR_ID N30;BUD_ID N30;IDENT_BUD T1;SOUCASTI T1;
+PS_ID N30;IDENT_PS T1
 	\end{lstlisting}
 
 	\item[Řádky s vlastními daty:] Pro~každý objekt jeden řádek.
@@ -252,7 +254,7 @@ polohopisu (měřené)
 
 \begin{description}
 	\item[\texttt{PAR}:] Tabulka \texttt{\zk{PAR}} obsahuje
-parcely evidované v~\zk{ISKN}. Z~pohledu zásuvného modulu vytvořeného
+parcely evidované v~\zk{ISKN}. Z~pohledu zásuvného modu\-lu vytvořeného
 v~rámci této práce se jedná o~nejdůležitější část souboru
 \zk{VFK}.\linebreak Je součástí největší skupiny datových bloků
 nemovitosti. V~tab.~\ref{tab:par_sloupce} jsou uvedeny sloupce,
