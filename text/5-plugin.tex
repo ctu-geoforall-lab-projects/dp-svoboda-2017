@@ -48,8 +48,8 @@ jehož hlavní výhodou je možnost ukotvení do~samotného programu
 QGIS. Díky tomu není nutné přepínat mezi~okny a~práce s~pluginem se
 stává uživatelsky přívětivou.
 
-Protože zásuvný modul se řídí podle~legislativy České republiky
-a~používá výmě\-nný formát katastru nemovitostí, je grafické
+Jelikož se zásuvný modul řídí podle~legislativy České republiky
+a~používá vý\-měnný formát katastru nemovitostí, je grafické
 uživatelské rozhraní v~českém jazyce.
 
 \section{Načtení VFK souboru}
@@ -65,8 +65,8 @@ Algoritmus pro načtení vrstvy parcel ze~souboru \zk{VFK} patří mezi
 komplikovanější části zásuvného modulu a~je klíčový pro~správný chod
 navazujících procesů.
 
-První verze tohoto algoritmu byla inspirována \zk{VFK}
-Pluginem\footnote{\url{\detokenize{http://github.com/ctu-geoforall-lab/qgis-vfk-plugin}}},
+První verze tohoto algoritmu byla inspirována \textit{VFK
+Pluginem}\footnote{\url{\detokenize{http://github.com/ctu-geoforall-lab/qgis-vfk-plugin}}},
 ale během vývoje bylo nezbytné algoritmus mnohokrát upravovat
 a~ve~výsledku se dosti liší.
 
@@ -200,10 +200,9 @@ V~dalším kroku se otevře databázové připojení. Databázovým dotazem se
 zkontroluje přítomnost tabulek \texttt{\detokenize{geometry_columns}}
 a~\texttt{\detokenize{spatial_ref_sys}}. Pokud to je nutné, pomocí SQL
 dávky se obě tabulky vytvoří a~nahrají se do nich potřebné
-údaje. Při~editaci a~navazujících kontrolách a~analýzách zásuvný modul
-do~tabulky parcel zapisuje vlastní data, proto je zapotřebí přidat
-vlastní sloupce. Dotazem se zjistí, jestli již v~databázi existují,
-když ne, další SQL dávka zajistí jejich vytvoření. Seznam přidaných
+údaje. Pro zapisování dat je potřeba přidat vlastní sloupce.
+Dotazem se zjistí, zda sloupce v~databázi existují,
+v~případě že ne, další SQL dávka zajistí jejich vytvoření. Seznam přidaných
 sloupců a~jejich datové typy se nachází
 v~tab.~\ref{tab:pridane_sloupce_par}.
 
@@ -286,8 +285,8 @@ plocha \\ \hline \texttt{13} & zastavěná plocha a nádvoří \\ \hline
 Tabulka parcel sama o~sobě obsahuje mnoho sloupců. Společně
 se~sloupci, které přidává zásuvný modul, se stává nepřehlednou, proto
 plugin všechny nepotřebné sloupce v~atributové tabulce skrývá. Kvůli
-větší srozumitelnosti pro~uživatele navíc přidává sloupcům aliasy, viz
-tab.~\ref{tab:viditelne_sloupce_aliasy_par}.
+větší srozumitelnosti pro~uživatele navíc zásuvný modul přidává sloupcům
+aliasy, viz tab.~\ref{tab:viditelne_sloupce_aliasy_par}.
 
 %%% ML: tabulka by mohla byt sirsi, potom by se text zbytecne nezalamoval
 % OS: Upraveno.
@@ -345,7 +344,7 @@ Kvůli zařazení parcel do~kategorií se během načítání přidává do~vrst
 parcel sloupec \texttt{\detokenize{PU_KATEGORIE}} (alias
 \texttt{KATEGORIE}), jehož datový typ je celé číslo
 (\texttt{integer}). Zásuvný modul místo dlouhých názvů jednotlivých
-kategorií používá číslice \texttt{0} - \texttt{2},
+kategorií používá číslice \texttt{0} až \texttt{2},
 viz~tab~\ref{tab:kategorie_hodnoty}.
 
 \begin{table}[H]
@@ -473,7 +472,7 @@ nároků vlastníků.
 \subsection{Kontroly}
 \label{kontroly}
 
-\subsubsection{Kontrola - obvodem}
+\subsubsection{Kontrola~– obvodem}
 \label{kontrola_obvodem}
 
 Kontrola \textit{obvodem} slouží k~výběru parcel, které se nenachází
@@ -496,7 +495,7 @@ processing.runalg('qgis:selectbylocation', layer, perimeterLayer,
 layer.invertSelection()
 \end{lstlisting}}
 
-\subsubsection{Kontrola - není v SPI}
+\subsubsection{Kontrola~– není v SPI}
 \label{kontrola_neni_v_spi}
 
 Jak vyplývá z~názvu, kontrola \textit{není v~SPI} provádí výběr
@@ -514,7 +513,7 @@ numbers=left]
 expression = QgsExpression("\"KMENOVE_CISLO_PAR\" is null")
 \end{lstlisting}}
 
-\subsubsection{Kontrola - není v mapě}
+\subsubsection{Kontrola~– není v mapě}
 \label{kontrola_neni_v_mape}
 
 Výsledkem kontroly \textit{není v~mapě} je výběr parcel, které mají
@@ -528,12 +527,12 @@ numbers=left]
 expression = QgsExpression("$geometry is null")
 \end{lstlisting}}
 
-\subsubsection{Kontrola - výměra nad mezní odchylkou}
+\subsubsection{Kontrola~– výměra nad mezní odchylkou}
 \label{kontrola_vymera}
 
 Kontrola \textit{výměra nad~mezní odchylkou} zjišťuje, jestli~rozdíl
 mezi výměrou dle~souboru popisných informací a~výměrou danou souborem
-geodetickým informací překračuje mezní odchylku. Hodnota mezní
+geodetických informací překračuje mezní odchylku. Hodnota mezní
 odchylky závisí na~kódu kvality nejméně přesně určeného lomového bodu
 na~hranici parcely \citep{vyhlaska_357}, viz
 tab.~\ref{tab:odchylky_vymer}. Pro~digitalizované parcely se kód
@@ -552,13 +551,13 @@ algoritmus zjistí kód kvality podrobných bodů podle
 %%% ML: co presne znaci nejvetsi kod kvality?
 % OS: Opraveno na "nejvyšší".
 tab.~\ref{tab:kody_kvality_digit}. Pomocí lomového bodu s~nejvyšším
-kódem kvality se vypočte mezní odchylka výměr a~porovná se
+kódem kva\-lity se vypočte mezní odchylka výměr a~porovná se
 s~absolutním rozdílem výměr dle~\zk{SPI} a~\zk{SGI}. Když je mezní
 odchylka překročena, přidá se parcela do~výběru. V~momentě, kdy už není
 k~dispozici žádný další prvek, se kontrola ukončí. Celý postup
 znázorňuje diagram na obr.~\ref{fig:diagram_vymera}.
 
-\subsubsection{Kontrola - bez vlastníka}
+\subsubsection{Kontrola~– bez vlastníka}
 \label{kontrola_bez_vlastnika}
 
 Kontrola \textit{bez~vlastníka} používá sloupec
@@ -586,12 +585,11 @@ odchylkou}~– diagram algoritmu (zdroj: autor)}
 \subsection{Analýzy}
 \label{analyzy}
 
-\subsubsection{Analýza - měření vzdálenosti}
+\subsubsection{Analýza~– měření vzdálenosti}
 \label{analyza_vzdalenosti}
 
-Analýza \textit{měření vzdálenosti} určuje pro~všechny parcely
-v~kategorii \textit{v~obvodu~- řešené (2)} vzdálenost jejich těžiště
-od~referenčního bodu, viz ukázka
+Analýza \textit{měření vzdálenosti} určuje pro~všechny řešené parcely
+vzdálenost jejich těžiště od~referenčního bodu, viz ukázka
 kódu~\ref{analyza_vzdalenost_vypocet_vzdalenosti_teziste_od_ref_bodu}. Výsledné
 zaokrouhlené hodnoty v~metrech ukládá do~sloupce
 \texttt{\detokenize{PU_VZDALENOST}}
@@ -611,7 +609,7 @@ distanceDouble = sqrt(refPoint.sqrDist(centroid))
 distance = int(round(distanceDouble))
 \end{lstlisting}}
 
-\subsubsection{Analýza - oceňování podle BPEJ}
+\subsubsection{Analýza~– oceňování podle BPEJ}
 \label{analyza_bpej}
 
 Analýza \textit{oceňování podle BPEJ} vypočítá cenu pozemku na~základě
