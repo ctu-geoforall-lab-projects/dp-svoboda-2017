@@ -357,11 +357,14 @@ zpráv (zdroj: autor)}
 Záložka \textit{Načtení VFK souboru} slouží k~načtení vrstvy parcel
 ze~souboru~\zk{VFK}.
 
+\subsection{Grafické uživatelské rozhraní}
+\label{manual_nacteni_gui}
+
 	\begin{figure}[H] \centering
 		\includegraphics[width=.55\textwidth]{./pictures/nacteni_vfk_gui.png}
 		\caption[Záložka \textit{Načtení VFK souboru}~–
 grafické uživatelské rozhraní]{Záložka \textit{Načtení VFK souboru}~–
-grafické uživatelské rozhraní (zdroj: autor)}
+grafické uživatelské rozhraní\newline (zdroj: autor)}
 		\label{fig:manual_nacteni_vfk_gui}
  	\end{figure}
 
@@ -390,7 +393,7 @@ aktivuje se tlačítko \textit{Načíst} (prvek~4) a~můžete zahájit
 import.
 
 O~průběhu načítání vás informuje indikátor průběhu (prvek~3) a~zprávy
-ve~stavovém řádku.
+ve~stavo\-vém řádku.
 
 \subsection{Symbologie vrstvy parcel}
 \label{manual_nacteni_symbologie}
@@ -427,6 +430,9 @@ parcel~– atributová tabulka (zdroj: autor)}
 Po úspěšném nahrání vrstvy parcel lze začít s~editací. Záložka
 \textit{Editace} poskytuje nástroje k~úpravě geometrie a~zařazení
 parcel do~kategorií.
+
+\subsection{Grafické uživatelské rozhraní}
+\label{manual_editace_gui}
 
 	\begin{figure}[H] \centering
 		\includegraphics[width=.55\textwidth]{./pictures/editace_gui.png}
@@ -552,8 +558,11 @@ obvodu~– atributová tabulka (zdroj: autor)}
 \label{manual_kontroly_analyzy}
 
 Poslední záložka zásuvného modulu nabízí možnost zkontrolovat data,
-zejména soulad mezi~\zk{SPI} a~\zk{SGI}, a~provést analýzy nezbytné
+zejména sou\-lad mezi~\zk{SPI} a~\zk{SGI}, a~provést analýzy nezbytné
 pro~sestavení nárokových listů.
+
+\subsection{Grafické uživatelské rozhraní}
+\label{manual_kontroly_analyzy_gui}
 
 	\begin{figure}[H] \centering
 		\includegraphics[width=.55\textwidth]{./pictures/ca_gui.png}
@@ -572,12 +581,15 @@ vybrána.
 	\item[Prvek 3:] Tlačítko pro~provedení kontroly či~analýzy.
 \end{description}
 
+\subsection{Postup}
+\label{manual_kontroly_analyzy_postup}
+
 V~rozbalovacím menu (prvek~1) zvolte kontrolu či~analýzu, důsledkem
 čehož se změní dolní okno (prvek~2). Když je vše potřebné zadané, lze
 kontrolu či~analýzu spustit. Zprávy ve~stavovém řádku poskytují
 informace o~výsledku.
 
-\subsubsection{Kontrola~– obvodem}
+\subsection{Kontrola~– obvodem}
 \label{manual_kontrola_obvodem}
 
 Kontrola obvodem provádí výběr parcel, které nejsou kompletně uvnitř
@@ -606,19 +618,19 @@ rozhraní (zdroj: autor)}
 		\label{fig:manual_kontrola_obvodem_gui}
  	\end{figure}
 
-\subsubsection{Kontrola~– není v SPI}
+\subsection{Kontrola~– není v SPI}
 \label{manual_kontrola_neni_v_spi}
 
 Kontrola \textit{není v SPI} slouží k~zobrazení parcel, které nejsou
 v~souboru popisných informací.
 
-\subsubsection{Kontrola~– není v mapě}
+\subsection{Kontrola~– není v mapě}
 \label{manual_kontrola_neni_v_mape}
 
 Kontrola \textit{není v~mapě} vybírá parcely, které mají nulovou
 geometrii a~tudíž se nezobrazují v~mapovém okně.
 
-\subsubsection{Kontrola~– výměra nad mezní odchylkou}
+\subsection{Kontrola~– výměra nad mezní odchylkou}
 \label{manual_kontrola_vymera}
 
 Kontrola \textit{výměra nad~mezní odchylkou} ověřuje, zda~rozdíl mezi
@@ -629,13 +641,13 @@ parcely. Jestliže je parcela digitalizovaná, kód kvality podrobných
 bodů se určí podle~měřítka podkladové mapy (viz sloupec
 \texttt{MERITKO PODKL.}).
 
-\subsubsection{Kontrola~– bez vlastníka}
+\subsection{Kontrola~– bez vlastníka}
 \label{manual_kontrola_bez_vlastnika}
 
 Kontrola \textit{bez~vlastníka} vybírá parcely, které jsou
 bez~vlastníka, tzn. že~nemají přiřazený list vlastnictví.
 
-\subsubsection{Analýza~– měření vzdálenosti}
+\subsection{Analýza~– měření vzdálenosti}
 \label{manual_analyza_vzdalenosti}
 
 Analýza \textit{měření vzdálenosti} počítá pro~všechny řešené parcely
@@ -656,7 +668,7 @@ grafické uživatelské rozhraní (zdroj: autor)}
 		\label{fig:manual_analyza_vzdalenosti_gui}
  	\end{figure}
 
-\subsubsection{Analýza~– oceňování podle BPEJ}
+\subsection{Analýza~– oceňování podle BPEJ}
 \label{manual_analyza_bpej}
 
 Analýza \textit{oceňování podle BPEJ} počítá cenu pozemku na~základě
