@@ -17,3 +17,5 @@ Ing. Martin Landa, Ph.D.
 06/2017
 
 ## Text
+
+[ondrej-svoboda-dp-2016.pdf](https://github.com/ctu-osgeorel-proj/dp-svoboda-2017/raw/master/text/ondrej-svoboda-dp-2017.pdf)
