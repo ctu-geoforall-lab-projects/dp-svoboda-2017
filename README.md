@@ -12,6 +12,10 @@ Bc. Ondřej Svoboda
 
 Ing. Martin Landa, Ph.D.
 
+## Oponent
+
+Ing. Michal Votoček, Ph.D.
+
 ## Obhajoba
 
 06/2017
