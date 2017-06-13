@@ -1,0 +1,15 @@
+*.aux
+*.log
+*.out
+*.bbl
+*.blg
+*.loa
+*.lof
+*.toc
+*.lot
+*.gz
+*.synctex.gz
+ondrej-svoboda-dp-2017-prezentace.pdf
+*.lol
+*.nav
+*.snm
