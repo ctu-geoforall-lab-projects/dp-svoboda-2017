@@ -144,7 +144,7 @@ Význam pozemkových úprav
 \begin{itemize}
 	\item zlepšení podmínek pro zemědělské hospodaření
 	\item zpřístupnění pozemků
-	\item zmírnění účinků vodní a větrné eroze
+	\item zmírnění účinků vodní a~větrné eroze
 	\item zlepšení životního prostředí
 	\item zvýšení ekologické stability krajiny
 	\item vyjasnění vlastnických vztahů
@@ -171,9 +171,10 @@ Běžně používané programy
 \begin{itemize}
 	\item zásuvný modul programu QGIS
 	\item přípravná fáze komplexních pozemkových úprav
-	\item práce a editace dat ve formátu VFK
+	\item práce a~editace dat ve formátu VFK
 	\item rozdělení parcel do kategorií
-	\item nástroje pro kontrolu souladu SPI a SGI
+	\item nástroje pro kontrolu souladu SPI a~SGI
+	\item oceňování podle BPEJ
 \end{itemize}
 
 \end{frame}
@@ -205,8 +206,8 @@ Obvod pozemkových úprav
 
 Předmět pozemkových úprav
 \begin{itemize}
-	\item pozemky v obvodu řešené dle § 2 zákona č. 139/2002
-	\item pozemky v obvodu neřešené dle § 2 zákona č. 139/2002
+	\item pozemky v~obvodu řešené dle § 2 zákona č.~139/2002
+	\item pozemky v~obvodu neřešené dle § 2 zákona č.~139/2002
 	\item pozemky mimo obvod
 \end{itemize}
 
@@ -225,13 +226,13 @@ Předmět pozemkových úprav
 	\item zjišťování průběhu hranic
 	\item vstupní soupisy nároků vlastníků
 	\begin{itemize}
-		\item kontrola souladu SPI a SGI
+		\item kontrola souladu SPI a~SGI
 		\item výpočet opravného koeficientu dle zaměření skutečného stavu
 		\item ocenění pozemků
 		\item výpočet vzdálenosti pozemků
-		\item prosté nároky ve výměře a ceně
+		\item prosté nároky ve~výměře a~ceně
 		\item průměrná vzdálenost pozemků
-		\item upravené nároky ve výměře a ceně
+		\item upravené nároky ve~výměře a~ceně
 	\end{itemize}
 \end{itemize}
 
@@ -246,7 +247,7 @@ Předmět pozemkových úprav
 \frametitle{VFK}
 
 \begin{itemize}
-	\item SPI i SGI
+	\item SPI i~SGI
 	\item vzájemné předávání dat mezi informačním systémem katastru nemovitostí a jinými systémy
 	\item textový soubor s příponou \textit{*.vfk}
 	\item struktura
@@ -483,21 +484,100 @@ Předmět pozemkových úprav
 %------------------------------------------------------------------
 
 \begin{frame}
+
 \Huge{\centerline{Děkuji za pozornost.}}
+
 \end{frame}
 
 %------------------------------------------------------------------
 
-% \section{Posudky}
-% 
-% \subsection{Reakce na posudky}
-% 
-% \begin{frame}
-% \frametitle{Reakce na posudky}
-% 
-% 
-% \end{frame}
+\section{Reakce na otázky oponenta}
 
+\begin{frame}
+
+\frametitle{Reakce na otázky oponenta}
+
+Jak se do~atributové tabulky vrstvy PAR zapíší stavební parcely v~katastrálním území s~dvěma číselnými řadami?
+
+\begin{itemize}
+	\item sloupec \texttt{\detokenize{DRUH_CISLOVANI_PAR}}
+	\begin{itemize}
+		\item \texttt{1} – stavební parcela
+		\item \texttt{2} – pozemková parcela
+	\end{itemize}
+	\item atributová tabulka
+	\begin{itemize}
+		\item \texttt{\detokenize{KMENOVE_CISLO_PAR}} – alias \texttt{KMENOVE C. (PUV.)}
+		\item \texttt{\detokenize{PODDELENI_CISLA_PAR}} – alias \texttt{PODDELENI C. (PUV.)}
+	\end{itemize}
+\end{itemize}
+
+\begin{figure}[ht]
+	\includegraphics[width=0.7\textwidth]{pictures/nacteni-tabulka.png}
+\end{figure}
+
+\end{frame}
+
+%------------------------------------------------------------------
+
+\begin{frame}
+
+\frametitle{Reakce na otázky oponenta}
+
+Bylo by možné použít vytvořený modul i~v~katastrálním území, kde stále existují parcely zjednodušené evidence (např. nedořešené grafické příděly)?
+
+\begin{itemize}
+	\item sloupec \texttt{\detokenize{PAR_TYPE}}
+	\begin{itemize}
+		\item \texttt{PKN} – parcela KN
+		\item \texttt{PZE} – parcela ZE
+	\end{itemize}
+	\item zásuvný modul Georeferencer GDAL
+	\item nástroj \textit{Přidat část}
+\end{itemize}
+
+\begin{figure}[ht]
+	\includegraphics[width=0.6\textwidth]{pictures/georeferencer.png}
+\end{figure}
+
+\end{frame}
+
+%------------------------------------------------------------------
+
+\begin{frame}
+
+\frametitle{Reakce na otázky oponenta}
+
+Při určování mezní odchylky ve~výměře vycházíte z~bodu s~nejvyšší hodnotou kódu kvality, nebo z~bodu s~nejnižší přesností (největší základní střední souřadnicovou chybou pro~daný kód kvality)?
+
+\begin{table}[H]
+	\fontsize{8}{10}\selectfont
+    \begin{tabular}{|l|l|l|}
+    	\hline
+		\begin{tabular}{@{}l@{}l@{}}
+			kód kvality nejméně \\ přesně určeného bodu \\ na~hranici parcely
+		\end{tabular} &
+		\begin{tabular}{@{}l@{}}
+			základní střední \\ souřadnicová chyba [m]
+		\end{tabular} &
+		mezní odchylka [m\textsuperscript{2}] \\
+		\hline
+		\hline \texttt{3} & 0.14 & $2$ \\
+		\hline \texttt{4} & 0.26 & $0.4*\sqrt{P}+4$ \\
+		\hline \texttt{5} & 0.50 & $1.2*\sqrt{P}+12$ \\
+		\hline \texttt{6} & 0.21 & $0.3*\sqrt{P}+3$ \\
+		\hline \texttt{7} & 0.42 & $0.8*\sqrt{P}+8$ \\
+		\hline \texttt{8} & 1.00 & $2.0*\sqrt{P}+20$ \\
+		\hline
+    \end{tabular} \centering
+\end{table}
+
+\begin{itemize}
+	\item kde $P$ je větší z~porovnávaných výměr v~metrech čtverečních
+	\item opraveno v~repositáři pro další vývoj
+\end{itemize}
+
+\end{frame}
 
 %==================================================================
 \end{document} 
