@@ -1,6 +1,11 @@
 Zásuvný modul QGIS pro pozemkové úpravy
 =======================================
 
+.. warning:: Tato dokumentace odpovídá stavu vývoje pluginu při
+   odevzdání diplomové práce (`PDF
+   <https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017/raw/master/text/ondrej-svoboda-dp-2017.pdf>`__). Aktuální
+   dokumentace pluginu je dostupná na https://ctu-geoforall-lab.github.io/qgis-pu-plugin/.
+
 Zásuvný modul slouží ke zpracování přípravné fáze komplexních
 pozemkových úprav.
 
