@@ -23,3 +23,9 @@ Ing. Michal Votoček, Ph.D.
 ## Text
 
 [ondrej-svoboda-dp-2017.pdf](https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017/raw/master/text/ondrej-svoboda-dp-2017.pdf)
+
+## Navazující vývoj
+
+Tento repositář je zmrazen termínem odevzdání diplomové práce.
+
+Další vývoj probíhá v navazujícím repositáři https://github.com/ctu-geoforall-lab/qgis-pu-plugin
