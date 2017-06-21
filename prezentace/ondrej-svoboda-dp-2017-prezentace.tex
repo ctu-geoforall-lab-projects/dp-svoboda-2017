@@ -215,8 +215,6 @@ Předmět pozemkových úprav
 
 %------------------------------------------------------------------
 
-\subsection{Přípravná fáze}
-
 \begin{frame}
 
 \frametitle{Přípravná fáze}
@@ -269,7 +267,7 @@ Předmět pozemkových úprav
 \frametitle{BPEJ}
 
 \begin{itemize}
-	\item produkční potenciál zemědělské půdy
+	\item vyjadřuje produkční potenciál zemědělské půdy
 	\item spravuje Státní pozemkový úřad
 	\item celostátní databáze od dubna 2017 veřejně dostupná
 	\item pětimístný kód BPEJ
@@ -398,7 +396,7 @@ Předmět pozemkových úprav
 	\item vrstva \texttt{PAR} otevřena v režimu zápisu
 	\item hodnoty kategorií uloženy ve vlastním sloupci
 	\item mechanismy pro nastavení kategorie a výběr prvků v kategorii
-	\item symbologie podle QML souboru
+	\item symbologie vrstvy obvodu podle QML souboru
 	\item atributová tabulka s aliasy
 \end{itemize}
 
@@ -454,7 +452,7 @@ Předmět pozemkových úprav
 \begin{itemize}
 	\item zdrojový kód
 	\begin{itemize}
-		\item \url{http://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017}
+		\item \url{https://github.com/ctu-geoforall-lab-projects/dp-svoboda-2017}
 	\end{itemize}
 	\item uživatelský manuál
 	\item funkcionalita
@@ -465,6 +463,9 @@ Předmět pozemkových úprav
 	\end{itemize}
 	\item instalace přes repositář organizace CTU GeoForAll Lab
 	\item další vývoj
+	\begin{itemize}
+		\item \url{https://github.com/ctu-geoforall-lab/qgis-pu-plugin}
+	\end{itemize}
 \end{itemize}
 
 \begin{figure}[ht]
@@ -510,10 +511,11 @@ Jak se do~atributové tabulky vrstvy PAR zapíší stavební parcely v~katastrá
 		\item \texttt{\detokenize{KMENOVE_CISLO_PAR}} – alias \texttt{KMENOVE C. (PUV.)}
 		\item \texttt{\detokenize{PODDELENI_CISLA_PAR}} – alias \texttt{PODDELENI C. (PUV.)}
 	\end{itemize}
+	\item opraveno v~repositáři pro další vývoj
 \end{itemize}
 
 \begin{figure}[ht]
-	\includegraphics[width=0.7\textwidth]{pictures/nacteni-tabulka.png}
+	\includegraphics[width=0.85\textwidth]{pictures/nacteni-tabulka.png}
 \end{figure}
 
 \end{frame}
